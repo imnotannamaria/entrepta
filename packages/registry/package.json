@@ -4,6 +4,7 @@
   "private": false,
   "description": "entrepta design system — component registry",
   "license": "MIT",
+  "files": ["styles", "lib", "primitives", "layout", "content", "feedback", "hooks"],
   "scripts": {
     "typecheck": "tsc --noEmit"
   },

@@ -9,20 +9,22 @@
     "entrepta": "./dist/index.js"
   },
   "scripts": {
-    "build": "tsc",
-    "dev": "tsc --watch",
+    "build": "tsup",
+    "dev": "tsup --watch",
     "typecheck": "tsc --noEmit",
     "test": "vitest run"
   },
-  "devDependencies": {
-    "typescript": "^5.7.2",
-    "vitest": "^2.1.8",
-    "@types/node": "^22.10.2"
-  },
   "dependencies": {
+    "@entrepta/registry": "workspace:*",
     "commander": "^13.0.0",
     "picocolors": "^1.1.1",
-    "prompts": "^2.4.2",
-    "@types/prompts": "^2.4.9"
+    "prompts": "^2.4.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "@types/prompts": "^2.4.9",
+    "tsup": "^8.5.1",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
   }
 }
