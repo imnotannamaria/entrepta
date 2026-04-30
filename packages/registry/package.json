@@ -1,0 +1,19 @@
+{
+  "name": "@entrepta/registry",
+  "version": "0.0.1",
+  "private": false,
+  "description": "entrepta design system — component registry",
+  "license": "MIT",
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.2",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0"
+  },
+  "peerDependencies": {
+    "react": ">=19",
+    "react-dom": ">=19"
+  }
+}
