@@ -14,6 +14,7 @@ export interface EntryptaConfig {
     components: string;
     lib: string;
     utils: string;
+    hooks: string;
   };
 }
 

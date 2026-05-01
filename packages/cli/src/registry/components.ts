@@ -114,11 +114,19 @@ export const COMPONENTS: RegistryComponent[] = [
     registryDeps: [],
   },
   {
+    name: "use-command-palette",
+    description: "Hook that wires the ⌘K global shortcut to open/close the command palette",
+    category: "hooks",
+    files: ["hooks/use-command-palette.ts"],
+    deps: [],
+    registryDeps: [],
+  },
+  {
     name: "command-palette",
     description: "⌘K command palette built on cmdk with groups, icons, and shortcuts",
     category: "feedback",
     files: ["feedback/command-palette.tsx"],
     deps: ["cmdk", "@radix-ui/react-dialog", "lucide-react"],
-    registryDeps: [],
+    registryDeps: ["use-command-palette"],
   },
 ];

@@ -23,6 +23,7 @@ const MOCK_CONFIG: EntryptaConfig = {
     components: "@/components/entrepta",
     lib: "@/lib",
     utils: "@/lib/utils",
+    hooks: "@/hooks",
   },
 };
 

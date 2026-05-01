@@ -63,6 +63,7 @@ export async function init(options: { theme?: string; overwrite: boolean }) {
       components: `@/${framework.componentsPath}`,
       lib: "@/lib",
       utils: "@/lib/utils",
+      hooks: "@/hooks",
     },
   };
 

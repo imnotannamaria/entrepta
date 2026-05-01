@@ -63,10 +63,9 @@ export async function add(components: string[], options: { overwrite: boolean })
 
     for (const file of component.files) {
       const src = path.join(registryRoot, file);
-      const destRelative = path.join(
-        config.aliases.components.replace("@/", ""),
-        path.basename(file)
-      );
+      const isHook = component.category === "hooks";
+      const baseAlias = isHook ? (config.aliases.hooks ?? "@/hooks") : config.aliases.components;
+      const destRelative = path.join(baseAlias.replace("@/", ""), path.basename(file));
       const dest = path.join(cwd, destRelative);
 
       await fs.mkdir(path.dirname(dest), { recursive: true });
