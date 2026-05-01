@@ -7,7 +7,7 @@ import { cn } from "../lib/utils";
 
 const inputWrapperVariants = cva(
   [
-    "relative flex items-center",
+    "relative flex items-center overflow-hidden",
     "bg-[var(--bg-surface)] border border-[var(--border-subtle)]",
     "transition-colors duration-[var(--motion-fast)]",
     "focus-within:border-[var(--fg-brand)]",
@@ -37,7 +37,7 @@ const inputBaseClass = [
   "bg-transparent",
   "font-mono text-sm text-[var(--fg-primary)]",
   "placeholder:text-[var(--fg-muted)]",
-  "outline-none focus:outline-none focus-visible:outline-none",
+  "outline-none",
 ].join(" ");
 
 export interface InputProps
