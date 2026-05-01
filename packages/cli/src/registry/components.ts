@@ -1,4 +1,68 @@
 import type { RegistryComponent } from "./types.js";
 
-// populated in Fase 3 as components are implemented
-export const COMPONENTS: RegistryComponent[] = [];
+export const COMPONENTS: RegistryComponent[] = [
+  {
+    name: "button",
+    description: "Primary action button with 4 variants and loading state",
+    category: "primitives",
+    files: ["primitives/button.tsx"],
+    deps: ["class-variance-authority", "lucide-react", "@radix-ui/react-slot"],
+    registryDeps: [],
+  },
+  {
+    name: "badge",
+    description: "Status badge — solid/soft/outline × 6 semantic colors",
+    category: "primitives",
+    files: ["primitives/badge.tsx"],
+    deps: ["class-variance-authority"],
+    registryDeps: [],
+  },
+  {
+    name: "input",
+    description: "Text input with default, search, and command (⌘K) variants",
+    category: "primitives",
+    files: ["primitives/input.tsx"],
+    deps: ["class-variance-authority", "lucide-react"],
+    registryDeps: [],
+  },
+  {
+    name: "card",
+    description: "Content card — default/featured/terminal/data variants",
+    category: "primitives",
+    files: ["primitives/card.tsx"],
+    deps: ["class-variance-authority"],
+    registryDeps: [],
+  },
+  {
+    name: "dialog",
+    description: "Modal dialog built on Radix UI with accessible close button",
+    category: "primitives",
+    files: ["primitives/dialog.tsx"],
+    deps: ["@radix-ui/react-dialog", "lucide-react"],
+    registryDeps: [],
+  },
+  {
+    name: "dropdown",
+    description: "Dropdown menu with items, checkboxes, radio groups and submenus",
+    category: "primitives",
+    files: ["primitives/dropdown.tsx"],
+    deps: ["@radix-ui/react-dropdown-menu", "lucide-react"],
+    registryDeps: [],
+  },
+  {
+    name: "tooltip",
+    description: "Hover tooltip with optional keyboard shortcut hint",
+    category: "primitives",
+    files: ["primitives/tooltip.tsx"],
+    deps: ["@radix-ui/react-tooltip"],
+    registryDeps: [],
+  },
+  {
+    name: "tabs",
+    description: "Editor-style file tabs with optional close button and icon",
+    category: "primitives",
+    files: ["primitives/tabs.tsx"],
+    deps: ["@radix-ui/react-tabs", "lucide-react"],
+    registryDeps: [],
+  },
+];
