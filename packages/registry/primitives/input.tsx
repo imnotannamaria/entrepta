@@ -37,7 +37,7 @@ const inputBaseClass = [
   "bg-transparent",
   "font-mono text-sm text-[var(--fg-primary)]",
   "placeholder:text-[var(--fg-muted)]",
-  "outline-none",
+  "outline-none focus:outline-none focus-visible:outline-none",
 ].join(" ");
 
 export interface InputProps
