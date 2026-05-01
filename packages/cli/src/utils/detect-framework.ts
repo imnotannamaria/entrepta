@@ -22,7 +22,7 @@ export async function detectFramework(cwd: string): Promise<Framework> {
       return {
         name: "Next.js (App Router)",
         cssPath: "app/globals.css",
-        componentsPath: "components/entrepta",
+        componentsPath: "app/components/entrepta",
         utilsPath: "lib/utils.ts",
       };
     }

@@ -85,7 +85,9 @@ export async function add(components: string[], options: { overwrite: boolean })
         }
       }
 
-      await fs.copyFile(src, dest);
+      let content = await fs.readFile(src, "utf-8");
+      content = rewriteImports(content, config.aliases.utils);
+      await fs.writeFile(dest, content, "utf-8");
       log.success(`Copied ${destRelative}`);
     }
 
@@ -122,6 +124,10 @@ function resolveComponents(names: string[]): string[] {
   }
 
   return [...resolved];
+}
+
+function rewriteImports(content: string, utilsAlias: string): string {
+  return content.replace(/from\s+["'](\.\.[/\\])*lib[/\\]utils["']/g, `from "${utilsAlias}"`);
 }
 
 async function fileExists(filePath: string): Promise<boolean> {

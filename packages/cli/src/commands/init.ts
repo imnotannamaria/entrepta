@@ -60,7 +60,7 @@ export async function init(options: { theme?: string; overwrite: boolean }) {
       baseColor: "zinc",
     },
     aliases: {
-      components: "@/components/entrepta",
+      components: `@/${framework.componentsPath}`,
       lib: "@/lib",
       utils: "@/lib/utils",
     },
