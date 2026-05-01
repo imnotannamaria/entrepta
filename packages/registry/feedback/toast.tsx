@@ -13,7 +13,7 @@ const Toaster = ({ ...props }: ToasterProps) => (
         toast: [
           "group toast",
           "font-mono text-xs",
-          "bg-[var(--bg-surface)] border border-[var(--border-subtle)]",
+          "bg-[var(--bg-surface)] border border-[var(--border-subtle)] border-l-2",
           "text-[var(--fg-primary)] shadow-lg",
           "rounded-[var(--radius-sm)]",
         ].join(" "),
@@ -26,10 +26,10 @@ const Toaster = ({ ...props }: ToasterProps) => (
           "bg-[var(--bg-surface-elevated)] text-[var(--fg-muted)]",
           "rounded-[var(--radius-sm)] font-mono text-xs",
         ].join(" "),
-        success: "border-[var(--status-success)]",
-        error: "border-[var(--status-error)]",
-        warning: "border-[var(--status-warning)]",
-        info: "border-[var(--status-info)]",
+        success: "border-l-[var(--status-success)]",
+        error: "border-l-[var(--status-error)]",
+        warning: "border-l-[var(--status-warning)]",
+        info: "border-l-[var(--status-info)]",
       },
     }}
     {...props}
