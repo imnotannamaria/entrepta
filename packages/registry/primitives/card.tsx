@@ -7,22 +7,16 @@ import { cn } from "../lib/utils";
 const cardVariants = cva("flex flex-col", {
   variants: {
     variant: {
-      default: [
-        "bg-[var(--bg-surface)] border border-[var(--border-subtle)]",
-        "rounded-[var(--radius-md)] p-5",
-      ],
-      featured: [
-        "bg-[var(--bg-surface-brand)] border border-[var(--fg-brand)]",
-        "rounded-[var(--radius-md)] p-5",
-      ],
+      default: ["bg-(--bg-surface) border border-(--border-subtle)", "rounded-(--radius-md) p-5"],
+      featured: ["bg-(--bg-surface-brand) border border-(--fg-brand)", "rounded-(--radius-md) p-5"],
       terminal: [
-        "bg-[var(--bg-canvas)] border border-[var(--border-subtle)]",
-        "rounded-[var(--radius-md)]",
+        "bg-(--bg-canvas) border border-(--border-subtle)",
+        "rounded-(--radius-md)",
         "font-mono text-sm",
       ],
       data: [
-        "bg-[var(--bg-surface-elevated)] border border-[var(--border-subtle)]",
-        "rounded-[var(--radius-md)] p-5 backdrop-blur-sm",
+        "bg-(--bg-surface-elevated) border border-(--border-subtle)",
+        "rounded-(--radius-md) p-5 backdrop-blur-sm",
       ],
     },
   },
@@ -53,7 +47,7 @@ const CardTitle = React.forwardRef<HTMLHeadingElement, React.HTMLAttributes<HTML
   ({ className, ...props }, ref) => (
     <h3
       ref={ref}
-      className={cn("font-serif text-lg text-[var(--fg-primary)] leading-snug", className)}
+      className={cn("font-serif text-lg text-(--fg-primary) leading-snug", className)}
       {...props}
     />
   )
@@ -64,7 +58,7 @@ const CardDescription = React.forwardRef<
   HTMLParagraphElement,
   React.HTMLAttributes<HTMLParagraphElement>
 >(({ className, ...props }, ref) => (
-  <p ref={ref} className={cn("text-sm text-[var(--fg-muted)] font-sans", className)} {...props} />
+  <p ref={ref} className={cn("text-sm text-(--fg-muted) font-sans", className)} {...props} />
 ));
 CardDescription.displayName = "CardDescription";
 
@@ -88,15 +82,15 @@ const CardTerminalBar = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HT
     <div
       ref={ref}
       className={cn(
-        "flex items-center gap-2 px-4 py-2 border-b border-[var(--border-subtle)]",
-        "text-[var(--fg-muted)] text-xs font-mono",
+        "flex items-center gap-2 px-4 py-2 border-b border-(--border-subtle)",
+        "text-(--fg-muted) text-xs font-mono",
         className
       )}
       {...props}
     >
-      <span className="w-2.5 h-2.5 rounded-full bg-[var(--status-error)] opacity-60" />
-      <span className="w-2.5 h-2.5 rounded-full bg-[var(--status-warning)] opacity-60" />
-      <span className="w-2.5 h-2.5 rounded-full bg-[var(--status-success)] opacity-60" />
+      <span className="w-2.5 h-2.5 rounded-full bg-(--status-error) opacity-60" />
+      <span className="w-2.5 h-2.5 rounded-full bg-(--status-warning) opacity-60" />
+      <span className="w-2.5 h-2.5 rounded-full bg-(--status-success) opacity-60" />
       {children && <span className="ml-2">{children}</span>}
     </div>
   )

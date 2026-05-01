@@ -10,34 +10,34 @@ const buttonVariants = cva(
   [
     "inline-flex items-center justify-center gap-2 shrink-0",
     "font-mono font-medium tracking-wide",
-    "border transition-all duration-[var(--motion-fast)]",
-    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg-canvas)]",
+    "border transition-all duration-(--motion-fast)",
+    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--ring) focus-visible:ring-offset-2 focus-visible:ring-offset-(--bg-canvas)",
     "disabled:pointer-events-none disabled:opacity-40",
   ],
   {
     variants: {
       variant: {
         default: [
-          "bg-[var(--fg-brand)] text-[var(--bg-canvas)] border-transparent",
+          "bg-(--fg-brand) text-(--bg-canvas) border-transparent",
           "hover:opacity-90 active:opacity-80",
         ],
         secondary: [
-          "bg-[var(--bg-surface)] text-[var(--fg-primary)] border-[var(--border-strong)]",
-          "hover:bg-[var(--bg-surface-elevated)] hover:border-[var(--fg-muted)] active:opacity-80",
+          "bg-(--bg-surface) text-(--fg-primary) border-(--border-strong)",
+          "hover:bg-(--bg-surface-elevated) hover:border-(--fg-muted) active:opacity-80",
         ],
         ghost: [
-          "bg-transparent text-[var(--fg-secondary)] border-transparent",
-          "hover:bg-[var(--bg-surface)] hover:text-[var(--fg-primary)] active:opacity-80",
+          "bg-transparent text-(--fg-secondary) border-transparent",
+          "hover:bg-(--bg-surface) hover:text-(--fg-primary) active:opacity-80",
         ],
         destructive: [
-          "bg-[var(--status-error)] text-white border-transparent",
+          "bg-(--status-error) text-white border-transparent",
           "hover:opacity-90 active:opacity-80",
         ],
       },
       size: {
-        sm: "h-7 px-3 text-xs rounded-[var(--radius-sm)]",
-        md: "h-9 px-4 text-sm rounded-[var(--radius-sm)]",
-        lg: "h-11 px-6 text-sm rounded-[var(--radius-md)]",
+        sm: "h-7 px-3 text-xs rounded-(--radius-sm)",
+        md: "h-9 px-4 text-sm rounded-(--radius-sm)",
+        lg: "h-11 px-6 text-sm rounded-(--radius-md)",
       },
     },
     defaultVariants: {
