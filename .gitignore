@@ -20,3 +20,6 @@ out
 # misc
 .DS_Store
 *.pem
+
+# Tests and Sandbox next projects
+sandbox/
