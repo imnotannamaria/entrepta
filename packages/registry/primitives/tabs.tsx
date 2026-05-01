@@ -15,7 +15,7 @@ const TabsList = React.forwardRef<
     ref={ref}
     className={cn(
       "flex items-end gap-0 overflow-x-auto",
-      "border-b border-(--border-subtle)",
+      "border-b border-[var(--border-subtle)]",
       "scrollbar-none",
       className
     )}
@@ -38,19 +38,19 @@ const TabsTrigger = React.forwardRef<
     className={cn(
       "group relative flex items-center gap-2 shrink-0",
       "h-9 px-4 font-mono text-xs",
-      "text-(--fg-muted) border-b-2 border-transparent",
-      "transition-colors duration-(--motion-fast)",
-      "hover:text-(--fg-secondary) hover:bg-(--bg-surface)",
-      "data-[state=active]:text-(--fg-primary)",
-      "data-[state=active]:border-(--fg-brand)",
-      "data-[state=active]:bg-(--bg-surface)",
-      "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-(--ring) focus-visible:ring-inset",
+      "text-[var(--fg-muted)] border-b-2 border-transparent",
+      "transition-colors duration-[var(--motion-fast)]",
+      "hover:text-[var(--fg-secondary)] hover:bg-[var(--bg-surface)]",
+      "data-[state=active]:text-[var(--fg-primary)]",
+      "data-[state=active]:border-[var(--fg-brand)]",
+      "data-[state=active]:bg-[var(--bg-surface)]",
+      "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[var(--ring)] focus-visible:ring-inset",
       className
     )}
     {...props}
   >
     {icon && (
-      <span className="shrink-0 text-(--fg-muted) group-data-[state=active]:text-(--fg-brand)">
+      <span className="shrink-0 text-[var(--fg-muted)] group-data-[state=active]:text-[var(--fg-brand)]">
         {icon}
       </span>
     )}
@@ -64,8 +64,8 @@ const TabsTrigger = React.forwardRef<
         }}
         className={cn(
           "ml-1 rounded p-0.5 opacity-0 group-hover:opacity-100",
-          "text-(--fg-muted) hover:text-(--fg-primary) hover:bg-(--bg-surface-elevated)",
-          "transition-all duration-(--motion-fast)",
+          "text-[var(--fg-muted)] hover:text-[var(--fg-primary)] hover:bg-[var(--bg-surface-elevated)]",
+          "transition-all duration-[var(--motion-fast)]",
           "focus-visible:outline-none focus-visible:opacity-100"
         )}
         aria-label="Close tab"
@@ -84,7 +84,7 @@ const TabsContent = React.forwardRef<
   <TabsPrimitive.Content
     ref={ref}
     className={cn(
-      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--ring) focus-visible:ring-offset-2 focus-visible:ring-offset-(--bg-canvas)",
+      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg-canvas)]",
       className
     )}
     {...props}

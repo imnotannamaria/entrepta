@@ -8,21 +8,21 @@ import { cn } from "../lib/utils";
 const inputWrapperVariants = cva(
   [
     "relative flex items-center",
-    "bg-(--bg-surface) border border-(--border-subtle)",
-    "transition-colors duration-(--motion-fast)",
-    "focus-within:border-(--fg-brand)",
+    "bg-[var(--bg-surface)] border border-[var(--border-subtle)]",
+    "transition-colors duration-[var(--motion-fast)]",
+    "focus-within:border-[var(--fg-brand)]",
     "has-[:disabled]:opacity-40 has-[:disabled]:pointer-events-none",
   ],
   {
     variants: {
       size: {
-        sm: "h-7 rounded-(--radius-sm)",
-        md: "h-9 rounded-(--radius-sm)",
-        lg: "h-11 rounded-(--radius-md)",
+        sm: "h-7 rounded-[var(--radius-sm)]",
+        md: "h-9 rounded-[var(--radius-sm)]",
+        lg: "h-11 rounded-[var(--radius-md)]",
       },
       state: {
         default: "",
-        error: "border-(--status-error) focus-within:border-(--status-error)",
+        error: "border-[var(--status-error)] focus-within:border-[var(--status-error)]",
       },
     },
     defaultVariants: {
@@ -35,8 +35,8 @@ const inputWrapperVariants = cva(
 const inputBaseClass = [
   "flex-1 h-full px-3",
   "bg-transparent",
-  "font-mono text-sm text-(--fg-primary)",
-  "placeholder:text-(--fg-muted)",
+  "font-mono text-sm text-[var(--fg-primary)]",
+  "placeholder:text-[var(--fg-muted)]",
   "outline-none",
 ].join(" ");
 
@@ -52,7 +52,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
       <div className={cn(inputWrapperVariants({ size, state }), className)}>
         {variant === "search" && (
           <Search
-            className="ml-3 shrink-0 text-(--fg-muted)"
+            className="ml-3 shrink-0 text-[var(--fg-muted)]"
             style={{ width: 14, height: 14, strokeWidth: 1.5 }}
           />
         )}
@@ -62,7 +62,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           {...props}
         />
         {variant === "command" && (
-          <div className="mr-3 flex items-center gap-0.5 text-(--fg-muted)">
+          <div className="mr-3 flex items-center gap-0.5 text-[var(--fg-muted)]">
             <Command style={{ width: 11, height: 11, strokeWidth: 1.5 }} />
             <span className="font-mono text-xs">K</span>
           </div>

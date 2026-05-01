@@ -22,8 +22,8 @@ const badgeVariants = cva(
         info: "",
       },
       size: {
-        sm: "h-5 px-1.5 rounded-(--radius-sm)",
-        md: "h-6 px-2 rounded-(--radius-sm)",
+        sm: "h-5 px-1.5 rounded-[var(--radius-sm)]",
+        md: "h-6 px-2 rounded-[var(--radius-sm)]",
       },
     },
     compoundVariants: [
@@ -31,98 +31,98 @@ const badgeVariants = cva(
       {
         variant: "solid",
         color: "neutral",
-        className: "bg-(--fg-muted) text-(--bg-canvas)",
+        className: "bg-[var(--fg-muted)] text-[var(--bg-canvas)]",
       },
       {
         variant: "solid",
         color: "brand",
-        className: "bg-(--fg-brand) text-(--bg-canvas)",
+        className: "bg-[var(--fg-brand)] text-[var(--bg-canvas)]",
       },
       {
         variant: "solid",
         color: "success",
-        className: "bg-(--status-success) text-(--bg-canvas)",
+        className: "bg-[var(--status-success)] text-[var(--bg-canvas)]",
       },
       {
         variant: "solid",
         color: "warning",
-        className: "bg-(--status-warning) text-(--bg-canvas)",
+        className: "bg-[var(--status-warning)] text-[var(--bg-canvas)]",
       },
       {
         variant: "solid",
         color: "error",
-        className: "bg-(--status-error) text-white",
+        className: "bg-[var(--status-error)] text-white",
       },
       {
         variant: "solid",
         color: "info",
-        className: "bg-(--status-info) text-(--bg-canvas)",
+        className: "bg-[var(--status-info)] text-[var(--bg-canvas)]",
       },
       // soft
       {
         variant: "soft",
         color: "neutral",
-        className: "bg-(--bg-surface) text-(--fg-secondary)",
+        className: "bg-[var(--bg-surface)] text-[var(--fg-secondary)]",
       },
       {
         variant: "soft",
         color: "brand",
-        className: "bg-(--bg-surface-brand) text-(--fg-brand)",
+        className: "bg-[var(--bg-surface-brand)] text-[var(--fg-brand)]",
       },
       {
         variant: "soft",
         color: "success",
         className:
-          "bg-[color-mix(in_srgb,var(--status-success)_15%,transparent)] text-(--status-success)",
+          "bg-[color-mix(in_srgb,var[var(--status-success)]_15%,transparent)] text-[var(--status-success)]",
       },
       {
         variant: "soft",
         color: "warning",
         className:
-          "bg-[color-mix(in_srgb,var(--status-warning)_15%,transparent)] text-(--status-warning)",
+          "bg-[color-mix(in_srgb,var[var(--status-warning)]_15%,transparent)] text-[var(--status-warning)]",
       },
       {
         variant: "soft",
         color: "error",
         className:
-          "bg-[color-mix(in_srgb,var(--status-error)_15%,transparent)] text-(--status-error)",
+          "bg-[color-mix(in_srgb,var[var(--status-error)]_15%,transparent)] text-[var(--status-error)]",
       },
       {
         variant: "soft",
         color: "info",
         className:
-          "bg-[color-mix(in_srgb,var(--status-info)_15%,transparent)] text-(--status-info)",
+          "bg-[color-mix(in_srgb,var[var(--status-info)]_15%,transparent)] text-[var(--status-info)]",
       },
       // outline
       {
         variant: "outline",
         color: "neutral",
-        className: "border-(--border-strong) text-(--fg-secondary)",
+        className: "border-[var(--border-strong)] text-[var(--fg-secondary)]",
       },
       {
         variant: "outline",
         color: "brand",
-        className: "border-(--fg-brand) text-(--fg-brand)",
+        className: "border-[var(--fg-brand)] text-[var(--fg-brand)]",
       },
       {
         variant: "outline",
         color: "success",
-        className: "border-(--status-success) text-(--status-success)",
+        className: "border-[var(--status-success)] text-[var(--status-success)]",
       },
       {
         variant: "outline",
         color: "warning",
-        className: "border-(--status-warning) text-(--status-warning)",
+        className: "border-[var(--status-warning)] text-[var(--status-warning)]",
       },
       {
         variant: "outline",
         color: "error",
-        className: "border-(--status-error) text-(--status-error)",
+        className: "border-[var(--status-error)] text-[var(--status-error)]",
       },
       {
         variant: "outline",
         color: "info",
-        className: "border-(--status-info) text-(--status-info)",
+        className: "border-[var(--status-info)] text-[var(--status-info)]",
       },
     ],
     defaultVariants: {
