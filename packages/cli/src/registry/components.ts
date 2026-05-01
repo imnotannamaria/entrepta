@@ -97,4 +97,28 @@ export const COMPONENTS: RegistryComponent[] = [
     deps: [],
     registryDeps: [],
   },
+  {
+    name: "skeleton",
+    description: "Animated shimmer placeholder for loading states",
+    category: "feedback",
+    files: ["feedback/skeleton.tsx"],
+    deps: [],
+    registryDeps: [],
+  },
+  {
+    name: "toast",
+    description: "Toast notifications via Sonner, styled with entrepta tokens",
+    category: "feedback",
+    files: ["feedback/toast.tsx"],
+    deps: ["sonner"],
+    registryDeps: [],
+  },
+  {
+    name: "command-palette",
+    description: "⌘K command palette built on cmdk with groups, icons, and shortcuts",
+    category: "feedback",
+    files: ["feedback/command-palette.tsx"],
+    deps: ["cmdk", "@radix-ui/react-dialog", "lucide-react"],
+    registryDeps: [],
+  },
 ];
