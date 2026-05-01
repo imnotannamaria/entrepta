@@ -34,7 +34,7 @@ const inputWrapperVariants = cva(
 
 const inputBaseClass = [
   "flex-1 h-full px-3",
-  "bg-transparent",
+  "bg-transparent border-0",
   "font-mono text-sm text-[var(--fg-primary)]",
   "placeholder:text-[var(--fg-muted)]",
   "outline-none",
