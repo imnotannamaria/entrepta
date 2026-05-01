@@ -7,6 +7,9 @@
 
 @import "tailwindcss";
 
+/* Scan all project TS/TSX files so Tailwind generates classes from components */
+@source "../**/*.{ts,tsx}";
+
 /* ============================================================
    PRIMITIVE TOKENS
    ============================================================ */
