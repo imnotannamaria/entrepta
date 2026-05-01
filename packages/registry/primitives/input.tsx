@@ -52,17 +52,21 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
       <div className={cn(inputWrapperVariants({ size, state }), className)}>
         {variant === "search" && (
           <Search
-            className="ml-3 shrink-0 text-[var(--fg-muted)]"
+            className="absolute left-3 shrink-0 text-[var(--fg-muted)] pointer-events-none"
             style={{ width: 14, height: 14, strokeWidth: 1.5 }}
           />
         )}
         <input
           ref={ref}
-          className={cn(inputBaseClass, variant === "search" && "pl-2")}
+          className={cn(
+            inputBaseClass,
+            variant === "search" && "pl-9",
+            variant === "command" && "pr-12"
+          )}
           {...props}
         />
         {variant === "command" && (
-          <div className="mr-3 flex items-center gap-0.5 text-[var(--fg-muted)]">
+          <div className="absolute right-3 flex items-center gap-0.5 text-[var(--fg-muted)] pointer-events-none">
             <Command style={{ width: 11, height: 11, strokeWidth: 1.5 }} />
             <span className="font-mono text-xs">K</span>
           </div>
