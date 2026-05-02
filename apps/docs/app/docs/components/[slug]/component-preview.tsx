@@ -1,0 +1,508 @@
+"use client";
+
+import {
+  Command,
+  CommandDialog,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@entrepta/registry/feedback/command-palette";
+import { Skeleton, SkeletonText } from "@entrepta/registry/feedback/skeleton";
+import { SectionHeader, SectionHeadingAccent } from "@entrepta/registry/layout/section-header";
+import { StatusBarItem } from "@entrepta/registry/layout/status-bar";
+import { TabBar, TabBarItem } from "@entrepta/registry/layout/tab-bar";
+import {
+  TopNav,
+  TopNavBreadcrumb,
+  TopNavLogo,
+  TopNavSeparator,
+} from "@entrepta/registry/layout/top-nav";
+import { Badge } from "@entrepta/registry/primitives/badge";
+import { Button } from "@entrepta/registry/primitives/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTerminalBar,
+  CardTitle,
+} from "@entrepta/registry/primitives/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@entrepta/registry/primitives/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuDestructiveItem,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuTrigger,
+} from "@entrepta/registry/primitives/dropdown";
+import { Input } from "@entrepta/registry/primitives/input";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@entrepta/registry/primitives/tabs";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipShortcut,
+  TooltipTrigger,
+} from "@entrepta/registry/primitives/tooltip";
+import { FileCode, GitBranch, Home, Settings, Zap } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
+
+function ButtonPreview() {
+  const [loading, setLoading] = useState(false);
+  return (
+    <div className="flex flex-col gap-6 w-full max-w-md">
+      <div className="flex flex-wrap gap-3">
+        <Button>Default</Button>
+        <Button variant="secondary">Secondary</Button>
+        <Button variant="ghost">Ghost</Button>
+        <Button variant="destructive">Destructive</Button>
+      </div>
+      <div className="flex flex-wrap gap-3">
+        <Button size="sm">Small</Button>
+        <Button size="md">Medium</Button>
+        <Button size="lg">Large</Button>
+      </div>
+      <div className="flex flex-wrap gap-3">
+        <Button
+          loading={loading}
+          onClick={() => {
+            setLoading(true);
+            setTimeout(() => setLoading(false), 2000);
+          }}
+        >
+          {loading ? "Loading..." : "Click to load"}
+        </Button>
+        <Button disabled>Disabled</Button>
+      </div>
+    </div>
+  );
+}
+
+function BadgePreview() {
+  return (
+    <div className="flex flex-col gap-4 w-full max-w-md">
+      <div className="flex flex-wrap gap-2">
+        {(["neutral", "brand", "success", "warning", "error", "info"] as const).map((color) => (
+          <Badge key={color} variant="solid" color={color}>
+            {color}
+          </Badge>
+        ))}
+      </div>
+      <div className="flex flex-wrap gap-2">
+        {(["neutral", "brand", "success", "warning", "error", "info"] as const).map((color) => (
+          <Badge key={color} variant="soft" color={color}>
+            {color}
+          </Badge>
+        ))}
+      </div>
+      <div className="flex flex-wrap gap-2">
+        {(["neutral", "brand", "success", "warning", "error", "info"] as const).map((color) => (
+          <Badge key={color} variant="outline" color={color}>
+            {color}
+          </Badge>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function InputPreview() {
+  return (
+    <div className="flex flex-col gap-3 w-full max-w-sm">
+      <Input placeholder="Default input..." />
+      <Input variant="search" placeholder="Search..." />
+      <Input variant="command" placeholder="⌘K to open" readOnly />
+      <Input placeholder="Error state" state="error" />
+      <Input placeholder="Disabled" disabled />
+    </div>
+  );
+}
+
+function CardPreview() {
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full max-w-xl">
+      <Card>
+        <CardHeader>
+          <CardTitle>Default card</CardTitle>
+          <CardDescription>Surface with subtle border</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <p className="font-sans text-xs text-[var(--fg-muted)]">Standard content area</p>
+        </CardContent>
+      </Card>
+      <Card variant="featured">
+        <CardHeader>
+          <CardTitle>Featured</CardTitle>
+          <CardDescription>Brand border highlight</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Badge variant="soft" color="brand">
+            featured
+          </Badge>
+        </CardContent>
+      </Card>
+      <Card variant="terminal">
+        <CardTerminalBar>~/entrepta</CardTerminalBar>
+        <CardContent>
+          <code className="font-mono text-xs text-[var(--fg-brand)]">$ pnpm dev</code>
+          <br />
+          <code className="font-mono text-xs text-[var(--fg-muted)]">ready on port 3000</code>
+        </CardContent>
+      </Card>
+      <Card variant="data">
+        <CardHeader>
+          <CardTitle>Data card</CardTitle>
+          <CardDescription>Glass surface</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <span className="font-mono text-2xl text-[var(--fg-primary)]">99.9%</span>
+          <span className="font-mono text-xs text-[var(--fg-muted)] ml-2">uptime</span>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
+function DialogPreview() {
+  return (
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button variant="secondary">Open dialog</Button>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Delete project</DialogTitle>
+          <DialogDescription>
+            This will permanently delete the project and all its data. This action cannot be undone.
+          </DialogDescription>
+        </DialogHeader>
+        <DialogFooter>
+          <Button variant="ghost">Cancel</Button>
+          <Button variant="destructive">Delete project</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+function DropdownPreview() {
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="secondary">Options ↓</Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent>
+        <DropdownMenuLabel>My account</DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem>
+          Profile
+          <DropdownMenuShortcut>⌘P</DropdownMenuShortcut>
+        </DropdownMenuItem>
+        <DropdownMenuItem>
+          Settings
+          <DropdownMenuShortcut>⌘,</DropdownMenuShortcut>
+        </DropdownMenuItem>
+        <DropdownMenuItem>Billing</DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuDestructiveItem>Log out</DropdownMenuDestructiveItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
+
+function TooltipPreview() {
+  return (
+    <TooltipProvider delayDuration={0}>
+      <div className="flex flex-wrap gap-4">
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button variant="ghost">Hover me</Button>
+          </TooltipTrigger>
+          <TooltipContent>Save document</TooltipContent>
+        </Tooltip>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button variant="secondary" size="sm">
+              With shortcut
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            Open command palette <TooltipShortcut>⌘K</TooltipShortcut>
+          </TooltipContent>
+        </Tooltip>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button variant="ghost" size="sm">
+              Bottom
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent side="bottom">Shown below</TooltipContent>
+        </Tooltip>
+      </div>
+    </TooltipProvider>
+  );
+}
+
+function TabsPreview() {
+  return (
+    <div className="w-full max-w-md border border-[var(--border-subtle)] rounded-[var(--radius-md)] overflow-hidden">
+      <Tabs defaultValue="preview">
+        <TabsList>
+          <TabsTrigger value="preview">Preview</TabsTrigger>
+          <TabsTrigger value="code">Code</TabsTrigger>
+          <TabsTrigger value="props">Props</TabsTrigger>
+        </TabsList>
+        <TabsContent value="preview" className="p-5">
+          <p className="font-sans text-sm text-[var(--fg-secondary)]">
+            Live component preview goes here.
+          </p>
+        </TabsContent>
+        <TabsContent value="code" className="p-5">
+          <code className="font-mono text-xs text-[var(--fg-brand)]">
+            {"<Button>Click me</Button>"}
+          </code>
+        </TabsContent>
+        <TabsContent value="props" className="p-5">
+          <p className="font-mono text-xs text-[var(--fg-muted)]">
+            variant, size, loading, asChild
+          </p>
+        </TabsContent>
+      </Tabs>
+    </div>
+  );
+}
+
+function TabBarPreview() {
+  const [active, setActive] = useState("index");
+  const [tabs, setTabs] = useState(["index.tsx", "globals.css", "utils.ts"]);
+  return (
+    <div className="w-full max-w-lg border border-[var(--border-subtle)] rounded-[var(--radius-md)] overflow-hidden">
+      <TabBar>
+        {tabs.map((tab) => (
+          <TabBarItem
+            key={tab}
+            active={active === tab}
+            onClick={() => setActive(tab)}
+            onClose={
+              tabs.length > 1
+                ? () => {
+                    const next = tabs.filter((t) => t !== tab);
+                    setTabs(next);
+                    if (active === tab) setActive(next[0]);
+                  }
+                : undefined
+            }
+          >
+            {tab}
+          </TabBarItem>
+        ))}
+      </TabBar>
+      <div className="p-4 bg-[var(--bg-surface)] min-h-16">
+        <code className="font-mono text-xs text-[var(--fg-muted)]">
+          {active} — click tabs to switch, ✕ to close
+        </code>
+      </div>
+    </div>
+  );
+}
+
+function StatusBarPreview() {
+  return (
+    <div className="w-full max-w-lg border border-[var(--border-subtle)] rounded-[var(--radius-md)] overflow-hidden">
+      <div className="bg-[var(--bg-surface)] h-20 flex items-center justify-center">
+        <p className="font-mono text-xs text-[var(--fg-muted)]">Page content</p>
+      </div>
+      <div className="flex items-center justify-between h-6 px-3 bg-[var(--fg-brand)] font-mono text-[10px] text-white">
+        <div className="flex items-center gap-3">
+          <StatusBarItem icon={<GitBranch style={{ width: 10, height: 10, strokeWidth: 1.5 }} />}>
+            main
+          </StatusBarItem>
+          <StatusBarItem>0 errors</StatusBarItem>
+        </div>
+        <div className="flex items-center gap-3">
+          <StatusBarItem>TypeScript</StatusBarItem>
+          <StatusBarItem>UTF-8</StatusBarItem>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function TopNavPreview() {
+  return (
+    <div className="w-full max-w-lg border border-[var(--border-subtle)] rounded-[var(--radius-md)] overflow-hidden">
+      <TopNav
+        left={
+          <TopNavLogo>
+            ◆ entrepta
+            <TopNavBreadcrumb>
+              <TopNavSeparator />
+              components
+              <TopNavSeparator />
+              button
+            </TopNavBreadcrumb>
+          </TopNavLogo>
+        }
+        right={
+          <div className="flex gap-2">
+            <Button size="sm" variant="ghost">
+              Docs
+            </Button>
+            <Button size="sm">GitHub</Button>
+          </div>
+        }
+      />
+      <div className="bg-[var(--bg-surface)] h-16 flex items-center justify-center">
+        <p className="font-mono text-xs text-[var(--fg-muted)]">Page content</p>
+      </div>
+    </div>
+  );
+}
+
+function SectionHeaderPreview() {
+  return (
+    <div className="flex flex-col gap-10 w-full max-w-lg">
+      <SectionHeader
+        eyebrow="components"
+        heading={
+          <>
+            Build faster with <SectionHeadingAccent>entrepta</SectionHeadingAccent>
+          </>
+        }
+        description="Copy-paste components that you own and control."
+      />
+      <SectionHeader eyebrow="centered layout" heading="Dark-first by default" align="center" />
+    </div>
+  );
+}
+
+function ToastPreview() {
+  return (
+    <div className="flex flex-wrap gap-3">
+      <Button variant="secondary" onClick={() => toast.success("Component copied to clipboard!")}>
+        Success
+      </Button>
+      <Button variant="secondary" onClick={() => toast.error("Build failed — see output")}>
+        Error
+      </Button>
+      <Button variant="secondary" onClick={() => toast.warning("Deprecated API used")}>
+        Warning
+      </Button>
+      <Button variant="secondary" onClick={() => toast("New update available")}>
+        Default
+      </Button>
+    </div>
+  );
+}
+
+function SkeletonPreview() {
+  return (
+    <div className="flex flex-col gap-6 w-full max-w-sm">
+      <div className="flex items-center gap-3">
+        <Skeleton variant="circle" className="w-10 h-10 shrink-0" />
+        <SkeletonText lines={2} className="flex-1" />
+      </div>
+      <Skeleton variant="rect" className="w-full h-32" />
+      <SkeletonText lines={3} />
+    </div>
+  );
+}
+
+function CommandPalettePreview() {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="flex flex-col items-center gap-4">
+      <Button variant="secondary" onClick={() => setOpen(true)}>
+        Open palette <kbd className="ml-2 font-mono text-[10px] opacity-60">⌘K</kbd>
+      </Button>
+      <CommandDialog open={open} onOpenChange={setOpen}>
+        <Command>
+          <CommandInput placeholder="Search pages, components..." />
+          <CommandList>
+            <CommandEmpty>No results found.</CommandEmpty>
+            <CommandGroup heading="Pages">
+              <CommandItem
+                icon={<Home style={{ width: 13, height: 13, strokeWidth: 1.5 }} />}
+                onSelect={() => setOpen(false)}
+              >
+                Home
+              </CommandItem>
+              <CommandItem
+                icon={<FileCode style={{ width: 13, height: 13, strokeWidth: 1.5 }} />}
+                onSelect={() => setOpen(false)}
+              >
+                Documentation
+              </CommandItem>
+            </CommandGroup>
+            <CommandGroup heading="Components">
+              <CommandItem
+                icon={<Zap style={{ width: 13, height: 13, strokeWidth: 1.5 }} />}
+                shortcut="B"
+                onSelect={() => setOpen(false)}
+              >
+                Button
+              </CommandItem>
+              <CommandItem
+                icon={<Zap style={{ width: 13, height: 13, strokeWidth: 1.5 }} />}
+                shortcut="Bd"
+                onSelect={() => setOpen(false)}
+              >
+                Badge
+              </CommandItem>
+            </CommandGroup>
+            <CommandGroup heading="Actions">
+              <CommandItem
+                icon={<Settings style={{ width: 13, height: 13, strokeWidth: 1.5 }} />}
+                onSelect={() => setOpen(false)}
+              >
+                Settings
+              </CommandItem>
+            </CommandGroup>
+          </CommandList>
+        </Command>
+      </CommandDialog>
+    </div>
+  );
+}
+
+const PREVIEWS: Record<string, React.ReactNode> = {
+  button: <ButtonPreview />,
+  badge: <BadgePreview />,
+  input: <InputPreview />,
+  card: <CardPreview />,
+  dialog: <DialogPreview />,
+  dropdown: <DropdownPreview />,
+  tooltip: <TooltipPreview />,
+  tabs: <TabsPreview />,
+  "tab-bar": <TabBarPreview />,
+  "status-bar": <StatusBarPreview />,
+  "top-nav": <TopNavPreview />,
+  "section-header": <SectionHeaderPreview />,
+  toast: <ToastPreview />,
+  skeleton: <SkeletonPreview />,
+  "command-palette": <CommandPalettePreview />,
+};
+
+export function ComponentPreview({ slug }: { slug: string }) {
+  return (
+    <div className="w-full flex items-center justify-center">
+      {PREVIEWS[slug] ?? (
+        <p className="font-mono text-xs text-[var(--fg-muted)]">No preview available</p>
+      )}
+    </div>
+  );
+}
