@@ -61,7 +61,7 @@ const MOCK_CONFIG = {
 
 const BUTTON_SOURCE = `import { cn } from "../lib/utils"\nexport function Button() {}\n`;
 
-let exitSpy: ReturnType<typeof vi.spyOn>;
+let exitSpy: { mockRestore: () => void };
 
 beforeEach(() => {
   vi.clearAllMocks();

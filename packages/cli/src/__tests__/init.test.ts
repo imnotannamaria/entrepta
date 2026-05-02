@@ -57,7 +57,7 @@ const mockInstallDeps = vi.mocked(installDeps);
 const GLOBALS_CSS = "/* globals */";
 const THEME_CSS = "/* theme */";
 
-let exitSpy: ReturnType<typeof vi.spyOn>;
+let exitSpy: { mockRestore: () => void };
 
 beforeEach(() => {
   vi.clearAllMocks();
