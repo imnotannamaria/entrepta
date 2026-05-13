@@ -100,14 +100,14 @@ const COMPONENTS: Record<string, ComponentDef> = {
     title: "Input",
     category: "Primitives",
     description:
-      "Text field with 3 variants: plain, search (magnifier icon), and command (⌘K hint). Supports error state.",
+      "Text field in 3 variants: plain, search (magnifier icon), and command ($ prefix + ⌘K hint). Supports error state and 3 sizes.",
     install: "input",
     usage: `import { Input } from "@/components/entrepta/input"
 
-<Input placeholder="Enter value..." />
-<Input variant="search" placeholder="Search..." />
-<Input variant="command" placeholder="⌘K to open" readOnly />
-<Input placeholder="Required field" state="error" />`,
+<Input placeholder="resend-ecommerce" />
+<Input variant="search" placeholder="search components…" />
+<Input variant="command" placeholder="run command…" />
+<Input state="error" defaultValue="HEALTHKIT_KEY" />`,
     props: [
       {
         name: "variant",

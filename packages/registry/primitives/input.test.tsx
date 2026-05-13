@@ -30,14 +30,19 @@ describe("Input", () => {
 
   it("renders search icon when variant=search", () => {
     const { container } = render(<Input variant="search" placeholder="search" />);
-    const svg = container.querySelector("svg");
-    expect(svg).toBeInTheDocument();
+    expect(container.querySelector("svg")).toBeInTheDocument();
   });
 
-  it("renders command icon when variant=command", () => {
-    const { container } = render(<Input variant="command" placeholder="cmd" />);
-    const svg = container.querySelector("svg");
-    expect(svg).toBeInTheDocument();
+  it("renders $ prefix and ⌘K kbd hint when variant=command", () => {
+    render(<Input variant="command" placeholder="cmd" />);
+    expect(screen.getByText("$")).toBeInTheDocument();
+    expect(screen.getByText("⌘")).toBeInTheDocument();
+    expect(screen.getByText("K")).toBeInTheDocument();
+  });
+
+  it("applies default border class", () => {
+    const { container } = render(<Input placeholder="x" />);
+    expect(container.firstChild).toHaveClass("border-[var(--border-strong)]");
   });
 
   it("applies error border when state=error", () => {
@@ -47,17 +52,27 @@ describe("Input", () => {
 
   it("applies sm size class", () => {
     const { container } = render(<Input size="sm" placeholder="sm" />);
-    expect(container.firstChild).toHaveClass("h-7");
+    expect(container.firstChild).toHaveClass("h-8");
+  });
+
+  it("applies md size class by default", () => {
+    const { container } = render(<Input placeholder="md" />);
+    expect(container.firstChild).toHaveClass("h-10");
   });
 
   it("applies lg size class", () => {
     const { container } = render(<Input size="lg" placeholder="lg" />);
-    expect(container.firstChild).toHaveClass("h-11");
+    expect(container.firstChild).toHaveClass("h-12");
   });
 
   it("forwards ref to input element", () => {
     const ref = { current: null };
     render(<Input ref={ref} placeholder="ref" />);
     expect(ref.current).toBeInstanceOf(HTMLInputElement);
+  });
+
+  it("merges custom className", () => {
+    const { container } = render(<Input className="my-class" placeholder="x" />);
+    expect(container.firstChild).toHaveClass("my-class");
   });
 });

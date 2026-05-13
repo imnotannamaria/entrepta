@@ -1,28 +1,34 @@
 "use client";
 
 import { type VariantProps, cva } from "class-variance-authority";
-import { Command, Search } from "lucide-react";
+import { Search } from "lucide-react";
 import * as React from "react";
 import { cn } from "../lib/utils";
 
 const inputWrapperVariants = cva(
   [
-    "relative flex items-center overflow-hidden",
-    "bg-[var(--bg-surface)] border border-[var(--border-subtle)]",
-    "transition-colors duration-[var(--motion-fast)]",
-    "focus-within:border-[var(--fg-brand)]",
+    "flex items-center gap-2 w-full",
+    "bg-[var(--bg-surface)]",
+    "border rounded-[var(--radius-md)]",
+    "transition-all duration-150 ease-out",
+    "hover:border-[var(--fg-muted)]",
+    "focus-within:border-[var(--fg-brand)] focus-within:shadow-[0_0_0_3px_var(--bg-surface-brand)]",
     "has-[:disabled]:opacity-40 has-[:disabled]:pointer-events-none",
   ],
   {
     variants: {
       size: {
-        sm: "h-7 rounded-[var(--radius-sm)]",
-        md: "h-9 rounded-[var(--radius-sm)]",
-        lg: "h-11 rounded-[var(--radius-md)]",
+        sm: "h-8 px-3",
+        md: "h-10 px-3",
+        lg: "h-12 px-4",
       },
       state: {
-        default: "",
-        error: "border-[var(--status-error)] focus-within:border-[var(--status-error)]",
+        default: "border-[var(--border-strong)]",
+        error: [
+          "border-[var(--status-error)]",
+          "hover:border-[var(--status-error)]",
+          "focus-within:border-[var(--status-error)] focus-within:shadow-[0_0_0_3px_var(--status-error-soft)]",
+        ],
       },
     },
     defaultVariants: {
@@ -33,11 +39,11 @@ const inputWrapperVariants = cva(
 );
 
 const inputBaseClass = [
-  "flex-1 h-full px-3",
-  "bg-transparent border-0 appearance-none",
-  "font-mono text-sm text-[var(--fg-primary)]",
+  "flex-1 min-w-0 h-full",
+  "bg-transparent border-0 appearance-none outline-none",
+  "font-mono text-[13px] text-[var(--fg-primary)]",
   "placeholder:text-[var(--fg-muted)]",
-  "outline-none",
+  "disabled:cursor-not-allowed",
 ].join(" ");
 
 export interface InputProps
@@ -52,24 +58,28 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
       <div className={cn(inputWrapperVariants({ size, state }), className)}>
         {variant === "search" && (
           <Search
-            className="absolute left-3 shrink-0 text-[var(--fg-muted)] pointer-events-none"
+            aria-hidden
+            className="shrink-0 text-[var(--fg-muted)]"
             style={{ width: 14, height: 14, strokeWidth: 1.5 }}
           />
         )}
-        <input
-          ref={ref}
-          className={cn(
-            inputBaseClass,
-            variant === "search" && "pl-9",
-            variant === "command" && "pr-12"
-          )}
-          {...props}
-        />
         {variant === "command" && (
-          <div className="absolute right-3 flex items-center gap-0.5 text-[var(--fg-muted)] pointer-events-none">
-            <Command style={{ width: 11, height: 11, strokeWidth: 1.5 }} />
-            <span className="font-mono text-xs">K</span>
-          </div>
+          <span
+            aria-hidden
+            className="shrink-0 font-mono text-[var(--fg-brand)] leading-none select-none"
+          >
+            $
+          </span>
+        )}
+        <input ref={ref} className={inputBaseClass} {...props} />
+        {variant === "command" && (
+          <kbd
+            aria-hidden
+            className="shrink-0 inline-flex items-center gap-0.5 font-mono text-[11px] text-[var(--fg-muted)] tracking-wide select-none"
+          >
+            <span>⌘</span>
+            <span>K</span>
+          </kbd>
         )}
       </div>
     );

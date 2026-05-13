@@ -141,11 +141,16 @@ function BadgePreview() {
 function InputPreview() {
   return (
     <div className="flex flex-col gap-3 w-full max-w-sm">
-      <Input placeholder="Default input..." />
-      <Input variant="search" placeholder="Search..." />
-      <Input variant="command" placeholder="⌘K to open" readOnly />
-      <Input placeholder="Error state" state="error" />
-      <Input placeholder="Disabled" disabled />
+      <Input placeholder="resend-ecommerce" />
+      <Input variant="search" placeholder="search components…" />
+      <Input variant="command" placeholder="run command…" />
+      <Input state="error" defaultValue="HEALTHKIT_KEY" />
+      <Input disabled placeholder="readonly" />
+      <div className="grid grid-cols-3 gap-2">
+        <Input size="sm" placeholder="sm" />
+        <Input size="md" placeholder="md" />
+        <Input size="lg" placeholder="lg" />
+      </div>
     </div>
   );
 }
