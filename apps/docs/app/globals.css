@@ -73,6 +73,16 @@
   --status-error: var(--rose-500);
   --status-info: var(--indigo-400);
 
+  /* status — soft (translucent bg + lighter fg, for badge/toast soft variants) */
+  --status-success-fg: var(--emerald-400);
+  --status-warning-fg: var(--amber-400);
+  --status-error-fg: var(--rose-400);
+  --status-info-fg: var(--indigo-400);
+  --status-success-soft: rgba(16, 185, 129, 0.12);
+  --status-warning-soft: rgba(245, 158, 11, 0.12);
+  --status-error-soft: rgba(244, 63, 94, 0.12);
+  --status-info-soft: rgba(129, 140, 248, 0.12);
+
   /* ============================================================
      SPACING
      ============================================================ */

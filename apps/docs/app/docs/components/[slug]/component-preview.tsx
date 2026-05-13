@@ -93,28 +93,46 @@ function ButtonPreview() {
 }
 
 function BadgePreview() {
+  const colors = ["neutral", "brand", "success", "warning", "error", "info"] as const;
   return (
     <div className="flex flex-col gap-4 w-full max-w-md">
-      <div className="flex flex-wrap gap-2">
-        {(["neutral", "brand", "success", "warning", "error", "info"] as const).map((color) => (
+      <div className="flex flex-wrap items-center gap-2">
+        {colors.map((color) => (
           <Badge key={color} variant="solid" color={color}>
             {color}
           </Badge>
         ))}
       </div>
-      <div className="flex flex-wrap gap-2">
-        {(["neutral", "brand", "success", "warning", "error", "info"] as const).map((color) => (
+      <div className="flex flex-wrap items-center gap-2">
+        {colors.map((color) => (
           <Badge key={color} variant="soft" color={color}>
             {color}
           </Badge>
         ))}
       </div>
-      <div className="flex flex-wrap gap-2">
-        {(["neutral", "brand", "success", "warning", "error", "info"] as const).map((color) => (
+      <div className="flex flex-wrap items-center gap-2">
+        {colors.map((color) => (
           <Badge key={color} variant="outline" color={color}>
             {color}
           </Badge>
         ))}
+      </div>
+      <div className="flex flex-wrap items-center gap-2">
+        <Badge variant="soft" color="success" dot>
+          open to work
+        </Badge>
+        <Badge variant="soft" color="warning" dot>
+          partial
+        </Badge>
+        <Badge variant="soft" color="error" dot>
+          error
+        </Badge>
+        <Badge variant="soft" color="info" dot>
+          syncing
+        </Badge>
+        <Badge variant="soft" color="neutral" dot>
+          idle
+        </Badge>
       </div>
     </div>
   );

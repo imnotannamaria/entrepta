@@ -65,10 +65,10 @@ const COMPONENTS: Record<string, ComponentDef> = {
     install: "badge",
     usage: `import { Badge } from "@/components/entrepta/badge"
 
-<Badge variant="solid" color="brand">v1.0</Badge>
-<Badge variant="soft" color="success">active</Badge>
+<Badge variant="solid" color="brand">FEATURED</Badge>
+<Badge variant="soft" color="success" dot>open to work</Badge>
 <Badge variant="outline" color="error">deprecated</Badge>
-<Badge variant="soft" color="warning">beta</Badge>`,
+<Badge variant="soft" color="warning" dot>partial</Badge>`,
     props: [
       {
         name: "variant",
@@ -87,6 +87,12 @@ const COMPONENTS: Record<string, ComponentDef> = {
         type: '"sm" | "md"',
         default: '"md"',
         description: "Height and padding",
+      },
+      {
+        name: "dot",
+        type: "boolean",
+        default: "false",
+        description: "Renders a colored status dot before the label",
       },
     ],
   },

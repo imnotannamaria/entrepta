@@ -24,7 +24,33 @@ describe("Badge", () => {
 
   it("applies soft neutral variant by default", () => {
     const { container } = render(<Badge>default</Badge>);
-    expect(container.firstChild).toHaveClass("bg-[var(--bg-surface)]");
+    expect(container.firstChild).toHaveClass("bg-white/[0.06]");
+  });
+
+  it("applies soft success with token bg/fg", () => {
+    const { container } = render(
+      <Badge variant="soft" color="success">
+        ok
+      </Badge>
+    );
+    expect(container.firstChild).toHaveClass("bg-[var(--status-success-soft)]");
+    expect(container.firstChild).toHaveClass("text-[var(--status-success-fg)]");
+  });
+
+  it("renders status dot when dot prop is true", () => {
+    const { container } = render(
+      <Badge variant="soft" color="success" dot>
+        live
+      </Badge>
+    );
+    const dot = container.querySelector("[aria-hidden]");
+    expect(dot).not.toBeNull();
+    expect(dot).toHaveClass("bg-[var(--status-success)]");
+  });
+
+  it("does not render dot by default", () => {
+    const { container } = render(<Badge>plain</Badge>);
+    expect(container.querySelector("[aria-hidden]")).toBeNull();
   });
 
   it("applies outline success variant", () => {

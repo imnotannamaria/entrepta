@@ -5,7 +5,10 @@ import * as React from "react";
 import { cn } from "../lib/utils";
 
 const badgeVariants = cva(
-  "inline-flex items-center gap-1.5 font-mono text-xs font-medium leading-none",
+  [
+    "inline-flex items-center gap-1.5 shrink-0 whitespace-nowrap",
+    "font-mono font-medium leading-none tracking-[0.02em]",
+  ],
   {
     variants: {
       variant: {
@@ -22,8 +25,8 @@ const badgeVariants = cva(
         info: "",
       },
       size: {
-        sm: "h-5 px-1.5 rounded-[var(--radius-sm)]",
-        md: "h-6 px-2 rounded-[var(--radius-sm)]",
+        sm: "h-5 px-1.5 text-[10px] rounded-[var(--radius-sm)]",
+        md: "h-6 px-2 text-[11px] rounded-[var(--radius-sm)]",
       },
     },
     compoundVariants: [
@@ -31,7 +34,7 @@ const badgeVariants = cva(
       {
         variant: "solid",
         color: "neutral",
-        className: "bg-[var(--fg-muted)] text-[var(--bg-canvas)]",
+        className: "bg-[var(--border-strong)] text-[var(--fg-primary)]",
       },
       {
         variant: "solid",
@@ -51,7 +54,7 @@ const badgeVariants = cva(
       {
         variant: "solid",
         color: "error",
-        className: "bg-[var(--status-error)] text-white",
+        className: "bg-[var(--status-error)] text-[var(--fg-primary)]",
       },
       {
         variant: "solid",
@@ -62,36 +65,32 @@ const badgeVariants = cva(
       {
         variant: "soft",
         color: "neutral",
-        className: "bg-[var(--bg-surface)] text-[var(--fg-secondary)]",
+        className: "bg-white/[0.06] text-[var(--fg-secondary)]",
       },
       {
         variant: "soft",
         color: "brand",
-        className: "bg-[var(--bg-surface-brand)] text-[var(--fg-brand)]",
+        className: "bg-[var(--bg-surface-brand)] text-[var(--fg-brand-hover)]",
       },
       {
         variant: "soft",
         color: "success",
-        className:
-          "bg-[color-mix(in_srgb,var[var(--status-success)]_15%,transparent)] text-[var(--status-success)]",
+        className: "bg-[var(--status-success-soft)] text-[var(--status-success-fg)]",
       },
       {
         variant: "soft",
         color: "warning",
-        className:
-          "bg-[color-mix(in_srgb,var[var(--status-warning)]_15%,transparent)] text-[var(--status-warning)]",
+        className: "bg-[var(--status-warning-soft)] text-[var(--status-warning-fg)]",
       },
       {
         variant: "soft",
         color: "error",
-        className:
-          "bg-[color-mix(in_srgb,var[var(--status-error)]_15%,transparent)] text-[var(--status-error)]",
+        className: "bg-[var(--status-error-soft)] text-[var(--status-error-fg)]",
       },
       {
         variant: "soft",
         color: "info",
-        className:
-          "bg-[color-mix(in_srgb,var[var(--status-info)]_15%,transparent)] text-[var(--status-info)]",
+        className: "bg-[var(--status-info-soft)] text-[var(--status-info-fg)]",
       },
       // outline
       {
@@ -133,18 +132,39 @@ const badgeVariants = cva(
   }
 );
 
+const dotColorClass: Record<NonNullable<VariantProps<typeof badgeVariants>["color"]>, string> = {
+  neutral: "bg-[var(--fg-muted)]",
+  brand: "bg-[var(--fg-brand)]",
+  success: "bg-[var(--status-success)]",
+  warning: "bg-[var(--status-warning)]",
+  error: "bg-[var(--status-error)]",
+  info: "bg-[var(--status-info)]",
+};
+
 export interface BadgeProps
   extends Omit<React.HTMLAttributes<HTMLSpanElement>, "color">,
-    VariantProps<typeof badgeVariants> {}
+    VariantProps<typeof badgeVariants> {
+  /** Render a colored status dot before the label */
+  dot?: boolean;
+}
 
 const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
-  ({ className, variant, color, size, ...props }, ref) => {
+  ({ className, variant, color, size, dot, children, ...props }, ref) => {
+    const resolvedColor = color ?? "neutral";
     return (
-      <span
-        ref={ref}
-        className={cn(badgeVariants({ variant, color, size }), className)}
-        {...props}
-      />
+      <span ref={ref} className={cn(badgeVariants({ variant, color, size }), className)} {...props}>
+        {dot && (
+          <span
+            aria-hidden
+            className={cn(
+              "inline-block rounded-full shrink-0",
+              size === "sm" ? "size-1.5" : "size-2",
+              dotColorClass[resolvedColor]
+            )}
+          />
+        )}
+        {children}
+      </span>
     );
   }
 );
