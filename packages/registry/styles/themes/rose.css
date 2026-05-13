@@ -4,6 +4,7 @@
 
 :root {
   --fg-brand: #f43f5e;
+  --fg-brand-hover: #fb7185;
   --bg-surface-brand: rgba(244, 63, 94, 0.12);
   --ring: rgba(244, 63, 94, 0.45);
 }

@@ -65,18 +65,18 @@ function ButtonPreview() {
   const [loading, setLoading] = useState(false);
   return (
     <div className="flex flex-col gap-6 w-full max-w-md">
-      <div className="flex flex-wrap gap-3">
-        <Button>Default</Button>
-        <Button variant="secondary">Secondary</Button>
-        <Button variant="ghost">Ghost</Button>
-        <Button variant="destructive">Destructive</Button>
+      <div className="flex flex-wrap items-center gap-3">
+        <Button>./projects.sh →</Button>
+        <Button variant="secondary">$ npx entrepta init</Button>
+        <Button variant="ghost">cat contact.txt</Button>
+        <Button variant="command">npx entrepta add button</Button>
       </div>
-      <div className="flex flex-wrap gap-3">
-        <Button size="sm">Small</Button>
-        <Button size="md">Medium</Button>
-        <Button size="lg">Large</Button>
+      <div className="flex flex-wrap items-center gap-3">
+        <Button size="sm">small 32h</Button>
+        <Button size="md">medium 40h</Button>
+        <Button size="lg">large 48h</Button>
       </div>
-      <div className="flex flex-wrap gap-3">
+      <div className="flex flex-wrap items-center gap-3">
         <Button
           loading={loading}
           onClick={() => {
@@ -84,7 +84,7 @@ function ButtonPreview() {
             setTimeout(() => setLoading(false), 2000);
           }}
         >
-          {loading ? "Loading..." : "Click to load"}
+          Click to load
         </Button>
         <Button disabled>Disabled</Button>
       </div>
@@ -192,7 +192,7 @@ function DialogPreview() {
         </DialogHeader>
         <DialogFooter>
           <Button variant="ghost">Cancel</Button>
-          <Button variant="destructive">Delete project</Button>
+          <Button>Delete project</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

@@ -26,16 +26,16 @@ const COMPONENTS: Record<string, ComponentDef> = {
     install: "button",
     usage: `import { Button } from "@/components/entrepta/button"
 
-<Button>Default</Button>
-<Button variant="secondary">Secondary</Button>
-<Button variant="ghost">Ghost</Button>
-<Button variant="destructive">Delete</Button>
-<Button size="sm" loading>Loading...</Button>`,
+<Button>./projects.sh →</Button>
+<Button variant="secondary">$ npx entrepta init</Button>
+<Button variant="ghost">cat contact.txt</Button>
+<Button variant="command">npx entrepta add button</Button>
+<Button size="sm" loading>Loading…</Button>`,
     props: [
       {
         name: "variant",
-        type: '"default" | "secondary" | "ghost" | "destructive"',
-        default: '"default"',
+        type: '"primary" | "secondary" | "ghost" | "command"',
+        default: '"primary"',
         description: "Visual style variant",
       },
       {
@@ -179,7 +179,7 @@ import { Button } from "@/components/entrepta/button"
     </DialogHeader>
     <DialogFooter>
       <Button variant="ghost">Cancel</Button>
-      <Button variant="destructive">Delete</Button>
+      <Button>Delete</Button>
     </DialogFooter>
   </DialogContent>
 </Dialog>`,

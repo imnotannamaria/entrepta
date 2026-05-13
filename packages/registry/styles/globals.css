@@ -57,6 +57,7 @@
   --fg-secondary: var(--zinc-400);
   --fg-muted: var(--zinc-500);
   --fg-brand: var(--violet-500); /* overridden by theme */
+  --fg-brand-hover: var(--violet-400); /* overridden by theme — lighter shade for hover */
 
   /* borders */
   --border-subtle: var(--zinc-800);

@@ -8,7 +8,8 @@
 @import "tailwindcss";
 
 /* Scan all project TS/TSX files so Tailwind generates classes from components */
-@source "../../**/*.{ts,tsx}";
+@source "../**/*.{ts,tsx}";
+@source "../../../packages/registry/**/*.{ts,tsx}";
 
 /* ============================================================
    PRIMITIVE TOKENS
@@ -57,6 +58,7 @@
   --fg-secondary: var(--zinc-400);
   --fg-muted: var(--zinc-500);
   --fg-brand: var(--violet-500); /* overridden by theme */
+  --fg-brand-hover: var(--violet-400); /* overridden by theme — lighter shade for hover */
 
   /* borders */
   --border-subtle: var(--zinc-800);
@@ -289,6 +291,7 @@
 
 :root {
   --fg-brand: #7c6bff;
+  --fg-brand-hover: #9b8eff;
   --bg-surface-brand: rgba(124, 107, 255, 0.15);
   --ring: rgba(124, 107, 255, 0.5);
 }

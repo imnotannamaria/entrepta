@@ -8,40 +8,43 @@ import { cn } from "../lib/utils";
 
 const buttonVariants = cva(
   [
-    "inline-flex items-center justify-center gap-2 shrink-0",
-    "font-mono font-medium tracking-wide",
-    "border transition-all duration-[var(--motion-fast)]",
-    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg-canvas)]",
-    "disabled:pointer-events-none disabled:opacity-40",
+    "group relative inline-flex items-center justify-center gap-2 shrink-0 whitespace-nowrap",
+    "font-mono font-medium",
+    "border rounded-[var(--radius-md)]",
+    "transition-all duration-150 ease-out",
+    "focus-visible:outline-none focus-visible:[outline:2px_solid_var(--fg-brand)] focus-visible:outline-offset-2",
+    "disabled:pointer-events-none disabled:opacity-40 disabled:cursor-not-allowed",
   ],
   {
     variants: {
       variant: {
-        default: [
+        primary: [
           "bg-[var(--fg-brand)] text-[var(--bg-canvas)] border-transparent",
-          "hover:opacity-90 active:opacity-80",
+          "hover:bg-[var(--fg-brand-hover)] hover:-translate-y-px",
+          "active:translate-y-0",
         ],
         secondary: [
-          "bg-[var(--bg-surface)] text-[var(--fg-primary)] border-[var(--border-strong)]",
-          "hover:bg-[var(--bg-surface-elevated)] hover:border-[var(--fg-muted)] active:opacity-80",
+          "bg-transparent text-[var(--fg-primary)] border-[var(--border-strong)]",
+          "hover:border-[var(--fg-muted)] hover:bg-white/[0.03]",
         ],
         ghost: [
           "bg-transparent text-[var(--fg-secondary)] border-transparent",
-          "hover:bg-[var(--bg-surface)] hover:text-[var(--fg-primary)] active:opacity-80",
+          "hover:text-[var(--fg-primary)] hover:bg-white/[0.04]",
         ],
-        destructive: [
-          "bg-[var(--status-error)] text-white border-transparent",
-          "hover:opacity-90 active:opacity-80",
+        command: [
+          "bg-[var(--bg-surface)] text-[var(--fg-primary)] border-[var(--border-subtle)] font-normal",
+          "before:content-['$'] before:text-[var(--fg-brand)] before:mr-0.5",
+          "hover:border-[var(--border-strong)] hover:bg-[var(--bg-surface-elevated)]",
         ],
       },
       size: {
-        sm: "h-7 px-3 text-xs rounded-[var(--radius-sm)]",
-        md: "h-9 px-4 text-sm rounded-[var(--radius-sm)]",
-        lg: "h-11 px-6 text-sm rounded-[var(--radius-md)]",
+        sm: "h-8 px-3 text-xs",
+        md: "h-10 px-4 text-[13px]",
+        lg: "h-12 px-6 text-sm",
       },
     },
     defaultVariants: {
-      variant: "default",
+      variant: "primary",
       size: "md",
     },
   }
@@ -65,12 +68,21 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         className={cn(buttonVariants({ variant, size }), className)}
         disabled={disabled || loading}
+        data-loading={loading ? "true" : undefined}
+        aria-busy={loading || undefined}
         {...props}
       >
+        <span className={cn("inline-flex items-center gap-2", loading && "opacity-0")}>
+          {children}
+        </span>
         {loading && (
-          <Loader2 className="animate-spin" style={{ width: 14, height: 14, strokeWidth: 1.5 }} />
+          <span
+            aria-hidden
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 inline-flex"
+          >
+            <Loader2 className="animate-spin" style={{ width: 14, height: 14, strokeWidth: 1.5 }} />
+          </span>
         )}
-        {children}
       </Comp>
     );
   }

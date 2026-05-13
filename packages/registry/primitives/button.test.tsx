@@ -32,34 +32,47 @@ describe("Button", () => {
     expect(svg).toBeInTheDocument();
   });
 
-  it("applies default variant class", () => {
-    const { container } = render(<Button>Default</Button>);
+  it("marks the button with data-loading when loading", () => {
+    render(<Button loading>Loading</Button>);
+    expect(screen.getByRole("button")).toHaveAttribute("data-loading", "true");
+  });
+
+  it("applies primary variant class", () => {
+    const { container } = render(<Button>Primary</Button>);
     expect(container.firstChild).toHaveClass("bg-[var(--fg-brand)]");
   });
 
   it("applies secondary variant class", () => {
     const { container } = render(<Button variant="secondary">Secondary</Button>);
-    expect(container.firstChild).toHaveClass("bg-[var(--bg-surface)]");
+    expect(container.firstChild).toHaveClass("bg-transparent");
+    expect(container.firstChild).toHaveClass("border-[var(--border-strong)]");
   });
 
   it("applies ghost variant class", () => {
     const { container } = render(<Button variant="ghost">Ghost</Button>);
     expect(container.firstChild).toHaveClass("bg-transparent");
+    expect(container.firstChild).toHaveClass("text-[var(--fg-secondary)]");
   });
 
-  it("applies destructive variant class", () => {
-    const { container } = render(<Button variant="destructive">Delete</Button>);
-    expect(container.firstChild).toHaveClass("bg-[var(--status-error)]");
+  it("applies command variant class", () => {
+    const { container } = render(<Button variant="command">npx entrepta init</Button>);
+    expect(container.firstChild).toHaveClass("bg-[var(--bg-surface)]");
+    expect(container.firstChild).toHaveClass("border-[var(--border-subtle)]");
   });
 
   it("applies sm size class", () => {
     const { container } = render(<Button size="sm">Small</Button>);
-    expect(container.firstChild).toHaveClass("h-7");
+    expect(container.firstChild).toHaveClass("h-8");
+  });
+
+  it("applies md size class", () => {
+    const { container } = render(<Button size="md">Medium</Button>);
+    expect(container.firstChild).toHaveClass("h-10");
   });
 
   it("applies lg size class", () => {
     const { container } = render(<Button size="lg">Large</Button>);
-    expect(container.firstChild).toHaveClass("h-11");
+    expect(container.firstChild).toHaveClass("h-12");
   });
 
   it("forwards ref to button element", () => {
