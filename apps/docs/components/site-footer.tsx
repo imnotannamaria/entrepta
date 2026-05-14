@@ -40,7 +40,7 @@ export function SiteFooter() {
           <ul className="flex flex-col gap-2">
             {[
               { label: "Primitives", href: "/docs/components/button" },
-              { label: "Layout", href: "/docs/components/tab-bar" },
+              { label: "Layout", href: "/docs/components/status-bar" },
               { label: "Feedback", href: "/docs/components/toast" },
               { label: "Themes", href: "/docs/themes" },
             ].map((l) => (

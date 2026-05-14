@@ -37,7 +37,6 @@ const COMPONENTS = [
   {
     category: "Layout",
     items: [
-      { name: "TabBar", href: "/docs/components/tab-bar", desc: "Full-width IDE editor tab bar" },
       {
         name: "StatusBar",
         href: "/docs/components/status-bar",

@@ -87,9 +87,9 @@ const COMPONENT_CATEGORIES = [
     label: "layout",
     num: "06",
     name: "Layout",
-    desc: "Tab bar, status bar, top nav, section header. The IDE chrome.",
-    count: "4 components",
-    href: "/docs/components/tab-bar",
+    desc: "Status bar, top nav, section header. The IDE chrome.",
+    count: "3 components",
+    href: "/docs/components/status-bar",
     preview: (
       <div className="mt-3 flex bg-[var(--bg-canvas)] border border-[var(--border-subtle)] rounded-lg overflow-hidden font-mono text-[11px]">
         <span className="px-2.5 py-1.5 text-[var(--fg-primary)] bg-[var(--bg-surface)] border-r border-[var(--border-subtle)]">

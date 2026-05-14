@@ -39,7 +39,6 @@ const NAV = [
   {
     heading: "Layout",
     items: [
-      { label: "TabBar", href: "/docs/components/tab-bar" },
       { label: "StatusBar", href: "/docs/components/status-bar" },
       { label: "TopNav", href: "/docs/components/top-nav" },
       { label: "SectionHeader", href: "/docs/components/section-header" },

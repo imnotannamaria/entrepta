@@ -366,47 +366,6 @@ import { Button } from "@/components/entrepta/button"
       },
     ],
   },
-  "tab-bar": {
-    title: "TabBar",
-    category: "Layout",
-    description:
-      "Full-width IDE-style file tab bar with a diamond logo mark and closable tab items. Scrolls horizontally on overflow.",
-    install: "tab-bar",
-    usage: `import { TabBar, TabBarItem } from "@/components/entrepta/tab-bar"
-
-<TabBar>
-  <TabBarItem active onClick={() => setActive("index")}>
-    index.tsx
-  </TabBarItem>
-  <TabBarItem onClose={() => closeTab("css")}>
-    globals.css
-  </TabBarItem>
-  <TabBarItem>utils.ts</TabBarItem>
-</TabBar>`,
-    props: [
-      {
-        name: "active",
-        type: "boolean",
-        default: "false",
-        description: "Highlights tab with brand underline (TabBarItem)",
-      },
-      {
-        name: "onClose",
-        type: "() => void",
-        description: "Shows close button; calls this on click (TabBarItem)",
-      },
-      {
-        name: "onClick",
-        type: "MouseEventHandler",
-        description: "Click handler on the tab label area (TabBarItem)",
-      },
-      {
-        name: "icon",
-        type: "ReactNode",
-        description: "Optional icon before label (TabBarItem)",
-      },
-    ],
-  },
   "status-bar": {
     title: "StatusBar",
     category: "Layout",

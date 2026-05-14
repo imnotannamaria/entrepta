@@ -66,14 +66,6 @@ export const COMPONENTS: RegistryComponent[] = [
     registryDeps: [],
   },
   {
-    name: "tab-bar",
-    description: "Full-width IDE editor tab bar with diamond logo and closeable tabs",
-    category: "layout",
-    files: ["layout/tab-bar.tsx"],
-    deps: ["lucide-react"],
-    registryDeps: [],
-  },
-  {
     name: "status-bar",
     description: "Fixed bottom status bar with brand color and left/right sections",
     category: "layout",

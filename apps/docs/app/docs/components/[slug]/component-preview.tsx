@@ -12,7 +12,6 @@ import {
 import { Skeleton, SkeletonText } from "@entrepta/registry/feedback/skeleton";
 import { SectionHeader, SectionHeadingAccent } from "@entrepta/registry/layout/section-header";
 import { StatusBarItem } from "@entrepta/registry/layout/status-bar";
-import { TabBar, TabBarItem } from "@entrepta/registry/layout/tab-bar";
 import {
   TopNav,
   TopNavBreadcrumb,
@@ -398,40 +397,6 @@ function TabsPreview() {
   );
 }
 
-function TabBarPreview() {
-  const [active, setActive] = useState("index");
-  const [tabs, setTabs] = useState(["index.tsx", "globals.css", "utils.ts"]);
-  return (
-    <div className="w-full max-w-lg border border-[var(--border-subtle)] rounded-[var(--radius-md)] overflow-hidden">
-      <TabBar>
-        {tabs.map((tab) => (
-          <TabBarItem
-            key={tab}
-            active={active === tab}
-            onClick={() => setActive(tab)}
-            onClose={
-              tabs.length > 1
-                ? () => {
-                    const next = tabs.filter((t) => t !== tab);
-                    setTabs(next);
-                    if (active === tab) setActive(next[0]);
-                  }
-                : undefined
-            }
-          >
-            {tab}
-          </TabBarItem>
-        ))}
-      </TabBar>
-      <div className="p-4 bg-[var(--bg-surface)] min-h-16">
-        <code className="font-mono text-xs text-[var(--fg-muted)]">
-          {active} — click tabs to switch, ✕ to close
-        </code>
-      </div>
-    </div>
-  );
-}
-
 function StatusBarPreview() {
   return (
     <div className="w-full max-w-lg border border-[var(--border-subtle)] rounded-[var(--radius-md)] overflow-hidden">
@@ -600,7 +565,6 @@ const PREVIEWS: Record<string, React.ReactNode> = {
   dropdown: <DropdownPreview />,
   tooltip: <TooltipPreview />,
   tabs: <TabsPreview />,
-  "tab-bar": <TabBarPreview />,
   "status-bar": <StatusBarPreview />,
   "top-nav": <TopNavPreview />,
   "section-header": <SectionHeaderPreview />,
