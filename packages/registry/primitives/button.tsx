@@ -12,7 +12,7 @@ const buttonVariants = cva(
     "font-mono font-medium",
     "border rounded-[var(--radius-md)]",
     "transition-all duration-150 ease-out",
-    "focus-visible:outline-none focus-visible:[outline:2px_solid_var(--fg-brand)] focus-visible:outline-offset-2",
+    "focus-visible:outline-none focus-visible:border-[var(--fg-brand)] focus-visible:shadow-[0_0_0_3px_var(--bg-surface-brand)]",
     "disabled:pointer-events-none disabled:opacity-40 disabled:cursor-not-allowed",
   ],
   {

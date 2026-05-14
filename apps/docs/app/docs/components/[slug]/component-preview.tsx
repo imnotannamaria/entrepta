@@ -270,22 +270,31 @@ function DropdownPreview() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="secondary">Options ↓</Button>
+        <Button variant="secondary">~/options ↓</Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        <DropdownMenuLabel>My account</DropdownMenuLabel>
-        <DropdownMenuSeparator />
+        <DropdownMenuLabel>account</DropdownMenuLabel>
         <DropdownMenuItem>
-          Profile
+          profile.tsx
           <DropdownMenuShortcut>⌘P</DropdownMenuShortcut>
         </DropdownMenuItem>
         <DropdownMenuItem>
-          Settings
+          settings.json
           <DropdownMenuShortcut>⌘,</DropdownMenuShortcut>
         </DropdownMenuItem>
-        <DropdownMenuItem>Billing</DropdownMenuItem>
+        <DropdownMenuItem>billing</DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuDestructiveItem>Log out</DropdownMenuDestructiveItem>
+        <DropdownMenuLabel>workspace</DropdownMenuLabel>
+        <DropdownMenuItem>
+          new project
+          <DropdownMenuShortcut>⌘N</DropdownMenuShortcut>
+        </DropdownMenuItem>
+        <DropdownMenuItem>switch theme</DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuDestructiveItem>
+          rm -rf session
+          <DropdownMenuShortcut>⌘⇧Q</DropdownMenuShortcut>
+        </DropdownMenuDestructiveItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );

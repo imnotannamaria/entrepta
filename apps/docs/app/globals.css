@@ -282,13 +282,29 @@
   outline-offset: 2px;
 }
 
-/* form fields manage their own focus state via wrapper (border + glow) */
+/* form fields, buttons, and menu items manage their own focus state */
 input:focus,
 input:focus-visible,
 textarea:focus,
 textarea:focus-visible,
 select:focus,
-select:focus-visible {
+select:focus-visible,
+button:focus,
+button:focus-visible,
+[role="button"]:focus,
+[role="button"]:focus-visible,
+[role="menuitem"]:focus,
+[role="menuitem"]:focus-visible,
+[role="menuitemcheckbox"]:focus,
+[role="menuitemcheckbox"]:focus-visible,
+[role="menuitemradio"]:focus,
+[role="menuitemradio"]:focus-visible,
+[role="option"]:focus,
+[role="option"]:focus-visible,
+[role="tab"]:focus,
+[role="tab"]:focus-visible,
+[cmdk-item]:focus,
+[cmdk-item]:focus-visible {
   outline: none !important;
   outline-offset: 0 !important;
 }

@@ -232,21 +232,21 @@ import { Button } from "@/components/entrepta/button"
   DropdownMenu, DropdownMenuTrigger, DropdownMenuContent,
   DropdownMenuItem, DropdownMenuSeparator,
   DropdownMenuLabel, DropdownMenuShortcut,
+  DropdownMenuDestructiveItem,
 } from "@/components/entrepta/dropdown"
 
 <DropdownMenu>
   <DropdownMenuTrigger asChild>
-    <Button variant="secondary">Options</Button>
+    <Button variant="secondary">~/options ↓</Button>
   </DropdownMenuTrigger>
   <DropdownMenuContent>
-    <DropdownMenuLabel>Account</DropdownMenuLabel>
-    <DropdownMenuSeparator />
+    <DropdownMenuLabel>account</DropdownMenuLabel>
     <DropdownMenuItem>
-      Profile <DropdownMenuShortcut>⌘P</DropdownMenuShortcut>
+      profile.tsx <DropdownMenuShortcut>⌘P</DropdownMenuShortcut>
     </DropdownMenuItem>
-    <DropdownMenuItem>Settings</DropdownMenuItem>
+    <DropdownMenuItem>settings.json</DropdownMenuItem>
     <DropdownMenuSeparator />
-    <DropdownMenuDestructiveItem>Log out</DropdownMenuDestructiveItem>
+    <DropdownMenuDestructiveItem>rm -rf session</DropdownMenuDestructiveItem>
   </DropdownMenuContent>
 </DropdownMenu>`,
     props: [
