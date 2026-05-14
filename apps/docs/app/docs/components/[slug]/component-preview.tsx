@@ -40,6 +40,7 @@ import {
   DialogDescription,
   DialogFooter,
   DialogHeader,
+  DialogLabel,
   DialogTitle,
   DialogTrigger,
 } from "@entrepta/registry/primitives/dialog";
@@ -243,13 +244,17 @@ function DialogPreview() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="secondary">Open dialog</Button>
+        <Button variant="secondary">$ rm -rf project</Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Delete project</DialogTitle>
+          <DialogLabel>danger zone</DialogLabel>
+          <DialogTitle>
+            Delete <em>resend-ecommerce</em>?
+          </DialogTitle>
           <DialogDescription>
-            This will permanently delete the project and all its data. This action cannot be undone.
+            This will permanently remove the project, its history, and all associated data. This
+            action cannot be undone.
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>

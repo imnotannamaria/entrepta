@@ -180,17 +180,21 @@ const COMPONENTS: Record<string, ComponentDef> = {
     install: "dialog",
     usage: `import {
   Dialog, DialogTrigger, DialogContent,
-  DialogHeader, DialogTitle, DialogDescription, DialogFooter,
+  DialogHeader, DialogLabel, DialogTitle,
+  DialogDescription, DialogFooter,
 } from "@/components/entrepta/dialog"
 import { Button } from "@/components/entrepta/button"
 
 <Dialog>
   <DialogTrigger asChild>
-    <Button variant="secondary">Open dialog</Button>
+    <Button variant="secondary">$ rm -rf project</Button>
   </DialogTrigger>
   <DialogContent>
     <DialogHeader>
-      <DialogTitle>Confirm action</DialogTitle>
+      <DialogLabel>danger zone</DialogLabel>
+      <DialogTitle>
+        Delete <em>resend-ecommerce</em>?
+      </DialogTitle>
       <DialogDescription>This cannot be undone.</DialogDescription>
     </DialogHeader>
     <DialogFooter>

@@ -7,6 +7,7 @@ import {
   DialogDescription,
   DialogFooter,
   DialogHeader,
+  DialogLabel,
   DialogTitle,
   DialogTrigger,
 } from "./dialog";
@@ -17,6 +18,7 @@ function TestDialog({ defaultOpen = false }: { defaultOpen?: boolean }) {
       <DialogTrigger>Open</DialogTrigger>
       <DialogContent>
         <DialogHeader>
+          <DialogLabel>danger zone</DialogLabel>
           <DialogTitle>Dialog title</DialogTitle>
           <DialogDescription>Dialog description</DialogDescription>
         </DialogHeader>
@@ -40,11 +42,24 @@ describe("Dialog", () => {
     expect(screen.getByRole("dialog")).toBeInTheDocument();
   });
 
-  it("renders title and description when open", async () => {
+  it("renders title, description, and label when open", async () => {
     render(<TestDialog />);
     await userEvent.click(screen.getByText("Open"));
     expect(screen.getByText("Dialog title")).toBeInTheDocument();
     expect(screen.getByText("Dialog description")).toBeInTheDocument();
+    expect(screen.getByText("danger zone")).toBeInTheDocument();
+  });
+
+  it("renders title with serif styling", async () => {
+    render(<TestDialog />);
+    await userEvent.click(screen.getByText("Open"));
+    expect(screen.getByText("Dialog title")).toHaveClass("font-serif");
+  });
+
+  it("DialogLabel renders the diamond glyph", async () => {
+    render(<TestDialog />);
+    await userEvent.click(screen.getByText("Open"));
+    expect(screen.getByText("◆")).toBeInTheDocument();
   });
 
   it("closes when the built-in close button is clicked", async () => {

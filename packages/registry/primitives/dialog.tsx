@@ -17,9 +17,10 @@ const DialogOverlay = React.forwardRef<
   <DialogPrimitive.Overlay
     ref={ref}
     className={cn(
-      "fixed inset-0 z-50 bg-[var(--bg-canvas)]/80 backdrop-blur-sm",
+      "fixed inset-0 z-50 bg-black/60 backdrop-blur-[4px]",
       "data-[state=open]:animate-in data-[state=closed]:animate-out",
       "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
+      "duration-200",
       className
     )}
     {...props}
@@ -37,30 +38,31 @@ const DialogContent = React.forwardRef<
       ref={ref}
       className={cn(
         "fixed left-1/2 top-1/2 z-50 -translate-x-1/2 -translate-y-1/2",
-        "w-full max-w-lg",
-        "bg-[var(--bg-surface)] border border-[var(--border-subtle)]",
-        "rounded-[var(--radius-lg)] p-6 shadow-2xl",
+        "flex flex-col gap-4",
+        "w-[calc(100vw-32px)] max-w-md",
+        "bg-[var(--bg-surface)] border border-[var(--border-strong)]",
+        "rounded-[var(--radius-lg)] p-6",
+        "shadow-[0_24px_48px_rgba(0,0,0,0.6)]",
         "data-[state=open]:animate-in data-[state=closed]:animate-out",
         "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
         "data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95",
-        "data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%]",
-        "data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%]",
-        "duration-[var(--motion-base)]",
+        "duration-200 ease-out",
         className
       )}
       {...props}
     >
       {children}
       <DialogPrimitive.Close
+        aria-label="Close"
         className={cn(
-          "absolute right-4 top-4",
-          "rounded-[var(--radius-sm)] p-1.5",
-          "text-[var(--fg-muted)] hover:text-[var(--fg-primary)] hover:bg-[var(--bg-surface-elevated)]",
-          "transition-colors duration-[var(--motion-fast)]",
-          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)]"
+          "absolute right-3 top-3 inline-flex items-center justify-center",
+          "h-7 w-7 rounded-[var(--radius-sm)]",
+          "text-[var(--fg-muted)] hover:text-[var(--fg-primary)] hover:bg-white/[0.04]",
+          "transition-colors duration-150",
+          "focus-visible:outline-none focus-visible:[outline:2px_solid_var(--fg-brand)] focus-visible:outline-offset-2"
         )}
       >
-        <X style={{ width: 16, height: 16, strokeWidth: 1.5 }} />
+        <X aria-hidden style={{ width: 14, height: 14, strokeWidth: 1.5 }} />
         <span className="sr-only">Close</span>
       </DialogPrimitive.Close>
     </DialogPrimitive.Content>
@@ -69,12 +71,19 @@ const DialogContent = React.forwardRef<
 DialogContent.displayName = DialogPrimitive.Content.displayName;
 
 const DialogHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
-  <div className={cn("flex flex-col gap-1.5 mb-5", className)} {...props} />
+  <div className={cn("flex flex-col gap-2 pr-8", className)} {...props} />
 );
 DialogHeader.displayName = "DialogHeader";
 
 const DialogFooter = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
-  <div className={cn("flex items-center justify-end gap-3 mt-6", className)} {...props} />
+  <div
+    className={cn(
+      "flex items-center justify-end gap-2 pt-5",
+      "border-t border-[var(--border-subtle)] -mx-6 px-6 mt-2",
+      className
+    )}
+    {...props}
+  />
 );
 DialogFooter.displayName = "DialogFooter";
 
@@ -85,7 +94,8 @@ const DialogTitle = React.forwardRef<
   <DialogPrimitive.Title
     ref={ref}
     className={cn(
-      "font-sans text-xl font-semibold text-[var(--fg-primary)] leading-snug",
+      "m-0 font-serif font-normal text-2xl leading-snug text-[var(--fg-primary)]",
+      "[&_em]:italic [&_em]:text-[var(--fg-brand)]",
       className
     )}
     {...props}
@@ -99,11 +109,35 @@ const DialogDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Description
     ref={ref}
-    className={cn("text-sm text-[var(--fg-muted)] font-sans leading-relaxed", className)}
+    className={cn(
+      "m-0 font-sans text-[13px] leading-relaxed text-[var(--fg-secondary)]",
+      className
+    )}
     {...props}
   />
 ));
 DialogDescription.displayName = DialogPrimitive.Description.displayName;
+
+/** Optional meta strip (file path / version / status) shown above the title. */
+const DialogLabel = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
+  ({ className, children, ...props }, ref) => (
+    <div
+      ref={ref}
+      className={cn(
+        "inline-flex items-center gap-1.5",
+        "font-mono text-[11px] uppercase tracking-[0.08em] text-[var(--fg-secondary)]",
+        className
+      )}
+      {...props}
+    >
+      <span aria-hidden className="text-[10px] text-[var(--fg-brand)] leading-none">
+        ◆
+      </span>
+      {children}
+    </div>
+  )
+);
+DialogLabel.displayName = "DialogLabel";
 
 export {
   Dialog,
@@ -112,6 +146,7 @@ export {
   DialogDescription,
   DialogFooter,
   DialogHeader,
+  DialogLabel,
   DialogOverlay,
   DialogPortal,
   DialogTitle,
