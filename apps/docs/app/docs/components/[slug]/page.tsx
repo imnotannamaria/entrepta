@@ -415,26 +415,36 @@ import { Button } from "@/components/entrepta/button"
     title: "TopNav",
     category: "Layout",
     description:
-      "Horizontal navigation with left/center/right slots. Compose with TopNavLogo, TopNavBreadcrumb, and TopNavSeparator.",
+      "Horizontal navigation with left/center/right slots. Compose with TopNavLogo, TopNavLogoMark (brand tile), TopNavBreadcrumb, TopNavMenu, and TopNavLink. Links support active and external states.",
     install: "top-nav",
     usage: `import {
-  TopNav, TopNavLogo, TopNavBreadcrumb, TopNavSeparator,
+  TopNav, TopNavLogo, TopNavLogoMark,
+  TopNavBreadcrumb, TopNavSeparator,
+  TopNavMenu, TopNavLink,
 } from "@/components/entrepta/top-nav"
-import { Button } from "@/components/entrepta/button"
 
 <TopNav
   left={
-    <TopNavLogo>
-      ◆ entrepta
+    <>
+      <TopNavLogo>
+        <TopNavLogoMark>e</TopNavLogoMark>
+        entrepta
+      </TopNavLogo>
       <TopNavBreadcrumb>
         <TopNavSeparator />
-        components
+        <span>docs</span>
         <TopNavSeparator />
-        button
+        <span className="here">button</span>
       </TopNavBreadcrumb>
-    </TopNavLogo>
+    </>
   }
-  right={<Button size="sm" variant="ghost">Sign in</Button>}
+  right={
+    <TopNavMenu>
+      <TopNavLink href="/" active>home</TopNavLink>
+      <TopNavLink href="/docs">docs</TopNavLink>
+      <TopNavLink href="https://github.com" external>github</TopNavLink>
+    </TopNavMenu>
+  }
 />`,
     props: [
       {

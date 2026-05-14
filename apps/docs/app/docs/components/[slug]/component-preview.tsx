@@ -14,7 +14,10 @@ import { StatusBarItem, StatusBarSeparator } from "@entrepta/registry/layout/sta
 import {
   TopNav,
   TopNavBreadcrumb,
+  TopNavLink,
   TopNavLogo,
+  TopNavLogoMark,
+  TopNavMenu,
   TopNavSeparator,
 } from "@entrepta/registry/layout/top-nav";
 import { Badge } from "@entrepta/registry/primitives/badge";
@@ -426,30 +429,39 @@ function StatusBarPreview() {
 
 function TopNavPreview() {
   return (
-    <div className="w-full max-w-lg border border-[var(--border-subtle)] rounded-[var(--radius-md)] overflow-hidden">
+    <div className="w-full max-w-3xl border border-[var(--border-subtle)] rounded-[var(--radius-md)] overflow-hidden">
       <TopNav
         left={
-          <TopNavLogo>
-            ◆ entrepta
+          <>
+            <TopNavLogo>
+              <TopNavLogoMark>e</TopNavLogoMark>
+              entrepta
+            </TopNavLogo>
             <TopNavBreadcrumb>
               <TopNavSeparator />
-              components
+              <span>docs</span>
               <TopNavSeparator />
-              button
+              <span className="here">button</span>
             </TopNavBreadcrumb>
-          </TopNavLogo>
+          </>
         }
         right={
-          <div className="flex gap-2">
-            <Button size="sm" variant="ghost">
-              Docs
-            </Button>
-            <Button size="sm">GitHub</Button>
-          </div>
+          <TopNavMenu>
+            <TopNavLink href="#" active>
+              home
+            </TopNavLink>
+            <TopNavLink href="#">docs</TopNavLink>
+            <TopNavLink href="#" external>
+              github
+            </TopNavLink>
+            <TopNavLink href="#" external>
+              npm
+            </TopNavLink>
+          </TopNavMenu>
         }
       />
-      <div className="bg-[var(--bg-surface)] h-16 flex items-center justify-center">
-        <p className="font-mono text-xs text-[var(--fg-muted)]">Page content</p>
+      <div className="bg-[var(--bg-surface)] h-20 flex items-center justify-center">
+        <p className="font-mono text-xs text-[var(--fg-muted)]">page content</p>
       </div>
     </div>
   );
