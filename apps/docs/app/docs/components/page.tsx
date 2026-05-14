@@ -47,11 +47,6 @@ const COMPONENTS = [
         href: "/docs/components/top-nav",
         desc: "Nav with logo, breadcrumb, actions",
       },
-      {
-        name: "SectionHeader",
-        href: "/docs/components/section-header",
-        desc: "Eyebrow + two-color headline",
-      },
     ],
   },
   {

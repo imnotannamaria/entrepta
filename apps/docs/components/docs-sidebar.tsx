@@ -41,7 +41,6 @@ const NAV = [
     items: [
       { label: "StatusBar", href: "/docs/components/status-bar" },
       { label: "TopNav", href: "/docs/components/top-nav" },
-      { label: "SectionHeader", href: "/docs/components/section-header" },
     ],
   },
   {

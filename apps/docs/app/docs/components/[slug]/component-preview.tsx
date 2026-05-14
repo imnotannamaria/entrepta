@@ -10,7 +10,6 @@ import {
   CommandList,
 } from "@entrepta/registry/feedback/command-palette";
 import { Skeleton, SkeletonText } from "@entrepta/registry/feedback/skeleton";
-import { SectionHeader, SectionHeadingAccent } from "@entrepta/registry/layout/section-header";
 import { StatusBarItem } from "@entrepta/registry/layout/status-bar";
 import {
   TopNav,
@@ -450,23 +449,6 @@ function TopNavPreview() {
   );
 }
 
-function SectionHeaderPreview() {
-  return (
-    <div className="flex flex-col gap-10 w-full max-w-lg">
-      <SectionHeader
-        eyebrow="components"
-        heading={
-          <>
-            Build faster with <SectionHeadingAccent>entrepta</SectionHeadingAccent>
-          </>
-        }
-        description="Copy-paste components that you own and control."
-      />
-      <SectionHeader eyebrow="centered layout" heading="Dark-first by default" align="center" />
-    </div>
-  );
-}
-
 function ToastPreview() {
   return (
     <div className="flex flex-wrap gap-3">
@@ -567,7 +549,6 @@ const PREVIEWS: Record<string, React.ReactNode> = {
   tabs: <TabsPreview />,
   "status-bar": <StatusBarPreview />,
   "top-nav": <TopNavPreview />,
-  "section-header": <SectionHeaderPreview />,
   toast: <ToastPreview />,
   skeleton: <SkeletonPreview />,
   "command-palette": <CommandPalettePreview />,

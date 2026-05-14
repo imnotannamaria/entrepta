@@ -450,59 +450,6 @@ import { Button } from "@/components/entrepta/button"
       },
     ],
   },
-  "section-header": {
-    title: "SectionHeader",
-    category: "Layout",
-    description:
-      "Eyebrow label + headline block for page sections. Use SectionHeadingAccent for inline brand-colored text.",
-    install: "section-header",
-    usage: `import { SectionHeader, SectionHeadingAccent } from "@/components/entrepta/section-header"
-
-<SectionHeader
-  eyebrow="components"
-  heading={
-    <>
-      Build faster with{" "}
-      <SectionHeadingAccent>entrepta</SectionHeadingAccent>
-    </>
-  }
-  description="Copy-paste components that you own and control."
-/>
-
-<SectionHeader
-  eyebrow="centered"
-  heading="Hello world"
-  align="center"
-/>`,
-    props: [
-      {
-        name: "eyebrow",
-        type: "string",
-        description: "Small mono uppercase label above heading",
-      },
-      {
-        name: "eyebrowColor",
-        type: "string",
-        description: "CSS color for eyebrow — defaults to var(--fg-brand)",
-      },
-      {
-        name: "heading",
-        type: "ReactNode",
-        description: "Main heading — accepts JSX for SectionHeadingAccent",
-      },
-      {
-        name: "description",
-        type: "string",
-        description: "Paragraph below heading",
-      },
-      {
-        name: "align",
-        type: '"left" | "center"',
-        default: '"left"',
-        description: "Text alignment",
-      },
-    ],
-  },
   toast: {
     title: "Toast",
     category: "Feedback",

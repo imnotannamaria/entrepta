@@ -82,14 +82,6 @@ export const COMPONENTS: RegistryComponent[] = [
     registryDeps: [],
   },
   {
-    name: "section-header",
-    description: "Eyebrow label + two-color headline for landing page sections",
-    category: "layout",
-    files: ["layout/section-header.tsx"],
-    deps: [],
-    registryDeps: [],
-  },
-  {
     name: "skeleton",
     description: "Animated shimmer placeholder for loading states",
     category: "feedback",
