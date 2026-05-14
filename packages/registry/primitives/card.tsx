@@ -4,32 +4,35 @@ import { type VariantProps, cva } from "class-variance-authority";
 import * as React from "react";
 import { cn } from "../lib/utils";
 
-const cardVariants = cva("flex flex-col", {
-  variants: {
-    variant: {
-      default: [
-        "bg-[var(--bg-surface)] border border-[var(--border-subtle)]",
-        "rounded-[var(--radius-md)] p-5",
-      ],
-      featured: [
-        "bg-[var(--bg-surface-brand)] border border-[var(--fg-brand)]",
-        "rounded-[var(--radius-md)] p-5",
-      ],
-      terminal: [
-        "bg-[var(--bg-canvas)] border border-[var(--border-subtle)]",
-        "rounded-[var(--radius-md)]",
-        "font-mono text-sm",
-      ],
-      data: [
-        "bg-[var(--bg-surface-elevated)] border border-[var(--border-subtle)]",
-        "rounded-[var(--radius-md)] p-5 backdrop-blur-sm",
-      ],
+const cardVariants = cva(
+  [
+    "relative flex flex-col gap-4 overflow-hidden",
+    "rounded-[var(--radius-lg)] border",
+    "transition-all duration-200 ease-out",
+  ],
+  {
+    variants: {
+      variant: {
+        default: [
+          "bg-[var(--bg-surface)] border-[var(--border-subtle)] p-6",
+          "hover:border-[var(--border-strong)] hover:bg-[var(--bg-surface-elevated)]",
+        ],
+        featured: [
+          "bg-[var(--bg-surface-brand)] border-[var(--fg-brand)]/30 p-6",
+          "hover:border-[var(--fg-brand)]/50",
+        ],
+        terminal: ["bg-[var(--bg-surface)] border-[var(--border-subtle)] p-0", "font-mono"],
+        data: [
+          "bg-[var(--bg-surface-elevated)] border-[var(--border-subtle)] p-6 backdrop-blur-sm",
+          "hover:border-[var(--border-strong)]",
+        ],
+      },
     },
-  },
-  defaultVariants: {
-    variant: "default",
-  },
-});
+    defaultVariants: {
+      variant: "default",
+    },
+  }
+);
 
 export interface CardProps
   extends React.HTMLAttributes<HTMLDivElement>,
@@ -44,16 +47,49 @@ Card.displayName = "Card";
 
 const CardHeader = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => (
-    <div ref={ref} className={cn("flex flex-col gap-1.5 p-5 pb-0", className)} {...props} />
+    <div
+      ref={ref}
+      className={cn(
+        "flex items-center justify-between gap-3",
+        "font-mono text-[11px] uppercase tracking-[0.08em] text-[var(--fg-secondary)]",
+        className
+      )}
+      {...props}
+    />
   )
 );
 CardHeader.displayName = "CardHeader";
+
+/** Editor-style label with diamond glyph prefix. Use inside CardHeader. */
+const CardLabel = React.forwardRef<HTMLSpanElement, React.HTMLAttributes<HTMLSpanElement>>(
+  ({ className, children, ...props }, ref) => (
+    <span ref={ref} className={cn("inline-flex items-center gap-1.5", className)} {...props}>
+      <span aria-hidden className="text-[10px] text-[var(--fg-brand)] leading-none">
+        ◆
+      </span>
+      {children}
+    </span>
+  )
+);
+CardLabel.displayName = "CardLabel";
+
+/** Muted meta info (versions, dates). Use inside CardHeader. */
+const CardMeta = React.forwardRef<HTMLSpanElement, React.HTMLAttributes<HTMLSpanElement>>(
+  ({ className, ...props }, ref) => (
+    <span ref={ref} className={cn("text-[var(--fg-muted)]", className)} {...props} />
+  )
+);
+CardMeta.displayName = "CardMeta";
 
 const CardTitle = React.forwardRef<HTMLHeadingElement, React.HTMLAttributes<HTMLHeadingElement>>(
   ({ className, ...props }, ref) => (
     <h3
       ref={ref}
-      className={cn("font-serif text-lg text-[var(--fg-primary)] leading-snug", className)}
+      className={cn(
+        "m-0 font-serif font-normal text-2xl leading-snug text-[var(--fg-primary)]",
+        "[&_em]:italic [&_em]:text-[var(--fg-brand)]",
+        className
+      )}
       {...props}
     />
   )
@@ -64,43 +100,89 @@ const CardDescription = React.forwardRef<
   HTMLParagraphElement,
   React.HTMLAttributes<HTMLParagraphElement>
 >(({ className, ...props }, ref) => (
-  <p ref={ref} className={cn("text-sm text-[var(--fg-muted)] font-sans", className)} {...props} />
+  <p
+    ref={ref}
+    className={cn(
+      "m-0 font-sans text-[13px] leading-relaxed text-[var(--fg-secondary)]",
+      className
+    )}
+    {...props}
+  />
 ));
 CardDescription.displayName = "CardDescription";
 
 const CardContent = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
-  ({ className, ...props }, ref) => (
-    <div ref={ref} className={cn("p-5 pt-3", className)} {...props} />
-  )
+  ({ className, ...props }, ref) => <div ref={ref} className={cn(className)} {...props} />
 );
 CardContent.displayName = "CardContent";
 
 const CardFooter = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => (
-    <div ref={ref} className={cn("flex items-center gap-3 p-5 pt-0", className)} {...props} />
+    <div
+      ref={ref}
+      className={cn(
+        "flex items-center justify-between gap-3",
+        "font-mono text-[11px] text-[var(--fg-muted)]",
+        className
+      )}
+      {...props}
+    />
   )
 );
 CardFooter.displayName = "CardFooter";
 
-/* terminal card header bar */
-const CardTerminalBar = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
+/** Inline code-comment styling with // prefix. Use inside CardFooter. */
+const CardComment = React.forwardRef<HTMLSpanElement, React.HTMLAttributes<HTMLSpanElement>>(
   ({ className, children, ...props }, ref) => (
+    <span ref={ref} className={cn(className)} {...props}>
+      <span aria-hidden className="text-[var(--fg-muted)]">
+        {"// "}
+      </span>
+      {children}
+    </span>
+  )
+);
+CardComment.displayName = "CardComment";
+
+/** Terminal-style header bar with bg + border-bottom. Use as first child of Card variant="terminal". */
+const CardTerminalBar = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
+  ({ className, ...props }, ref) => (
     <div
       ref={ref}
       className={cn(
-        "flex items-center gap-2 px-4 py-2 border-b border-[var(--border-subtle)]",
-        "text-[var(--fg-muted)] text-xs font-mono",
+        "flex items-center justify-between gap-3 px-4 py-3",
+        "border-b border-[var(--border-subtle)] bg-black/30",
+        "font-mono text-[11px] uppercase tracking-[0.08em] text-[var(--fg-secondary)]",
         className
       )}
       {...props}
-    >
-      <span className="w-2.5 h-2.5 rounded-full bg-[var(--status-error)] opacity-60" />
-      <span className="w-2.5 h-2.5 rounded-full bg-[var(--status-warning)] opacity-60" />
-      <span className="w-2.5 h-2.5 rounded-full bg-[var(--status-success)] opacity-60" />
-      {children && <span className="ml-2">{children}</span>}
-    </div>
+    />
   )
 );
 CardTerminalBar.displayName = "CardTerminalBar";
 
-export { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter, CardTerminalBar };
+/** Body wrapper for Card variant="terminal" (provides inner padding). */
+const CardTerminalBody = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
+  ({ className, ...props }, ref) => (
+    <div
+      ref={ref}
+      className={cn("p-4 font-mono text-[13px] leading-relaxed", className)}
+      {...props}
+    />
+  )
+);
+CardTerminalBody.displayName = "CardTerminalBody";
+
+export {
+  Card,
+  CardHeader,
+  CardLabel,
+  CardMeta,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
+  CardComment,
+  CardTerminalBar,
+  CardTerminalBody,
+};

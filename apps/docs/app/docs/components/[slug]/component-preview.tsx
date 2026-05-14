@@ -23,10 +23,15 @@ import { Badge } from "@entrepta/registry/primitives/badge";
 import { Button } from "@entrepta/registry/primitives/button";
 import {
   Card,
+  CardComment,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
+  CardLabel,
+  CardMeta,
   CardTerminalBar,
+  CardTerminalBody,
   CardTitle,
 } from "@entrepta/registry/primitives/card";
 import {
@@ -157,44 +162,78 @@ function InputPreview() {
 
 function CardPreview() {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full max-w-xl">
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full max-w-2xl">
       <Card>
         <CardHeader>
-          <CardTitle>Default card</CardTitle>
-          <CardDescription>Surface with subtle border</CardDescription>
+          <CardLabel>latest post</CardLabel>
+          <CardMeta>apr 12 · 1 min</CardMeta>
         </CardHeader>
-        <CardContent>
-          <p className="font-sans text-xs text-[var(--fg-muted)]">Standard content area</p>
-        </CardContent>
+        <CardTitle>
+          Plain markdown beats <em>Notion</em>.
+        </CardTitle>
+        <CardDescription>
+          Two years of database PTSD, condensed into an opinionated rant about plain text and git.
+        </CardDescription>
+        <CardFooter>
+          <span>read →</span>
+          <CardComment>draft</CardComment>
+        </CardFooter>
       </Card>
+
       <Card variant="featured">
         <CardHeader>
-          <CardTitle>Featured</CardTitle>
-          <CardDescription>Brand border highlight</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Badge variant="soft" color="brand">
-            featured
+          <CardLabel>resend-ecommerce</CardLabel>
+          <Badge variant="solid" color="brand">
+            FEATURED
           </Badge>
-        </CardContent>
+        </CardHeader>
+        <CardTitle>
+          Email templates, in <em>React</em>.
+        </CardTitle>
+        <CardDescription>
+          12 typed templates — receipts, shipping, returns. Used by 200+ projects.
+        </CardDescription>
+        <CardFooter>
+          <CardComment>shipped 2025-11</CardComment>
+          <span>github ↗</span>
+        </CardFooter>
       </Card>
+
       <Card variant="terminal">
-        <CardTerminalBar>~/entrepta</CardTerminalBar>
-        <CardContent>
-          <code className="font-mono text-xs text-[var(--fg-brand)]">$ pnpm dev</code>
-          <br />
-          <code className="font-mono text-xs text-[var(--fg-muted)]">ready on port 3000</code>
-        </CardContent>
+        <CardTerminalBar>
+          <CardLabel>install</CardLabel>
+          <CardMeta>v0.1.0</CardMeta>
+        </CardTerminalBar>
+        <CardTerminalBody>
+          <div>
+            <span className="text-[var(--fg-muted)]">$</span> npx{" "}
+            <span className="text-[var(--fg-brand)]">entrepta</span> init
+          </div>
+          <div>
+            <span className="text-[var(--fg-muted)]">$</span> entrepta add{" "}
+            <span className="text-[var(--status-success-fg)]">button</span>
+          </div>
+          <div className="text-[var(--fg-muted)] mt-2">{"// 1 component installed"}</div>
+        </CardTerminalBody>
       </Card>
+
       <Card variant="data">
         <CardHeader>
-          <CardTitle>Data card</CardTitle>
-          <CardDescription>Glass surface</CardDescription>
+          <CardLabel>oss '26</CardLabel>
+          <Badge variant="soft" color="success" dot>
+            +11
+          </Badge>
         </CardHeader>
         <CardContent>
-          <span className="font-mono text-2xl text-[var(--fg-primary)]">99.9%</span>
-          <span className="font-mono text-xs text-[var(--fg-muted)] ml-2">uptime</span>
+          <div className="font-serif text-5xl text-[var(--fg-primary)] leading-none">
+            <em className="italic text-[var(--fg-brand)]">11</em>
+          </div>
+          <div className="font-mono text-xs text-[var(--fg-muted)] mt-1">repos shipped</div>
         </CardContent>
+        <CardFooter>
+          <CardComment>consistent</CardComment>
+          <span>updated 21:14</span>
+        </CardFooter>
       </Card>
     </div>
   );

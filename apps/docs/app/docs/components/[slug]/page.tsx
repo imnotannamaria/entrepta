@@ -136,22 +136,32 @@ const COMPONENTS: Record<string, ComponentDef> = {
       "Surface container in 4 flavours: default, featured (brand border), terminal (macOS chrome), and data (glass).",
     install: "card",
     usage: `import {
-  Card, CardHeader, CardTitle,
-  CardDescription, CardContent, CardFooter,
-  CardTerminalBar,
+  Card, CardHeader, CardLabel, CardMeta, CardTitle,
+  CardDescription, CardFooter, CardComment,
+  CardTerminalBar, CardTerminalBody,
 } from "@/components/entrepta/card"
 
 <Card>
   <CardHeader>
-    <CardTitle>Project name</CardTitle>
-    <CardDescription>Short description here.</CardDescription>
+    <CardLabel>latest post</CardLabel>
+    <CardMeta>apr 12 · 1 min</CardMeta>
   </CardHeader>
-  <CardContent>Content goes here.</CardContent>
+  <CardTitle>
+    Plain markdown beats <em>Notion</em>.
+  </CardTitle>
+  <CardDescription>Two years of database PTSD, condensed.</CardDescription>
+  <CardFooter>
+    <span>read →</span>
+    <CardComment>draft</CardComment>
+  </CardFooter>
 </Card>
 
 <Card variant="terminal">
-  <CardTerminalBar>~/projects/entrepta</CardTerminalBar>
-  <CardContent>$ pnpm dev</CardContent>
+  <CardTerminalBar>
+    <CardLabel>install</CardLabel>
+    <CardMeta>v0.1.0</CardMeta>
+  </CardTerminalBar>
+  <CardTerminalBody>$ npx entrepta init</CardTerminalBody>
 </Card>`,
     props: [
       {
