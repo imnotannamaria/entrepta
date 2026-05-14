@@ -13,18 +13,18 @@ const StatusBar = React.forwardRef<HTMLDivElement, StatusBarProps>(
     <div
       ref={ref}
       className={cn(
-        "fixed bottom-0 left-0 right-0 z-50",
-        "flex items-center justify-between",
-        "h-6 px-3",
-        "bg-[var(--fg-brand)] text-white",
-        "font-mono text-[10px]",
+        "fixed bottom-0 left-0 right-0 z-40",
+        "flex items-center justify-between gap-4",
+        "py-1.5 px-4",
+        "bg-[var(--fg-brand)] text-[var(--zinc-50)]",
+        "font-mono text-[11px]",
         "hidden sm:flex",
         className
       )}
       {...props}
     >
-      <div className="flex items-center gap-3">{left ?? children}</div>
-      <div className="flex items-center gap-3">{right}</div>
+      <div className="flex items-center gap-4">{left ?? children}</div>
+      {right && <div className="flex items-center gap-4">{right}</div>}
     </div>
   )
 );
@@ -39,8 +39,8 @@ const StatusBarItem = React.forwardRef<HTMLSpanElement, StatusBarItemProps>(
     <span
       ref={ref}
       className={cn(
-        "flex items-center gap-1 opacity-90 hover:opacity-100 cursor-default",
-        "transition-opacity duration-[var(--motion-fast)]",
+        "inline-flex items-center gap-1 opacity-95 hover:opacity-100",
+        "transition-opacity duration-150 cursor-default",
         className
       )}
       {...props}
@@ -52,5 +52,20 @@ const StatusBarItem = React.forwardRef<HTMLSpanElement, StatusBarItemProps>(
 );
 StatusBarItem.displayName = "StatusBarItem";
 
-export { StatusBar, StatusBarItem };
+/** Inline `·` separator between items. Sits with reduced opacity. */
+const StatusBarSeparator = React.forwardRef<HTMLSpanElement, React.HTMLAttributes<HTMLSpanElement>>(
+  ({ className, ...props }, ref) => (
+    <span
+      ref={ref}
+      aria-hidden
+      className={cn("inline-block opacity-60 select-none", className)}
+      {...props}
+    >
+      ·
+    </span>
+  )
+);
+StatusBarSeparator.displayName = "StatusBarSeparator";
+
+export { StatusBar, StatusBarItem, StatusBarSeparator };
 export type { StatusBarItemProps, StatusBarProps };

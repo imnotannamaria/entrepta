@@ -372,19 +372,23 @@ import { Button } from "@/components/entrepta/button"
     description:
       "Fixed bottom bar with brand background. Left/right slots for status items. Hidden on mobile (sm:flex).",
     install: "status-bar",
-    usage: `import { StatusBar, StatusBarItem } from "@/components/entrepta/status-bar"
+    usage: `import {
+  StatusBar, StatusBarItem, StatusBarSeparator,
+} from "@/components/entrepta/status-bar"
 
 // In root layout:
 <StatusBar
   left={
     <>
-      <StatusBarItem>main</StatusBarItem>
+      <StatusBarItem icon={<GitBranchIcon />}>main</StatusBarItem>
+      <StatusBarSeparator />
       <StatusBarItem>0 errors</StatusBarItem>
     </>
   }
   right={
     <>
       <StatusBarItem>TypeScript</StatusBarItem>
+      <StatusBarSeparator />
       <StatusBarItem>UTF-8</StatusBarItem>
     </>
   }

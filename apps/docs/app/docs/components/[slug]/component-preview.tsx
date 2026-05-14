@@ -10,7 +10,7 @@ import {
   CommandList,
 } from "@entrepta/registry/feedback/command-palette";
 import { Skeleton, SkeletonText } from "@entrepta/registry/feedback/skeleton";
-import { StatusBarItem } from "@entrepta/registry/layout/status-bar";
+import { StatusBarItem, StatusBarSeparator } from "@entrepta/registry/layout/status-bar";
 import {
   TopNav,
   TopNavBreadcrumb,
@@ -398,20 +398,26 @@ function TabsPreview() {
 
 function StatusBarPreview() {
   return (
-    <div className="w-full max-w-lg border border-[var(--border-subtle)] rounded-[var(--radius-md)] overflow-hidden">
+    <div className="w-full max-w-2xl border border-[var(--border-subtle)] rounded-[var(--radius-md)] overflow-hidden">
       <div className="bg-[var(--bg-surface)] h-20 flex items-center justify-center">
-        <p className="font-mono text-xs text-[var(--fg-muted)]">Page content</p>
+        <p className="font-mono text-xs text-[var(--fg-muted)]">page content</p>
       </div>
-      <div className="flex items-center justify-between h-6 px-3 bg-[var(--fg-brand)] font-mono text-[10px] text-white">
-        <div className="flex items-center gap-3">
+      <div className="flex items-center justify-between gap-4 py-1.5 px-4 bg-[var(--fg-brand)] font-mono text-[11px] text-[var(--zinc-50)]">
+        <div className="flex items-center gap-4">
           <StatusBarItem icon={<GitBranch style={{ width: 10, height: 10, strokeWidth: 1.5 }} />}>
             main
           </StatusBarItem>
+          <StatusBarSeparator />
           <StatusBarItem>0 errors</StatusBarItem>
+          <StatusBarSeparator />
+          <StatusBarItem>2 warnings</StatusBarItem>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-4">
           <StatusBarItem>TypeScript</StatusBarItem>
+          <StatusBarSeparator />
           <StatusBarItem>UTF-8</StatusBarItem>
+          <StatusBarSeparator />
+          <StatusBarItem>Ln 1, Col 1</StatusBarItem>
         </div>
       </div>
     </div>

@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import { StatusBar, StatusBarItem } from "./status-bar";
+import { StatusBar, StatusBarItem, StatusBarSeparator } from "./status-bar";
 
 describe("StatusBar", () => {
   it("renders left slot content", () => {
@@ -47,5 +47,17 @@ describe("StatusBarItem", () => {
       <StatusBarItem icon={<svg data-testid="icon" />}>label</StatusBarItem>
     );
     expect(container.querySelector("[data-testid='icon']")).toBeInTheDocument();
+  });
+});
+
+describe("StatusBarSeparator", () => {
+  it("renders the dot glyph", () => {
+    render(<StatusBarSeparator />);
+    expect(screen.getByText("·")).toBeInTheDocument();
+  });
+
+  it("is aria-hidden", () => {
+    const { container } = render(<StatusBarSeparator />);
+    expect(container.firstChild).toHaveAttribute("aria-hidden", "true");
   });
 });
