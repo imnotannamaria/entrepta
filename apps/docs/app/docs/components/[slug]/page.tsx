@@ -293,17 +293,17 @@ import { Button } from "@/components/entrepta/button"
 // Usage:
 <Tooltip>
   <TooltipTrigger asChild>
-    <Button variant="ghost">Hover me</Button>
+    <Button variant="ghost" size="sm">⌘K</Button>
   </TooltipTrigger>
   <TooltipContent>
-    Save document <TooltipShortcut>⌘S</TooltipShortcut>
+    open command palette <TooltipShortcut>⌘K</TooltipShortcut>
   </TooltipContent>
 </Tooltip>`,
     props: [
       {
         name: "delayDuration",
         type: "number",
-        default: "700",
+        default: "200",
         description: "Delay in ms before tooltip opens (TooltipProvider)",
       },
       {
@@ -315,7 +315,7 @@ import { Button } from "@/components/entrepta/button"
       {
         name: "sideOffset",
         type: "number",
-        default: "6",
+        default: "8",
         description: "Gap in px from trigger (TooltipContent)",
       },
     ],

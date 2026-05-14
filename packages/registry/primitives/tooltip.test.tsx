@@ -45,10 +45,10 @@ describe("Tooltip", () => {
     expect(screen.getAllByText("⌘S").length).toBeGreaterThanOrEqual(1);
   });
 
-  it("shortcut has muted tracking-widest style class", () => {
+  it("shortcut has muted mono style class", () => {
     render(<OpenTooltip content="Go" shortcut="⌘K" />);
     const shortcuts = screen.getAllByText("⌘K");
-    const styled = shortcuts.find((el) => el.classList.contains("tracking-widest"));
+    const styled = shortcuts.find((el) => el.classList.contains("text-[var(--fg-muted)]"));
     expect(styled).toBeInTheDocument();
   });
 

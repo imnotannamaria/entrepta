@@ -303,30 +303,42 @@ function DropdownPreview() {
 function TooltipPreview() {
   return (
     <TooltipProvider delayDuration={0}>
-      <div className="flex flex-wrap gap-4">
+      <div className="flex flex-wrap items-center gap-4">
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button variant="ghost">Hover me</Button>
+            <Button variant="ghost" size="sm">
+              hover me
+            </Button>
           </TooltipTrigger>
-          <TooltipContent>Save document</TooltipContent>
+          <TooltipContent>save buffer</TooltipContent>
         </Tooltip>
         <Tooltip>
           <TooltipTrigger asChild>
             <Button variant="secondary" size="sm">
-              With shortcut
+              ⌘K
             </Button>
           </TooltipTrigger>
           <TooltipContent>
-            Open command palette <TooltipShortcut>⌘K</TooltipShortcut>
+            open command palette <TooltipShortcut>⌘K</TooltipShortcut>
           </TooltipContent>
         </Tooltip>
         <Tooltip>
           <TooltipTrigger asChild>
             <Button variant="ghost" size="sm">
-              Bottom
+              git status
             </Button>
           </TooltipTrigger>
-          <TooltipContent side="bottom">Shown below</TooltipContent>
+          <TooltipContent side="bottom">
+            3 modified · 1 untracked <TooltipShortcut>⌘⇧G</TooltipShortcut>
+          </TooltipContent>
+        </Tooltip>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Badge variant="soft" color="success" dot>
+              live
+            </Badge>
+          </TooltipTrigger>
+          <TooltipContent side="right">deploy.entrepta.dev</TooltipContent>
         </Tooltip>
       </div>
     </TooltipProvider>
