@@ -6,17 +6,24 @@ interface SkeletonProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const Skeleton = React.forwardRef<HTMLDivElement, SkeletonProps>(
-  ({ className, variant = "rect", ...props }, ref) => (
+  ({ className, variant = "rect", style, ...props }, ref) => (
     <div
       ref={ref}
+      aria-hidden="true"
+      style={{
+        backgroundImage:
+          "linear-gradient(90deg, var(--bg-surface) 0%, var(--bg-surface-elevated) 50%, var(--bg-surface) 100%)",
+        backgroundSize: "200% 100%",
+        animation: "shimmer 1.5s linear infinite",
+        ...style,
+      }}
       className={cn(
-        "animate-pulse bg-[var(--bg-surface-elevated)]",
+        "block",
         variant === "circle" && "rounded-full",
         variant === "line" && "rounded-[var(--radius-sm)] h-4 w-full",
         variant === "rect" && "rounded-[var(--radius-sm)]",
         className
       )}
-      aria-hidden="true"
       {...props}
     />
   )
