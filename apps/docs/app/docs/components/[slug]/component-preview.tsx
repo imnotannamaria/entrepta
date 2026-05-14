@@ -347,27 +347,51 @@ function TooltipPreview() {
 
 function TabsPreview() {
   return (
-    <div className="w-full max-w-md border border-[var(--border-subtle)] rounded-[var(--radius-md)] overflow-hidden">
-      <Tabs defaultValue="preview">
+    <div className="w-full max-w-2xl border border-[var(--border-subtle)] rounded-[var(--radius-md)] overflow-hidden">
+      <Tabs defaultValue="home">
         <TabsList>
-          <TabsTrigger value="preview">Preview</TabsTrigger>
-          <TabsTrigger value="code">Code</TabsTrigger>
-          <TabsTrigger value="props">Props</TabsTrigger>
+          <TabsTrigger value="home" onClose={() => {}}>
+            home.tsx
+          </TabsTrigger>
+          <TabsTrigger value="about" onClose={() => {}}>
+            about.md
+          </TabsTrigger>
+          <TabsTrigger value="stack" onClose={() => {}}>
+            stack.json
+          </TabsTrigger>
+          <TabsTrigger value="contact" onClose={() => {}}>
+            contact.txt
+          </TabsTrigger>
         </TabsList>
-        <TabsContent value="preview" className="p-5">
-          <p className="font-sans text-sm text-[var(--fg-secondary)]">
-            Live component preview goes here.
-          </p>
+        <TabsContent value="home" className="p-5 font-mono text-[13px] text-[var(--fg-secondary)]">
+          <div>
+            <span className="text-[var(--fg-muted)]">{"// "}</span>landing page
+          </div>
+          <div className="mt-1">
+            <span className="text-[var(--fg-brand)]">export default</span> function Home()
+          </div>
         </TabsContent>
-        <TabsContent value="code" className="p-5">
-          <code className="font-mono text-xs text-[var(--fg-brand)]">
-            {"<Button>Click me</Button>"}
-          </code>
+        <TabsContent
+          value="about"
+          className="p-5 font-sans text-[13px] text-[var(--fg-secondary)] leading-relaxed"
+        >
+          Engineer building a personal design system. Dark-first, IDE-style, opinionated.
         </TabsContent>
-        <TabsContent value="props" className="p-5">
-          <p className="font-mono text-xs text-[var(--fg-muted)]">
-            variant, size, loading, asChild
-          </p>
+        <TabsContent value="stack" className="p-5 font-mono text-[13px] text-[var(--fg-secondary)]">
+          <div>
+            <span className="text-[var(--fg-muted)]">"framework":</span>{" "}
+            <span className="text-[var(--status-success-fg)]">"next-15"</span>
+          </div>
+          <div>
+            <span className="text-[var(--fg-muted)]">"react":</span>{" "}
+            <span className="text-[var(--status-success-fg)]">"19"</span>
+          </div>
+        </TabsContent>
+        <TabsContent
+          value="contact"
+          className="p-5 font-mono text-[13px] text-[var(--fg-secondary)]"
+        >
+          a2002aninha22@gmail.com
         </TabsContent>
       </Tabs>
     </div>

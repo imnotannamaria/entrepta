@@ -64,7 +64,7 @@ describe("Tabs", () => {
     expect(onChange).toHaveBeenCalledWith("b");
   });
 
-  it("renders close button on tab when onClose is provided", () => {
+  it("renders close affordance on tab when onClose is provided", () => {
     render(
       <Tabs defaultValue="a">
         <TabsList>
@@ -75,6 +75,29 @@ describe("Tabs", () => {
         <TabsContent value="a">A</TabsContent>
       </Tabs>
     );
-    expect(screen.getByRole("button", { name: /close/i })).toBeInTheDocument();
+    expect(screen.getByTitle("Close tab")).toBeInTheDocument();
+  });
+
+  it("invokes onClose when close affordance is clicked", () => {
+    const onClose = vi.fn();
+    render(
+      <Tabs defaultValue="a">
+        <TabsList>
+          <TabsTrigger value="a" onClose={onClose}>
+            Closable
+          </TabsTrigger>
+        </TabsList>
+        <TabsContent value="a">A</TabsContent>
+      </Tabs>
+    );
+    const closeEl = screen.getByTitle("Close tab");
+    closeEl.dispatchEvent(new MouseEvent("mousedown", { bubbles: true }));
+    expect(onClose).toHaveBeenCalled();
+  });
+
+  it("renders diamond marker on active tab when no icon", () => {
+    render(<TestTabs />);
+    const activeTab = screen.getByRole("tab", { name: /Tab A/ });
+    expect(activeTab.textContent).toContain("◆");
   });
 });

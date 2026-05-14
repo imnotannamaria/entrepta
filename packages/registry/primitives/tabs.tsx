@@ -1,7 +1,6 @@
 "use client";
 
 import * as TabsPrimitive from "@radix-ui/react-tabs";
-import { X } from "lucide-react";
 import * as React from "react";
 import { cn } from "../lib/utils";
 
@@ -14,8 +13,8 @@ const TabsList = React.forwardRef<
   <TabsPrimitive.List
     ref={ref}
     className={cn(
-      "flex items-end gap-0 overflow-x-auto",
-      "border-b border-[var(--border-subtle)]",
+      "flex items-stretch overflow-x-auto",
+      "bg-[var(--bg-canvas)] border-b border-[var(--border-subtle)]",
       "scrollbar-none",
       className
     )}
@@ -36,42 +35,53 @@ const TabsTrigger = React.forwardRef<
   <TabsPrimitive.Trigger
     ref={ref}
     className={cn(
-      "group relative flex items-center gap-2 shrink-0",
-      "h-9 px-4 font-mono text-xs",
-      "text-[var(--fg-muted)] border-b-2 border-transparent",
-      "transition-colors duration-[var(--motion-fast)]",
-      "hover:text-[var(--fg-secondary)] hover:bg-[var(--bg-surface)]",
+      "group relative inline-flex items-center gap-2 shrink-0 whitespace-nowrap",
+      "px-4 py-3 font-mono text-[12px] text-[var(--fg-muted)]",
+      "border-r border-[var(--border-subtle)]",
+      "transition-colors duration-150",
+      "hover:text-[var(--fg-secondary)]",
       "data-[state=active]:text-[var(--fg-primary)]",
-      "data-[state=active]:border-[var(--fg-brand)]",
       "data-[state=active]:bg-[var(--bg-surface)]",
-      "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[var(--ring)] focus-visible:ring-inset",
+      "data-[disabled]:opacity-40 data-[disabled]:cursor-not-allowed",
       className
     )}
     {...props}
   >
-    {icon && (
+    {icon ? (
       <span className="shrink-0 text-[var(--fg-muted)] group-data-[state=active]:text-[var(--fg-brand)]">
         {icon}
+      </span>
+    ) : (
+      <span
+        aria-hidden
+        className={cn(
+          "shrink-0 text-[9px] leading-none",
+          "text-transparent group-data-[state=active]:text-[var(--fg-brand)]"
+        )}
+      >
+        ◆
       </span>
     )}
     <span>{children}</span>
     {onClose && (
-      <button
-        type="button"
-        onClick={(e) => {
+      <span
+        aria-hidden
+        title="Close tab"
+        onMouseDown={(e) => {
           e.stopPropagation();
+          e.preventDefault();
           onClose();
         }}
         className={cn(
-          "ml-1 rounded p-0.5 opacity-0 group-hover:opacity-100",
-          "text-[var(--fg-muted)] hover:text-[var(--fg-primary)] hover:bg-[var(--bg-surface-elevated)]",
-          "transition-all duration-[var(--motion-fast)]",
-          "focus-visible:outline-none focus-visible:opacity-100"
+          "ml-1 inline-grid place-items-center size-3.5 rounded-[3px]",
+          "text-[var(--fg-muted)] opacity-0 cursor-pointer",
+          "transition-opacity duration-150",
+          "group-hover:opacity-60 group-data-[state=active]:opacity-60",
+          "hover:!opacity-100 hover:bg-white/[0.08] hover:text-[var(--fg-primary)]"
         )}
-        aria-label="Close tab"
       >
-        <X style={{ width: 12, height: 12, strokeWidth: 1.5 }} />
-      </button>
+        <span className="text-sm leading-none">×</span>
+      </span>
     )}
   </TabsPrimitive.Trigger>
 ));
@@ -83,10 +93,7 @@ const TabsContent = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <TabsPrimitive.Content
     ref={ref}
-    className={cn(
-      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg-canvas)]",
-      className
-    )}
+    className={cn("focus-visible:outline-none", className)}
     {...props}
   />
 ));

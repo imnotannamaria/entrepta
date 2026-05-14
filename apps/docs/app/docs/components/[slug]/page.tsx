@@ -324,22 +324,19 @@ import { Button } from "@/components/entrepta/button"
     title: "Tabs",
     category: "Primitives",
     description:
-      "Editor-style tab navigation via Radix Tabs. Active tab shows brand underline. Supports icons and close buttons.",
+      "Editor-style tab navigation via Radix Tabs. Active tab is marked with a ◆ glyph in brand color. Tabs can be closable and accept icons.",
     install: "tabs",
     usage: `import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/entrepta/tabs"
 
-<Tabs defaultValue="preview">
+<Tabs defaultValue="home">
   <TabsList>
-    <TabsTrigger value="preview">Preview</TabsTrigger>
-    <TabsTrigger value="code">Code</TabsTrigger>
-    <TabsTrigger value="props" onClose={() => {}}>Props</TabsTrigger>
+    <TabsTrigger value="home" onClose={() => {}}>home.tsx</TabsTrigger>
+    <TabsTrigger value="about" onClose={() => {}}>about.md</TabsTrigger>
+    <TabsTrigger value="stack" onClose={() => {}}>stack.json</TabsTrigger>
   </TabsList>
-  <TabsContent value="preview" className="p-4">
-    Live preview here
-  </TabsContent>
-  <TabsContent value="code" className="p-4">
-    Code snippet here
-  </TabsContent>
+  <TabsContent value="home" className="p-5">…</TabsContent>
+  <TabsContent value="about" className="p-5">…</TabsContent>
+  <TabsContent value="stack" className="p-5">…</TabsContent>
 </Tabs>`,
     props: [
       {
