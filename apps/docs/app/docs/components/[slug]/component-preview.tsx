@@ -4,10 +4,12 @@ import {
   Command,
   CommandDialog,
   CommandEmpty,
+  CommandFoot,
   CommandGroup,
   CommandInput,
   CommandItem,
   CommandList,
+  CommandSeparator,
 } from "@entrepta/registry/feedback/command-palette";
 import { Skeleton, SkeletonText } from "@entrepta/registry/feedback/skeleton";
 import { StatusBarItem, StatusBarSeparator } from "@entrepta/registry/layout/status-bar";
@@ -545,28 +547,34 @@ function CommandPalettePreview() {
   return (
     <div className="flex flex-col items-center gap-4">
       <Button variant="secondary" onClick={() => setOpen(true)}>
-        Open palette <kbd className="ml-2 font-mono text-[10px] opacity-60">⌘K</kbd>
+        open palette{" "}
+        <kbd className="ml-2 px-1 font-mono text-[11px] border border-[var(--border-strong)] rounded-[3px] text-[var(--fg-muted)]">
+          ⌘K
+        </kbd>
       </Button>
       <CommandDialog open={open} onOpenChange={setOpen}>
         <Command>
-          <CommandInput placeholder="Search pages, components..." />
+          <CommandInput placeholder="type to filter…" />
           <CommandList>
-            <CommandEmpty>No results found.</CommandEmpty>
-            <CommandGroup heading="Pages">
+            <CommandEmpty>No results.</CommandEmpty>
+            <CommandGroup heading="pages">
               <CommandItem
                 icon={<Home style={{ width: 13, height: 13, strokeWidth: 1.5 }} />}
+                shortcut="⌘1"
                 onSelect={() => setOpen(false)}
               >
-                Home
+                home.tsx
               </CommandItem>
               <CommandItem
                 icon={<FileCode style={{ width: 13, height: 13, strokeWidth: 1.5 }} />}
+                shortcut="⌘2"
                 onSelect={() => setOpen(false)}
               >
-                Documentation
+                docs/installation
               </CommandItem>
             </CommandGroup>
-            <CommandGroup heading="Components">
+            <CommandSeparator />
+            <CommandGroup heading="components">
               <CommandItem
                 icon={<Zap style={{ width: 13, height: 13, strokeWidth: 1.5 }} />}
                 shortcut="B"
@@ -582,15 +590,25 @@ function CommandPalettePreview() {
                 Badge
               </CommandItem>
             </CommandGroup>
-            <CommandGroup heading="Actions">
+            <CommandSeparator />
+            <CommandGroup heading="actions">
+              <CommandItem
+                icon={<GitBranch style={{ width: 13, height: 13, strokeWidth: 1.5 }} />}
+                shortcut="⌘⇧D"
+                onSelect={() => setOpen(false)}
+              >
+                Deploy to production
+              </CommandItem>
               <CommandItem
                 icon={<Settings style={{ width: 13, height: 13, strokeWidth: 1.5 }} />}
+                shortcut="⌘,"
                 onSelect={() => setOpen(false)}
               >
                 Settings
               </CommandItem>
             </CommandGroup>
           </CommandList>
+          <CommandFoot />
         </Command>
       </CommandDialog>
     </div>

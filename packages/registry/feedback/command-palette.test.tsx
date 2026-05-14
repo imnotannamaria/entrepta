@@ -5,6 +5,7 @@ import {
   Command,
   CommandDialog,
   CommandEmpty,
+  CommandFoot,
   CommandGroup,
   CommandInput,
   CommandItem,
@@ -108,5 +109,66 @@ describe("CommandDialog", () => {
     );
     await userEvent.click(screen.getByText("Action"));
     expect(onSelect).toHaveBeenCalled();
+  });
+
+  it("renders the esc kbd chip by default and closes when clicked", async () => {
+    const onOpenChange = vi.fn();
+    render(
+      <CommandDialog open onOpenChange={onOpenChange}>
+        <Command>
+          <CommandInput placeholder="Search..." />
+          <CommandList />
+        </Command>
+      </CommandDialog>
+    );
+    const esc = screen.getByRole("button", { name: /close command palette/i });
+    expect(esc).toBeInTheDocument();
+    expect(esc.textContent).toBe("esc");
+    await userEvent.click(esc);
+    expect(onOpenChange).toHaveBeenCalledWith(false);
+  });
+
+  it("hides the esc chip when showEsc is false", () => {
+    render(
+      <CommandDialog open onOpenChange={() => {}}>
+        <Command>
+          <CommandInput placeholder="Search..." showEsc={false} />
+          <CommandList />
+        </Command>
+      </CommandDialog>
+    );
+    expect(
+      screen.queryByRole("button", { name: /close command palette/i })
+    ).not.toBeInTheDocument();
+  });
+
+  it("CommandFoot renders default keyboard hints", () => {
+    render(
+      <CommandDialog open onOpenChange={() => {}}>
+        <Command>
+          <CommandInput placeholder="Search..." />
+          <CommandList />
+          <CommandFoot />
+        </Command>
+      </CommandDialog>
+    );
+    expect(screen.getByText(/⌘K to close/)).toBeInTheDocument();
+  });
+
+  it("CommandFoot accepts custom children", () => {
+    render(
+      <CommandDialog open onOpenChange={() => {}}>
+        <Command>
+          <CommandInput placeholder="Search..." />
+          <CommandList />
+          <CommandFoot>
+            <span>12 results</span>
+            <span>powered by cmdk</span>
+          </CommandFoot>
+        </Command>
+      </CommandDialog>
+    );
+    expect(screen.getByText("12 results")).toBeInTheDocument();
+    expect(screen.getByText("powered by cmdk")).toBeInTheDocument();
   });
 });

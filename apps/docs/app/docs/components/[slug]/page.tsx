@@ -537,11 +537,12 @@ toast("New update available")`,
     title: "CommandPalette",
     category: "Feedback",
     description:
-      "⌘K command palette built with cmdk. Opens via global keyboard shortcut registered by useCommandPalette.",
+      "⌘K command palette built with cmdk. Centered modal with ◆ brand-tinted selection, esc-to-close chip, and a status foot showing keyboard hints. Wire global shortcut with useCommandPalette.",
     install: "command-palette",
     usage: `import {
   Command, CommandDialog, CommandInput,
   CommandList, CommandGroup, CommandItem, CommandEmpty,
+  CommandSeparator, CommandFoot,
 } from "@/components/entrepta/command-palette"
 import { useCommandPalette } from "@/hooks/use-command-palette"
 
@@ -550,15 +551,22 @@ export function MyPalette() {
   return (
     <CommandDialog open={open} onOpenChange={setOpen}>
       <Command>
-        <CommandInput placeholder="Search..." />
+        <CommandInput placeholder="type to filter…" />
         <CommandList>
           <CommandEmpty>No results.</CommandEmpty>
-          <CommandGroup heading="Pages">
-            <CommandItem onSelect={() => router.push("/")}>
-              Home
+          <CommandGroup heading="pages">
+            <CommandItem shortcut="⌘1" onSelect={() => router.push("/")}>
+              home.tsx
+            </CommandItem>
+          </CommandGroup>
+          <CommandSeparator />
+          <CommandGroup heading="actions">
+            <CommandItem shortcut="⌘⇧D" onSelect={deploy}>
+              Deploy to production
             </CommandItem>
           </CommandGroup>
         </CommandList>
+        <CommandFoot />
       </Command>
     </CommandDialog>
   )
