@@ -2,6 +2,10 @@ import { render } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { Toaster } from "./toast";
 
+function getStyle(container: HTMLElement) {
+  return container.querySelector("style")?.textContent ?? "";
+}
+
 describe("Toaster", () => {
   it("renders without crashing", () => {
     const { container } = render(<Toaster />);
@@ -10,48 +14,55 @@ describe("Toaster", () => {
 
   it("injects style tag with sonner data-attribute selectors", () => {
     const { container } = render(<Toaster />);
-    const styleTag = container.querySelector("style");
-    expect(styleTag).toBeInTheDocument();
-    expect(styleTag?.textContent).toContain("[data-sonner-toast]");
+    expect(getStyle(container)).toContain("[data-sonner-toast]");
   });
 
-  it("applies success border-left-color token in injected styles", () => {
+  it("applies radius-md and the design-spec drop shadow", () => {
     const { container } = render(<Toaster />);
-    const styleTag = container.querySelector("style");
-    expect(styleTag?.textContent).toContain('data-type="success"');
-    expect(styleTag?.textContent).toContain("var(--status-success)");
+    const style = getStyle(container);
+    expect(style).toContain("border-radius: var(--radius-md)");
+    expect(style).toContain("box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5)");
   });
 
-  it("applies error border-left-color token in injected styles", () => {
+  it("uses mono for title and sans for description", () => {
     const { container } = render(<Toaster />);
-    const styleTag = container.querySelector("style");
-    expect(styleTag?.textContent).toContain('data-type="error"');
-    expect(styleTag?.textContent).toContain("var(--status-error)");
+    const style = getStyle(container);
+    expect(style).toMatch(/\[data-title\][^}]*var\(--font-mono\)/);
+    expect(style).toMatch(/\[data-description\][^}]*var\(--font-sans\)/);
   });
 
-  it("applies warning border-left-color token in injected styles", () => {
+  it("applies success border-left-color token", () => {
     const { container } = render(<Toaster />);
-    const styleTag = container.querySelector("style");
-    expect(styleTag?.textContent).toContain('data-type="warning"');
-    expect(styleTag?.textContent).toContain("var(--status-warning)");
+    const style = getStyle(container);
+    expect(style).toContain('data-type="success"');
+    expect(style).toContain("var(--status-success)");
   });
 
-  it("applies info border-left-color token in injected styles", () => {
+  it("applies error border-left-color token", () => {
     const { container } = render(<Toaster />);
-    const styleTag = container.querySelector("style");
-    expect(styleTag?.textContent).toContain('data-type="info"');
-    expect(styleTag?.textContent).toContain("var(--status-info)");
+    const style = getStyle(container);
+    expect(style).toContain('data-type="error"');
+    expect(style).toContain("var(--status-error)");
   });
 
-  it("applies mono font family from CSS token", () => {
+  it("applies warning and info border-left-color tokens", () => {
     const { container } = render(<Toaster />);
-    const styleTag = container.querySelector("style");
-    expect(styleTag?.textContent).toContain("var(--font-mono)");
+    const style = getStyle(container);
+    expect(style).toContain('data-type="warning"');
+    expect(style).toContain("var(--status-warning)");
+    expect(style).toContain('data-type="info"');
+    expect(style).toContain("var(--status-info)");
+  });
+
+  it("sets min-width 320px and padding 12 16 to match design", () => {
+    const { container } = render(<Toaster />);
+    const style = getStyle(container);
+    expect(style).toContain("min-width: 320px");
+    expect(style).toContain("padding: 12px 16px");
   });
 
   it("uses dark theme by default", () => {
     render(<Toaster />);
-    // Sonner container exists somewhere in the document (portal)
     expect(document.body).toBeInTheDocument();
   });
 });

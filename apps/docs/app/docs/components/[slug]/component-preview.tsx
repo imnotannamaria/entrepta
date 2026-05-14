@@ -470,17 +470,58 @@ function TopNavPreview() {
 function ToastPreview() {
   return (
     <div className="flex flex-wrap gap-3">
-      <Button variant="secondary" onClick={() => toast.success("Component copied to clipboard!")}>
-        Success
+      <Button
+        variant="secondary"
+        size="sm"
+        onClick={() =>
+          toast.success("Build passed", {
+            description: "12 components compiled in 1.4s",
+          })
+        }
+      >
+        success
       </Button>
-      <Button variant="secondary" onClick={() => toast.error("Build failed — see output")}>
-        Error
+      <Button
+        variant="secondary"
+        size="sm"
+        onClick={() =>
+          toast.error("Type error in button.tsx", {
+            description: "Property 'variant' does not exist on type 'ButtonProps'",
+          })
+        }
+      >
+        error
       </Button>
-      <Button variant="secondary" onClick={() => toast.warning("Deprecated API used")}>
-        Warning
+      <Button
+        variant="secondary"
+        size="sm"
+        onClick={() =>
+          toast.warning("Deprecated API", {
+            description: "useTheme() will be removed in v1.0 — use ThemeProvider instead",
+          })
+        }
+      >
+        warning
       </Button>
-      <Button variant="secondary" onClick={() => toast("New update available")}>
-        Default
+      <Button
+        variant="secondary"
+        size="sm"
+        onClick={() =>
+          toast.info("Update available", {
+            description: "entrepta@0.2.0 is ready to install",
+          })
+        }
+      >
+        info
+      </Button>
+      <Button
+        variant="secondary"
+        size="sm"
+        onClick={() =>
+          toast("Snapshot saved", { description: "~/projects/entrepta/snapshot.json" })
+        }
+      >
+        default
       </Button>
     </div>
   );
