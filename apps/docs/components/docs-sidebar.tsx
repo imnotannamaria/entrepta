@@ -17,10 +17,11 @@ const NAV = [
   {
     heading: "Foundations",
     items: [
+      { label: "Overview", href: "/docs/foundations" },
       { label: "Color", href: "/docs/foundations/color" },
       { label: "Typography", href: "/docs/foundations/typography" },
-      { label: "Spacing", href: "/docs/foundations/spacing" },
-      { label: "Motion", href: "/docs/foundations/motion" },
+      { label: "Spacing & Grid", href: "/docs/foundations/spacing" },
+      { label: "Radius & Motion", href: "/docs/foundations/motion" },
     ],
   },
   {
