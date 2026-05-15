@@ -1,6 +1,21 @@
 import { SiteFooter } from "@/components/site-footer";
 import { SiteNav } from "@/components/site-nav";
 import { SiteStatusBar } from "@/components/site-status-bar";
+import { Badge } from "@entrepta/registry/primitives/badge";
+import { Button } from "@entrepta/registry/primitives/button";
+import {
+  Card,
+  CardComment,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardLabel,
+  CardMeta,
+  CardTerminalBar,
+  CardTerminalBody,
+  CardTitle,
+} from "@entrepta/registry/primitives/card";
 import Link from "next/link";
 
 const PRINCIPLES = [
@@ -51,11 +66,11 @@ const COMPONENT_CATEGORIES = [
     count: "52 tokens",
     href: "/docs/foundations/color",
     preview: (
-      <div className="flex gap-1.5 mt-3">
+      <div className="flex gap-1.5">
         {["#09090B", "#7C6BFF", "#10B981", "#F59E0B", "#F43F5E"].map((c) => (
           <span
             key={c}
-            className="w-9 h-9 rounded-lg border border-[var(--border-subtle)]"
+            className="w-9 h-9 rounded-[var(--radius-sm)] border border-[var(--border-subtle)]"
             style={{ background: c }}
           />
         ))}
@@ -64,72 +79,82 @@ const COMPONENT_CATEGORIES = [
   },
   {
     label: "primitives",
-    num: "05",
+    num: "08",
     name: "Primitives",
-    desc: "Buttons, badges, inputs, cards. The atoms used everywhere.",
+    desc: "Button, Badge, Input, Card, Dialog, Dropdown, Tooltip, Tabs.",
     count: "8 components",
     href: "/docs/components/button",
     preview: (
-      <div className="flex gap-1.5 flex-wrap mt-3">
-        <span className="font-mono text-[10px] px-2 py-0.5 rounded bg-[var(--fg-brand)] text-white">
+      <div className="flex gap-1.5 flex-wrap items-center">
+        <Badge variant="solid" color="brand">
           FEATURED
-        </span>
-        <span className="font-mono text-[10px] px-2 py-0.5 rounded bg-[var(--status-success)]/15 text-[var(--status-success)] border border-[var(--status-success)]/30">
+        </Badge>
+        <Badge variant="soft" color="success" dot>
           shipped
-        </span>
-        <span className="font-mono text-[10px] px-2 py-0.5 rounded border border-[var(--border-strong)] text-[var(--fg-muted)]">
+        </Badge>
+        <Badge variant="outline" color="neutral">
           v0.1.0
-        </span>
+        </Badge>
       </div>
     ),
   },
   {
     label: "layout",
-    num: "06",
+    num: "02",
     name: "Layout",
-    desc: "Status bar, top nav, section header. The IDE chrome.",
-    count: "3 components",
+    desc: "StatusBar and TopNav. The IDE chrome that frames the canvas.",
+    count: "2 components",
     href: "/docs/components/status-bar",
     preview: (
-      <div className="mt-3 flex bg-[var(--bg-canvas)] border border-[var(--border-subtle)] rounded-lg overflow-hidden font-mono text-[11px]">
-        <span className="px-2.5 py-1.5 text-[var(--fg-primary)] bg-[var(--bg-surface)] border-r border-[var(--border-subtle)]">
-          <span className="text-[var(--fg-brand)]">◆</span> home.tsx
+      <div className="flex bg-[var(--bg-canvas)] border border-[var(--border-subtle)] rounded-[var(--radius-sm)] overflow-hidden font-mono text-[11px]">
+        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 text-[var(--fg-primary)] bg-[var(--bg-surface)] border-r border-[var(--border-subtle)]">
+          <span className="text-[var(--fg-brand)] text-[9px] leading-none">◆</span> home.tsx
         </span>
-        <span className="px-2.5 py-1.5 text-[var(--fg-muted)] border-r border-[var(--border-subtle)]">
+        <span className="px-3 py-1.5 text-[var(--fg-muted)] border-r border-[var(--border-subtle)]">
           about.md
         </span>
-        <span className="px-2.5 py-1.5 text-[var(--fg-muted)]">stack.ts</span>
+        <span className="px-3 py-1.5 text-[var(--fg-muted)]">stack.ts</span>
       </div>
     ),
   },
   {
     label: "feedback",
-    num: "07",
+    num: "03",
     name: "Feedback",
-    desc: "Toasts, command palette, skeleton. Interaction signals.",
+    desc: "Toast, Skeleton, CommandPalette. Interaction signals + loading states.",
     count: "3 components",
     href: "/docs/components/toast",
     preview: (
-      <div className="mt-3 px-3 py-2 bg-[var(--bg-canvas)] border border-[var(--border-subtle)] border-l-2 border-l-[var(--status-success)] rounded-md font-mono text-[11px]">
-        <span className="text-[var(--fg-primary)]">synced</span>{" "}
-        <span className="text-[var(--fg-muted)]">· 7 days written</span>
+      <div className="px-3 py-2 bg-[var(--bg-surface)] border border-[var(--border-subtle)] border-l-2 border-l-[var(--status-success)] rounded-[var(--radius-md)] font-mono text-[11px] shadow-[0_4px_12px_rgba(0,0,0,0.3)]">
+        <div className="text-[var(--fg-primary)] text-[12px] mb-0.5">Build passed</div>
+        <div className="font-sans text-[11px] text-[var(--fg-secondary)]">
+          12 components compiled in 1.4s
+        </div>
       </div>
     ),
   },
   {
     label: "themes",
-    num: "08",
+    num: "06",
     name: "Themes",
-    desc: "6 presets — one command to switch. Same tokens, different personality.",
+    desc: "Six presets — one CLI flag to switch. Same tokens, different personality.",
     count: "6 presets",
     href: "/docs/themes",
     preview: (
-      <div className="mt-3 flex gap-2">
-        {["#7C6BFF", "#A1A1AA", "#10B981", "#F59E0B", "#F43F5E", "#64748B"].map((c) => (
+      <div className="flex gap-2">
+        {[
+          { c: "#7C6BFF", n: "entrepta" },
+          { c: "#A1A1AA", n: "zinc" },
+          { c: "#10B981", n: "emerald" },
+          { c: "#F59E0B", n: "amber" },
+          { c: "#F43F5E", n: "rose" },
+          { c: "#64748B", n: "slate" },
+        ].map((t) => (
           <span
-            key={c}
+            key={t.n}
+            title={t.n}
             className="w-6 h-6 rounded-full border border-[var(--border-subtle)]"
-            style={{ background: c }}
+            style={{ background: t.c }}
           />
         ))}
       </div>
@@ -137,17 +162,43 @@ const COMPONENT_CATEGORIES = [
   },
   {
     label: "cli",
-    num: "09",
+    num: "03",
     name: "CLI",
     desc: "npx entrepta init · add · diff. Copy-paste without the clipboard.",
     count: "3 commands",
     href: "/docs/cli",
     preview: (
-      <div className="mt-3 px-3 py-2 bg-[var(--bg-canvas)] border border-[var(--border-subtle)] rounded-md font-mono text-[11px] text-[var(--fg-muted)]">
-        <span className="text-[var(--status-success)]">$</span> npx entrepta add button
+      <div className="px-3 py-2 bg-[var(--bg-canvas)] border border-[var(--border-subtle)] rounded-[var(--radius-sm)] font-mono text-[11px] text-[var(--fg-secondary)]">
+        <span className="text-[var(--fg-muted)]">$</span>{" "}
+        <span className="text-[var(--fg-brand)]">entrepta</span> add button
       </div>
     ),
   },
+];
+
+const INSTALL_STEPS = [
+  {
+    num: "01",
+    cmd: "npx entrepta init --theme=entrepta",
+    out: "wrote app/globals.css · created entrepta.json",
+  },
+  {
+    num: "02",
+    cmd: "npx entrepta add button badge input",
+    out: "3 components copied to components/entrepta/",
+  },
+  {
+    num: "03",
+    cmd: "npm run dev",
+    out: null,
+  },
+];
+
+const HERO_STATS = [
+  { dt: "tokens", dd: "52" },
+  { dt: "components", dd: "15" },
+  { dt: "themes", dd: "6" },
+  { dt: "updated", dd: "2026-05" },
 ];
 
 export default function Home() {
@@ -157,11 +208,11 @@ export default function Home() {
 
       <main className="pt-14 pb-10 sm:pb-16">
         {/* ── HERO ── */}
-        <section className="max-w-[1280px] mx-auto px-6 sm:px-12 pt-20 sm:pt-28 pb-16 grid grid-cols-1 lg:grid-cols-[1fr_420px] gap-16 items-start">
+        <section className="max-w-[1280px] mx-auto px-6 sm:px-12 pt-20 sm:pt-28 pb-16 grid grid-cols-1 lg:grid-cols-[1fr_440px] gap-16 items-start">
           <div>
-            <div className="font-mono text-[11px] text-[var(--fg-muted)] mb-6 flex items-center gap-3">
+            <div className="font-mono text-[11px] text-[var(--fg-muted)] mb-6 inline-flex items-center gap-3 uppercase tracking-[0.06em]">
               <span>design system</span>
-              <span className="border border-[var(--border-subtle)] rounded px-1.5 py-0.5 text-[var(--fg-brand)]">
+              <span className="border border-[var(--border-subtle)] rounded-[3px] px-1.5 py-0.5 text-[var(--fg-brand)] normal-case tracking-normal">
                 v0.1 · draft
               </span>
               <span>by anna maria</span>
@@ -173,41 +224,38 @@ export default function Home() {
             </h1>
 
             <p className="font-sans text-base sm:text-lg text-[var(--fg-secondary)] leading-relaxed max-w-xl mb-10">
-              <strong className="text-[var(--fg-primary)] font-medium">entrepta</strong> is the
-              visual and interaction language behind two web products —{" "}
-              <strong className="text-[var(--fg-primary)] font-medium">portfolio</strong> and{" "}
-              <strong className="text-[var(--fg-primary)] font-medium">wristkit</strong>. Shared
-              foundations, 6 themes, dark-first. Built around editor metaphors: tabs, command
-              palette, status bar, file paths.
+              <strong className="text-[var(--fg-primary)] font-medium">entrepta</strong> is a
+              dark-first component library, shipped shadcn-style. Foundations, primitives, layout
+              and feedback components — built around editor metaphors: tabs, command palette, status
+              bar, file paths, inline comments, shell prompts.
             </p>
 
             <div className="flex flex-wrap gap-3 mb-12">
-              <Link
-                href="/docs/components"
-                className="flex items-center gap-2 h-10 px-5 bg-[var(--fg-brand)] text-white font-mono text-sm rounded-[var(--radius-sm)] hover:opacity-90 transition-opacity"
-              >
-                browse components <span>→</span>
+              <Link href="/docs/components">
+                <Button size="lg">
+                  browse components <span aria-hidden>→</span>
+                </Button>
               </Link>
-              <Link
-                href="#install"
-                className="flex items-center gap-2 h-10 px-5 bg-[var(--bg-surface)] border border-[var(--border-subtle)] text-[var(--fg-secondary)] font-mono text-sm rounded-[var(--radius-sm)] hover:border-[var(--border-strong)] hover:text-[var(--fg-primary)] transition-colors"
-              >
-                $ install
+              <Link href="#install">
+                <Button variant="command" size="lg">
+                  npx entrepta init
+                </Button>
               </Link>
+              <Button variant="ghost" size="lg">
+                press{" "}
+                <kbd className="ml-1 px-1.5 py-0.5 font-mono text-[11px] border border-[var(--border-strong)] rounded-[3px] text-[var(--fg-muted)]">
+                  ⌘K
+                </kbd>
+              </Button>
             </div>
 
-            <dl className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-              {[
-                { dt: "tokens", dd: "52" },
-                { dt: "components", dd: "17" },
-                { dt: "themes", dd: "6" },
-                { dt: "updated", dd: "2026-05" },
-              ].map((s) => (
+            <dl className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              {HERO_STATS.map((s) => (
                 <div
                   key={s.dt}
                   className="border border-[var(--border-subtle)] rounded-[var(--radius-sm)] p-3"
                 >
-                  <dt className="font-mono text-[10px] text-[var(--fg-muted)] uppercase tracking-widest mb-1">
+                  <dt className="font-mono text-[10px] text-[var(--fg-muted)] uppercase tracking-[0.08em] mb-1">
                     {s.dt}
                   </dt>
                   <dd className="font-mono text-sm text-[var(--fg-primary)]">{s.dd}</dd>
@@ -216,25 +264,38 @@ export default function Home() {
             </dl>
           </div>
 
-          {/* Editor preview */}
+          {/* Editor preview (decorative IDE chrome) */}
           <aside
-            className="hidden lg:flex flex-col rounded-[var(--radius-lg)] border border-[var(--border-subtle)] overflow-hidden bg-[var(--bg-canvas)]"
+            className="hidden lg:flex flex-col rounded-[var(--radius-lg)] border border-[var(--border-strong)] overflow-hidden bg-[var(--bg-canvas)] shadow-[0_24px_48px_rgba(0,0,0,0.4)]"
             aria-hidden="true"
           >
-            <div className="flex items-center border-b border-[var(--border-subtle)] bg-[var(--bg-surface)]">
-              {["tokens.css", "card.tsx", "theme.ts"].map((tab, i) => (
+            {/* file tabs */}
+            <div className="flex items-stretch bg-[var(--bg-canvas)] border-b border-[var(--border-subtle)]">
+              {[
+                { name: "tokens.css", active: true },
+                { name: "card.tsx", active: false },
+                { name: "theme.ts", active: false },
+              ].map((tab) => (
                 <span
-                  key={tab}
-                  className={`px-4 py-2.5 font-mono text-xs border-b-2 ${
-                    i === 0
-                      ? "text-[var(--fg-primary)] border-[var(--fg-brand)] bg-[var(--bg-canvas)]"
-                      : "text-[var(--fg-muted)] border-transparent"
+                  key={tab.name}
+                  className={`inline-flex items-center gap-2 px-4 py-3 font-mono text-[12px] border-r border-[var(--border-subtle)] ${
+                    tab.active
+                      ? "text-[var(--fg-primary)] bg-[var(--bg-surface)]"
+                      : "text-[var(--fg-muted)]"
                   }`}
                 >
-                  {tab}
+                  <span
+                    className={`text-[9px] leading-none ${
+                      tab.active ? "text-[var(--fg-brand)]" : "text-transparent"
+                    }`}
+                  >
+                    ◆
+                  </span>
+                  {tab.name}
                 </span>
               ))}
             </div>
+            {/* code */}
             <div className="flex flex-1">
               <div className="flex flex-col items-end pr-4 pt-4 font-mono text-[11px] text-[var(--border-strong)] select-none">
                 {Array.from({ length: 8 }, (_, i) => (
@@ -249,23 +310,20 @@ export default function Home() {
                 {"\n"}
                 <span className="text-[var(--status-info)]">{":root"}</span>
                 <span className="text-[var(--fg-secondary)]">{" {"}</span>
-                {"\n"}
-                {"  "}
+                {"\n  "}
                 <span className="text-[var(--fg-brand)]">{"--fg-brand"}</span>
                 <span className="text-[var(--fg-secondary)]">{": "}</span>
-                <span className="text-[var(--status-success)]">{"#7C6BFF"}</span>
+                <span className="text-[var(--status-success-fg)]">{"#7C6BFF"}</span>
                 <span className="text-[var(--fg-secondary)]">{";"}</span>
-                {"\n"}
-                {"  "}
+                {"\n  "}
                 <span className="text-[var(--fg-brand)]">{"--bg-canvas"}</span>
                 <span className="text-[var(--fg-secondary)]">{": "}</span>
-                <span className="text-[var(--status-success)]">{"#09090B"}</span>
+                <span className="text-[var(--status-success-fg)]">{"#09090B"}</span>
                 <span className="text-[var(--fg-secondary)]">{";"}</span>
-                {"\n"}
-                {"  "}
+                {"\n  "}
                 <span className="text-[var(--fg-brand)]">{"--bg-surface"}</span>
                 <span className="text-[var(--fg-secondary)]">{": "}</span>
-                <span className="text-[var(--status-success)]">{"#18181B"}</span>
+                <span className="text-[var(--status-success-fg)]">{"#18181B"}</span>
                 <span className="text-[var(--fg-secondary)]">{";"}</span>
                 {"\n"}
                 <span className="text-[var(--fg-secondary)]">{"}"}</span>
@@ -277,19 +335,19 @@ export default function Home() {
                 <span className="text-[var(--status-warning)]">{'"emerald"'}</span>
                 <span className="text-[var(--status-info)]">{"]"}</span>
                 <span className="text-[var(--fg-secondary)]">{" {"}</span>
-                {"\n"}
-                {"  "}
+                {"\n  "}
                 <span className="text-[var(--fg-brand)]">{"--fg-brand"}</span>
                 <span className="text-[var(--fg-secondary)]">{": "}</span>
-                <span className="text-[var(--status-success)]">{"#10B981"}</span>
+                <span className="text-[var(--status-success-fg)]">{"#10B981"}</span>
                 <span className="text-[var(--fg-secondary)]">{";"}</span>
                 {"\n"}
                 <span className="text-[var(--fg-secondary)]">{"}"}</span>
               </pre>
             </div>
-            <div className="h-6 px-3 flex items-center justify-between bg-[var(--fg-brand)] font-mono text-[10px] text-white">
-              <span>TypeScript · UTF-8 · Ln 4, Col 18</span>
-              <span>anna@recife</span>
+            {/* statusbar inline */}
+            <div className="py-1.5 px-4 flex items-center justify-between gap-4 bg-[var(--fg-brand)] font-mono text-[11px] text-[var(--zinc-50)]">
+              <span className="opacity-95">TypeScript · UTF-8 · Ln 4, Col 18</span>
+              <span className="opacity-95">anna@recife</span>
             </div>
           </aside>
         </section>
@@ -300,52 +358,31 @@ export default function Home() {
           className="max-w-[1280px] mx-auto px-6 sm:px-12 py-20 border-t border-[var(--border-subtle)]"
         >
           <div className="mb-10">
-            <div className="font-mono text-[11px] text-[var(--fg-brand)] uppercase tracking-widest mb-3">
+            <div className="font-mono text-[11px] text-[var(--fg-brand)] uppercase tracking-[0.08em] mb-3">
               — getting started
             </div>
             <h2 className="font-serif text-[clamp(32px,4vw,56px)] font-normal leading-tight tracking-tight text-[var(--fg-primary)]">
-              <em className="italic">Three</em> commands.
+              <em className="italic text-[var(--fg-brand)]">Three</em> commands.
               <br />
               <span className="text-[var(--fg-muted)]">You own the code.</span>
             </h2>
             <p className="mt-4 font-sans text-base text-[var(--fg-secondary)] max-w-lg leading-relaxed">
               entrepta ships as CSS tokens + copy-paste components. No SDK. No analytics. Drop it
-              into any Next.js or Vite project and start shipping.
+              into any Next.js project and start shipping.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-6">
-            {/* Terminal */}
-            <div className="rounded-[var(--radius-lg)] border border-[var(--border-subtle)] overflow-hidden bg-[var(--bg-canvas)]">
-              <div className="flex items-center justify-between px-4 py-2.5 border-b border-[var(--border-subtle)] bg-[var(--bg-surface)]">
-                <span className="font-mono text-[10px] uppercase tracking-widest text-[var(--fg-muted)]">
-                  terminal · zsh
-                </span>
-                <span className="font-mono text-[10px] text-[var(--fg-muted)]">
-                  ~/projects/portfolio
-                </span>
-              </div>
-              <div className="p-6 flex flex-col gap-4 font-mono text-sm">
-                {[
-                  {
-                    num: "01",
-                    cmd: "npx entrepta init --theme=entrepta",
-                    out: "wrote app/globals.css · created entrepta.json",
-                  },
-                  {
-                    num: "02",
-                    cmd: "npx entrepta add button badge input",
-                    out: "3 components copied to components/entrepta/",
-                  },
-                  {
-                    num: "03",
-                    cmd: "npm run dev",
-                    out: null,
-                  },
-                ].map((step) => (
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-6">
+            <Card variant="terminal">
+              <CardTerminalBar>
+                <CardLabel>terminal · zsh</CardLabel>
+                <CardMeta>~/projects/portfolio</CardMeta>
+              </CardTerminalBar>
+              <CardTerminalBody className="flex flex-col gap-4">
+                {INSTALL_STEPS.map((step) => (
                   <div key={step.num} className="flex flex-col gap-1">
                     <div className="flex items-center gap-3">
-                      <span className="text-[var(--fg-muted)] text-[10px] w-5 shrink-0">
+                      <span className="text-[var(--fg-muted)] text-[11px] w-5 shrink-0">
                         {step.num}
                       </span>
                       <span className="text-[var(--fg-secondary)]">
@@ -358,43 +395,49 @@ export default function Home() {
                   </div>
                 ))}
                 <div className="pl-8 flex items-center gap-2 text-[11px]">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[var(--status-success)] inline-block" />
-                  <span className="text-[var(--status-success)]">ready</span>
-                  <span className="text-[var(--fg-muted)]">· run npm run dev</span>
+                  <span className="size-1.5 rounded-full bg-[var(--status-success)] inline-block" />
+                  <span className="text-[var(--status-success-fg)]">ready</span>
+                  <span className="text-[var(--fg-muted)]">{"// run npm run dev"}</span>
                 </div>
-              </div>
-            </div>
+              </CardTerminalBody>
+            </Card>
 
-            {/* Package card */}
-            <div className="rounded-[var(--radius-lg)] border border-[var(--border-subtle)] p-6 flex flex-col gap-4 bg-[var(--bg-surface)]">
-              <div className="flex items-center justify-between">
-                <span className="font-serif text-xl text-[var(--fg-primary)]">@entrepta/cli</span>
-                <span className="font-mono text-[10px] px-2 py-0.5 rounded bg-[var(--fg-brand)]/15 text-[var(--fg-brand)] border border-[var(--fg-brand)]/30">
+            <Card>
+              <CardHeader>
+                <CardLabel>@entrepta/cli</CardLabel>
+                <Badge variant="soft" color="brand">
                   v0.1.0
-                </span>
-              </div>
-              {[
-                { k: "size", v: "14 kb gzipped" },
-                { k: "deps", v: "zero peer deps" },
-                { k: "ships", v: "css vars · components" },
-                { k: "license", v: "MIT" },
-                { k: "themes", v: "6 presets" },
-              ].map((r) => (
-                <div
-                  key={r.k}
-                  className="flex items-center justify-between border-t border-[var(--border-subtle)] pt-3"
+                </Badge>
+              </CardHeader>
+              <CardContent className="flex flex-col gap-3">
+                {[
+                  { k: "size", v: "14 kb gzipped" },
+                  { k: "deps", v: "zero peer deps" },
+                  { k: "ships", v: "css vars · components" },
+                  { k: "license", v: "MIT" },
+                  { k: "themes", v: "6 presets" },
+                ].map((r, i) => (
+                  <div
+                    key={r.k}
+                    className={`flex items-center justify-between font-mono text-[12px] ${
+                      i > 0 ? "border-t border-[var(--border-subtle)] pt-3" : ""
+                    }`}
+                  >
+                    <span className="text-[var(--fg-muted)]">{r.k}</span>
+                    <span className="text-[var(--fg-secondary)]">{r.v}</span>
+                  </div>
+                ))}
+              </CardContent>
+              <CardFooter>
+                <CardComment>mit · open source</CardComment>
+                <Link
+                  href="/docs"
+                  className="text-[var(--fg-brand)] hover:opacity-80 transition-opacity"
                 >
-                  <span className="font-mono text-[11px] text-[var(--fg-muted)]">{r.k}</span>
-                  <span className="font-mono text-[11px] text-[var(--fg-secondary)]">{r.v}</span>
-                </div>
-              ))}
-              <Link
-                href="/docs"
-                className="mt-auto pt-4 border-t border-[var(--border-subtle)] font-mono text-xs text-[var(--fg-brand)] hover:opacity-80 transition-opacity text-right"
-              >
-                read the docs →
-              </Link>
-            </div>
+                  read the docs ↗
+                </Link>
+              </CardFooter>
+            </Card>
           </div>
         </section>
 
@@ -403,79 +446,65 @@ export default function Home() {
           id="principles"
           className="max-w-[1280px] mx-auto px-6 sm:px-12 py-20 border-t border-[var(--border-subtle)]"
         >
-          <div className="flex items-start justify-between mb-12">
+          <div className="flex items-start justify-between mb-12 gap-6">
             <h2 className="font-serif text-[clamp(32px,4vw,56px)] font-normal leading-tight tracking-tight text-[var(--fg-primary)]">
-              <em className="italic">Six</em> principles.
+              <em className="italic text-[var(--fg-brand)]">Six</em> principles.
               <br />
               One product personality.
             </h2>
-            <span className="font-mono text-[10px] text-[var(--fg-muted)] hidden sm:block mt-2">
+            <span className="font-mono text-[11px] text-[var(--fg-muted)] hidden sm:inline-block mt-2 uppercase tracking-[0.08em]">
               section 1.2 · brief
             </span>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px bg-[var(--border-subtle)]">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {PRINCIPLES.map((p) => (
-              <div
-                key={p.num}
-                className="bg-[var(--bg-canvas)] p-6 hover:bg-[var(--bg-surface)] transition-colors"
-              >
-                <div className="font-mono text-[10px] text-[var(--fg-brand)] mb-4">{p.num}</div>
-                <h3 className="font-sans text-sm font-semibold text-[var(--fg-primary)] mb-2">
-                  {p.title}
-                </h3>
-                <p className="font-sans text-sm text-[var(--fg-muted)] leading-relaxed mb-4">
-                  {p.desc}
-                </p>
-                <div className="font-mono text-[10px] text-[var(--fg-muted)] border border-[var(--border-subtle)] rounded px-2 py-1 inline-block">
-                  {p.tag}
-                </div>
-              </div>
+              <Card key={p.num}>
+                <CardHeader>
+                  <CardLabel>principle {p.num}</CardLabel>
+                </CardHeader>
+                <CardTitle className="text-[20px]">{p.title}</CardTitle>
+                <CardDescription>{p.desc}</CardDescription>
+                <CardFooter>
+                  <CardComment>{p.tag}</CardComment>
+                </CardFooter>
+              </Card>
             ))}
           </div>
         </section>
 
         {/* ── COMPONENTS PREVIEW ── */}
         <section className="max-w-[1280px] mx-auto px-6 sm:px-12 py-20 border-t border-[var(--border-subtle)]">
-          <div className="flex items-end justify-between mb-10">
+          <div className="flex items-end justify-between mb-10 gap-6">
             <h2 className="font-serif text-[clamp(32px,4vw,56px)] font-normal leading-tight tracking-tight text-[var(--fg-primary)]">
-              <em className="italic">What's</em> inside.{" "}
+              <em className="italic text-[var(--fg-brand)]">What's</em> inside.{" "}
               <span className="text-[var(--fg-muted)]">Six categories.</span>
             </h2>
-            <Link
-              href="/docs/components"
-              className="hidden sm:inline-block font-mono text-xs text-[var(--fg-brand)] hover:opacity-80 transition-opacity"
-            >
-              browse all →
+            <Link href="/docs/components" className="hidden sm:inline-block shrink-0">
+              <Button variant="ghost" size="sm">
+                browse all ↗
+              </Button>
             </Link>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {COMPONENT_CATEGORIES.map((cat) => (
-              <Link
-                key={cat.label}
-                href={cat.href}
-                className="group flex flex-col p-5 border border-[var(--border-subtle)] rounded-[var(--radius-md)] bg-[var(--bg-canvas)] hover:border-[var(--border-strong)] hover:bg-[var(--bg-surface)] transition-colors"
-              >
-                <div className="flex items-center justify-between mb-3">
-                  <span className="font-mono text-[10px] uppercase tracking-widest text-[var(--fg-muted)]">
-                    {cat.label}
-                  </span>
-                  <span className="font-mono text-[10px] text-[var(--fg-muted)]">{cat.num}</span>
-                </div>
-                <h3 className="font-sans text-sm font-semibold text-[var(--fg-primary)] mb-1.5">
-                  {cat.name}
-                </h3>
-                <p className="font-sans text-xs text-[var(--fg-muted)] leading-relaxed">
-                  {cat.desc}
-                </p>
-                {cat.preview}
-                <div className="mt-auto pt-4 flex items-center justify-between">
-                  <span className="font-mono text-[10px] text-[var(--fg-muted)]">{cat.count}</span>
-                  <span className="font-mono text-[10px] text-[var(--fg-brand)] group-hover:translate-x-0.5 transition-transform">
-                    →
-                  </span>
-                </div>
+              <Link key={cat.label} href={cat.href} className="group block">
+                <Card className="h-full hover:border-[var(--fg-brand)]/40 transition-colors">
+                  <CardHeader>
+                    <CardLabel>{cat.label}</CardLabel>
+                    <CardMeta>{cat.num}</CardMeta>
+                  </CardHeader>
+                  <CardTitle className="text-[20px]">{cat.name}</CardTitle>
+                  <CardDescription>{cat.desc}</CardDescription>
+                  <CardContent>{cat.preview}</CardContent>
+                  <CardFooter>
+                    <CardComment>{cat.count}</CardComment>
+                    <span className="text-[var(--fg-brand)] transition-transform group-hover:translate-x-0.5">
+                      →
+                    </span>
+                  </CardFooter>
+                </Card>
               </Link>
             ))}
           </div>
@@ -483,35 +512,38 @@ export default function Home() {
 
         {/* ── CTA STRIP ── */}
         <section className="max-w-[1280px] mx-auto px-6 sm:px-12 py-20 border-t border-[var(--border-subtle)]">
-          <div className="border border-[var(--border-subtle)] rounded-[var(--radius-xl)] p-12 sm:p-16 text-center bg-[radial-gradient(ellipse_at_top_right,rgba(124,107,255,0.08),transparent_60%)]">
-            <div className="font-mono text-[10px] uppercase tracking-widest text-[var(--fg-brand)] mb-4">
-              — ready to ship
+          <Card
+            variant="featured"
+            className="p-12 sm:p-16 text-center bg-[radial-gradient(ellipse_at_top,var(--bg-surface-brand),transparent_60%)]"
+          >
+            <div className="flex flex-col items-center gap-6">
+              <div className="font-mono text-[11px] uppercase tracking-[0.08em] text-[var(--fg-brand)]">
+                — ready to ship
+              </div>
+              <h2 className="font-serif text-[clamp(36px,5vw,72px)] font-normal leading-none tracking-tight text-[var(--fg-primary)]">
+                Start <em className="italic text-[var(--fg-brand)]">building.</em>
+              </h2>
+              <p className="font-sans text-base text-[var(--fg-secondary)] max-w-md leading-relaxed">
+                Every token, every component, every state — laid out in the docs. Press{" "}
+                <kbd className="font-mono text-xs border border-[var(--border-strong)] rounded-[3px] px-1.5 py-0.5 text-[var(--fg-muted)]">
+                  ⌘K
+                </kbd>{" "}
+                to jump anywhere.
+              </p>
+              <div className="flex gap-3 justify-center flex-wrap mt-2">
+                <Link href="/docs/components">
+                  <Button size="lg">
+                    browse components <span aria-hidden>→</span>
+                  </Button>
+                </Link>
+                <Link href="/docs/themes">
+                  <Button variant="secondary" size="lg">
+                    see themes
+                  </Button>
+                </Link>
+              </div>
             </div>
-            <h2 className="font-serif text-[clamp(36px,5vw,72px)] font-normal leading-none tracking-tight text-[var(--fg-primary)] mb-6">
-              Start building.
-            </h2>
-            <p className="font-sans text-base text-[var(--fg-secondary)] max-w-md mx-auto mb-8 leading-relaxed">
-              Every token, every component, every state — laid out in the docs. Press{" "}
-              <kbd className="font-mono text-xs border border-[var(--border-strong)] rounded px-1.5 py-0.5 text-[var(--fg-muted)]">
-                ⌘K
-              </kbd>{" "}
-              to jump anywhere.
-            </p>
-            <div className="flex gap-3 justify-center flex-wrap">
-              <Link
-                href="/docs/components"
-                className="flex items-center gap-2 h-11 px-6 bg-[var(--fg-brand)] text-white font-mono text-sm rounded-[var(--radius-sm)] hover:opacity-90 transition-opacity"
-              >
-                browse components →
-              </Link>
-              <Link
-                href="/docs/themes"
-                className="flex items-center gap-2 h-11 px-6 bg-[var(--bg-surface)] border border-[var(--border-subtle)] text-[var(--fg-secondary)] font-mono text-sm rounded-[var(--radius-sm)] hover:border-[var(--border-strong)] hover:text-[var(--fg-primary)] transition-colors"
-              >
-                see themes
-              </Link>
-            </div>
-          </div>
+          </Card>
         </section>
 
         <SiteFooter />

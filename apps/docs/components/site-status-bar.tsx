@@ -1,18 +1,24 @@
+import { StatusBar, StatusBarItem, StatusBarSeparator } from "@entrepta/registry/layout/status-bar";
+
 export function SiteStatusBar() {
   return (
-    <div className="hidden sm:flex fixed bottom-0 left-0 right-0 z-40 h-6 px-4 items-center justify-between bg-[var(--fg-brand)] text-white font-mono text-[10px]">
-      <div className="flex items-center gap-3">
-        <span>entrepta</span>
-        <span className="opacity-50">·</span>
-        <span>v0.1 draft</span>
-        <span className="opacity-50">·</span>
-        <span>home</span>
-      </div>
-      <div className="flex items-center gap-3">
-        <span>press ⌘K to navigate</span>
-        <span className="opacity-50">·</span>
-        <span>anna@recife</span>
-      </div>
-    </div>
+    <StatusBar
+      left={
+        <>
+          <StatusBarItem>entrepta</StatusBarItem>
+          <StatusBarSeparator />
+          <StatusBarItem>v0.1 draft</StatusBarItem>
+          <StatusBarSeparator />
+          <StatusBarItem>home</StatusBarItem>
+        </>
+      }
+      right={
+        <>
+          <StatusBarItem>press ⌘K to navigate</StatusBarItem>
+          <StatusBarSeparator />
+          <StatusBarItem>anna@recife</StatusBarItem>
+        </>
+      }
+    />
   );
 }
