@@ -1,17 +1,11 @@
 import fs from "node:fs/promises";
-import { createRequire } from "node:module";
 import path from "node:path";
 import prompts from "prompts";
 import { COMPONENTS } from "../registry/components.js";
 import { readConfig } from "../utils/config.js";
 import { log } from "../utils/logger.js";
 import { detectPackageManager, installDeps } from "../utils/package-manager.js";
-
-const require = createRequire(import.meta.url);
-
-function getRegistryRoot(): string {
-  return path.dirname(require.resolve("@entrepta/registry/package.json"));
-}
+import { getRegistryRoot } from "../utils/registry.js";
 
 export async function add(components: string[], options: { overwrite: boolean }) {
   const cwd = process.cwd();
@@ -49,7 +43,13 @@ export async function add(components: string[], options: { overwrite: boolean })
   // resolve dependencies (including transitive)
   const toInstall = resolveComponents(selected);
 
-  const registryRoot = getRegistryRoot();
+  let registryRoot: string;
+  try {
+    registryRoot = getRegistryRoot();
+  } catch (err) {
+    log.error(err instanceof Error ? err.message : String(err));
+    process.exit(1);
+  }
   const allNpmDeps: string[] = [];
 
   for (const name of toInstall) {

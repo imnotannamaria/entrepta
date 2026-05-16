@@ -1,20 +1,14 @@
 import fs from "node:fs/promises";
-import { createRequire } from "node:module";
 import path from "node:path";
 import prompts from "prompts";
 import { writeConfig } from "../utils/config.js";
 import { detectFramework } from "../utils/detect-framework.js";
 import { log } from "../utils/logger.js";
 import { detectPackageManager, installDeps } from "../utils/package-manager.js";
+import { getRegistryRoot } from "../utils/registry.js";
 
 const THEMES = ["entrepta", "blossom", "marmalade", "julia", "ivy", "bosco"] as const;
 type Theme = (typeof THEMES)[number];
-
-const require = createRequire(import.meta.url);
-
-function getRegistryRoot(): string {
-  return path.dirname(require.resolve("@entrepta/registry/package.json"));
-}
 
 export async function init(options: { theme?: string; overwrite: boolean }) {
   const cwd = process.cwd();
@@ -88,7 +82,13 @@ export async function init(options: { theme?: string; overwrite: boolean }) {
   }
 
   // write globals.css
-  const registryRoot = getRegistryRoot();
+  let registryRoot: string;
+  try {
+    registryRoot = getRegistryRoot();
+  } catch (err) {
+    log.error(err instanceof Error ? err.message : String(err));
+    process.exit(1);
+  }
   const globalsCssContent = await fs.readFile(
     path.join(registryRoot, "styles", "globals.css"),
     "utf-8"
