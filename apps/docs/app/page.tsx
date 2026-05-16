@@ -1,3 +1,4 @@
+import { CommandPaletteTrigger } from "@/components/command-palette-trigger";
 import { HomeIdePreview } from "@/components/home-ide-preview";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteNav } from "@/components/site-nav";
@@ -242,12 +243,7 @@ export default function Home() {
                   npx entrepta init
                 </Button>
               </Link>
-              <Button variant="ghost" size="lg">
-                press{" "}
-                <kbd className="ml-1 px-1.5 py-0.5 font-mono text-[11px] border border-[var(--border-strong)] rounded-[3px] text-[var(--fg-muted)]">
-                  ⌘K
-                </kbd>
-              </Button>
+              <CommandPaletteTrigger />
             </div>
 
             <dl className="grid grid-cols-2 sm:grid-cols-4 gap-3">

@@ -1,3 +1,4 @@
+import { SiteCommandPaletteProvider } from "@/components/site-command-palette";
 import { Toaster } from "@entrepta/registry/feedback/toast";
 import type { Metadata } from "next";
 import "./globals.css";
@@ -16,8 +17,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="bg-[var(--bg-canvas)] text-[var(--fg-primary)] antialiased">
-        {children}
-        <Toaster position="bottom-right" />
+        <SiteCommandPaletteProvider>
+          {children}
+          <Toaster position="bottom-right" />
+        </SiteCommandPaletteProvider>
       </body>
     </html>
   );
