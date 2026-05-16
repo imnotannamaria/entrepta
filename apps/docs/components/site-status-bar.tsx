@@ -14,8 +14,8 @@ export function SiteStatusBar() {
       }
       right={
         <>
-          <StatusBarItem>press ⌘K to navigate</StatusBarItem>
-          <StatusBarSeparator />
+          <StatusBarItem className="hidden md:inline-flex">press ⌘K to navigate</StatusBarItem>
+          <StatusBarSeparator className="hidden md:inline-block" />
           <StatusBarItem>anna@recife</StatusBarItem>
         </>
       }

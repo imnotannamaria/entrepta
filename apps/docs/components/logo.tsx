@@ -35,7 +35,7 @@ export function Logo({ className, showTag = false }: LogoProps) {
         entrepta<em className="text-[var(--fg-brand)] not-italic">.</em>
       </span>
       {showTag && (
-        <span className="font-mono text-[10px] text-[var(--fg-muted)] border border-[var(--border-subtle)] rounded px-1.5 py-0.5">
+        <span className="hidden sm:inline-flex font-mono text-[10px] text-[var(--fg-muted)] border border-[var(--border-subtle)] rounded px-1.5 py-0.5">
           v0.1
         </span>
       )}

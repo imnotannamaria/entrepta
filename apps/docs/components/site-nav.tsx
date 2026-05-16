@@ -3,6 +3,7 @@
 import { TopNav, TopNavLink, TopNavMenu } from "@entrepta/registry/layout/top-nav";
 import Link from "next/link";
 import { Logo } from "./logo";
+import { MobileNav } from "./mobile-nav";
 
 export function SiteNav() {
   return (
@@ -15,15 +16,18 @@ export function SiteNav() {
           </Link>
         }
         right={
-          <TopNavMenu>
-            <TopNavLink href="/#install">install</TopNavLink>
-            <TopNavLink href="/#principles">principles</TopNavLink>
-            <TopNavLink href="/docs/components">components</TopNavLink>
-            <TopNavLink href="/docs/themes">themes</TopNavLink>
-            <TopNavLink href="https://github.com/imnotannamaria/entrepta" external>
-              github
-            </TopNavLink>
-          </TopNavMenu>
+          <>
+            <TopNavMenu>
+              <TopNavLink href="/#install">install</TopNavLink>
+              <TopNavLink href="/#principles">principles</TopNavLink>
+              <TopNavLink href="/docs/components">components</TopNavLink>
+              <TopNavLink href="/docs/themes">themes</TopNavLink>
+              <TopNavLink href="https://github.com/imnotannamaria/entrepta" external>
+                github
+              </TopNavLink>
+            </TopNavMenu>
+            <MobileNav />
+          </>
         }
       />
     </div>

@@ -3,9 +3,9 @@ import { Logo } from "./logo";
 
 export function SiteFooter() {
   return (
-    <footer className="border-t border-[var(--border-subtle)] mt-24 pb-16">
-      <div className="max-w-[1280px] mx-auto px-6 sm:px-12 pt-16 grid grid-cols-1 sm:grid-cols-[1fr_auto_auto_auto] gap-12">
-        <div>
+    <footer className="border-t border-[var(--border-subtle)] mt-16 sm:mt-24 pb-16">
+      <div className="max-w-[1280px] mx-auto px-4 sm:px-8 lg:px-12 pt-12 sm:pt-16 grid grid-cols-2 sm:grid-cols-[1fr_auto_auto_auto] gap-8 sm:gap-12">
+        <div className="col-span-2 sm:col-span-1">
           <Logo className="mb-4" />
           <p className="font-sans text-sm text-[var(--fg-muted)] max-w-xs leading-relaxed">
             A personal design system, posed as an IDE. Dark-first, built by Anna Maria.
@@ -82,7 +82,7 @@ export function SiteFooter() {
           </ul>
         </div>
       </div>
-      <div className="max-w-[1280px] mx-auto px-6 sm:px-12 mt-12 pt-6 border-t border-[var(--border-subtle)] flex items-center justify-between">
+      <div className="max-w-[1280px] mx-auto px-4 sm:px-8 lg:px-12 mt-10 sm:mt-12 pt-6 border-t border-[var(--border-subtle)] flex items-center justify-between gap-3">
         <span className="font-mono text-[10px] text-[var(--fg-muted)]">v0.1 · 2026</span>
         <span className="font-mono text-[10px] text-[var(--fg-muted)]">built with entrepta</span>
       </div>
