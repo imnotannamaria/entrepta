@@ -8,7 +8,12 @@ import { ComponentPreview } from "./component-preview";
 const REGISTRY_ROOT = path.resolve(process.cwd(), "..", "..", "packages", "registry");
 
 async function readSourceFile(relPath: string): Promise<string> {
-  return fs.readFile(path.join(REGISTRY_ROOT, relPath), "utf-8");
+  const resolved = path.resolve(REGISTRY_ROOT, relPath);
+  const relative = path.relative(REGISTRY_ROOT, resolved);
+  if (relative.startsWith("..") || path.isAbsolute(relative)) {
+    throw new Error(`Refusing to read outside the registry root: ${relPath}`);
+  }
+  return fs.readFile(resolved, "utf-8");
 }
 
 async function getComponentSources(
