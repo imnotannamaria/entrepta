@@ -74,7 +74,7 @@ export default function ColorPage() {
             <em>Color.</em> Zinc neutrals, one accent.
           </>
         }
-        description="Primitives are the atoms. Components consume only semantic tokens — never primitives directly. The accent shifts per theme; everything else is shared."
+        description="Primitives are the atoms. Components consume only semantic tokens, never primitives directly. The accent shifts per theme. Everything else is shared."
         meta="29 tokens"
       />
 

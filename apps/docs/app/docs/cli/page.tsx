@@ -1,73 +1,128 @@
+import { DocPageHeader, DocSubhead } from "@/components/doc-page-header";
+import {
+  Card,
+  CardComment,
+  CardFooter,
+  CardHeader,
+  CardLabel,
+  CardMeta,
+  CardTerminalBar,
+  CardTerminalBody,
+  CardTitle,
+} from "@entrepta/registry/primitives/card";
+
 const COMMANDS = [
   {
     cmd: "npx entrepta init",
-    desc: "Setup inicial — cria globals.css, lib/utils.ts, entrepta.json. Prompts tema interativo.",
+    title: "init",
+    desc: "Bootstraps a project. Writes globals.css, lib/utils.ts, and entrepta.json. Prompts for a theme.",
     flags: [
       { flag: "--theme=<preset>", desc: "Skip the theme prompt" },
-      { flag: "--overwrite", desc: "Overwrite existing files" },
+      { flag: "--overwrite", desc: "Overwrite existing files without asking" },
     ],
   },
   {
     cmd: "npx entrepta add <component>",
-    desc: "Copia 1+ componentes para o projeto. Resolve dependências automaticamente.",
+    title: "add",
+    desc: "Copies one or more components into your project. Resolves dependencies automatically.",
     flags: [{ flag: "--overwrite", desc: "Overwrite without confirming" }],
   },
   {
     cmd: "npx entrepta add",
-    desc: "Modo interativo — lista todos os componentes disponíveis para selecionar.",
+    title: "add (interactive)",
+    desc: "Same as above, no args. Opens a picker with every available component.",
     flags: [],
   },
   {
     cmd: "npx entrepta diff <component>",
-    desc: "Mostra diff entre versão local e versão do registry.",
+    title: "diff",
+    desc: "Shows the diff between your local copy of a component and the current registry version.",
     flags: [],
   },
 ];
 
 export default function CliPage() {
   return (
-    <article className="max-w-2xl">
-      <div className="font-mono text-[10px] uppercase tracking-widest text-[var(--fg-brand)] mb-6">
-        reference
-      </div>
-      <h1 className="font-serif text-4xl font-normal text-[var(--fg-primary)] leading-tight tracking-tight mb-4">
-        CLI Reference
-      </h1>
-      <p className="font-sans text-base text-[var(--fg-secondary)] leading-relaxed mb-10">
-        The{" "}
-        <code className="font-mono text-xs text-[var(--fg-brand)] bg-[var(--bg-canvas)] px-1 py-0.5 rounded">
-          entrepta
-        </code>{" "}
-        CLI copies components and tokens directly into your project.
-      </p>
+    <article>
+      <DocPageHeader
+        eyebrow="reference"
+        title={
+          <>
+            <em>CLI</em> reference.
+          </>
+        }
+        description={
+          <>
+            The <code>entrepta</code> CLI copies components and tokens directly into your project.
+            No SDK, no runtime wrapper. You own the source.
+          </>
+        }
+        meta="4 commands"
+      />
 
-      <div className="flex flex-col gap-6">
-        {COMMANDS.map((c) => (
-          <div
-            key={c.cmd}
-            className="border border-[var(--border-subtle)] rounded-[var(--radius-md)] overflow-hidden"
-          >
-            <div className="px-4 py-3 bg-[var(--bg-surface)] border-b border-[var(--border-subtle)]">
-              <code className="font-mono text-sm text-[var(--fg-primary)]">
-                <span className="text-[var(--status-success)]">$</span> {c.cmd}
-              </code>
+      <section className="mb-12">
+        <DocSubhead count="quick try">First run</DocSubhead>
+        <Card variant="terminal">
+          <CardTerminalBar>
+            <CardLabel>terminal · zsh</CardLabel>
+            <CardMeta>~/your-app</CardMeta>
+          </CardTerminalBar>
+          <CardTerminalBody className="flex flex-col gap-2">
+            <div className="text-[var(--fg-secondary)]">
+              <span className="text-[var(--fg-brand)]">$</span> npx entrepta init
+              <span className="text-[var(--fg-muted)]"> --theme=entrepta</span>
             </div>
-            <div className="px-4 py-3 bg-[var(--bg-canvas)]">
-              <p className="font-sans text-sm text-[var(--fg-secondary)] mb-3">{c.desc}</p>
+            <div className="text-[var(--fg-muted)] text-[11px] pl-3">→ wrote app/globals.css</div>
+            <div className="text-[var(--fg-muted)] text-[11px] pl-3">→ created entrepta.json</div>
+            <div className="text-[var(--fg-secondary)] mt-2">
+              <span className="text-[var(--fg-brand)]">$</span> npx entrepta add button
+            </div>
+            <div className="text-[var(--fg-muted)] text-[11px] pl-3">
+              → copied components/entrepta/button.tsx
+            </div>
+          </CardTerminalBody>
+        </Card>
+      </section>
+
+      <section>
+        <DocSubhead count={`${COMMANDS.length} commands`}>Commands</DocSubhead>
+        <div className="flex flex-col gap-4">
+          {COMMANDS.map((c) => (
+            <Card key={c.cmd}>
+              <CardHeader>
+                <CardLabel>{c.title}</CardLabel>
+                <CardMeta>
+                  {c.flags.length === 0
+                    ? "no flags"
+                    : `${c.flags.length} flag${c.flags.length > 1 ? "s" : ""}`}
+                </CardMeta>
+              </CardHeader>
+              <CardTitle className="font-mono text-[15px] text-[var(--fg-primary)]">
+                <span className="text-[var(--fg-brand)]">$</span> {c.cmd}
+              </CardTitle>
+              <p className="font-sans text-[13px] leading-relaxed text-[var(--fg-secondary)] m-0">
+                {c.desc}
+              </p>
               {c.flags.length > 0 && (
-                <div className="flex flex-col gap-1.5">
+                <div className="flex flex-col gap-2 pt-3 border-t border-[var(--border-subtle)]">
                   {c.flags.map((f) => (
-                    <div key={f.flag} className="flex items-center gap-3 font-mono text-xs">
+                    <div
+                      key={f.flag}
+                      className="grid grid-cols-[220px_1fr] gap-3 items-center font-mono text-[12px]"
+                    >
                       <code className="text-[var(--fg-brand)]">{f.flag}</code>
                       <span className="text-[var(--fg-muted)]">{f.desc}</span>
                     </div>
                   ))}
                 </div>
               )}
-            </div>
-          </div>
-        ))}
-      </div>
+              <CardFooter>
+                <CardComment>copy paste, no install</CardComment>
+              </CardFooter>
+            </Card>
+          ))}
+        </div>
+      </section>
     </article>
   );
 }

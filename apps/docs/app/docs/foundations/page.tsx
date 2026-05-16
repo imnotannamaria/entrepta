@@ -25,7 +25,7 @@ const PAGES = [
     num: "02",
     label: "typography",
     title: "Typography",
-    desc: "Three families — Newsreader serif for headlines, JetBrains Mono for UI, Inter for prose. Ten size tokens.",
+    desc: "Three families. Newsreader serif for headlines, JetBrains Mono for UI, Inter for prose. Ten size tokens.",
     count: "10 tokens",
     href: "/docs/foundations/typography",
   },
@@ -57,7 +57,7 @@ export default function FoundationsIndex() {
             The <em>raw materials.</em>
           </>
         }
-        description="Tokens, type, grid, motion. Every component is built from these primitives — change them once and the whole system shifts."
+        description="Tokens, type, grid, motion. Every component is built from these primitives. Change them once and the whole system shifts."
       />
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

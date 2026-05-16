@@ -26,7 +26,7 @@ export default function MotionPage() {
             <em>Radius</em> & motion.
           </>
         }
-        description="Soft, never round. Motion is fast and unfussy — the product is not a demo reel."
+        description="Soft, never round. Motion is fast and unfussy. The product is not a demo reel."
         meta="9 tokens"
       />
 
@@ -74,7 +74,7 @@ export default function MotionPage() {
           <div className="mt-4 font-mono text-[11px] text-[var(--fg-muted)] leading-relaxed">
             <span className="text-[var(--fg-brand)]">{"// "}</span>
             Components respect{" "}
-            <span className="text-[var(--fg-primary)]">prefers-reduced-motion</span> globally — all
+            <span className="text-[var(--fg-primary)]">prefers-reduced-motion</span> globally. All
             animations collapse to ~0ms when the user requests reduced motion.
           </div>
         </div>
