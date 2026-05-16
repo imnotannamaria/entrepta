@@ -109,10 +109,10 @@ describe("init", () => {
       expect(log.error).toHaveBeenCalled();
     });
 
-    it("falls through to prompt when --theme value is not a valid preset", async () => {
-      mockPrompts.mockResolvedValueOnce({ theme: "entrepta" } as never);
-      await init({ theme: "invalid-theme", overwrite: false });
-      expect(mockPrompts).toHaveBeenCalledWith(expect.objectContaining({ type: "select" }));
+    it("exits with code 1 when --theme value is not a valid preset", async () => {
+      await expect(init({ theme: "invalid-theme", overwrite: false })).rejects.toThrow("exit:1");
+      expect(log.error).toHaveBeenCalledWith(expect.stringContaining("Invalid theme"));
+      expect(mockPrompts).not.toHaveBeenCalled();
     });
   });
 

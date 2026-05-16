@@ -19,7 +19,11 @@ export async function init(options: { theme?: string; overwrite: boolean }) {
 
   // resolve theme
   let theme: Theme;
-  if (options.theme && THEMES.includes(options.theme as Theme)) {
+  if (options.theme !== undefined) {
+    if (!THEMES.includes(options.theme as Theme)) {
+      log.error(`Invalid theme "${options.theme}". Available: ${THEMES.join(", ")}.`);
+      process.exit(1);
+    }
     theme = options.theme as Theme;
   } else {
     const answer = await prompts({
