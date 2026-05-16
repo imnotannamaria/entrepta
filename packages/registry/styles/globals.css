@@ -323,6 +323,44 @@ button:focus-visible,
 }
 
 /* ============================================================
+   SCROLLBARS  — themed to match the IDE chrome
+   ============================================================ */
+
+@layer base {
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-strong) transparent;
+  }
+
+  *::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  *::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background: var(--border-strong);
+    border: 2px solid var(--bg-canvas);
+    border-radius: 999px;
+  }
+
+  *::-webkit-scrollbar-thumb:hover {
+    background: var(--zinc-600);
+  }
+
+  *::-webkit-scrollbar-thumb:active {
+    background: var(--fg-brand);
+  }
+
+  *::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+}
+
+/* ============================================================
    KEYFRAMES
    ============================================================ */
 
