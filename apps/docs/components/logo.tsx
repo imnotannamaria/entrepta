@@ -36,7 +36,7 @@ export function Logo({ className, showTag = false }: LogoProps) {
       </span>
       {showTag && (
         <span className="font-mono text-[10px] text-[var(--fg-muted)] border border-[var(--border-subtle)] rounded px-1.5 py-0.5">
-          v0.1 · draft
+          v0.1
         </span>
       )}
     </div>

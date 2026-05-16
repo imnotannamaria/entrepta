@@ -9,7 +9,7 @@ program.name("entrepta").description("entrepta design system CLI").version("0.0.
 program
   .command("init")
   .description("initialize entrepta in your project")
-  .option("-t, --theme <theme>", "theme preset (entrepta|zinc|emerald|amber|rose|slate)")
+  .option("-t, --theme <theme>", "theme preset (entrepta|blossom|marmalade|julia|ivy|bosco)")
   .option("--overwrite", "overwrite existing files", false)
   .action(init);
 

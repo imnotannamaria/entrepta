@@ -1,0 +1,10 @@
+/* ============================================================
+   marmalade theme — warm orange, editorial and energetic
+   ============================================================ */
+
+:root {
+  --fg-brand: #ff8213;
+  --fg-brand-hover: #ff9d45;
+  --bg-surface-brand: rgba(255, 130, 19, 0.14);
+  --ring: rgba(255, 130, 19, 0.45);
+}

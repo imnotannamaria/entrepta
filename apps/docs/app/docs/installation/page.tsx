@@ -83,7 +83,7 @@ export default function InstallationPage() {
             <div>
               <span className="text-[var(--fg-muted)] text-[11px] mr-3">02</span>
               <span className="text-[var(--fg-brand)]">$</span>{" "}
-              <span className="text-[var(--fg-primary)]">npx entrepta init --theme=emerald</span>
+              <span className="text-[var(--fg-primary)]">npx entrepta init --theme=ivy</span>
               <span className="text-[var(--fg-muted)] text-[11px] ml-3">
                 {"// skip the prompt"}
               </span>

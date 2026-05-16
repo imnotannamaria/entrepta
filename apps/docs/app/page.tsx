@@ -146,11 +146,11 @@ const COMPONENT_CATEGORIES = [
       <div className="flex gap-2">
         {[
           { c: "#7C6BFF", n: "entrepta" },
-          { c: "#A1A1AA", n: "zinc" },
-          { c: "#10B981", n: "emerald" },
-          { c: "#F59E0B", n: "amber" },
-          { c: "#F43F5E", n: "rose" },
-          { c: "#64748B", n: "slate" },
+          { c: "#CC2E36", n: "blossom" },
+          { c: "#FF8213", n: "marmalade" },
+          { c: "#E85A8A", n: "julia" },
+          { c: "#35A365", n: "ivy" },
+          { c: "#2563EB", n: "bosco" },
         ].map((t) => (
           <span
             key={t.n}
@@ -215,7 +215,7 @@ export default function Home() {
             <div className="font-mono text-[11px] text-[var(--fg-muted)] mb-6 inline-flex items-center gap-3 uppercase tracking-[0.06em]">
               <span>design system</span>
               <span className="border border-[var(--border-subtle)] rounded-[3px] px-1.5 py-0.5 text-[var(--fg-brand)] normal-case tracking-normal">
-                v0.1 · draft
+                v0.1
               </span>
               <span>by anna maria</span>
             </div>

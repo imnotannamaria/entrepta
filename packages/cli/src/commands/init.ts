@@ -7,7 +7,7 @@ import { detectFramework } from "../utils/detect-framework.js";
 import { log } from "../utils/logger.js";
 import { detectPackageManager, installDeps } from "../utils/package-manager.js";
 
-const THEMES = ["entrepta", "zinc", "emerald", "amber", "rose", "slate"] as const;
+const THEMES = ["entrepta", "blossom", "marmalade", "julia", "ivy", "bosco"] as const;
 type Theme = (typeof THEMES)[number];
 
 const require = createRequire(import.meta.url);
@@ -33,12 +33,12 @@ export async function init(options: { theme?: string; overwrite: boolean }) {
       name: "theme",
       message: "Choose a theme:",
       choices: [
-        { title: "entrepta  — violet/indigo, IDE personality (default)", value: "entrepta" },
-        { title: "zinc      — no accent, cold terminal", value: "zinc" },
-        { title: "emerald   — open source, devtools, fintech", value: "emerald" },
-        { title: "amber     — warmth, blogs, editorial", value: "amber" },
-        { title: "rose      — bold, creative, agencies", value: "rose" },
-        { title: "slate     — neutral warm, corporate-friendly", value: "slate" },
+        { title: "entrepta   — violet, IDE personality (default)", value: "entrepta" },
+        { title: "blossom    — cherry red, bold and confident", value: "blossom" },
+        { title: "marmalade  — warm orange, editorial and energetic", value: "marmalade" },
+        { title: "julia      — warm pink, soft and expressive", value: "julia" },
+        { title: "ivy        — forest green, calm and grounded", value: "ivy" },
+        { title: "bosco      — deep blue, technical and steady", value: "bosco" },
       ],
       initial: 0,
     });

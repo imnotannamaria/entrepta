@@ -14,37 +14,37 @@ const THEMES = [
     name: "entrepta",
     brand: "#7C6BFF",
     hover: "#9B8EFF",
-    vibe: "Default. Personal, playful, IDE personality.",
+    vibe: "Default. Violet, playful, IDE personality.",
   },
   {
-    name: "zinc",
-    brand: "#A1A1AA",
-    hover: "#D4D4D8",
-    vibe: "No accent. Cold and terminal-like.",
+    name: "blossom",
+    brand: "#CC2E36",
+    hover: "#E04750",
+    vibe: "Cherry red. Bold and confident.",
   },
   {
-    name: "emerald",
-    brand: "#10B981",
-    hover: "#34D399",
-    vibe: "Open source, devtools, fintech.",
+    name: "marmalade",
+    brand: "#FF8213",
+    hover: "#FF9D45",
+    vibe: "Warm orange. Editorial and energetic.",
   },
   {
-    name: "amber",
-    brand: "#F59E0B",
-    hover: "#FBBF24",
-    vibe: "Warm. Blogs and editorial sites.",
+    name: "julia",
+    brand: "#E85A8A",
+    hover: "#F178A0",
+    vibe: "Warm pink. Soft and expressive.",
   },
   {
-    name: "rose",
-    brand: "#F43F5E",
-    hover: "#FB7185",
-    vibe: "Bold. Creative work and agencies.",
+    name: "ivy",
+    brand: "#35A365",
+    hover: "#4CBA7C",
+    vibe: "Forest green. Calm and grounded.",
   },
   {
-    name: "slate",
-    brand: "#64748B",
-    hover: "#94A3B8",
-    vibe: "Neutral, slightly warm. Corporate-friendly.",
+    name: "bosco",
+    brand: "#2563EB",
+    hover: "#4F86F3",
+    vibe: "Deep blue. Technical and steady.",
   },
 ];
 
@@ -116,7 +116,7 @@ export default function ThemesPage() {
         <p className="mt-4 font-mono text-[11px] text-[var(--fg-muted)] leading-relaxed">
           <span className="text-[var(--fg-brand)]">{"// "}</span>
           Switch at any time by running{" "}
-          <code className="text-[var(--fg-primary)]">npx entrepta theme rose</code>. Existing
+          <code className="text-[var(--fg-primary)]">npx entrepta theme blossom</code>. Existing
           components pick up the new brand color on next page load.
         </p>
       </section>

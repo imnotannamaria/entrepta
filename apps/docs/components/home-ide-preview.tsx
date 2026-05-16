@@ -42,17 +42,17 @@ const FILES: Record<FileKey, FileMeta> = {
         {"\n"}
         <span className="text-[var(--fg-secondary)]">{"}"}</span>
         {"\n"}
-        <span className="text-[var(--fg-muted)]">{"// theme: emerald"}</span>
+        <span className="text-[var(--fg-muted)]">{"// theme: ivy"}</span>
         {"\n"}
         <span className="text-[var(--status-info)]">[data-theme</span>
         <span className="text-[var(--fg-secondary)]">=</span>
-        <span className="text-[var(--status-warning)]">"emerald"</span>
+        <span className="text-[var(--status-warning)]">"ivy"</span>
         <span className="text-[var(--status-info)]">]</span>
         <span className="text-[var(--fg-secondary)]">{" {"}</span>
         {"\n  "}
         <span className="text-[var(--fg-brand)]">--fg-brand</span>
         <span className="text-[var(--fg-secondary)]">: </span>
-        <span className="text-[var(--status-success-fg)]">#10B981</span>
+        <span className="text-[var(--status-success-fg)]">#35A365</span>
         <span className="text-[var(--fg-secondary)]">;</span>
         {"\n"}
         <span className="text-[var(--fg-secondary)]">{"}"}</span>
@@ -102,20 +102,20 @@ const FILES: Record<FileKey, FileMeta> = {
         <span className="text-[var(--fg-secondary)]">,</span>{" "}
         <span className="text-[var(--fg-muted)]">{"// #7C6BFF"}</span>
         {"\n  "}
-        <span className="text-[var(--status-warning)]">"zinc"</span>
+        <span className="text-[var(--status-warning)]">"blossom"</span>
         <span className="text-[var(--fg-secondary)]">,</span>
         {"\n  "}
-        <span className="text-[var(--status-warning)]">"emerald"</span>
+        <span className="text-[var(--status-warning)]">"marmalade"</span>
         <span className="text-[var(--fg-secondary)]">,</span>{" "}
-        <span className="text-[var(--fg-muted)]">{"// #10B981"}</span>
+        <span className="text-[var(--fg-muted)]">{"// #FF8213"}</span>
         {"\n  "}
-        <span className="text-[var(--status-warning)]">"amber"</span>
+        <span className="text-[var(--status-warning)]">"julia"</span>
         <span className="text-[var(--fg-secondary)]">,</span>
         {"\n  "}
-        <span className="text-[var(--status-warning)]">"rose"</span>
+        <span className="text-[var(--status-warning)]">"ivy"</span>
         <span className="text-[var(--fg-secondary)]">,</span>
         {"\n  "}
-        <span className="text-[var(--status-warning)]">"slate"</span>
+        <span className="text-[var(--status-warning)]">"bosco"</span>
         <span className="text-[var(--fg-secondary)]">,</span>
         {"\n"}
         <span className="text-[var(--fg-secondary)]">{"] as const"}</span>

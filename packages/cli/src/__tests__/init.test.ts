@@ -83,20 +83,20 @@ afterEach(() => {
 describe("init", () => {
   describe("theme selection", () => {
     it("uses --theme flag without showing prompt", async () => {
-      await init({ theme: "emerald", overwrite: false });
+      await init({ theme: "ivy", overwrite: false });
       expect(mockPrompts).not.toHaveBeenCalledWith(expect.objectContaining({ type: "select" }));
     });
 
     it("writes config with the provided theme", async () => {
-      await init({ theme: "amber", overwrite: false });
+      await init({ theme: "marmalade", overwrite: false });
       expect(mockWriteConfig).toHaveBeenCalledWith(
         expect.any(String),
-        expect.objectContaining({ theme: "amber" })
+        expect.objectContaining({ theme: "marmalade" })
       );
     });
 
     it("shows select prompt when no --theme flag provided", async () => {
-      mockPrompts.mockResolvedValueOnce({ theme: "zinc" } as never);
+      mockPrompts.mockResolvedValueOnce({ theme: "julia" } as never);
       await init({ theme: undefined, overwrite: false });
       expect(mockPrompts).toHaveBeenCalledWith(
         expect.objectContaining({ type: "select", name: "theme" })
@@ -135,12 +135,12 @@ describe("init", () => {
     });
 
     it("creates entrepta.json config with correct structure", async () => {
-      await init({ theme: "rose", overwrite: false });
+      await init({ theme: "blossom", overwrite: false });
       expect(mockWriteConfig).toHaveBeenCalledWith(
         expect.any(String),
         expect.objectContaining({
           $schema: expect.stringContaining("entrepta.dev"),
-          theme: "rose",
+          theme: "blossom",
           tsx: true,
           aliases: expect.objectContaining({
             components: expect.any(String),
