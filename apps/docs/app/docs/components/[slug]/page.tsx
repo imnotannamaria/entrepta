@@ -104,7 +104,7 @@ const COMPONENTS: Record<string, ComponentDef> = {
     install: "input",
     usage: `import { Input } from "@/components/entrepta/input"
 
-<Input placeholder="resend-ecommerce" />
+<Input placeholder="project-name" />
 <Input variant="search" placeholder="search components…" />
 <Input variant="command" placeholder="run command…" />
 <Input state="error" defaultValue="HEALTHKIT_KEY" />`,
@@ -193,7 +193,7 @@ import { Button } from "@/components/entrepta/button"
     <DialogHeader>
       <DialogLabel>danger zone</DialogLabel>
       <DialogTitle>
-        Delete <em>resend-ecommerce</em>?
+        Delete <em>project-name</em>?
       </DialogTitle>
       <DialogDescription>This cannot be undone.</DialogDescription>
     </DialogHeader>
@@ -450,17 +450,17 @@ import { Button } from "@/components/entrepta/button"
       {
         name: "left",
         type: "ReactNode",
-        description: "Left slot — logo and breadcrumb",
+        description: "Left slot. Logo and breadcrumb.",
       },
       {
         name: "center",
         type: "ReactNode",
-        description: "Centered slot — hidden on mobile",
+        description: "Centered slot. Hidden on mobile.",
       },
       {
         name: "right",
         type: "ReactNode",
-        description: "Right slot — actions",
+        description: "Right slot. Actions and menu.",
       },
     ],
   },

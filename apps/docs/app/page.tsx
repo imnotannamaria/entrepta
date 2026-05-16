@@ -22,13 +22,13 @@ const PRINCIPLES = [
   {
     num: "01",
     title: "Dark-first, always.",
-    desc: "Both products are born dark. Light mode is optional, never priority. The deep zinc-950 is the canvas — not dashboard gray.",
+    desc: "Both products are born dark. Light mode is optional, never priority. The deep zinc-950 is the canvas, not dashboard gray.",
     tag: "canvas: #09090B",
   },
   {
     num: "02",
     title: "Editor as metaphor.",
-    desc: "Tabs, command palette, status bar, file paths, inline comments, shell prompts, monospace metadata. Not decoration — personality.",
+    desc: "Tabs, command palette, status bar, file paths, inline comments, shell prompts, monospace metadata. Not decoration. Personality.",
     tag: "tabs · ⌘K · > · $ · //",
   },
   {
@@ -137,7 +137,7 @@ const COMPONENT_CATEGORIES = [
     label: "themes",
     num: "06",
     name: "Themes",
-    desc: "Six presets — one CLI flag to switch. Same tokens, different personality.",
+    desc: "Six presets. One CLI flag to switch. Same tokens, different personality.",
     count: "6 presets",
     href: "/docs/themes",
     preview: (
@@ -225,8 +225,8 @@ export default function Home() {
 
             <p className="font-sans text-base sm:text-lg text-[var(--fg-secondary)] leading-relaxed max-w-xl mb-10">
               <strong className="text-[var(--fg-primary)] font-medium">entrepta</strong> is a
-              dark-first component library, shipped shadcn-style. Foundations, primitives, layout
-              and feedback components — built around editor metaphors: tabs, command palette, status
+              dark-first component library you copy into your repo. Foundations, primitives, layout
+              and feedback components. Built around editor metaphors: tabs, command palette, status
               bar, file paths, inline comments, shell prompts.
             </p>
 
@@ -359,7 +359,7 @@ export default function Home() {
         >
           <div className="mb-10">
             <div className="font-mono text-[11px] text-[var(--fg-brand)] uppercase tracking-[0.08em] mb-3">
-              — getting started
+              · getting started
             </div>
             <h2 className="font-serif text-[clamp(32px,4vw,56px)] font-normal leading-tight tracking-tight text-[var(--fg-primary)]">
               <em className="italic text-[var(--fg-brand)]">Three</em> commands.
@@ -518,13 +518,13 @@ export default function Home() {
           >
             <div className="flex flex-col items-center gap-6">
               <div className="font-mono text-[11px] uppercase tracking-[0.08em] text-[var(--fg-brand)]">
-                — ready to ship
+                · ready to ship
               </div>
               <h2 className="font-serif text-[clamp(36px,5vw,72px)] font-normal leading-none tracking-tight text-[var(--fg-primary)]">
                 Start <em className="italic text-[var(--fg-brand)]">building.</em>
               </h2>
               <p className="font-sans text-base text-[var(--fg-secondary)] max-w-md leading-relaxed">
-                Every token, every component, every state — laid out in the docs. Press{" "}
+                Every token, every component, every state. Laid out in the docs. Press{" "}
                 <kbd className="font-mono text-xs border border-[var(--border-strong)] rounded-[3px] px-1.5 py-0.5 text-[var(--fg-muted)]">
                   ⌘K
                 </kbd>{" "}

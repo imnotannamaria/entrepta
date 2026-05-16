@@ -150,7 +150,7 @@ function BadgePreview() {
 function InputPreview() {
   return (
     <div className="flex flex-col gap-3 w-full max-w-sm">
-      <Input placeholder="resend-ecommerce" />
+      <Input placeholder="project-name" />
       <Input variant="search" placeholder="search components…" />
       <Input variant="command" placeholder="run command…" />
       <Input state="error" defaultValue="HEALTHKIT_KEY" />
@@ -186,16 +186,16 @@ function CardPreview() {
 
       <Card variant="featured">
         <CardHeader>
-          <CardLabel>resend-ecommerce</CardLabel>
+          <CardLabel>open-source-kit</CardLabel>
           <Badge variant="solid" color="brand">
             FEATURED
           </Badge>
         </CardHeader>
         <CardTitle>
-          Email templates, in <em>React</em>.
+          Components, in <em>React</em>.
         </CardTitle>
         <CardDescription>
-          12 typed templates — receipts, shipping, returns. Used by 200+ projects.
+          A dark-first kit of typed primitives. Copy-paste, own the source, ship faster.
         </CardDescription>
         <CardFooter>
           <CardComment>shipped 2025-11</CardComment>
@@ -253,7 +253,7 @@ function DialogPreview() {
         <DialogHeader>
           <DialogLabel>danger zone</DialogLabel>
           <DialogTitle>
-            Delete <em>resend-ecommerce</em>?
+            Delete <em>project-name</em>?
           </DialogTitle>
           <DialogDescription>
             This will permanently remove the project, its history, and all associated data. This
@@ -499,7 +499,7 @@ function ToastPreview() {
         size="sm"
         onClick={() =>
           toast.warning("Deprecated API", {
-            description: "useTheme() will be removed in v1.0 — use ThemeProvider instead",
+            description: "useTheme() will be removed in v1.0. Use ThemeProvider instead.",
           })
         }
       >

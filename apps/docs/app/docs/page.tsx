@@ -35,7 +35,7 @@ const QUICK_START = [
 const FILES = [
   { file: "app/globals.css", desc: "CSS tokens + reset + fonts" },
   { file: "lib/utils.ts", desc: "cn() helper (clsx + tailwind-merge)" },
-  { file: "entrepta.json", desc: "config — theme, paths, aliases" },
+  { file: "entrepta.json", desc: "config. theme, paths, aliases." },
 ];
 
 const NEXT_PAGES = [
@@ -81,9 +81,9 @@ export default function DocsIntro() {
         }
         description={
           <>
-            A dark-first design system distributed in the shadcn-style — copy-paste components, not
-            an npm package of pre-built UI. You own the source. Run a command, the component lives
-            in your repo, styled with your tokens, editable without fighting a library.
+            A dark-first design system distributed as copy-paste components, not an npm package of
+            pre-built UI. You own the source. Run a command, the component lives in your repo,
+            styled with your tokens, editable without fighting a library.
           </>
         }
       />

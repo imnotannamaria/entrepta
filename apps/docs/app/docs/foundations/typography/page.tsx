@@ -41,7 +41,7 @@ const SCALE = [
     spec: "24 / 31 · serif",
     sample: (
       <span className="font-serif text-[24px] leading-[31px] text-[var(--fg-primary)]">
-        resend-ecommerce
+        Project name
       </span>
     ),
   },
