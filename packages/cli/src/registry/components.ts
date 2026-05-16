@@ -113,4 +113,12 @@ export const COMPONENTS: RegistryComponent[] = [
     deps: ["cmdk", "@radix-ui/react-dialog", "lucide-react"],
     registryDeps: ["use-command-palette"],
   },
+  {
+    name: "code-block",
+    description: "Code container with macOS chrome, language label and a copy-to-clipboard button",
+    category: "content",
+    files: ["content/code-block.tsx"],
+    deps: ["lucide-react"],
+    registryDeps: [],
+  },
 ];

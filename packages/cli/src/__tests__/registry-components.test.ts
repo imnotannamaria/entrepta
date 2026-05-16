@@ -1,6 +1,38 @@
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 import { COMPONENTS } from "../registry/components.js";
 import type { RegistryComponent } from "../registry/types.js";
+
+const REGISTRY_ROOT = path.resolve(
+  path.dirname(fileURLToPath(import.meta.url)),
+  "..",
+  "..",
+  "..",
+  "registry"
+);
+
+function listRegistryFiles(): string[] {
+  const dirs: RegistryComponent["category"][] = [
+    "primitives",
+    "layout",
+    "content",
+    "feedback",
+    "hooks",
+  ];
+  const out: string[] = [];
+  for (const dir of dirs) {
+    const full = path.join(REGISTRY_ROOT, dir);
+    if (!fs.existsSync(full)) continue;
+    for (const entry of fs.readdirSync(full)) {
+      if (entry.endsWith(".test.tsx") || entry.endsWith(".test.ts")) continue;
+      if (!entry.endsWith(".tsx") && !entry.endsWith(".ts")) continue;
+      out.push(`${dir}/${entry}`);
+    }
+  }
+  return out;
+}
 
 const VALID_CATEGORIES: RegistryComponent["category"][] = [
   "primitives",
@@ -90,6 +122,22 @@ describe("COMPONENTS registry", () => {
     for (const name of withCva) {
       const c = COMPONENTS.find((c) => c.name === name);
       expect(c?.deps, `${name} missing cva dep`).toContain("class-variance-authority");
+    }
+  });
+
+  it("every source file in the registry has a matching COMPONENTS entry", () => {
+    const filesOnDisk = listRegistryFiles();
+    const filesRegistered = new Set(COMPONENTS.flatMap((c) => c.files));
+    const missing = filesOnDisk.filter((f) => !filesRegistered.has(f));
+    expect(missing, `Files on disk but not in COMPONENTS: ${missing.join(", ")}`).toEqual([]);
+  });
+
+  it("every COMPONENTS file path exists on disk", () => {
+    for (const c of COMPONENTS) {
+      for (const file of c.files) {
+        const full = path.join(REGISTRY_ROOT, file);
+        expect(fs.existsSync(full), `${c.name}: missing file ${file}`).toBe(true);
+      }
     }
   });
 });
