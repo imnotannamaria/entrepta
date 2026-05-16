@@ -3,6 +3,7 @@ import { HomeIdePreview } from "@/components/home-ide-preview";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteNav } from "@/components/site-nav";
 import { SiteStatusBar } from "@/components/site-status-bar";
+import { CodeBlock } from "@entrepta/registry/content/code-block";
 import { Badge } from "@entrepta/registry/primitives/badge";
 import { Button } from "@entrepta/registry/primitives/button";
 import {
@@ -14,8 +15,6 @@ import {
   CardHeader,
   CardLabel,
   CardMeta,
-  CardTerminalBar,
-  CardTerminalBody,
   CardTitle,
 } from "@entrepta/registry/primitives/card";
 import Link from "next/link";
@@ -136,6 +135,29 @@ const COMPONENT_CATEGORIES = [
     ),
   },
   {
+    label: "content",
+    num: "01",
+    name: "Content",
+    desc: "CodeBlock. Snippets with macOS chrome, language label and a one-click copy.",
+    count: "1 component",
+    href: "/docs/components/code-block",
+    preview: (
+      <div className="rounded-[var(--radius-sm)] border border-[var(--border-subtle)] bg-[var(--bg-surface)] overflow-hidden font-mono text-[11px]">
+        <div className="flex items-center gap-2 px-3 py-1.5 bg-black/30 border-b border-[var(--border-subtle)]">
+          <span className="w-2 h-2 rounded-full bg-[var(--status-error)] opacity-60" />
+          <span className="w-2 h-2 rounded-full bg-[var(--status-warning)] opacity-60" />
+          <span className="w-2 h-2 rounded-full bg-[var(--status-success)] opacity-60" />
+          <span className="ml-auto text-[10px] uppercase tracking-[0.08em] text-[var(--fg-brand)]">
+            bash
+          </span>
+        </div>
+        <div className="px-3 py-2 text-[var(--fg-secondary)]">
+          <span className="text-[var(--fg-brand)]">$</span> npx entrepta add code-block
+        </div>
+      </div>
+    ),
+  },
+  {
     label: "themes",
     num: "06",
     name: "Themes",
@@ -198,7 +220,7 @@ const INSTALL_STEPS = [
 
 const HERO_STATS = [
   { dt: "tokens", dd: "52" },
-  { dt: "components", dd: "15" },
+  { dt: "components", dd: "14" },
   { dt: "themes", dd: "6" },
   { dt: "updated", dd: "2026-05" },
 ];
@@ -285,12 +307,14 @@ export default function Home() {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-6">
-            <Card variant="terminal">
-              <CardTerminalBar>
-                <CardLabel>terminal · zsh</CardLabel>
-                <CardMeta>~/projects/portfolio</CardMeta>
-              </CardTerminalBar>
-              <CardTerminalBody className="flex flex-col gap-4">
+            <CodeBlock
+              variant="terminal"
+              filename="terminal · zsh"
+              meta="~/projects/portfolio"
+              language="bash"
+              code={INSTALL_STEPS.map((s) => s.cmd).join("\n")}
+            >
+              <div className="flex flex-col gap-4">
                 {INSTALL_STEPS.map((step) => (
                   <div key={step.num} className="flex flex-col gap-1">
                     <div className="flex items-center gap-3">
@@ -311,8 +335,8 @@ export default function Home() {
                   <span className="text-[var(--status-success-fg)]">ready</span>
                   <span className="text-[var(--fg-muted)]">{"// run npm run dev"}</span>
                 </div>
-              </CardTerminalBody>
-            </Card>
+              </div>
+            </CodeBlock>
 
             <Card>
               <CardHeader>

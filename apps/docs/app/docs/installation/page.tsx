@@ -1,4 +1,5 @@
 import { DocPageHeader, DocSubhead } from "@/components/doc-page-header";
+import { CodeBlock } from "@entrepta/registry/content/code-block";
 import { Button } from "@entrepta/registry/primitives/button";
 import {
   Card,
@@ -7,8 +8,6 @@ import {
   CardHeader,
   CardLabel,
   CardMeta,
-  CardTerminalBar,
-  CardTerminalBody,
   CardTitle,
 } from "@entrepta/registry/primitives/card";
 import Link from "next/link";
@@ -66,12 +65,15 @@ export default function InstallationPage() {
 
       <section className="mb-12">
         <DocSubhead count="step 1">Run init</DocSubhead>
-        <Card variant="terminal">
-          <CardTerminalBar>
-            <CardLabel>terminal · zsh</CardLabel>
-            <CardMeta>~/your-app</CardMeta>
-          </CardTerminalBar>
-          <CardTerminalBody className="flex flex-col gap-3">
+        <CodeBlock
+          variant="terminal"
+          filename="terminal · zsh"
+          meta="~/your-app"
+          language="bash"
+          code={`npx entrepta init
+npx entrepta init --theme=ivy`}
+        >
+          <div className="flex flex-col gap-3">
             <div>
               <span className="text-[var(--fg-muted)] text-[11px] mr-3">01</span>
               <span className="text-[var(--fg-brand)]">$</span>{" "}
@@ -88,8 +90,8 @@ export default function InstallationPage() {
                 {"// skip the prompt"}
               </span>
             </div>
-          </CardTerminalBody>
-        </Card>
+          </div>
+        </CodeBlock>
       </section>
 
       <section className="mb-12">

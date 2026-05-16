@@ -1,4 +1,5 @@
 import { DocPageHeader, DocSubhead } from "@/components/doc-page-header";
+import { CodeBlock } from "@entrepta/registry/content/code-block";
 import {
   Card,
   CardComment,
@@ -101,18 +102,16 @@ export default function ThemesPage() {
 
       <section>
         <DocSubhead count="3 tokens">What changes per theme</DocSubhead>
-        <Card variant="terminal">
-          <div className="px-4 py-3 border-b border-[var(--border-subtle)] bg-black/30 font-mono text-[11px] uppercase tracking-[0.08em] text-[var(--fg-secondary)]">
-            {"// entrepta theme"}
-          </div>
-          <pre className="p-5 font-mono text-[13px] leading-relaxed text-[var(--fg-secondary)] overflow-x-auto m-0">
-            {`:root {
+        <CodeBlock
+          variant="terminal"
+          filename="entrepta theme"
+          language="css"
+          code={`:root {
   --fg-brand:         #7C6BFF;
   --fg-brand-hover:   #9B8EFF;
   --bg-surface-brand: rgba(124, 107, 255, 0.15);
 }`}
-          </pre>
-        </Card>
+        />
         <p className="mt-4 font-mono text-[11px] text-[var(--fg-muted)] leading-relaxed">
           <span className="text-[var(--fg-brand)]">{"// "}</span>
           Switch at any time by running{" "}

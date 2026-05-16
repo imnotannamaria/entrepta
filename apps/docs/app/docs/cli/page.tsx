@@ -1,4 +1,5 @@
 import { DocPageHeader, DocSubhead } from "@/components/doc-page-header";
+import { CodeBlock } from "@entrepta/registry/content/code-block";
 import {
   Card,
   CardComment,
@@ -6,8 +7,6 @@ import {
   CardHeader,
   CardLabel,
   CardMeta,
-  CardTerminalBar,
-  CardTerminalBody,
   CardTitle,
 } from "@entrepta/registry/primitives/card";
 
@@ -62,12 +61,15 @@ export default function CliPage() {
 
       <section className="mb-12">
         <DocSubhead count="quick try">First run</DocSubhead>
-        <Card variant="terminal">
-          <CardTerminalBar>
-            <CardLabel>terminal · zsh</CardLabel>
-            <CardMeta>~/your-app</CardMeta>
-          </CardTerminalBar>
-          <CardTerminalBody className="flex flex-col gap-2">
+        <CodeBlock
+          variant="terminal"
+          filename="terminal · zsh"
+          meta="~/your-app"
+          language="bash"
+          code={`npx entrepta init --theme=entrepta
+npx entrepta add button`}
+        >
+          <div className="flex flex-col gap-2">
             <div className="text-[var(--fg-secondary)]">
               <span className="text-[var(--fg-brand)]">$</span> npx entrepta init
               <span className="text-[var(--fg-muted)]"> --theme=entrepta</span>
@@ -80,8 +82,8 @@ export default function CliPage() {
             <div className="text-[var(--fg-muted)] text-[11px] pl-3">
               → copied components/entrepta/button.tsx
             </div>
-          </CardTerminalBody>
-        </Card>
+          </div>
+        </CodeBlock>
       </section>
 
       <section>

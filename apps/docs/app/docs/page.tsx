@@ -1,4 +1,5 @@
 import { DocPageHeader, DocSubhead } from "@/components/doc-page-header";
+import { CodeBlock } from "@entrepta/registry/content/code-block";
 import { Button } from "@entrepta/registry/primitives/button";
 import {
   Card,
@@ -8,8 +9,6 @@ import {
   CardHeader,
   CardLabel,
   CardMeta,
-  CardTerminalBar,
-  CardTerminalBody,
   CardTitle,
 } from "@entrepta/registry/primitives/card";
 import Link from "next/link";
@@ -112,12 +111,14 @@ export default function DocsIntro() {
 
       <section className="mb-14">
         <DocSubhead count="3 commands">Quick start</DocSubhead>
-        <Card variant="terminal">
-          <CardTerminalBar>
-            <CardLabel>terminal · zsh</CardLabel>
-            <CardMeta>~/projects/your-app</CardMeta>
-          </CardTerminalBar>
-          <CardTerminalBody className="flex flex-col gap-3">
+        <CodeBlock
+          variant="terminal"
+          filename="terminal · zsh"
+          meta="~/projects/your-app"
+          language="bash"
+          code={QUICK_START.map((s) => s.cmd).join("\n")}
+        >
+          <div className="flex flex-col gap-3">
             {QUICK_START.map((s) => (
               <div key={s.num} className="flex items-baseline gap-3">
                 <span className="text-[var(--fg-muted)] text-[11px] w-5 shrink-0">{s.num}</span>
@@ -130,8 +131,8 @@ export default function DocsIntro() {
                 </span>
               </div>
             ))}
-          </CardTerminalBody>
-        </Card>
+          </div>
+        </CodeBlock>
       </section>
 
       <section className="mb-14">

@@ -1,5 +1,6 @@
 "use client";
 
+import { CodeBlock } from "@entrepta/registry/content/code-block";
 import {
   Command,
   CommandDialog,
@@ -615,6 +616,28 @@ function CommandPalettePreview() {
   );
 }
 
+function CodeBlockPreview() {
+  return (
+    <div className="flex flex-col gap-4 w-full max-w-xl">
+      <CodeBlock
+        code={`npx entrepta init --theme=ivy
+npx entrepta add button card command-palette`}
+        filename="terminal · zsh"
+        meta="~/your-app"
+        variant="terminal"
+        language="bash"
+      />
+      <CodeBlock
+        code={`import { Button } from "@/components/entrepta/button"
+
+<Button variant="primary">Ship</Button>`}
+        filename="hero.tsx"
+        language="tsx"
+      />
+    </div>
+  );
+}
+
 const PREVIEWS: Record<string, React.ReactNode> = {
   button: <ButtonPreview />,
   badge: <BadgePreview />,
@@ -629,6 +652,7 @@ const PREVIEWS: Record<string, React.ReactNode> = {
   toast: <ToastPreview />,
   skeleton: <SkeletonPreview />,
   "command-palette": <CommandPalettePreview />,
+  "code-block": <CodeBlockPreview />,
 };
 
 export function ComponentPreview({ slug }: { slug: string }) {

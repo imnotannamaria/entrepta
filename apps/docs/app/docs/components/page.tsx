@@ -61,6 +61,16 @@ const COMPONENTS = [
       },
     ],
   },
+  {
+    category: "Content",
+    items: [
+      {
+        name: "CodeBlock",
+        href: "/docs/components/code-block",
+        desc: "Snippet container with copy button",
+      },
+    ],
+  },
 ];
 
 export default function ComponentsIndex() {
@@ -73,7 +83,7 @@ export default function ComponentsIndex() {
         Components
       </h1>
       <p className="font-sans text-base text-[var(--fg-secondary)] leading-relaxed mb-10">
-        17 components across 3 categories. All copy-paste via CLI or manual.
+        14 components across 4 categories. All copy-paste via CLI or manual.
       </p>
 
       <div className="flex flex-col gap-10">

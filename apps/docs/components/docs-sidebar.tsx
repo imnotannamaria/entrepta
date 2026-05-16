@@ -52,6 +52,10 @@ const NAV = [
       { label: "CommandPalette", href: "/docs/components/command-palette" },
     ],
   },
+  {
+    heading: "Content",
+    items: [{ label: "CodeBlock", href: "/docs/components/code-block" }],
+  },
 ];
 
 export function DocsSidebar() {

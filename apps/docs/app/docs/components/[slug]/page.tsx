@@ -1,3 +1,4 @@
+import { CodeBlock } from "@entrepta/registry/content/code-block";
 import { notFound } from "next/navigation";
 import { ComponentPreview } from "./component-preview";
 
@@ -10,7 +11,7 @@ type Prop = {
 
 type ComponentDef = {
   title: string;
-  category: "Primitives" | "Layout" | "Feedback";
+  category: "Primitives" | "Layout" | "Feedback" | "Content";
   description: string;
   install: string;
   usage: string;
@@ -599,6 +600,67 @@ export function MyPalette() {
       },
     ],
   },
+  "code-block": {
+    title: "CodeBlock",
+    category: "Content",
+    description:
+      "Code container with optional macOS-style chrome, filename and language labels, and a one-click copy button. Pass raw code via the `code` prop; provide `children` for syntax-highlighted JSX rendering.",
+    install: "code-block",
+    usage: `import { CodeBlock } from "@/components/entrepta/code-block"
+
+// Plain copy-paste snippet
+<CodeBlock
+  code={\`npx entrepta init --theme=ivy\`}
+  filename="install.sh"
+  language="bash"
+  variant="terminal"
+/>
+
+// Custom highlighted body — copy still grabs the raw code
+<CodeBlock code={raw} filename="tokens.css" language="css">
+  <span className="text-[var(--fg-brand)]">--fg-brand</span>: #7C6BFF;
+</CodeBlock>`,
+    props: [
+      {
+        name: "code",
+        type: "string",
+        description: "Raw code string copied to the clipboard. Required.",
+      },
+      {
+        name: "filename",
+        type: "string",
+        description: "Label shown on the left of the chrome",
+      },
+      {
+        name: "language",
+        type: "string",
+        description: "Language tag shown on the right (e.g. bash, tsx, css)",
+      },
+      {
+        name: "meta",
+        type: "string",
+        description: "Secondary label between filename and language",
+      },
+      {
+        name: "variant",
+        type: '"default" | "terminal"',
+        default: '"default"',
+        description: "`terminal` adds three macOS-style window dots",
+      },
+      {
+        name: "showCopy",
+        type: "boolean",
+        default: "true",
+        description: "Toggle the copy button",
+      },
+      {
+        name: "copyTimeout",
+        type: "number",
+        default: "1500",
+        description: "How long the 'copied' state stays visible (ms)",
+      },
+    ],
+  },
 };
 
 export function generateStaticParams() {
@@ -646,19 +708,12 @@ export default async function ComponentPage({
         <h2 className="font-mono text-[10px] uppercase tracking-widest text-[var(--fg-muted)] border-b border-[var(--border-subtle)] pb-2 mb-6">
           Usage
         </h2>
-        <div className="rounded-[var(--radius-md)] border border-[var(--border-subtle)] bg-[var(--bg-surface)] overflow-x-auto">
-          <div className="flex items-center gap-2 px-4 py-2 border-b border-[var(--border-subtle)]">
-            <span className="w-2.5 h-2.5 rounded-full bg-[var(--status-error)] opacity-60" />
-            <span className="w-2.5 h-2.5 rounded-full bg-[var(--status-warning)] opacity-60" />
-            <span className="w-2.5 h-2.5 rounded-full bg-[var(--status-success)] opacity-60" />
-            <span className="font-mono text-xs text-[var(--fg-muted)] ml-2">
-              {component.install}.tsx
-            </span>
-          </div>
-          <pre className="font-mono text-xs text-[var(--fg-secondary)] leading-6 p-5 overflow-x-auto">
-            <code>{component.usage}</code>
-          </pre>
-        </div>
+        <CodeBlock
+          code={component.usage}
+          variant="terminal"
+          filename={`${component.install}.tsx`}
+          language="tsx"
+        />
       </section>
 
       <section>

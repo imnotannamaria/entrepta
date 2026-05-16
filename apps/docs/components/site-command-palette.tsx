@@ -199,6 +199,12 @@ export function SiteCommandPaletteProvider({ children }: { children: ReactNode }
               >
                 CommandPalette
               </CommandItem>
+              <CommandItem
+                icon={<Box {...ICON_PROPS} />}
+                onSelect={() => go("/docs/components/code-block")}
+              >
+                CodeBlock
+              </CommandItem>
             </CommandGroup>
 
             <CommandSeparator />
