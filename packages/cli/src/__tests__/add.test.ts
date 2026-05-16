@@ -155,6 +155,23 @@ describe("add", () => {
       const hookDest = allWritten.find((p) => p.includes("use-command-palette"));
       expect(hookDest).toContain("hooks/");
     });
+
+    it("does not infinite-loop when resolving cyclic registryDeps", async () => {
+      vi.resetModules();
+      vi.doMock("../registry/components.js", () => ({
+        COMPONENTS: [
+          { name: "a", category: "primitives", files: [], deps: [], registryDeps: ["b"] },
+          { name: "b", category: "primitives", files: [], deps: [], registryDeps: ["a"] },
+        ],
+      }));
+      const { resolveComponents: cyclicResolve } = await import("../commands/add.js");
+      expect(() => cyclicResolve(["a"])).not.toThrow();
+      const result = cyclicResolve(["a"]);
+      expect(result).toEqual(expect.arrayContaining(["a", "b"]));
+      expect(result.length).toBe(2);
+      vi.doUnmock("../registry/components.js");
+      vi.resetModules();
+    });
   });
 
   describe("overwrite behaviour", () => {

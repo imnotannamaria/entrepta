@@ -124,16 +124,19 @@ export async function add(components: string[], options: { overwrite: boolean })
   log.success(`\nAdded: ${toInstall.join(", ")}`);
 }
 
-function resolveComponents(names: string[]): string[] {
+export function resolveComponents(names: string[]): string[] {
   const resolved = new Set<string>();
+  const visiting = new Set<string>();
 
   function resolve(name: string) {
-    if (resolved.has(name)) return;
+    if (resolved.has(name) || visiting.has(name)) return;
     const component = COMPONENTS.find((c) => c.name === name);
     if (!component) return;
+    visiting.add(name);
     for (const dep of component.registryDeps) {
       resolve(dep);
     }
+    visiting.delete(name);
     resolved.add(name);
   }
 
