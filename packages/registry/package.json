@@ -15,17 +15,6 @@
     "url": "https://github.com/imnotannamaria/entrepta/issues"
   },
   "author": "Anna Maria",
-  "files": [
-    "styles",
-    "lib",
-    "primitives",
-    "layout",
-    "content",
-    "feedback",
-    "hooks",
-    "README.md",
-    "LICENSE"
-  ],
   "publishConfig": {
     "access": "public",
     "provenance": true

@@ -17,7 +17,7 @@
   },
   "author": "Anna Maria",
   "bin": {
-    "entrepta": "./dist/index.js"
+    "entrepta": "dist/index.js"
   },
   "files": ["dist", "README.md", "LICENSE"],
   "publishConfig": {
