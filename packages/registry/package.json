@@ -4,6 +4,17 @@
   "private": false,
   "description": "entrepta design system — component registry",
   "license": "MIT",
+  "keywords": ["entrepta", "design-system", "components", "react", "tailwind", "radix-ui"],
+  "homepage": "https://github.com/imnotannamaria/entrepta#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/imnotannamaria/entrepta.git",
+    "directory": "packages/registry"
+  },
+  "bugs": {
+    "url": "https://github.com/imnotannamaria/entrepta/issues"
+  },
+  "author": "Anna Maria",
   "files": [
     "styles",
     "lib",

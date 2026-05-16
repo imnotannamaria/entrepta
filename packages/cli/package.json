@@ -5,6 +5,17 @@
   "description": "entrepta CLI — add components to your project",
   "license": "MIT",
   "type": "module",
+  "keywords": ["entrepta", "design-system", "components", "cli", "react", "nextjs", "tailwind"],
+  "homepage": "https://github.com/imnotannamaria/entrepta#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/imnotannamaria/entrepta.git",
+    "directory": "packages/cli"
+  },
+  "bugs": {
+    "url": "https://github.com/imnotannamaria/entrepta/issues"
+  },
+  "author": "Anna Maria",
   "bin": {
     "entrepta": "./dist/index.js"
   },
