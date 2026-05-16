@@ -40,6 +40,18 @@ export async function add(components: string[], options: { overwrite: boolean })
     selected = picks as string[];
   }
 
+  // validate names before resolving
+  const known = new Set(COMPONENTS.map((c) => c.name));
+  const unknown = selected.filter((name) => !known.has(name));
+  if (unknown.length > 0) {
+    log.error(`Unknown component(s): ${unknown.join(", ")}`);
+    const available = COMPONENTS.filter((c) => c.category !== "hooks")
+      .map((c) => c.name)
+      .join(", ");
+    log.info(`Available: ${available}`);
+    process.exit(1);
+  }
+
   // resolve dependencies (including transitive)
   const toInstall = resolveComponents(selected);
 

@@ -128,8 +128,9 @@ describe("add", () => {
       expect(cva.length).toBe(1);
     });
 
-    it("silently skips unknown component name without writing any file", async () => {
-      await add(["nonexistent"], { overwrite: false });
+    it("exits with code 1 and lists available components on unknown name", async () => {
+      await expect(add(["nonexistent"], { overwrite: false })).rejects.toThrow("exit:1");
+      expect(log.error).toHaveBeenCalledWith(expect.stringContaining("nonexistent"));
       expect(mockWriteFile).not.toHaveBeenCalled();
     });
   });
