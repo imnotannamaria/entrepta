@@ -141,8 +141,15 @@ export function cn(...inputs: ClassValue[]) {
   // install peer deps
   log.step("Installing dependencies...");
   const pm = await detectPackageManager(cwd);
-  await installDeps(["clsx", "tailwind-merge", "class-variance-authority"], cwd, pm);
-  log.success("Dependencies installed.");
+  try {
+    await installDeps(["clsx", "tailwind-merge", "class-variance-authority"], cwd, pm);
+    log.success("Dependencies installed.");
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err);
+    log.error(`Failed to install dependencies: ${message}`);
+    log.info(`Install them manually: ${pm} add clsx tailwind-merge class-variance-authority`);
+    process.exit(1);
+  }
 
   log.success(`\nentrepta initialized with theme: ${theme}`);
   log.info(`Run "npx entrepta add <component>" to add components.`);

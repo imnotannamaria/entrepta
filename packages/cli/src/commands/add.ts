@@ -98,8 +98,15 @@ export async function add(components: string[], options: { overwrite: boolean })
   if (uniqueDeps.length > 0) {
     log.step("Installing dependencies...");
     const pm = await detectPackageManager(cwd);
-    await installDeps(uniqueDeps, cwd, pm);
-    log.success("Dependencies installed.");
+    try {
+      await installDeps(uniqueDeps, cwd, pm);
+      log.success("Dependencies installed.");
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+      log.error(`Failed to install dependencies: ${message}`);
+      log.info(`Install them manually: ${pm} add ${uniqueDeps.join(" ")}`);
+      process.exit(1);
+    }
   }
 
   log.success(`\nAdded: ${toInstall.join(", ")}`);
