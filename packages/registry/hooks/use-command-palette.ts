@@ -18,6 +18,7 @@ function useCommandPalette(options: UseCommandPaletteOptions = {}): UseCommandPa
   const toggle = React.useCallback(() => setOpen((v) => !v), []);
 
   React.useEffect(() => {
+    if (typeof document === "undefined") return;
     const handler = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === shortcut) {
         e.preventDefault();
