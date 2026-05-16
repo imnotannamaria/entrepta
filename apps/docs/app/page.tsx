@@ -1,9 +1,9 @@
 import { CommandPaletteTrigger } from "@/components/command-palette-trigger";
 import { HomeIdePreview } from "@/components/home-ide-preview";
+import { HomeInstall } from "@/components/home-install";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteNav } from "@/components/site-nav";
 import { SiteStatusBar } from "@/components/site-status-bar";
-import { CodeBlock } from "@entrepta/registry/content/code-block";
 import { Badge } from "@entrepta/registry/primitives/badge";
 import { Button } from "@entrepta/registry/primitives/button";
 import {
@@ -307,36 +307,7 @@ export default function Home() {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-6">
-            <CodeBlock
-              variant="terminal"
-              filename="terminal · zsh"
-              meta="~/projects/portfolio"
-              language="bash"
-              code={INSTALL_STEPS.map((s) => s.cmd).join("\n")}
-            >
-              <div className="flex flex-col gap-4">
-                {INSTALL_STEPS.map((step) => (
-                  <div key={step.num} className="flex flex-col gap-1">
-                    <div className="flex items-center gap-3">
-                      <span className="text-[var(--fg-muted)] text-[11px] w-5 shrink-0">
-                        {step.num}
-                      </span>
-                      <span className="text-[var(--fg-secondary)]">
-                        <span className="text-[var(--fg-brand)]">$</span> {step.cmd}
-                      </span>
-                    </div>
-                    {step.out && (
-                      <div className="pl-8 text-[11px] text-[var(--fg-muted)]">→ {step.out}</div>
-                    )}
-                  </div>
-                ))}
-                <div className="pl-8 flex items-center gap-2 text-[11px]">
-                  <span className="size-1.5 rounded-full bg-[var(--status-success)] inline-block" />
-                  <span className="text-[var(--status-success-fg)]">ready</span>
-                  <span className="text-[var(--fg-muted)]">{"// run npm run dev"}</span>
-                </div>
-              </div>
-            </CodeBlock>
+            <HomeInstall steps={INSTALL_STEPS} />
 
             <Card>
               <CardHeader>

@@ -164,7 +164,7 @@ export function HomeIdePreview() {
             <StatusBarItem>{activeFile.cursor}</StatusBarItem>
           </>
         }
-        right={<StatusBarItem>anna@recife</StatusBarItem>}
+        right={<StatusBarItem>annamaria.app</StatusBarItem>}
       />
     </aside>
   );

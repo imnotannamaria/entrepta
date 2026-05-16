@@ -1,6 +1,33 @@
+import fs from "node:fs/promises";
+import path from "node:path";
+import { ComponentInstall } from "@/components/component-install";
 import { CodeBlock } from "@entrepta/registry/content/code-block";
 import { notFound } from "next/navigation";
 import { ComponentPreview } from "./component-preview";
+
+const REGISTRY_ROOT = path.resolve(process.cwd(), "..", "..", "packages", "registry");
+
+async function readSourceFile(relPath: string): Promise<string> {
+  return fs.readFile(path.join(REGISTRY_ROOT, relPath), "utf-8");
+}
+
+async function getComponentSources(
+  component: ComponentDef
+): Promise<{ filename: string; source: string; language?: string }[]> {
+  const defaultRel = `${component.category.toLowerCase()}/${component.install}.tsx`;
+  const filePaths = [defaultRel, ...(component.extraFiles ?? [])];
+
+  return Promise.all(
+    filePaths.map(async (relPath) => {
+      const source = await readSourceFile(relPath);
+      const basename = path.basename(relPath);
+      const isHook = relPath.startsWith("hooks/");
+      const dest = isHook ? `hooks/${basename}` : `components/entrepta/${basename}`;
+      const language = basename.endsWith(".ts") ? "ts" : "tsx";
+      return { filename: dest, source, language };
+    })
+  );
+}
 
 type Prop = {
   name: string;
@@ -16,6 +43,10 @@ type ComponentDef = {
   install: string;
   usage: string;
   props: Prop[];
+  /** npm packages required by this component (excludes clsx/tailwind-merge which init installs). */
+  dependencies: string[];
+  /** Extra registry files beyond `${category}/${install}.tsx`. Use the registry-relative path. */
+  extraFiles?: string[];
 };
 
 const COMPONENTS: Record<string, ComponentDef> = {
@@ -25,6 +56,7 @@ const COMPONENTS: Record<string, ComponentDef> = {
     description:
       "Primary action element with 4 variants, 3 sizes, and a loading state. Extends all native <button> attributes.",
     install: "button",
+    dependencies: ["class-variance-authority", "lucide-react", "@radix-ui/react-slot"],
     usage: `import { Button } from "@/components/entrepta/button"
 
 <Button>./projects.sh →</Button>
@@ -64,6 +96,7 @@ const COMPONENTS: Record<string, ComponentDef> = {
     category: "Primitives",
     description: "Inline status chip. 3 variants × 6 semantic colors × 2 sizes.",
     install: "badge",
+    dependencies: ["class-variance-authority"],
     usage: `import { Badge } from "@/components/entrepta/badge"
 
 <Badge variant="solid" color="brand">FEATURED</Badge>
@@ -103,6 +136,7 @@ const COMPONENTS: Record<string, ComponentDef> = {
     description:
       "Text field in 3 variants: plain, search (magnifier icon), and command ($ prefix + ⌘K hint). Supports error state and 3 sizes.",
     install: "input",
+    dependencies: ["class-variance-authority", "lucide-react"],
     usage: `import { Input } from "@/components/entrepta/input"
 
 <Input placeholder="project-name" />
@@ -136,6 +170,7 @@ const COMPONENTS: Record<string, ComponentDef> = {
     description:
       "Surface container in 4 flavours: default, featured (brand border), terminal (macOS chrome), and data (glass).",
     install: "card",
+    dependencies: ["class-variance-authority"],
     usage: `import {
   Card, CardHeader, CardLabel, CardMeta, CardTitle,
   CardDescription, CardFooter, CardComment,
@@ -179,6 +214,7 @@ const COMPONENTS: Record<string, ComponentDef> = {
     description:
       "Accessible modal via Radix UI. Composed of trigger, overlay, content, header, and footer sub-components.",
     install: "dialog",
+    dependencies: ["@radix-ui/react-dialog", "lucide-react"],
     usage: `import {
   Dialog, DialogTrigger, DialogContent,
   DialogHeader, DialogLabel, DialogTitle,
@@ -229,6 +265,7 @@ import { Button } from "@/components/entrepta/button"
     description:
       "Context menu via Radix DropdownMenu. Supports items, separators, labels, shortcuts, and keyboard navigation.",
     install: "dropdown",
+    dependencies: ["@radix-ui/react-dropdown-menu", "lucide-react"],
     usage: `import {
   DropdownMenu, DropdownMenuTrigger, DropdownMenuContent,
   DropdownMenuItem, DropdownMenuSeparator,
@@ -281,6 +318,7 @@ import { Button } from "@/components/entrepta/button"
     description:
       "Hover popover via Radix Tooltip. Wrap your app in TooltipProvider once at the root. Supports keyboard shortcut hints.",
     install: "tooltip",
+    dependencies: ["@radix-ui/react-tooltip"],
     usage: `import {
   TooltipProvider, Tooltip, TooltipTrigger,
   TooltipContent, TooltipShortcut,
@@ -327,6 +365,7 @@ import { Button } from "@/components/entrepta/button"
     description:
       "Editor-style tab navigation via Radix Tabs. Active tab is marked with a ◆ glyph in brand color. Tabs can be closable and accept icons.",
     install: "tabs",
+    dependencies: ["@radix-ui/react-tabs", "lucide-react"],
     usage: `import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/entrepta/tabs"
 
 <Tabs defaultValue="home">
@@ -373,6 +412,7 @@ import { Button } from "@/components/entrepta/button"
     description:
       "Fixed bottom bar with brand background. Left/right slots for status items. Hidden on mobile (sm:flex).",
     install: "status-bar",
+    dependencies: [],
     usage: `import {
   StatusBar, StatusBarItem, StatusBarSeparator,
 } from "@/components/entrepta/status-bar"
@@ -418,6 +458,7 @@ import { Button } from "@/components/entrepta/button"
     description:
       "Horizontal navigation with left/center/right slots. Compose with TopNavLogo, TopNavLogoMark (brand tile), TopNavBreadcrumb, TopNavMenu, and TopNavLink. Links support active and external states.",
     install: "top-nav",
+    dependencies: [],
     usage: `import {
   TopNav, TopNavLogo, TopNavLogoMark,
   TopNavBreadcrumb, TopNavSeparator,
@@ -471,6 +512,7 @@ import { Button } from "@/components/entrepta/button"
     description:
       "Notification toasts via Sonner with entrepta tokens. Mount <Toaster> once in root layout, then call toast() anywhere.",
     install: "toast",
+    dependencies: ["sonner"],
     usage: `import { Toaster } from "@/components/entrepta/toast"
 import { toast } from "sonner"
 
@@ -509,6 +551,7 @@ toast("New update available")`,
     description:
       "Animated shimmer placeholder that respects prefers-reduced-motion. Use SkeletonText for multi-line text blocks.",
     install: "skeleton",
+    dependencies: [],
     usage: `import { Skeleton, SkeletonText } from "@/components/entrepta/skeleton"
 
 // Avatar + text row
@@ -540,6 +583,8 @@ toast("New update available")`,
     description:
       "⌘K command palette built with cmdk. Centered modal with ◆ brand-tinted selection, esc-to-close chip, and a status foot showing keyboard hints. Wire global shortcut with useCommandPalette.",
     install: "command-palette",
+    dependencies: ["cmdk", "@radix-ui/react-dialog", "lucide-react"],
+    extraFiles: ["hooks/use-command-palette.ts"],
     usage: `import {
   Command, CommandDialog, CommandInput,
   CommandList, CommandGroup, CommandItem, CommandEmpty,
@@ -606,6 +651,7 @@ export function MyPalette() {
     description:
       "Code container with optional macOS-style chrome, filename and language labels, and a one-click copy button. Pass raw code via the `code` prop; provide `children` for syntax-highlighted JSX rendering.",
     install: "code-block",
+    dependencies: ["lucide-react"],
     usage: `import { CodeBlock } from "@/components/entrepta/code-block"
 
 // Plain copy-paste snippet
@@ -676,6 +722,8 @@ export default async function ComponentPage({
   const component = COMPONENTS[slug];
   if (!component) notFound();
 
+  const sources = await getComponentSources(component);
+
   return (
     <article className="max-w-3xl">
       <div className="font-mono text-[10px] uppercase tracking-widest text-[var(--fg-brand)] mb-6">
@@ -685,15 +733,9 @@ export default async function ComponentPage({
       <h1 className="font-serif text-4xl font-normal text-[var(--fg-primary)] leading-tight tracking-tight mb-3">
         {component.title}
       </h1>
-      <p className="font-sans text-base text-[var(--fg-secondary)] leading-relaxed mb-8">
+      <p className="font-sans text-base text-[var(--fg-secondary)] leading-relaxed mb-10">
         {component.description}
       </p>
-
-      <div className="flex items-center gap-3 mb-10">
-        <code className="font-mono text-xs text-[var(--fg-brand)] bg-[var(--bg-canvas)] border border-[var(--border-subtle)] px-3 py-1.5 rounded-[var(--radius-sm)]">
-          npx entrepta add {component.install}
-        </code>
-      </div>
 
       <section className="mb-10">
         <h2 className="font-mono text-[10px] uppercase tracking-widest text-[var(--fg-muted)] border-b border-[var(--border-subtle)] pb-2 mb-6">
@@ -702,6 +744,17 @@ export default async function ComponentPage({
         <div className="border border-[var(--border-subtle)] rounded-[var(--radius-md)] bg-[var(--bg-canvas)] min-h-40 flex items-center justify-center p-8">
           <ComponentPreview slug={slug} />
         </div>
+      </section>
+
+      <section className="mb-10">
+        <h2 className="font-mono text-[10px] uppercase tracking-widest text-[var(--fg-muted)] border-b border-[var(--border-subtle)] pb-2 mb-6">
+          Installation
+        </h2>
+        <ComponentInstall
+          cliCommand={`npx entrepta add ${component.install}`}
+          dependencies={component.dependencies}
+          files={sources}
+        />
       </section>
 
       <section className="mb-10">
