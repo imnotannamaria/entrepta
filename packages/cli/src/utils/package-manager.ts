@@ -14,10 +14,12 @@ export async function detectPackageManager(cwd: string): Promise<PackageManager>
 export function installDeps(deps: string[], cwd: string, pm: PackageManager): Promise<void> {
   return new Promise((resolve, reject) => {
     const args = pm === "npm" ? ["install", ...deps] : ["add", ...deps];
-    const proc = spawn(pm, args, { cwd, stdio: "inherit", shell: true });
+    // shell: false (default) so package names are not interpreted by the shell.
+    const proc = spawn(pm, args, { cwd, stdio: "inherit" });
+    proc.on("error", (err) => reject(err));
     proc.on("close", (code) => {
       if (code === 0) resolve();
-      else reject(new Error(`${pm} add failed with exit code ${code}`));
+      else reject(new Error(`${pm} ${args[0]} failed with exit code ${code}`));
     });
   });
 }
