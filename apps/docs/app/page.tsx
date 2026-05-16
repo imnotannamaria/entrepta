@@ -1,3 +1,4 @@
+import { HomeIdePreview } from "@/components/home-ide-preview";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteNav } from "@/components/site-nav";
 import { SiteStatusBar } from "@/components/site-status-bar";
@@ -264,92 +265,7 @@ export default function Home() {
             </dl>
           </div>
 
-          {/* Editor preview (decorative IDE chrome) */}
-          <aside
-            className="hidden lg:flex flex-col rounded-[var(--radius-lg)] border border-[var(--border-strong)] overflow-hidden bg-[var(--bg-canvas)] shadow-[0_24px_48px_rgba(0,0,0,0.4)]"
-            aria-hidden="true"
-          >
-            {/* file tabs */}
-            <div className="flex items-stretch bg-[var(--bg-canvas)] border-b border-[var(--border-subtle)]">
-              {[
-                { name: "tokens.css", active: true },
-                { name: "card.tsx", active: false },
-                { name: "theme.ts", active: false },
-              ].map((tab) => (
-                <span
-                  key={tab.name}
-                  className={`inline-flex items-center gap-2 px-4 py-3 font-mono text-[12px] border-r border-[var(--border-subtle)] ${
-                    tab.active
-                      ? "text-[var(--fg-primary)] bg-[var(--bg-surface)]"
-                      : "text-[var(--fg-muted)]"
-                  }`}
-                >
-                  <span
-                    className={`text-[9px] leading-none ${
-                      tab.active ? "text-[var(--fg-brand)]" : "text-transparent"
-                    }`}
-                  >
-                    ◆
-                  </span>
-                  {tab.name}
-                </span>
-              ))}
-            </div>
-            {/* code */}
-            <div className="flex flex-1">
-              <div className="flex flex-col items-end pr-4 pt-4 font-mono text-[11px] text-[var(--border-strong)] select-none">
-                {Array.from({ length: 8 }, (_, i) => (
-                  // biome-ignore lint/suspicious/noArrayIndexKey: static line numbers, never reordered
-                  <span key={i} className="leading-6">
-                    {i + 1}
-                  </span>
-                ))}
-              </div>
-              <pre className="flex-1 pt-4 pb-4 pr-4 font-mono text-[12px] leading-6 overflow-x-auto">
-                <span className="text-[var(--fg-muted)]">{"/* entrepta · semantic tokens */"}</span>
-                {"\n"}
-                <span className="text-[var(--status-info)]">{":root"}</span>
-                <span className="text-[var(--fg-secondary)]">{" {"}</span>
-                {"\n  "}
-                <span className="text-[var(--fg-brand)]">{"--fg-brand"}</span>
-                <span className="text-[var(--fg-secondary)]">{": "}</span>
-                <span className="text-[var(--status-success-fg)]">{"#7C6BFF"}</span>
-                <span className="text-[var(--fg-secondary)]">{";"}</span>
-                {"\n  "}
-                <span className="text-[var(--fg-brand)]">{"--bg-canvas"}</span>
-                <span className="text-[var(--fg-secondary)]">{": "}</span>
-                <span className="text-[var(--status-success-fg)]">{"#09090B"}</span>
-                <span className="text-[var(--fg-secondary)]">{";"}</span>
-                {"\n  "}
-                <span className="text-[var(--fg-brand)]">{"--bg-surface"}</span>
-                <span className="text-[var(--fg-secondary)]">{": "}</span>
-                <span className="text-[var(--status-success-fg)]">{"#18181B"}</span>
-                <span className="text-[var(--fg-secondary)]">{";"}</span>
-                {"\n"}
-                <span className="text-[var(--fg-secondary)]">{"}"}</span>
-                {"\n"}
-                <span className="text-[var(--fg-muted)]">{"// theme: emerald"}</span>
-                {"\n"}
-                <span className="text-[var(--status-info)]">{"[data-theme"}</span>
-                <span className="text-[var(--fg-secondary)]">{"="}</span>
-                <span className="text-[var(--status-warning)]">{'"emerald"'}</span>
-                <span className="text-[var(--status-info)]">{"]"}</span>
-                <span className="text-[var(--fg-secondary)]">{" {"}</span>
-                {"\n  "}
-                <span className="text-[var(--fg-brand)]">{"--fg-brand"}</span>
-                <span className="text-[var(--fg-secondary)]">{": "}</span>
-                <span className="text-[var(--status-success-fg)]">{"#10B981"}</span>
-                <span className="text-[var(--fg-secondary)]">{";"}</span>
-                {"\n"}
-                <span className="text-[var(--fg-secondary)]">{"}"}</span>
-              </pre>
-            </div>
-            {/* statusbar inline */}
-            <div className="py-1.5 px-4 flex items-center justify-between gap-4 bg-[var(--fg-brand)] font-mono text-[11px] text-[var(--zinc-50)]">
-              <span className="opacity-95">TypeScript · UTF-8 · Ln 4, Col 18</span>
-              <span className="opacity-95">anna@recife</span>
-            </div>
-          </aside>
+          <HomeIdePreview />
         </section>
 
         {/* ── INSTALL ── */}
