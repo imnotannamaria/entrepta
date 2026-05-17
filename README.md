@@ -77,7 +77,7 @@ export function Hero() {
 ```
 entrepta/
 ├── apps/
-│   └── docs/          Next.js site at entrepta.dev
+│   └── docs/          Next.js site at entrepta.vercel.app
 ├── packages/
 │   ├── cli/           npx entrepta — init, add
 │   └── registry/      source of truth for components, tokens, themes

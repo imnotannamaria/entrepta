@@ -14,7 +14,7 @@ const mockReadFile = vi.mocked(fs.readFile);
 const mockWriteFile = vi.mocked(fs.writeFile);
 
 const MOCK_CONFIG: EntryptaConfig = {
-  $schema: "https://entrepta.dev/schema.json",
+  $schema: "https://entrepta.vercel.app/schema.json",
   theme: "entrepta",
   tsx: true,
   rsc: true,

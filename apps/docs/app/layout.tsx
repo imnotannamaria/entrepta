@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://entrepta.vercel.app"),
   title: "entrepta · a personal design system",
   description:
     "Dark-first design system posed as an IDE. Copy-paste components, CSS tokens, CLI. Built by Anna Maria.",

@@ -342,7 +342,7 @@ function TooltipPreview() {
               live
             </Badge>
           </TooltipTrigger>
-          <TooltipContent side="right">deploy.entrepta.dev</TooltipContent>
+          <TooltipContent side="right">entrepta.vercel.app</TooltipContent>
         </Tooltip>
       </div>
     </TooltipProvider>

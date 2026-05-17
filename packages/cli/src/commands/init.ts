@@ -49,7 +49,7 @@ export async function init(options: { theme?: string; overwrite: boolean }) {
 
   // write entrepta.json
   const config = {
-    $schema: "https://entrepta.dev/schema.json",
+    $schema: "https://entrepta.vercel.app/schema.json",
     theme,
     tsx: true,
     rsc: true,

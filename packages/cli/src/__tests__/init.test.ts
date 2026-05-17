@@ -139,7 +139,7 @@ describe("init", () => {
       expect(mockWriteConfig).toHaveBeenCalledWith(
         expect.any(String),
         expect.objectContaining({
-          $schema: expect.stringContaining("entrepta.dev"),
+          $schema: expect.stringContaining("entrepta.vercel.app"),
           theme: "blossom",
           tsx: true,
           aliases: expect.objectContaining({

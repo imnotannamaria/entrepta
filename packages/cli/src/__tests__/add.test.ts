@@ -46,7 +46,7 @@ const mockReadConfig = vi.mocked(readConfig);
 const mockInstallDeps = vi.mocked(installDeps);
 
 const MOCK_CONFIG = {
-  $schema: "https://entrepta.dev/schema.json",
+  $schema: "https://entrepta.vercel.app/schema.json",
   theme: "entrepta" as const,
   tsx: true,
   rsc: true,
