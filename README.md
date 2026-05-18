@@ -5,7 +5,7 @@ A dark-first design system for sites that look like they were built by an engine
 Copy-paste components. CSS tokens. No SDK. You own the code.
 
 ```bash
-npx entrepta init
+npx @entrepta/cli@latest init
 ```
 
 ## What you get
@@ -24,8 +24,8 @@ Plus 6 theme presets you can switch with one flag: `entrepta`, `blossom`, `marma
 ### With the CLI
 
 ```bash
-npx entrepta init --theme=ivy
-npx entrepta add button card command-palette
+npx @entrepta/cli@latest init --theme=ivy
+npx @entrepta/cli@latest add button card command-palette
 ```
 
 The CLI writes your `globals.css`, sets up `lib/utils.ts`, installs peer deps, and copies the components into your project.
@@ -52,7 +52,7 @@ export function Hero() {
     <>
       <Button variant="primary">Ship</Button>
       <CodeBlock
-        code="npx entrepta init --theme=ivy"
+        code="npx @entrepta/cli@latest init --theme=ivy"
         variant="terminal"
         filename="terminal · zsh"
         language="bash"
@@ -79,7 +79,7 @@ entrepta/
 ├── apps/
 │   └── docs/          Next.js site at entrepta.vercel.app
 ├── packages/
-│   ├── cli/           npx entrepta — init, add
+│   ├── cli/           npx @entrepta/cli@latest — init, add
 │   └── registry/      source of truth for components, tokens, themes
 ```
 

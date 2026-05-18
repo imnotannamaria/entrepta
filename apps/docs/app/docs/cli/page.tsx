@@ -12,7 +12,7 @@ import {
 
 const COMMANDS = [
   {
-    cmd: "npx entrepta init",
+    cmd: "npx @entrepta/cli@latest init",
     title: "init",
     desc: "Bootstraps a project. Writes globals.css, lib/utils.ts, and entrepta.json. Prompts for a theme.",
     flags: [
@@ -21,19 +21,19 @@ const COMMANDS = [
     ],
   },
   {
-    cmd: "npx entrepta add <component>",
+    cmd: "npx @entrepta/cli@latest add <component>",
     title: "add",
     desc: "Copies one or more components into your project. Resolves dependencies automatically.",
     flags: [{ flag: "--overwrite", desc: "Overwrite without confirming" }],
   },
   {
-    cmd: "npx entrepta add",
+    cmd: "npx @entrepta/cli@latest add",
     title: "add (interactive)",
     desc: "Same as above, no args. Opens a picker with every available component.",
     flags: [],
   },
   {
-    cmd: "npx entrepta diff <component>",
+    cmd: "npx @entrepta/cli@latest diff <component>",
     title: "diff",
     desc: "Shows the diff between your local copy of a component and the current registry version.",
     flags: [],
@@ -66,18 +66,18 @@ export default function CliPage() {
           filename="terminal · zsh"
           meta="~/your-app"
           language="bash"
-          code={`npx entrepta init --theme=entrepta
-npx entrepta add button`}
+          code={`npx @entrepta/cli@latest init --theme=entrepta
+npx @entrepta/cli@latest add button`}
         >
           <div className="flex flex-col gap-2">
             <div className="text-[var(--fg-secondary)]">
-              <span className="text-[var(--fg-brand)]">$</span> npx entrepta init
+              <span className="text-[var(--fg-brand)]">$</span> npx @entrepta/cli@latest init
               <span className="text-[var(--fg-muted)]"> --theme=entrepta</span>
             </div>
             <div className="text-[var(--fg-muted)] text-[11px] pl-3">→ wrote app/globals.css</div>
             <div className="text-[var(--fg-muted)] text-[11px] pl-3">→ created entrepta.json</div>
             <div className="text-[var(--fg-secondary)] mt-2">
-              <span className="text-[var(--fg-brand)]">$</span> npx entrepta add button
+              <span className="text-[var(--fg-brand)]">$</span> npx @entrepta/cli@latest add button
             </div>
             <div className="text-[var(--fg-muted)] text-[11px] pl-3">
               → copied components/entrepta/button.tsx

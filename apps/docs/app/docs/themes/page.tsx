@@ -115,8 +115,8 @@ export default function ThemesPage() {
         <p className="mt-4 font-mono text-[11px] text-[var(--fg-muted)] leading-relaxed">
           <span className="text-[var(--fg-brand)]">{"// "}</span>
           Switch at any time by running{" "}
-          <code className="text-[var(--fg-primary)]">npx entrepta theme blossom</code>. Existing
-          components pick up the new brand color on next page load.
+          <code className="text-[var(--fg-primary)]">npx @entrepta/cli@latest theme blossom</code>.
+          Existing components pick up the new brand color on next page load.
         </p>
       </section>
     </article>

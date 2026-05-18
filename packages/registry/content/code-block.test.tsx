@@ -2,7 +2,7 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { CodeBlock } from "./code-block";
 
-const SAMPLE = "npx entrepta init --theme=ivy";
+const SAMPLE = "npx @entrepta/cli@latest init --theme=ivy";
 
 function mockClipboard() {
   const writeText = vi.fn(async () => undefined);

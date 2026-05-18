@@ -16,12 +16,12 @@ import Link from "next/link";
 const QUICK_START = [
   {
     num: "01",
-    cmd: "npx entrepta init --theme=entrepta",
+    cmd: "npx @entrepta/cli@latest init --theme=entrepta",
     comment: "setup tokens + config",
   },
   {
     num: "02",
-    cmd: "npx entrepta add button badge input",
+    cmd: "npx @entrepta/cli@latest add button badge input",
     comment: "copy components",
   },
   {

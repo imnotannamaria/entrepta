@@ -156,7 +156,7 @@ export function cn(...inputs: ClassValue[]) {
   }
 
   log.success(`\nentrepta initialized with theme: ${theme}`);
-  log.info(`Run "npx entrepta add <component>" to add components.`);
+  log.info(`Run "npx @entrepta/cli@latest add <component>" to add components.`);
 }
 
 async function fileExists(filePath: string): Promise<boolean> {

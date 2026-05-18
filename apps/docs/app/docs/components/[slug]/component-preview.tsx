@@ -77,9 +77,9 @@ function ButtonPreview() {
     <div className="flex flex-col gap-6 w-full max-w-md">
       <div className="flex flex-wrap items-center gap-3">
         <Button>./projects.sh →</Button>
-        <Button variant="secondary">$ npx entrepta init</Button>
+        <Button variant="secondary">$ npx @entrepta/cli@latest init</Button>
         <Button variant="ghost">cat contact.txt</Button>
-        <Button variant="command">npx entrepta add button</Button>
+        <Button variant="command">npx @entrepta/cli@latest add button</Button>
       </div>
       <div className="flex flex-wrap items-center gap-3">
         <Button size="sm">small 32h</Button>
@@ -212,10 +212,10 @@ function CardPreview() {
         <CardTerminalBody>
           <div>
             <span className="text-[var(--fg-muted)]">$</span> npx{" "}
-            <span className="text-[var(--fg-brand)]">entrepta</span> init
+            <span className="text-[var(--fg-brand)]">@entrepta/cli@latest</span> init
           </div>
           <div>
-            <span className="text-[var(--fg-muted)]">$</span> entrepta add{" "}
+            <span className="text-[var(--fg-muted)]">$</span> npx @entrepta/cli@latest add{" "}
             <span className="text-[var(--status-success-fg)]">button</span>
           </div>
           <div className="text-[var(--fg-muted)] mt-2">{"// 1 component installed"}</div>
@@ -620,8 +620,8 @@ function CodeBlockPreview() {
   return (
     <div className="flex flex-col gap-4 w-full max-w-xl">
       <CodeBlock
-        code={`npx entrepta init --theme=ivy
-npx entrepta add button card command-palette`}
+        code={`npx @entrepta/cli@latest init --theme=ivy
+npx @entrepta/cli@latest add button card command-palette`}
         filename="terminal · zsh"
         meta="~/your-app"
         variant="terminal"

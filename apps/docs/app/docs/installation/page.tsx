@@ -70,14 +70,14 @@ export default function InstallationPage() {
           filename="terminal · zsh"
           meta="~/your-app"
           language="bash"
-          code={`npx entrepta init
-npx entrepta init --theme=ivy`}
+          code={`npx @entrepta/cli@latest init
+npx @entrepta/cli@latest init --theme=ivy`}
         >
           <div className="flex flex-col gap-3">
             <div>
               <span className="text-[var(--fg-muted)] text-[11px] mr-3">01</span>
               <span className="text-[var(--fg-brand)]">$</span>{" "}
-              <span className="text-[var(--fg-primary)]">npx entrepta init</span>
+              <span className="text-[var(--fg-primary)]">npx @entrepta/cli@latest init</span>
               <span className="text-[var(--fg-muted)] text-[11px] ml-3">
                 {"// prompts for a theme"}
               </span>
@@ -85,7 +85,9 @@ npx entrepta init --theme=ivy`}
             <div>
               <span className="text-[var(--fg-muted)] text-[11px] mr-3">02</span>
               <span className="text-[var(--fg-brand)]">$</span>{" "}
-              <span className="text-[var(--fg-primary)]">npx entrepta init --theme=ivy</span>
+              <span className="text-[var(--fg-primary)]">
+                npx @entrepta/cli@latest init --theme=ivy
+              </span>
               <span className="text-[var(--fg-muted)] text-[11px] ml-3">
                 {"// skip the prompt"}
               </span>
@@ -118,7 +120,7 @@ npx entrepta init --theme=ivy`}
         <DocSubhead count="step 2">Add components</DocSubhead>
         <Card>
           <CardHeader>
-            <CardLabel>npx entrepta add</CardLabel>
+            <CardLabel>npx @entrepta/cli@latest add</CardLabel>
             <CardMeta>copy paste</CardMeta>
           </CardHeader>
           <CardTitle className="text-[20px]">
@@ -127,7 +129,7 @@ npx entrepta init --theme=ivy`}
           <p className="font-sans text-[13px] leading-relaxed text-[var(--fg-secondary)] m-0">
             Run{" "}
             <code className="font-mono text-[var(--fg-brand)]">
-              npx entrepta add button badge input
+              npx @entrepta/cli@latest add button badge input
             </code>{" "}
             and the components land in <code className="font-mono">components/entrepta/</code>. Edit
             them like any other file in your repo.

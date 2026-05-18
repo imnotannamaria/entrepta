@@ -55,7 +55,7 @@ describe("Button", () => {
   });
 
   it("applies command variant class", () => {
-    const { container } = render(<Button variant="command">npx entrepta init</Button>);
+    const { container } = render(<Button variant="command">npx @entrepta/cli@latest init</Button>);
     expect(container.firstChild).toHaveClass("bg-[var(--bg-surface)]");
     expect(container.firstChild).toHaveClass("border-[var(--border-subtle)]");
   });

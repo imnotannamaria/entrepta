@@ -152,7 +152,7 @@ const COMPONENT_CATEGORIES = [
           </span>
         </div>
         <div className="px-3 py-2 text-[var(--fg-secondary)]">
-          <span className="text-[var(--fg-brand)]">$</span> npx entrepta add code-block
+          <span className="text-[var(--fg-brand)]">$</span> npx @entrepta/cli@latest add code-block
         </div>
       </div>
     ),
@@ -188,13 +188,13 @@ const COMPONENT_CATEGORIES = [
     label: "cli",
     num: "03",
     name: "CLI",
-    desc: "npx entrepta init · add · diff. Copy-paste without the clipboard.",
+    desc: "npx @entrepta/cli@latest init · add · diff. Copy-paste without the clipboard.",
     count: "3 commands",
     href: "/docs/cli",
     preview: (
       <div className="px-3 py-2 bg-[var(--bg-canvas)] border border-[var(--border-subtle)] rounded-[var(--radius-sm)] font-mono text-[11px] text-[var(--fg-secondary)]">
-        <span className="text-[var(--fg-muted)]">$</span>{" "}
-        <span className="text-[var(--fg-brand)]">entrepta</span> add button
+        <span className="text-[var(--fg-muted)]">$</span> npx{" "}
+        <span className="text-[var(--fg-brand)]">@entrepta/cli@latest</span> add button
       </div>
     ),
   },
@@ -203,12 +203,12 @@ const COMPONENT_CATEGORIES = [
 const INSTALL_STEPS = [
   {
     num: "01",
-    cmd: "npx entrepta init --theme=entrepta",
+    cmd: "npx @entrepta/cli@latest init --theme=entrepta",
     out: "wrote app/globals.css · created entrepta.json",
   },
   {
     num: "02",
-    cmd: "npx entrepta add button badge input",
+    cmd: "npx @entrepta/cli@latest add button badge input",
     out: "3 components copied to components/entrepta/",
   },
   {
@@ -262,7 +262,7 @@ export default function Home() {
               </Link>
               <Link href="#install">
                 <Button variant="command" size="lg">
-                  npx entrepta init
+                  npx @entrepta/cli@latest init
                 </Button>
               </Link>
               <CommandPaletteTrigger />

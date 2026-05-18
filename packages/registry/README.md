@@ -9,8 +9,8 @@ This package is the source of truth for entrepta's components, themes, and token
 Components are copy-paste. Use the CLI:
 
 ```bash
-npx entrepta init
-npx entrepta add button card
+npx @entrepta/cli@latest init
+npx @entrepta/cli@latest add button card
 ```
 
 Or open the [docs](https://github.com/imnotannamaria/entrepta) and copy any component by hand via its **Manual** tab.

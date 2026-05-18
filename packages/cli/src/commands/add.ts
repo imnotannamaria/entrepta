@@ -12,7 +12,7 @@ export async function add(components: string[], options: { overwrite: boolean })
 
   const config = await readConfig(cwd);
   if (!config) {
-    log.error("entrepta.json not found. Run `npx entrepta init` first.");
+    log.error("entrepta.json not found. Run `npx @entrepta/cli@latest init` first.");
     process.exit(1);
   }
 

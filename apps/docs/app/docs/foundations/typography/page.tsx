@@ -78,7 +78,7 @@ const SCALE = [
     spec: "14 / 21 · mono",
     sample: (
       <span className="font-mono text-[14px] leading-[21px] text-[var(--fg-primary)]">
-        $ npx entrepta init
+        $ npx @entrepta/cli@latest init
       </span>
     ),
   },

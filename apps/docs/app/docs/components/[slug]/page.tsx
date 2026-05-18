@@ -65,9 +65,9 @@ const COMPONENTS: Record<string, ComponentDef> = {
     usage: `import { Button } from "@/components/entrepta/button"
 
 <Button>./projects.sh →</Button>
-<Button variant="secondary">$ npx entrepta init</Button>
+<Button variant="secondary">$ npx @entrepta/cli@latest init</Button>
 <Button variant="ghost">cat contact.txt</Button>
-<Button variant="command">npx entrepta add button</Button>
+<Button variant="command">npx @entrepta/cli@latest add button</Button>
 <Button size="sm" loading>Loading…</Button>`,
     props: [
       {
@@ -202,7 +202,7 @@ const COMPONENTS: Record<string, ComponentDef> = {
     <CardLabel>install</CardLabel>
     <CardMeta>v0.1.0</CardMeta>
   </CardTerminalBar>
-  <CardTerminalBody>$ npx entrepta init</CardTerminalBody>
+  <CardTerminalBody>$ npx @entrepta/cli@latest init</CardTerminalBody>
 </Card>`,
     props: [
       {
@@ -661,7 +661,7 @@ export function MyPalette() {
 
 // Plain copy-paste snippet
 <CodeBlock
-  code={\`npx entrepta init --theme=ivy\`}
+  code={\`npx @entrepta/cli@latest init --theme=ivy\`}
   filename="install.sh"
   language="bash"
   variant="terminal"
@@ -756,7 +756,7 @@ export default async function ComponentPage({
           Installation
         </h2>
         <ComponentInstall
-          cliCommand={`npx entrepta add ${component.install}`}
+          cliCommand={`npx @entrepta/cli@latest add ${component.install}`}
           dependencies={component.dependencies}
           files={sources}
         />
