@@ -30,7 +30,7 @@ const dropdownItemClass = cn(
   "rounded-[var(--radius-sm)] px-3 py-2",
   "font-mono text-[13px] text-[var(--fg-secondary)]",
   "outline-none transition-colors duration-150",
-  "focus:bg-[var(--bg-surface-elevated)] focus:text-[var(--fg-primary)]",
+  "focus:bg-[var(--bg-surface-elevated)] focus:text-[var(--fg-primary)] focus:shadow-[inset_2px_0_0_var(--fg-brand)]",
   "data-[state=open]:bg-[var(--bg-surface-elevated)]",
   "data-[disabled]:pointer-events-none data-[disabled]:opacity-40"
 );

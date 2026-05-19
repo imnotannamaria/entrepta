@@ -64,8 +64,11 @@ const TabsTrigger = React.forwardRef<
     )}
     <span>{children}</span>
     {onClose && (
+      // biome-ignore lint/a11y/useSemanticElements: HTML forbids nesting <button> inside <button>; the Radix Trigger is already a button, so the close affordance must be a span.
+      // biome-ignore lint/a11y/useFocusableInteractive: Same reason — the parent Trigger handles tab focus; the close acts on mousedown only by design.
       <span
-        aria-hidden
+        role="button"
+        aria-label="Close tab"
         title="Close tab"
         onMouseDown={(e) => {
           e.stopPropagation();
@@ -80,7 +83,9 @@ const TabsTrigger = React.forwardRef<
           "hover:!opacity-100 hover:bg-white/[0.08] hover:text-[var(--fg-primary)]"
         )}
       >
-        <span className="text-sm leading-none">×</span>
+        <span aria-hidden className="text-sm leading-none">
+          ×
+        </span>
       </span>
     )}
   </TabsPrimitive.Trigger>
@@ -93,7 +98,10 @@ const TabsContent = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <TabsPrimitive.Content
     ref={ref}
-    className={cn("focus-visible:outline-none", className)}
+    className={cn(
+      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg-canvas)] rounded-[var(--radius-sm)]",
+      className
+    )}
     {...props}
   />
 ));

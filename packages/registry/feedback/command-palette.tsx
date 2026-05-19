@@ -76,13 +76,14 @@ const CommandInput = React.forwardRef<
     />
     <CommandPrimitive.Input
       ref={ref}
+      aria-label="Search commands"
+      {...props}
       className={cn(
         "flex-1 bg-transparent border-0 outline-none appearance-none",
         "font-mono text-[14px] text-[var(--fg-primary)]",
         "placeholder:text-[var(--fg-muted)]",
         className
       )}
-      {...props}
     />
     {showEsc && (
       <DialogPrimitive.Close asChild>
