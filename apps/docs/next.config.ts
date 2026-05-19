@@ -1,13 +1,17 @@
 import type { NextConfig } from "next";
 
-// Single source of truth for the CSP. unsafe-inline on script-src is required
-// by the inline ThemeInitScript that prevents the light/dark flash before
-// hydration; unsafe-inline on style-src covers Tailwind's runtime styles and
-// the inline style props we use for theme dots. Both narrow the surface to
-// "inline only, no eval", which is the strictest setting compatible with our
-// build today. Migrating ThemeInitScript to a nonce-based strategy would let
-// us drop the script-src exception in the future.
-const csp = [
+// CSP for the production build. Notes on each directive:
+//   - script-src needs 'unsafe-inline' for the no-flash ThemeInitScript;
+//     migrating that to a nonce-based strategy would let us drop it.
+//   - style-src needs 'unsafe-inline' for Tailwind runtime + inline style
+//     props on theme dots.
+//   - We intentionally omit 'unsafe-eval' so the prod bundle can't eval.
+//
+// IMPORTANT: this CSP is only sent in production. Next.js dev mode uses
+// eval-source-map (the JS chunks are wrapped in eval(), which CSP would
+// block — every page becomes blank/inert because React never hydrates).
+// Vercel deploys are always production, so the policy still ships there.
+const productionCsp = [
   "default-src 'self'",
   "base-uri 'self'",
   "object-src 'none'",
@@ -21,8 +25,8 @@ const csp = [
   "upgrade-insecure-requests",
 ].join("; ");
 
-const securityHeaders = [
-  { key: "Content-Security-Policy", value: csp },
+const productionSecurityHeaders = [
+  { key: "Content-Security-Policy", value: productionCsp },
   { key: "X-Frame-Options", value: "DENY" },
   { key: "X-Content-Type-Options", value: "nosniff" },
   { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
@@ -36,15 +40,18 @@ const securityHeaders = [
   },
 ];
 
+const isProd = process.env.NODE_ENV === "production";
+
 const nextConfig: NextConfig = {
   transpilePackages: ["@entrepta/registry"],
   poweredByHeader: false,
   reactStrictMode: true,
   async headers() {
+    if (!isProd) return [];
     return [
       {
         source: "/:path*",
-        headers: securityHeaders,
+        headers: productionSecurityHeaders,
       },
     ];
   },
