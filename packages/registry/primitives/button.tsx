@@ -25,11 +25,11 @@ const buttonVariants = cva(
         ],
         secondary: [
           "bg-transparent text-[var(--fg-primary)] border-[var(--border-strong)]",
-          "hover:border-[var(--fg-muted)] hover:bg-white/[0.03]",
+          "hover:border-[var(--fg-muted)] hover:bg-[var(--bg-hover-soft)]",
         ],
         ghost: [
           "bg-transparent text-[var(--fg-secondary)] border-transparent",
-          "hover:text-[var(--fg-primary)] hover:bg-white/[0.04]",
+          "hover:text-[var(--fg-primary)] hover:bg-[var(--bg-hover-soft)]",
         ],
         command: [
           "bg-[var(--bg-surface)] text-[var(--fg-primary)] border-[var(--border-subtle)] font-normal",

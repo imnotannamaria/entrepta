@@ -8,3 +8,10 @@
   --bg-surface-brand: rgba(204, 46, 54, 0.14);
   --ring: rgba(204, 46, 54, 0.45);
 }
+
+:root[data-mode="light"] {
+  --fg-brand: #b8262e;
+  --fg-brand-hover: #cc2e36;
+  --bg-surface-brand: rgba(184, 38, 46, 0.08);
+  --ring: rgba(184, 38, 46, 0.4);
+}

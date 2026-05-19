@@ -80,7 +80,7 @@ const TabsTrigger = React.forwardRef<
           "text-[var(--fg-muted)] opacity-0 cursor-pointer",
           "transition-opacity duration-150",
           "group-hover:opacity-60 group-data-[state=active]:opacity-60",
-          "hover:!opacity-100 hover:bg-white/[0.08] hover:text-[var(--fg-primary)]"
+          "hover:!opacity-100 hover:bg-[var(--bg-hover-strong)] hover:text-[var(--fg-primary)]"
         )}
       >
         <span aria-hidden className="text-sm leading-none">

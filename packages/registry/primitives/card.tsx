@@ -40,7 +40,13 @@ export interface CardProps
 
 const Card = React.forwardRef<HTMLDivElement, CardProps>(
   ({ className, variant, ...props }, ref) => (
-    <div ref={ref} className={cn(cardVariants({ variant }), className)} {...props} />
+    <div
+      ref={ref}
+      // Terminal cards intentionally stay dark in light mode for the IDE-chrome feel.
+      data-surface={variant === "terminal" ? "dark" : undefined}
+      className={cn(cardVariants({ variant }), className)}
+      {...props}
+    />
   )
 );
 Card.displayName = "Card";
@@ -151,7 +157,7 @@ const CardTerminalBar = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HT
       ref={ref}
       className={cn(
         "flex items-center justify-between gap-3 px-4 py-3",
-        "border-b border-[var(--border-subtle)] bg-black/30",
+        "border-b border-[var(--border-subtle)] bg-[var(--bg-chrome)]",
         "font-mono text-[11px] uppercase tracking-[0.08em] text-[var(--fg-secondary)]",
         className
       )}

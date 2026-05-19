@@ -24,7 +24,7 @@ describe("Badge", () => {
 
   it("applies soft neutral variant by default", () => {
     const { container } = render(<Badge>default</Badge>);
-    expect(container.firstChild).toHaveClass("bg-white/[0.06]");
+    expect(container.firstChild).toHaveClass("bg-[var(--bg-hover-strong)]");
   });
 
   it("applies soft success with token bg/fg", () => {

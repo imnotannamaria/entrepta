@@ -66,6 +66,13 @@
   /* focus ring */
   --ring: rgba(124, 107, 255, 0.5); /* overridden by theme */
 
+  /* hover overlays (flip white→black in light mode) */
+  --bg-hover-soft: rgba(255, 255, 255, 0.04);
+  --bg-hover-strong: rgba(255, 255, 255, 0.08);
+
+  /* recessed surface used in chrome bars (code-block head, terminal bar) */
+  --bg-chrome: rgba(0, 0, 0, 0.3);
+
   /* status */
   --status-success: var(--emerald-500);
   --status-warning: var(--amber-500);
@@ -371,4 +378,52 @@ button:focus-visible,
   100% {
     background-position: -200% 0;
   }
+}
+
+/* ============================================================
+   LIGHT MODE — activated by data-mode="light" on <html>.
+   Dark is the default; the toggle is explicit, not OS-driven.
+   The theme block (--fg-brand etc.) lives separately, see your
+   chosen theme file in styles/themes/.
+   ============================================================ */
+
+:root[data-mode="light"] {
+  --bg-canvas: #fafafa;
+  --bg-surface: #ffffff;
+  --bg-surface-elevated: #f4f4f5;
+
+  --fg-primary: #09090b;
+  --fg-secondary: #52525b;
+  --fg-muted: #71717a;
+
+  --border-subtle: #e4e4e7;
+  --border-strong: #d4d4d8;
+
+  --bg-hover-soft: rgba(0, 0, 0, 0.04);
+  --bg-hover-strong: rgba(0, 0, 0, 0.08);
+  --bg-chrome: rgba(0, 0, 0, 0.03);
+
+  color-scheme: light;
+}
+
+/* Scoped "always dark" surface — for terminal cards, code blocks, tooltips
+   and any element that should feel like IDE chrome regardless of page mode.
+   Apply data-surface="dark" on the element root. */
+[data-surface="dark"] {
+  --bg-canvas: #09090b;
+  --bg-surface: #0e0e10;
+  --bg-surface-elevated: rgba(39, 39, 42, 0.6);
+
+  --fg-primary: #fafafa;
+  --fg-secondary: #a1a1aa;
+  --fg-muted: #71717a;
+
+  --border-subtle: #27272a;
+  --border-strong: #3f3f46;
+
+  --bg-hover-soft: rgba(255, 255, 255, 0.04);
+  --bg-hover-strong: rgba(255, 255, 255, 0.08);
+  --bg-chrome: rgba(0, 0, 0, 0.3);
+
+  color-scheme: dark;
 }

@@ -57,7 +57,7 @@ const DialogContent = React.forwardRef<
         className={cn(
           "absolute right-3 top-3 inline-flex items-center justify-center",
           "h-7 w-7 rounded-[var(--radius-sm)]",
-          "text-[var(--fg-muted)] hover:text-[var(--fg-primary)] hover:bg-white/[0.04]",
+          "text-[var(--fg-muted)] hover:text-[var(--fg-primary)] hover:bg-[var(--bg-hover-soft)]",
           "transition-colors duration-150",
           "focus-visible:outline-none focus-visible:[outline:2px_solid_var(--fg-brand)] focus-visible:outline-offset-2"
         )}

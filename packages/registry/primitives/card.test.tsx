@@ -106,7 +106,7 @@ describe("Card sub-components", () => {
   it("CardTerminalBar renders with darker background and border-bottom", () => {
     const { container } = render(<CardTerminalBar>~/project</CardTerminalBar>);
     expect(screen.getByText("~/project")).toBeInTheDocument();
-    expect(container.firstChild).toHaveClass("bg-black/30");
+    expect(container.firstChild).toHaveClass("bg-[var(--bg-chrome)]");
   });
 
   it("CardTerminalBody applies padding and mono font", () => {
