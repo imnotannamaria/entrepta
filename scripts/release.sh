@@ -48,27 +48,34 @@ fi
 ok "logged in as $(npm whoami)"
 
 pending_changesets="$(find .changeset -maxdepth 1 -name '*.md' ! -name 'README.md' | wc -l | tr -d ' ')"
-if [[ "$pending_changesets" == "0" ]]; then
-  fail "No pending changesets in .changeset/. Run 'pnpm changeset' first."
-fi
 ok "${pending_changesets} pending changeset(s)"
 
 # ── bump versions ────────────────────────────────────────────────────────
 
-step "Bumping versions from changesets"
-pnpm changeset version
+if [[ "$pending_changesets" != "0" ]]; then
+  step "Bumping versions from changesets"
+  pnpm changeset version
+else
+  step "No pending changesets — using current versions (recovery mode)"
+fi
 
 registry_version="$(node -p "require('./packages/registry/package.json').version")"
 cli_version="$(node -p "require('./packages/cli/package.json').version")"
 ok "@entrepta/registry  → ${registry_version}"
 ok "@entrepta/cli       → ${cli_version}"
 
+publish_registry=true
+publish_cli=true
 if npm view "@entrepta/registry@${registry_version}" version >/dev/null 2>&1; then
-  fail "@entrepta/registry@${registry_version} is already on npm. Something is off — abort."
+  publish_registry=false
+  ok "@entrepta/registry@${registry_version} already on npm — will skip"
 fi
-
 if npm view "@entrepta/cli@${cli_version}" version >/dev/null 2>&1; then
-  fail "@entrepta/cli@${cli_version} is already on npm. Something is off — abort."
+  publish_cli=false
+  ok "@entrepta/cli@${cli_version} already on npm — will skip"
+fi
+if ! $publish_registry && ! $publish_cli; then
+  fail "Nothing to publish — both versions already on npm. Bump versions first."
 fi
 
 # ── build + test ─────────────────────────────────────────────────────────
@@ -101,21 +108,37 @@ fi
 
 # ── publish ──────────────────────────────────────────────────────────────
 
-step "Publishing @entrepta/registry@${registry_version}"
-pnpm --filter @entrepta/registry publish --access public --no-git-checks --no-provenance
+if $publish_registry; then
+  step "Publishing @entrepta/registry@${registry_version}"
+  pnpm --filter @entrepta/registry publish --access public --no-git-checks --no-provenance
+else
+  step "Skipping @entrepta/registry@${registry_version} (already published)"
+fi
 
-step "Publishing @entrepta/cli@${cli_version}"
-pnpm --filter @entrepta/cli publish --access public --no-git-checks --no-provenance
+if $publish_cli; then
+  step "Publishing @entrepta/cli@${cli_version}"
+  pnpm --filter @entrepta/cli publish --access public --no-git-checks --no-provenance
+else
+  step "Skipping @entrepta/cli@${cli_version} (already published)"
+fi
 
-# ── commit + push ────────────────────────────────────────────────────────
+# ── commit + tag + push ──────────────────────────────────────────────────
 
-step "Committing version bump"
-git add .
-git commit -m "chore: release @entrepta/cli@${cli_version} + @entrepta/registry@${registry_version}"
+if [[ -n "$(git status --porcelain)" ]]; then
+  step "Committing version bump"
+  git add .
+  git commit -m "chore: release @entrepta/cli@${cli_version} + @entrepta/registry@${registry_version}"
+else
+  step "No file changes to commit (recovery mode)"
+fi
 
-step "Tagging"
-git tag "@entrepta/registry@${registry_version}"
-git tag "@entrepta/cli@${cli_version}"
+step "Tagging (skipping tags that already exist)"
+if $publish_registry && ! git rev-parse "@entrepta/registry@${registry_version}" >/dev/null 2>&1; then
+  git tag "@entrepta/registry@${registry_version}"
+fi
+if $publish_cli && ! git rev-parse "@entrepta/cli@${cli_version}" >/dev/null 2>&1; then
+  git tag "@entrepta/cli@${cli_version}"
+fi
 
 step "Pushing to origin"
 git push origin main
@@ -124,8 +147,8 @@ git push origin --tags
 # ── done ─────────────────────────────────────────────────────────────────
 
 echo
-ok "Published @entrepta/registry@${registry_version}"
-ok "Published @entrepta/cli@${cli_version}"
+if $publish_registry; then ok "Published @entrepta/registry@${registry_version}"; fi
+if $publish_cli; then ok "Published @entrepta/cli@${cli_version}"; fi
 echo
 bold "Verify"
 echo "  npm view @entrepta/cli@${cli_version}"

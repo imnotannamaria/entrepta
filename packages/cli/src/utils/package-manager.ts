@@ -13,7 +13,11 @@ export async function detectPackageManager(cwd: string): Promise<PackageManager>
 
 export function installDeps(deps: string[], cwd: string, pm: PackageManager): Promise<void> {
   return new Promise((resolve, reject) => {
-    const args = pm === "npm" ? ["install", ...deps] : ["add", ...deps];
+    // Suppress npm's audit + fund output so users don't see warnings about
+    // pre-existing vulnerabilities in their project (unrelated to entrepta).
+    // pnpm/yarn/bun don't run audit during install, so no flags needed.
+    const npmFlags = pm === "npm" ? ["--no-audit", "--no-fund"] : [];
+    const args = pm === "npm" ? ["install", ...npmFlags, ...deps] : ["add", ...deps];
     // shell: false (default) so package names are not interpreted by the shell.
     const proc = spawn(pm, args, { cwd, stdio: "inherit" });
     proc.on("error", (err) => reject(err));
