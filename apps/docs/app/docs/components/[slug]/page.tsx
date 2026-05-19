@@ -13,7 +13,23 @@ async function readSourceFile(relPath: string): Promise<string> {
   if (relative.startsWith("..") || path.isAbsolute(relative)) {
     throw new Error(`Refusing to read outside the registry root: ${relPath}`);
   }
-  return fs.readFile(resolved, "utf-8");
+  const raw = await fs.readFile(resolved, "utf-8");
+  return rewriteImportsForConsumer(raw);
+}
+
+/**
+ * Rewrite registry-internal import paths to the aliases users see in their
+ * own project, so Manual-tab copy-paste works without manual edits.
+ *
+ * Today only `../lib/utils` → `@/lib/utils` is needed (no component-to-component
+ * relative imports exist in production sources). Add more cases here as the
+ * registry grows.
+ */
+function rewriteImportsForConsumer(source: string): string {
+  return source.replace(
+    /from\s+(['"])\.\.\/lib\/utils\1/g,
+    (_, quote: string) => `from ${quote}@/lib/utils${quote}`
+  );
 }
 
 async function getComponentSources(
