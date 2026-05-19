@@ -67,6 +67,13 @@
   /* focus ring */
   --ring: rgba(124, 107, 255, 0.5); /* overridden by theme */
 
+  /* hover overlays (flip white→black in light mode) */
+  --bg-hover-soft: rgba(255, 255, 255, 0.04);
+  --bg-hover-strong: rgba(255, 255, 255, 0.08);
+
+  /* recessed surface used in chrome bars (code-block head, terminal bar) */
+  --bg-chrome: rgba(0, 0, 0, 0.3);
+
   /* status */
   --status-success: var(--emerald-500);
   --status-warning: var(--amber-500);
@@ -420,5 +427,96 @@ button:focus-visible,
   --fg-brand-hover: #4f86f3;
   --bg-surface-brand: rgba(37, 99, 235, 0.14);
   --ring: rgba(37, 99, 235, 0.45);
+}
+
+/* ============================================================
+   LIGHT MODE — activated by data-mode="light" on <html>.
+   Dark is the default; the toggle is explicit, not OS-driven.
+   ============================================================ */
+
+:root[data-mode="light"] {
+  --bg-canvas: #fafafa;
+  --bg-surface: #ffffff;
+  --bg-surface-elevated: #f4f4f5;
+
+  --fg-primary: #09090b;
+  --fg-secondary: #52525b;
+  --fg-muted: #71717a;
+
+  --border-subtle: #e4e4e7;
+  --border-strong: #d4d4d8;
+
+  --bg-hover-soft: rgba(0, 0, 0, 0.04);
+  --bg-hover-strong: rgba(0, 0, 0, 0.08);
+  --bg-chrome: rgba(0, 0, 0, 0.03);
+
+  color-scheme: light;
+}
+
+/* Scoped "always dark" surface — for terminal cards, code blocks, tooltips
+   and other elements that need to feel like an IDE chrome regardless of the
+   page mode. Apply data-surface="dark" on the element root. */
+[data-surface="dark"] {
+  --bg-canvas: #09090b;
+  --bg-surface: #0e0e10;
+  --bg-surface-elevated: rgba(39, 39, 42, 0.6);
+
+  --fg-primary: #fafafa;
+  --fg-secondary: #a1a1aa;
+  --fg-muted: #71717a;
+
+  --border-subtle: #27272a;
+  --border-strong: #3f3f46;
+
+  --bg-hover-soft: rgba(255, 255, 255, 0.04);
+  --bg-hover-strong: rgba(255, 255, 255, 0.08);
+  --bg-chrome: rgba(0, 0, 0, 0.3);
+
+  color-scheme: dark;
+}
+
+/* Per-theme brand color shifts slightly darker on light backgrounds so
+   it still meets AA contrast against #FAFAFA / #FFFFFF surfaces. */
+:root[data-mode="light"],
+:root[data-mode="light"][data-theme="entrepta"] {
+  --fg-brand: #6b5bff;
+  --fg-brand-hover: #5848e0;
+  --bg-surface-brand: rgba(107, 91, 255, 0.08);
+  --ring: rgba(107, 91, 255, 0.4);
+}
+
+:root[data-mode="light"][data-theme="blossom"] {
+  --fg-brand: #b8262e;
+  --fg-brand-hover: #cc2e36;
+  --bg-surface-brand: rgba(184, 38, 46, 0.08);
+  --ring: rgba(184, 38, 46, 0.4);
+}
+
+:root[data-mode="light"][data-theme="marmalade"] {
+  --fg-brand: #d96b00;
+  --fg-brand-hover: #ed7c0c;
+  --bg-surface-brand: rgba(217, 107, 0, 0.08);
+  --ring: rgba(217, 107, 0, 0.4);
+}
+
+:root[data-mode="light"][data-theme="julia"] {
+  --fg-brand: #d33a72;
+  --fg-brand-hover: #e15489;
+  --bg-surface-brand: rgba(211, 58, 114, 0.08);
+  --ring: rgba(211, 58, 114, 0.4);
+}
+
+:root[data-mode="light"][data-theme="ivy"] {
+  --fg-brand: #1e8350;
+  --fg-brand-hover: #2a9760;
+  --bg-surface-brand: rgba(30, 131, 80, 0.08);
+  --ring: rgba(30, 131, 80, 0.4);
+}
+
+:root[data-mode="light"][data-theme="bosco"] {
+  --fg-brand: #1d4ed8;
+  --fg-brand-hover: #2563eb;
+  --bg-surface-brand: rgba(29, 78, 216, 0.08);
+  --ring: rgba(29, 78, 216, 0.4);
 }
 /* docs source scan */

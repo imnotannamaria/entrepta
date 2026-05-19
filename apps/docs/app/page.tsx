@@ -430,6 +430,10 @@ export default function Home() {
                   k: "contrast",
                   v: "AA targets for body copy; brand reserved for emphasis",
                 },
+                {
+                  k: "dark + light",
+                  v: "every theme ships in two modes; the user picks via data-mode",
+                },
               ].map((row) => (
                 <li
                   key={row.k}
