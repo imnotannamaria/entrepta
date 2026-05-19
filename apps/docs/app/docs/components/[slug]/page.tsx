@@ -34,6 +34,14 @@ async function getComponentSources(
   );
 }
 
+async function getUtilsSourceIfNeeded(sources: { source: string }[]): Promise<string | null> {
+  const usesCn = sources.some(
+    (f) => f.source.includes('from "@/lib/utils"') || f.source.includes("from '@/lib/utils'")
+  );
+  if (!usesCn) return null;
+  return readSourceFile("lib/utils.ts");
+}
+
 type Prop = {
   name: string;
   type: string;
@@ -728,6 +736,7 @@ export default async function ComponentPage({
   if (!component) notFound();
 
   const sources = await getComponentSources(component);
+  const utilsSource = await getUtilsSourceIfNeeded(sources);
 
   return (
     <article className="max-w-3xl">
@@ -759,6 +768,7 @@ export default async function ComponentPage({
           cliCommand={`npx @entrepta/cli@latest add ${component.install}`}
           dependencies={component.dependencies}
           files={sources}
+          utilsSource={utilsSource}
         />
       </section>
 
