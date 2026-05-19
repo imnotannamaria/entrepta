@@ -64,7 +64,7 @@ const COMPONENT_CATEGORIES = [
     num: "01–04",
     name: "Foundations",
     desc: "Color primitives and semantic tokens, type scale, spacing, radius, motion.",
-    count: "52 tokens",
+    count: "69 tokens",
     href: "/docs/foundations/color",
     preview: (
       <div className="flex gap-1.5">
@@ -186,10 +186,10 @@ const COMPONENT_CATEGORIES = [
   },
   {
     label: "cli",
-    num: "03",
+    num: "02",
     name: "CLI",
-    desc: "npx @entrepta/cli@latest init · add · diff. Copy-paste without the clipboard.",
-    count: "3 commands",
+    desc: "npx @entrepta/cli@latest init · add. Copy-paste without the clipboard.",
+    count: "2 commands",
     href: "/docs/cli",
     preview: (
       <div className="px-3 py-2 bg-[var(--bg-canvas)] border border-[var(--border-subtle)] rounded-[var(--radius-sm)] font-mono text-[11px] text-[var(--fg-secondary)]">
@@ -219,10 +219,9 @@ const INSTALL_STEPS = [
 ];
 
 const HERO_STATS = [
-  { dt: "tokens", dd: "52" },
+  { dt: "tokens", dd: "69" },
   { dt: "components", dd: "14" },
   { dt: "themes", dd: "6" },
-  { dt: "updated", dd: "2026-05" },
 ];
 
 export default function Home() {
@@ -237,7 +236,7 @@ export default function Home() {
             <div className="font-mono text-[11px] text-[var(--fg-muted)] mb-6 inline-flex items-center gap-3 uppercase tracking-[0.06em]">
               <span>design system</span>
               <span className="border border-[var(--border-subtle)] rounded-[3px] px-1.5 py-0.5 text-[var(--fg-brand)] normal-case tracking-normal">
-                v0.1
+                v1.0
               </span>
               <span>by anna maria</span>
             </div>
@@ -268,7 +267,7 @@ export default function Home() {
               <CommandPaletteTrigger />
             </div>
 
-            <dl className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <dl className="grid grid-cols-3 gap-3">
               {HERO_STATS.map((s) => (
                 <div
                   key={s.dt}
@@ -313,13 +312,13 @@ export default function Home() {
               <CardHeader>
                 <CardLabel>@entrepta/cli</CardLabel>
                 <Badge variant="soft" color="brand">
-                  v0.1.0
+                  v1.0.1
                 </Badge>
               </CardHeader>
               <CardContent className="flex flex-col gap-3">
                 {[
-                  { k: "size", v: "14 kb gzipped" },
-                  { k: "deps", v: "zero peer deps" },
+                  { k: "size", v: "~7 kb gzipped" },
+                  { k: "deps", v: "react 19+" },
                   { k: "ships", v: "css vars · components" },
                   { k: "license", v: "MIT" },
                   { k: "themes", v: "6 presets" },
@@ -385,7 +384,7 @@ export default function Home() {
           <div className="flex items-end justify-between mb-10 gap-6">
             <h2 className="font-serif text-[clamp(32px,4vw,56px)] font-normal leading-tight tracking-tight text-[var(--fg-primary)]">
               <em className="italic text-[var(--fg-brand)]">What's</em> inside.{" "}
-              <span className="text-[var(--fg-muted)]">Six categories.</span>
+              <span className="text-[var(--fg-muted)]">Seven categories.</span>
             </h2>
             <Link href="/docs/components" className="hidden sm:inline-block shrink-0">
               <Button variant="ghost" size="sm">
