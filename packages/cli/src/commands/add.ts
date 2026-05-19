@@ -80,6 +80,16 @@ export async function add(components: string[], options: { overwrite: boolean })
       const destRelative = path.join(baseAlias.replace("@/", ""), path.basename(file));
       const dest = path.join(cwd, destRelative);
 
+      // Guard against a tampered entrepta.json whose alias escapes the project,
+      // e.g. "components": "@/../../etc". Refuse to write outside cwd.
+      const relFromCwd = path.relative(cwd, dest);
+      if (relFromCwd.startsWith("..") || path.isAbsolute(relFromCwd)) {
+        log.error(
+          `Refusing to write outside the project. Check the aliases in entrepta.json: "${destRelative}" resolves outside ${cwd}.`
+        );
+        process.exit(1);
+      }
+
       await fs.mkdir(path.dirname(dest), { recursive: true });
 
       const destExists = await fileExists(dest);
@@ -148,7 +158,19 @@ export function resolveComponents(names: string[]): string[] {
 }
 
 function rewriteImports(content: string, utilsAlias: string): string {
-  return content.replace(/from\s+["'](\.\.[/\\])*lib[/\\]utils["']/g, `from "${utilsAlias}"`);
+  // Reject aliases that contain string-breaking characters. We're about to
+  // splice utilsAlias into a string literal in source code we're writing to
+  // disk; quotes / backslashes / newlines would let a tampered config inject
+  // arbitrary code into the generated file.
+  if (/["'\\\n\r`]/.test(utilsAlias)) {
+    throw new Error(
+      `Invalid utils alias in entrepta.json: ${JSON.stringify(utilsAlias)}. Aliases cannot contain quotes, backslashes, backticks or newlines.`
+    );
+  }
+  // $ has special meaning ($&, $1…$9, $') in String.prototype.replace
+  // replacement strings — escape it so the alias is taken literally.
+  const safeAlias = utilsAlias.replace(/\$/g, "$$$$");
+  return content.replace(/from\s+["'](\.\.[/\\])*lib[/\\]utils["']/g, `from "${safeAlias}"`);
 }
 
 async function fileExists(filePath: string): Promise<boolean> {
