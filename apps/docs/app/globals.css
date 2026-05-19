@@ -375,13 +375,50 @@ button:focus-visible,
 }
 
 /* ============================================================
-   entrepta theme — violet/indigo (default)
+   THEMES — 6 presets, switchable via data-theme on <html>
+   Default (no attribute) falls back to entrepta.
    ============================================================ */
 
-:root {
+:root,
+:root[data-theme="entrepta"] {
   --fg-brand: #7c6bff;
   --fg-brand-hover: #9b8eff;
   --bg-surface-brand: rgba(124, 107, 255, 0.15);
   --ring: rgba(124, 107, 255, 0.5);
+}
+
+:root[data-theme="blossom"] {
+  --fg-brand: #cc2e36;
+  --fg-brand-hover: #e04750;
+  --bg-surface-brand: rgba(204, 46, 54, 0.14);
+  --ring: rgba(204, 46, 54, 0.45);
+}
+
+:root[data-theme="marmalade"] {
+  --fg-brand: #ff8213;
+  --fg-brand-hover: #ff9d45;
+  --bg-surface-brand: rgba(255, 130, 19, 0.14);
+  --ring: rgba(255, 130, 19, 0.45);
+}
+
+:root[data-theme="julia"] {
+  --fg-brand: #e85a8a;
+  --fg-brand-hover: #f178a0;
+  --bg-surface-brand: rgba(232, 90, 138, 0.14);
+  --ring: rgba(232, 90, 138, 0.45);
+}
+
+:root[data-theme="ivy"] {
+  --fg-brand: #35a365;
+  --fg-brand-hover: #4cba7c;
+  --bg-surface-brand: rgba(53, 163, 101, 0.14);
+  --ring: rgba(53, 163, 101, 0.45);
+}
+
+:root[data-theme="bosco"] {
+  --fg-brand: #2563eb;
+  --fg-brand-hover: #4f86f3;
+  --bg-surface-brand: rgba(37, 99, 235, 0.14);
+  --ring: rgba(37, 99, 235, 0.45);
 }
 /* docs source scan */

@@ -1,4 +1,6 @@
 import { SiteCommandPaletteProvider } from "@/components/site-command-palette";
+import { ThemeInitScript } from "@/components/theme-init-script";
+import { ThemeSwitcher } from "@/components/theme-switcher";
 import { Toaster } from "@entrepta/registry/feedback/toast";
 import type { Metadata } from "next";
 import "./globals.css";
@@ -16,10 +18,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className="bg-[var(--bg-canvas)] text-[var(--fg-primary)] antialiased">
+        <ThemeInitScript />
         <SiteCommandPaletteProvider>
           {children}
+          <ThemeSwitcher />
           <Toaster position="bottom-right" />
         </SiteCommandPaletteProvider>
       </body>
