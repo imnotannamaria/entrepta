@@ -452,6 +452,75 @@ export default function Home() {
           </div>
         </section>
 
+        {/* ── SECURITY ── */}
+        <section
+          id="security"
+          className="max-w-[1280px] mx-auto px-6 sm:px-12 py-20 border-t border-[var(--border-subtle)]"
+        >
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-12 items-start">
+            <div>
+              <div className="font-mono text-[11px] text-[var(--fg-brand)] uppercase tracking-[0.08em] mb-3">
+                · security
+              </div>
+              <h2 className="font-serif text-[clamp(32px,4vw,56px)] font-normal leading-tight tracking-tight text-[var(--fg-primary)]">
+                <em className="italic text-[var(--fg-brand)]">Audited</em> by
+                <br />
+                <span className="text-[var(--fg-muted)]">design.</span>
+              </h2>
+              <p className="mt-4 font-sans text-base text-[var(--fg-secondary)] max-w-md leading-relaxed">
+                entrepta ships as copy-paste source — no runtime SDK, no telemetry, no remote code.
+                The CLI guards against path traversal via aliases, the docs site sets a strict CSP
+                and the usual hardening headers, and dependencies stay tight and audited.
+              </p>
+            </div>
+            <ul className="flex flex-col gap-0 border-t border-[var(--border-subtle)]">
+              {[
+                {
+                  k: "copy-paste",
+                  v: "components land in your repo as plain source — no runtime to compromise",
+                },
+                {
+                  k: "no telemetry",
+                  v: "the CLI calls only npm; the docs site has no analytics or beacons",
+                },
+                {
+                  k: "alias guard",
+                  v: "CLI refuses to write outside the project, even if entrepta.json is tampered",
+                },
+                {
+                  k: "shell-safe",
+                  v: "package-manager spawn uses shell:false so deps can't inject commands",
+                },
+                {
+                  k: "csp + headers",
+                  v: "strict Content-Security-Policy, HSTS, X-Frame-Options DENY, no Powered-By",
+                },
+                {
+                  k: "no eval",
+                  v: "zero eval / new Function / unsafe innerHTML in components or docs",
+                },
+                {
+                  k: "deps minimal",
+                  v: "registry has 4 runtime deps, CLI has 3 — easy to keep audited",
+                },
+              ].map((row) => (
+                <li
+                  key={row.k}
+                  className="grid grid-cols-[140px_1fr] gap-4 items-baseline py-3 border-b border-[var(--border-subtle)] font-mono text-[12px]"
+                >
+                  <span className="text-[var(--fg-brand)] inline-flex items-center gap-1.5">
+                    <span aria-hidden className="text-[10px] leading-none">
+                      ◆
+                    </span>
+                    {row.k}
+                  </span>
+                  <span className="text-[var(--fg-secondary)] leading-relaxed">{row.v}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+
         {/* ── COMPONENTS PREVIEW ── */}
         <section className="max-w-[1280px] mx-auto px-6 sm:px-12 py-20 border-t border-[var(--border-subtle)]">
           <div className="flex items-end justify-between mb-10 gap-6">

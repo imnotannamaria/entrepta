@@ -13,7 +13,16 @@ async function readSourceFile(relPath: string): Promise<string> {
   if (relative.startsWith("..") || path.isAbsolute(relative)) {
     throw new Error(`Refusing to read outside the registry root: ${relPath}`);
   }
-  const raw = await fs.readFile(resolved, "utf-8");
+  // Defense in depth: resolve symlinks before reading so a symlinked file
+  // inside the registry can't trick the path check into reading something
+  // outside it. Build-time only, but cheap to be paranoid.
+  const real = await fs.realpath(resolved);
+  const realRoot = await fs.realpath(REGISTRY_ROOT);
+  const realRel = path.relative(realRoot, real);
+  if (realRel.startsWith("..") || path.isAbsolute(realRel)) {
+    throw new Error(`Refusing to read symlinked path outside the registry root: ${relPath}`);
+  }
+  const raw = await fs.readFile(real, "utf-8");
   return rewriteImportsForConsumer(raw);
 }
 
