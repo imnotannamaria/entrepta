@@ -1,5 +1,13 @@
 # @entrepta/cli
 
+## 1.0.1
+
+### Patch Changes
+
+- a1fd53a: Update README to reflect `npx @entrepta/cli@latest` command pattern
+- Updated dependencies [a1fd53a]
+  - @entrepta/registry@1.0.1
+
 ## 1.0.0
 
 ### Major Changes
