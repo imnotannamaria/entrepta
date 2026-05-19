@@ -21,6 +21,12 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className="bg-[var(--bg-canvas)] text-[var(--fg-primary)] antialiased">
         <ThemeInitScript />
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100] focus:px-3 focus:py-2 focus:rounded-[var(--radius-sm)] focus:bg-[var(--bg-surface)] focus:text-[var(--fg-primary)] focus:border focus:border-[var(--fg-brand)] focus:outline-none focus:shadow-[0_0_0_3px_var(--bg-surface-brand)] focus:font-mono focus:text-xs"
+        >
+          Skip to main content
+        </a>
         <SiteCommandPaletteProvider>
           {children}
           <ThemeSwitcher />

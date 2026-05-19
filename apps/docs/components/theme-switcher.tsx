@@ -52,6 +52,9 @@ export function ThemeSwitcher() {
       className="fixed bottom-12 right-5 z-50 font-mono text-[11px]"
       data-theme-switcher
     >
+      <span aria-live="polite" className="sr-only">
+        Active theme: {current.label}
+      </span>
       {open && (
         <div
           aria-label="Theme"

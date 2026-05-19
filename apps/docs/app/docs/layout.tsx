@@ -10,7 +10,13 @@ export default function DocsLayout({ children }: { children: React.ReactNode }) 
         <aside className="hidden md:block w-56 shrink-0 border-r border-[var(--border-subtle)] sticky top-14 self-start h-[calc(100vh-3.5rem)] overflow-y-auto px-3">
           <DocsSidebar />
         </aside>
-        <main className="flex-1 min-w-0 px-4 sm:px-8 lg:px-12 py-8 sm:py-10">{children}</main>
+        <main
+          id="main-content"
+          tabIndex={-1}
+          className="flex-1 min-w-0 px-4 sm:px-8 lg:px-12 py-8 sm:py-10"
+        >
+          {children}
+        </main>
       </div>
       <SiteStatusBar />
     </>

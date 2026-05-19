@@ -229,7 +229,7 @@ export default function Home() {
     <>
       <SiteNav />
 
-      <main className="pt-14 pb-10 sm:pb-16">
+      <main id="main-content" tabIndex={-1} className="pt-14 pb-10 sm:pb-16">
         {/* ── HERO ── */}
         <section className="max-w-[1280px] mx-auto px-6 sm:px-12 pt-20 sm:pt-28 pb-16 grid grid-cols-1 lg:grid-cols-[1fr_440px] gap-16 items-start">
           <div>
@@ -376,6 +376,75 @@ export default function Home() {
                 </CardFooter>
               </Card>
             ))}
+          </div>
+        </section>
+
+        {/* ── ACCESSIBILITY ── */}
+        <section
+          id="accessibility"
+          className="max-w-[1280px] mx-auto px-6 sm:px-12 py-20 border-t border-[var(--border-subtle)]"
+        >
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-12 items-start">
+            <div>
+              <div className="font-mono text-[11px] text-[var(--fg-brand)] uppercase tracking-[0.08em] mb-3">
+                · a11y
+              </div>
+              <h2 className="font-serif text-[clamp(32px,4vw,56px)] font-normal leading-tight tracking-tight text-[var(--fg-primary)]">
+                <em className="italic text-[var(--fg-brand)]">Accessible</em> by
+                <br />
+                <span className="text-[var(--fg-muted)]">default.</span>
+              </h2>
+              <p className="mt-4 font-sans text-base text-[var(--fg-secondary)] max-w-md leading-relaxed">
+                Built on Radix primitives so keyboard navigation, focus management, and ARIA
+                semantics come for free. The docs site adds the rest: skip links, live regions, and
+                motion that respects user preferences.
+              </p>
+            </div>
+            <ul className="flex flex-col gap-0 border-t border-[var(--border-subtle)]">
+              {[
+                {
+                  k: "keyboard",
+                  v: "every interactive element reachable & operable",
+                },
+                {
+                  k: "focus",
+                  v: "visible 3px brand ring on every focusable surface",
+                },
+                {
+                  k: "screen readers",
+                  v: "Radix primitives + aria-label on icon-only controls",
+                },
+                {
+                  k: "skip link",
+                  v: "press Tab on any page → jump to main content",
+                },
+                {
+                  k: "motion",
+                  v: "prefers-reduced-motion disables animations globally",
+                },
+                {
+                  k: "live regions",
+                  v: "theme & toast changes announced to screen readers",
+                },
+                {
+                  k: "contrast",
+                  v: "AA targets for body copy; brand reserved for emphasis",
+                },
+              ].map((row) => (
+                <li
+                  key={row.k}
+                  className="grid grid-cols-[140px_1fr] gap-4 items-baseline py-3 border-b border-[var(--border-subtle)] font-mono text-[12px]"
+                >
+                  <span className="text-[var(--fg-brand)] inline-flex items-center gap-1.5">
+                    <span aria-hidden className="text-[10px] leading-none">
+                      ◆
+                    </span>
+                    {row.k}
+                  </span>
+                  <span className="text-[var(--fg-secondary)] leading-relaxed">{row.v}</span>
+                </li>
+              ))}
+            </ul>
           </div>
         </section>
 
