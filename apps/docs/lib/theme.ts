@@ -13,13 +13,5 @@ export type Mode = "dark" | "light";
 export const DEFAULT_THEME: ThemeId = "entrepta";
 export const DEFAULT_MODE: Mode = "dark";
 
-export const THEME_STORAGE_KEY = "entrepta:theme";
-export const MODE_STORAGE_KEY = "entrepta:mode";
-
-export function isThemeId(value: unknown): value is ThemeId {
-  return typeof value === "string" && THEMES.some((t) => t.id === value);
-}
-
-export function isMode(value: unknown): value is Mode {
-  return value === "dark" || value === "light";
-}
+/** Prefix for the localStorage keys (`<prefix>:theme`, `<prefix>:mode`). */
+export const STORAGE_KEY_PREFIX = "entrepta";

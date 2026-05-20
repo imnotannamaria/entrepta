@@ -29,17 +29,19 @@ async function readSourceFile(relPath: string): Promise<string> {
 
 /**
  * Rewrite registry-internal import paths to the aliases users see in their
- * own project, so Manual-tab copy-paste works without manual edits.
- *
- * Today only `../lib/utils` → `@/lib/utils` is needed (no component-to-component
- * relative imports exist in production sources). Add more cases here as the
- * registry grows.
+ * own project, so Manual-tab copy-paste works without manual edits. Mirrors
+ * the rewrite the CLI does in `packages/cli/src/commands/add.ts`.
  */
 function rewriteImportsForConsumer(source: string): string {
-  return source.replace(
-    /from\s+(['"])\.\.\/lib\/utils\1/g,
-    (_, quote: string) => `from ${quote}@/lib/utils${quote}`
-  );
+  return source
+    .replace(
+      /from\s+(['"])\.\.\/lib\/utils\1/g,
+      (_, quote: string) => `from ${quote}@/lib/utils${quote}`
+    )
+    .replace(
+      /from\s+(['"])\.\.\/hooks\/([A-Za-z0-9_-]+)\1/g,
+      (_, quote: string, name: string) => `from ${quote}@/hooks/${name}${quote}`
+    );
 }
 
 async function getComponentSources(
@@ -542,6 +544,77 @@ import { Button } from "@/components/entrepta/button"
         name: "right",
         type: "ReactNode",
         description: "Right slot. Actions and menu.",
+      },
+    ],
+  },
+  "theme-switcher": {
+    title: "ThemeSwitcher",
+    category: "Layout",
+    description:
+      "Floating theme + dark/light picker. Drives `data-theme` and `data-mode` on `<html>` and persists to localStorage. Ships with a `<ThemeScript>` helper that runs pre-paint to avoid flashes.",
+    install: "theme-switcher",
+    dependencies: [],
+    extraFiles: ["hooks/use-theme.ts"],
+    usage: `import {
+  ThemeScript, ThemeSwitcher,
+} from "@/components/entrepta/theme-switcher"
+
+const THEMES = [
+  { id: "entrepta", label: "entrepta", color: "#7C6BFF", lightColor: "#6B5BFF" },
+  { id: "blossom",  label: "blossom",  color: "#CC2E36", lightColor: "#B8262E" },
+  { id: "ivy",      label: "ivy",      color: "#35A365", lightColor: "#1E8350" },
+] as const
+
+// In your root <head>, before React hydrates:
+<ThemeScript storageKey="myapp" />
+
+// Anywhere in the tree (usually the root layout):
+<ThemeSwitcher
+  themes={THEMES}
+  defaultTheme="entrepta"
+  storageKey="myapp"
+/>`,
+    props: [
+      {
+        name: "themes",
+        type: "ThemeOption[]",
+        description: "List of themes. Each `{ id, label, color, lightColor? }`. Required.",
+      },
+      {
+        name: "defaultTheme",
+        type: "string",
+        default: "themes[0].id",
+        description: "Theme id to use when nothing is stored.",
+      },
+      {
+        name: "defaultMode",
+        type: '"dark" | "light"',
+        default: '"dark"',
+        description: "Initial mode when nothing is stored.",
+      },
+      {
+        name: "storageKey",
+        type: "string",
+        default: '"entrepta"',
+        description: "Prefix for the two localStorage keys (`:theme`, `:mode`).",
+      },
+      {
+        name: "position",
+        type: '"bottom-right" | "bottom-left" | "top-right" | "top-left"',
+        default: '"bottom-right"',
+        description: "Where the floating trigger anchors.",
+      },
+      {
+        name: "hideModeToggle",
+        type: "boolean",
+        default: "false",
+        description: "Hide the dark/light section and the mode label on the trigger.",
+      },
+      {
+        name: "disableMode",
+        type: "boolean",
+        default: "false",
+        description: "Lock mode to `defaultMode`. Useful for dark-only sites.",
       },
     ],
   },

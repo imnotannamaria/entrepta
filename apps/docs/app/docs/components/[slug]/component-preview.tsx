@@ -638,6 +638,75 @@ npx @entrepta/cli@latest add button card command-palette`}
   );
 }
 
+function ThemeSwitcherPreview() {
+  const themes = [
+    { id: "entrepta", label: "entrepta", color: "#7C6BFF", active: true },
+    { id: "blossom", label: "blossom", color: "#CC2E36", active: false },
+    { id: "marmalade", label: "marmalade", color: "#FF8213", active: false },
+    { id: "julia", label: "julia", color: "#E85A8A", active: false },
+    { id: "ivy", label: "ivy", color: "#35A365", active: false },
+    { id: "bosco", label: "bosco", color: "#2563EB", active: false },
+  ];
+  return (
+    <div className="w-full max-w-md flex flex-col items-end gap-3 font-mono text-[11px]">
+      <div
+        aria-hidden
+        className="flex flex-col gap-1 p-2 rounded-[var(--radius-md)] border border-[var(--border-subtle)] bg-[var(--bg-surface)] shadow-[0_8px_24px_rgba(0,0,0,0.4)] min-w-[200px]"
+      >
+        <div className="px-2 py-1 text-[10px] uppercase tracking-[0.08em] text-[var(--fg-muted)] border-b border-[var(--border-subtle)] mb-1">
+          mode
+        </div>
+        <div className="flex items-center justify-between gap-2 px-2 py-1.5 rounded-[var(--radius-sm)]">
+          <span className="flex items-center gap-2.5">
+            <span
+              className="inline-grid place-items-center w-4 h-4 rounded-full border border-[var(--border-subtle)] text-[10px] leading-none"
+              style={{ background: "#09090b", color: "#fafafa" }}
+            >
+              ◗
+            </span>
+            <span className="text-[var(--fg-primary)]">dark</span>
+          </span>
+          <span className="text-[var(--fg-muted)] text-[10px] uppercase tracking-[0.08em]">
+            → light
+          </span>
+        </div>
+        <div className="px-2 py-1 text-[10px] uppercase tracking-[0.08em] text-[var(--fg-muted)] border-b border-[var(--border-subtle)] mt-2 mb-1">
+          theme
+        </div>
+        {themes.map((t) => (
+          <div
+            key={t.id}
+            className="flex items-center gap-2.5 px-2 py-1.5 rounded-[var(--radius-sm)]"
+          >
+            <span
+              className="inline-block w-4 h-4 rounded-full border border-[var(--border-subtle)] shrink-0"
+              style={{ background: t.color }}
+            />
+            <span
+              className={
+                t.active ? "text-[var(--fg-primary)] flex-1" : "text-[var(--fg-secondary)] flex-1"
+              }
+            >
+              {t.label}
+            </span>
+            {t.active && <span className="text-[var(--fg-brand)] text-[10px] leading-none">◆</span>}
+          </div>
+        ))}
+      </div>
+      <div className="flex items-center gap-2 px-2.5 py-2 rounded-[var(--radius-md)] border border-[var(--border-subtle)] bg-[var(--bg-surface)] shadow-[0_4px_12px_rgba(0,0,0,0.3)]">
+        <span
+          className="inline-block w-3.5 h-3.5 rounded-full border border-[var(--border-subtle)]"
+          style={{ background: "#7C6BFF" }}
+        />
+        <span className="text-[var(--fg-muted)] uppercase tracking-[0.08em] text-[10px]">dark</span>
+      </div>
+      <p className="self-start text-[10px] text-[var(--fg-muted)] uppercase tracking-[0.08em]">
+        {"// live switcher sits in the corner of every docs page"}
+      </p>
+    </div>
+  );
+}
+
 const PREVIEWS: Record<string, React.ReactNode> = {
   button: <ButtonPreview />,
   badge: <BadgePreview />,
@@ -649,6 +718,7 @@ const PREVIEWS: Record<string, React.ReactNode> = {
   tabs: <TabsPreview />,
   "status-bar": <StatusBarPreview />,
   "top-nav": <TopNavPreview />,
+  "theme-switcher": <ThemeSwitcherPreview />,
   toast: <ToastPreview />,
   skeleton: <SkeletonPreview />,
   "command-palette": <CommandPalettePreview />,

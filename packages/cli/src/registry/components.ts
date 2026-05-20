@@ -106,6 +106,22 @@ export const COMPONENTS: RegistryComponent[] = [
     registryDeps: [],
   },
   {
+    name: "use-theme",
+    description: "Hook that manages theme + dark/light mode with localStorage persistence",
+    category: "hooks",
+    files: ["hooks/use-theme.ts"],
+    deps: [],
+    registryDeps: [],
+  },
+  {
+    name: "theme-switcher",
+    description: "Floating theme + mode picker with no-flash ThemeScript helper",
+    category: "layout",
+    files: ["layout/theme-switcher.tsx"],
+    deps: [],
+    registryDeps: ["use-theme"],
+  },
+  {
     name: "command-palette",
     description: "⌘K command palette built on cmdk with groups, icons, and shortcuts",
     category: "feedback",

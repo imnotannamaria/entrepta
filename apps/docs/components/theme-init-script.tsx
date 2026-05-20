@@ -1,4 +1,5 @@
-import { MODE_STORAGE_KEY, THEME_STORAGE_KEY } from "@/lib/theme";
+import { STORAGE_KEY_PREFIX } from "@/lib/theme";
+import { ThemeScript } from "@entrepta/registry/layout/theme-switcher";
 
 /**
  * Inline script that runs before React hydrates so the saved theme + mode
@@ -6,11 +7,5 @@ import { MODE_STORAGE_KEY, THEME_STORAGE_KEY } from "@/lib/theme";
  * the default look until the client-side effect ran.
  */
 export function ThemeInitScript() {
-  const script = `(function(){try{var t=localStorage.getItem(${JSON.stringify(
-    THEME_STORAGE_KEY
-  )});if(t)document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem(${JSON.stringify(
-    MODE_STORAGE_KEY
-  )});if(m==='light')document.documentElement.setAttribute('data-mode','light');}catch(e){}})();`;
-  // biome-ignore lint/security/noDangerouslySetInnerHtml: the script body is a static string we control; no user input is interpolated.
-  return <script dangerouslySetInnerHTML={{ __html: script }} />;
+  return <ThemeScript storageKey={STORAGE_KEY_PREFIX} />;
 }

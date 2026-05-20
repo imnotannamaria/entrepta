@@ -30,6 +30,7 @@ const COMPONENT_SLUGS = [
   "tabs",
   "status-bar",
   "top-nav",
+  "theme-switcher",
   "toast",
   "skeleton",
   "command-palette",

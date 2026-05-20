@@ -55,6 +55,11 @@ const COMPONENTS = [
         href: "/docs/components/top-nav",
         desc: "Nav with logo, breadcrumb, actions",
       },
+      {
+        name: "ThemeSwitcher",
+        href: "/docs/components/theme-switcher",
+        desc: "Floating theme + dark/light picker",
+      },
     ],
   },
   {

@@ -107,7 +107,7 @@ export async function add(components: string[], options: { overwrite: boolean })
       }
 
       let content = await fs.readFile(src, "utf-8");
-      content = rewriteImports(content, config.aliases.utils);
+      content = rewriteImports(content, config.aliases.utils, config.aliases.hooks);
       await fs.writeFile(dest, content, "utf-8");
       log.success(`Copied ${destRelative}`);
     }
@@ -157,20 +157,31 @@ export function resolveComponents(names: string[]): string[] {
   return [...resolved];
 }
 
-function rewriteImports(content: string, utilsAlias: string): string {
+function rewriteImports(content: string, utilsAlias: string, hooksAlias: string): string {
   // Reject aliases that contain string-breaking characters. We're about to
-  // splice utilsAlias into a string literal in source code we're writing to
-  // disk; quotes / backslashes / newlines would let a tampered config inject
+  // splice them into string literals in source code we're writing to disk;
+  // quotes / backslashes / newlines would let a tampered config inject
   // arbitrary code into the generated file.
-  if (/["'\\\n\r`]/.test(utilsAlias)) {
-    throw new Error(
-      `Invalid utils alias in entrepta.json: ${JSON.stringify(utilsAlias)}. Aliases cannot contain quotes, backslashes, backticks or newlines.`
-    );
+  for (const [name, value] of [
+    ["utils", utilsAlias],
+    ["hooks", hooksAlias],
+  ] as const) {
+    if (/["'\\\n\r`]/.test(value)) {
+      throw new Error(
+        `Invalid ${name} alias in entrepta.json: ${JSON.stringify(value)}. Aliases cannot contain quotes, backslashes, backticks or newlines.`
+      );
+    }
   }
   // $ has special meaning ($&, $1…$9, $') in String.prototype.replace
   // replacement strings — escape it so the alias is taken literally.
-  const safeAlias = utilsAlias.replace(/\$/g, "$$$$");
-  return content.replace(/from\s+["'](\.\.[/\\])*lib[/\\]utils["']/g, `from "${safeAlias}"`);
+  const safeUtils = utilsAlias.replace(/\$/g, "$$$$");
+  const safeHooks = hooksAlias.replace(/\$/g, "$$$$");
+  return content
+    .replace(/from\s+["'](\.\.[/\\])*lib[/\\]utils["']/g, `from "${safeUtils}"`)
+    .replace(
+      /from\s+["']\.\.[/\\]hooks[/\\]([A-Za-z0-9_-]+)["']/g,
+      (_match, name: string) => `from "${safeHooks}/${name.replace(/\$/g, "$$$$")}"`
+    );
 }
 
 async function fileExists(filePath: string): Promise<boolean> {
