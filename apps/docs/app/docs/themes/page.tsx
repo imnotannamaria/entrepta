@@ -9,6 +9,14 @@ import {
   CardLabel,
   CardMeta,
 } from "@entrepta/registry/primitives/card";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Themes",
+  description:
+    "Six entrepta theme presets: entrepta, blossom, marmalade, julia, ivy, bosco. Swap brand color with one CLI flag, same tokens.",
+  alternates: { canonical: "/docs/themes" },
+};
 
 const THEMES = [
   {

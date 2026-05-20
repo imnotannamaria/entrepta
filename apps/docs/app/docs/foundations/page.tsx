@@ -10,7 +10,15 @@ import {
   CardMeta,
   CardTitle,
 } from "@entrepta/registry/primitives/card";
+import type { Metadata } from "next";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "Foundations",
+  description:
+    "entrepta foundations: color tokens, typography scale, spacing system, radius, motion. The CSS primitives every component is built on.",
+  alternates: { canonical: "/docs/foundations" },
+};
 
 const PAGES = [
   {

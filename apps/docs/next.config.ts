@@ -3,8 +3,11 @@ import type { NextConfig } from "next";
 // CSP for the production build. Notes on each directive:
 //   - script-src needs 'unsafe-inline' for the no-flash ThemeInitScript;
 //     migrating that to a nonce-based strategy would let us drop it.
+//   - script-src also allows va.vercel-scripts.com for Vercel Analytics.
 //   - style-src needs 'unsafe-inline' for Tailwind runtime + inline style
 //     props on theme dots.
+//   - connect-src stays 'self' because the Analytics beacon posts to the
+//     same-origin /_vercel/insights endpoint (proxied by Vercel).
 //   - We intentionally omit 'unsafe-eval' so the prod bundle can't eval.
 //
 // IMPORTANT: this CSP is only sent in production. Next.js dev mode uses
@@ -20,7 +23,7 @@ const productionCsp = [
   "img-src 'self' data:",
   "font-src 'self' https://fonts.gstatic.com data:",
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-  "script-src 'self' 'unsafe-inline'",
+  "script-src 'self' 'unsafe-inline' https://va.vercel-scripts.com",
   "connect-src 'self'",
   "upgrade-insecure-requests",
 ].join("; ");

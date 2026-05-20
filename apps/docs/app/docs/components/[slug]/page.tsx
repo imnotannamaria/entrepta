@@ -2,6 +2,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { ComponentInstall } from "@/components/component-install";
 import { CodeBlock } from "@entrepta/registry/content/code-block";
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ComponentPreview } from "./component-preview";
 
@@ -749,6 +750,33 @@ export function MyPalette() {
 
 export function generateStaticParams() {
   return Object.keys(COMPONENTS).map((slug) => ({ slug }));
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const component = COMPONENTS[slug];
+  if (!component) return {};
+  const canonical = `/docs/components/${slug}`;
+  return {
+    title: component.title,
+    description: component.description,
+    alternates: { canonical },
+    openGraph: {
+      title: `${component.title} · entrepta`,
+      description: component.description,
+      url: canonical,
+      type: "article",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${component.title} · entrepta`,
+      description: component.description,
+    },
+  };
 }
 
 export default async function ComponentPage({

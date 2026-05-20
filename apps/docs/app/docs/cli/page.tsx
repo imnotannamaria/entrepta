@@ -9,6 +9,14 @@ import {
   CardMeta,
   CardTitle,
 } from "@entrepta/registry/primitives/card";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "CLI",
+  description:
+    "The entrepta CLI reference: init, add, diff, theme. Resolve dependencies, copy components, swap themes from the command line.",
+  alternates: { canonical: "/docs/cli" },
+};
 
 const COMMANDS = [
   {

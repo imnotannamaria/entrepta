@@ -2,14 +2,83 @@ import { SiteCommandPaletteProvider } from "@/components/site-command-palette";
 import { ThemeInitScript } from "@/components/theme-init-script";
 import { ThemeSwitcher } from "@/components/theme-switcher";
 import { Toaster } from "@entrepta/registry/feedback/toast";
-import type { Metadata } from "next";
+import { Analytics } from "@vercel/analytics/next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
+const SITE_URL = "https://entrepta.vercel.app";
+const SITE_NAME = "entrepta";
+const SITE_TAGLINE = "a personal design system, posed as an IDE";
+const SITE_DESCRIPTION =
+  "Dark-first React component library. Copy-paste components, CSS tokens, CLI. Built around editor metaphors: tabs, command palette, status bar, file paths.";
+
 export const metadata: Metadata = {
-  metadataBase: new URL("https://entrepta.vercel.app"),
-  title: "entrepta · a personal design system",
-  description:
-    "Dark-first design system posed as an IDE. Copy-paste components, CSS tokens, CLI. Built by Anna Maria.",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: `${SITE_NAME} · ${SITE_TAGLINE}`,
+    template: `%s · ${SITE_NAME}`,
+  },
+  description: SITE_DESCRIPTION,
+  applicationName: SITE_NAME,
+  authors: [{ name: "Anna Maria", url: "https://anna-maria-dev.vercel.app" }],
+  creator: "Anna Maria",
+  publisher: "Anna Maria",
+  keywords: [
+    "design system",
+    "react",
+    "component library",
+    "tailwind",
+    "tailwind v4",
+    "shadcn",
+    "copy paste components",
+    "dark mode",
+    "css variables",
+    "next.js",
+    "radix ui",
+    "entrepta",
+  ],
+  category: "technology",
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    type: "website",
+    url: SITE_URL,
+    siteName: SITE_NAME,
+    title: `${SITE_NAME} · ${SITE_TAGLINE}`,
+    description: SITE_DESCRIPTION,
+    locale: "en_US",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${SITE_NAME} · ${SITE_TAGLINE}`,
+    description: SITE_DESCRIPTION,
+    creator: "@annamaria_dev",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: dark)", color: "#09090B" },
+    { media: "(prefers-color-scheme: light)", color: "#FAFAFA" },
+  ],
+  colorScheme: "dark light",
 };
 
 export default function RootLayout({
@@ -32,6 +101,7 @@ export default function RootLayout({
           <ThemeSwitcher />
           <Toaster position="bottom-right" />
         </SiteCommandPaletteProvider>
+        <Analytics />
       </body>
     </html>
   );

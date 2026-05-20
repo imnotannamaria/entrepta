@@ -10,7 +10,15 @@ import {
   CardMeta,
   CardTitle,
 } from "@entrepta/registry/primitives/card";
+import type { Metadata } from "next";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "Installation",
+  description:
+    "Install entrepta in a Next.js or Vite project. Run npx @entrepta/cli init, pick a theme, copy components into components/entrepta.",
+  alternates: { canonical: "/docs/installation" },
+};
 
 const REQUIREMENTS = [
   { label: "React", value: "19 or newer" },
@@ -135,7 +143,7 @@ npx @entrepta/cli@latest init --theme=ivy`}
             them like any other file in your repo.
           </p>
           <CardFooter>
-            <CardComment>no SDK, no analytics, no runtime wrapper</CardComment>
+            <CardComment>no SDK, no runtime telemetry, no wrapper</CardComment>
           </CardFooter>
         </Card>
       </section>

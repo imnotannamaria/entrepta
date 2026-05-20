@@ -11,7 +11,15 @@ import {
   CardMeta,
   CardTitle,
 } from "@entrepta/registry/primitives/card";
+import type { Metadata } from "next";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "Docs",
+  description:
+    "Get started with entrepta. Install the CLI, copy components into your repo, and ship in a Next.js or Vite project.",
+  alternates: { canonical: "/docs" },
+};
 
 const QUICK_START = [
   {
@@ -100,7 +108,7 @@ export default function DocsIntro() {
           <CardDescription>
             entrepta is opinionated about three things: a deep zinc-950 canvas (light mode is
             optional, never priority), editor metaphors as personality (tabs, ◆ markers, file paths,
-            shell prompts), and copy-paste distribution (no SDK, no analytics, no runtime wrapper
+            shell prompts), and copy-paste distribution (no SDK, no runtime telemetry, no wrapper
             between you and your components).
           </CardDescription>
           <CardFooter>

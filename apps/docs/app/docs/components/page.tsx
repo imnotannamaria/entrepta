@@ -1,4 +1,12 @@
+import type { Metadata } from "next";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "Components",
+  description:
+    "All entrepta components: Button, Badge, Input, Card, Dialog, Dropdown, Tooltip, Tabs, StatusBar, TopNav, Toast, Skeleton, CommandPalette, CodeBlock.",
+  alternates: { canonical: "/docs/components" },
+};
 
 const COMPONENTS = [
   {

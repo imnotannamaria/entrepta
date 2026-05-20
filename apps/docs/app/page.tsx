@@ -300,8 +300,8 @@ export default function Home() {
               <span className="text-[var(--fg-muted)]">You own the code.</span>
             </h2>
             <p className="mt-4 font-sans text-base text-[var(--fg-secondary)] max-w-lg leading-relaxed">
-              entrepta ships as CSS tokens + copy-paste components. No SDK. No analytics. Drop it
-              into any Next.js project and start shipping.
+              entrepta ships as CSS tokens + copy-paste components. No runtime SDK, no telemetry in
+              the components you copy. Drop it into any Next.js project and start shipping.
             </p>
           </div>
 
@@ -480,8 +480,8 @@ export default function Home() {
                   v: "components land in your repo as plain source — no runtime to compromise",
                 },
                 {
-                  k: "no telemetry",
-                  v: "the CLI calls only npm; the docs site has no analytics or beacons",
+                  k: "no runtime telemetry",
+                  v: "the CLI calls only npm; copied components ship zero analytics or beacons",
                 },
                 {
                   k: "alias guard",
