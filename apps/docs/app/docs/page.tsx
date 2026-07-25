@@ -71,7 +71,7 @@ const NEXT_PAGES = [
     label: "components",
     num: "→ 4",
     title: "Components",
-    desc: "13 components across primitives, layout, and feedback. Each with props + live preview.",
+    desc: "16 components across primitives, layout, and feedback. Each with props + live preview.",
     href: "/docs/components",
   },
 ];

@@ -90,6 +90,20 @@ describe("ModeToggle", () => {
     expect(floating.className).toMatch(/left-5/);
   });
 
+  it("stays in sync with another toggle on the page", async () => {
+    const user = userEvent.setup();
+    render(
+      <>
+        <ModeToggle variant="labeled" data-testid="nav" />
+        <ModeToggle variant="labeled" data-testid="corner" />
+      </>
+    );
+    await user.click(screen.getByTestId("nav"));
+    expect(screen.getByTestId("nav")).toHaveAttribute("data-mode", "light");
+    expect(screen.getByTestId("corner")).toHaveAttribute("data-mode", "light");
+    expect(screen.getByTestId("corner")).toHaveTextContent("light");
+  });
+
   it("respects a custom storageKey", async () => {
     const user = userEvent.setup();
     render(<ModeToggle storageKey="myapp" />);

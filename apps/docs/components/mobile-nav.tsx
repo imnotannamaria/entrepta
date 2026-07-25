@@ -53,6 +53,8 @@ const DOCS_NAV = [
     items: [
       { label: "StatusBar", href: "/docs/components/status-bar" },
       { label: "TopNav", href: "/docs/components/top-nav" },
+      { label: "ThemeSwitcher", href: "/docs/components/theme-switcher" },
+      { label: "ModeToggle", href: "/docs/components/mode-toggle" },
     ],
   },
   {

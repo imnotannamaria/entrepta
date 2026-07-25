@@ -10,10 +10,10 @@ npx @entrepta/cli@latest init
 
 ## What you get
 
-14 components across 4 categories, all written in React 19 and styled with Tailwind v4 + CSS variables.
+16 components across 4 categories, all written in React 19 and styled with Tailwind v4 + CSS variables.
 
 - **Primitives**: Button, Badge, Input, Card, Dialog, Dropdown, Tooltip, Tabs
-- **Layout**: StatusBar, TopNav
+- **Layout**: StatusBar, TopNav, ThemeSwitcher, ModeToggle
 - **Feedback**: Toast, Skeleton, CommandPalette
 - **Content**: CodeBlock
 

@@ -101,10 +101,10 @@ const COMPONENT_CATEGORIES = [
   },
   {
     label: "layout",
-    num: "02",
+    num: "04",
     name: "Layout",
-    desc: "StatusBar and TopNav. The IDE chrome that frames the canvas.",
-    count: "2 components",
+    desc: "StatusBar, TopNav, ThemeSwitcher, ModeToggle. The IDE chrome that frames the canvas.",
+    count: "4 components",
     href: "/docs/components/status-bar",
     preview: (
       <div className="flex bg-[var(--bg-canvas)] border border-[var(--border-subtle)] rounded-[var(--radius-sm)] overflow-hidden font-mono text-[11px]">
