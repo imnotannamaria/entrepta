@@ -156,6 +156,22 @@ describe("add", () => {
       expect(hookDest).toContain("hooks/");
     });
 
+    it("installs use-mode when adding mode-toggle", async () => {
+      await add(["mode-toggle"], { overwrite: false });
+
+      const allWritten = mockWriteFile.mock.calls.map(([dest]) => String(dest));
+      expect(allWritten.some((p) => p.includes("hooks/use-mode"))).toBe(true);
+      expect(allWritten.some((p) => p.includes("mode-toggle"))).toBe(true);
+    });
+
+    it("installs use-mode transitively when adding theme-switcher", async () => {
+      await add(["theme-switcher"], { overwrite: false });
+
+      const allWritten = mockWriteFile.mock.calls.map(([dest]) => String(dest));
+      expect(allWritten.some((p) => p.includes("use-theme"))).toBe(true);
+      expect(allWritten.some((p) => p.includes("use-mode"))).toBe(true);
+    });
+
     it("does not infinite-loop when resolving cyclic registryDeps", async () => {
       vi.resetModules();
       vi.doMock("../registry/components.js", () => ({

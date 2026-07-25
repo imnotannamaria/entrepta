@@ -102,10 +102,10 @@ entrepta/
 │   └── registry/             # @entrepta/registry, source of truth
 │       ├── styles/           # globals.css + themes/*.css
 │       ├── primitives/       # button, badge, input, card, dialog, dropdown, tooltip, tabs
-│       ├── layout/           # status-bar, top-nav, theme-switcher
+│       ├── layout/           # status-bar, top-nav, theme-switcher, mode-toggle
 │       ├── content/          # code-block
 │       ├── feedback/         # toast, skeleton, command-palette
-│       ├── hooks/            # use-theme, use-command-palette
+│       ├── hooks/            # use-theme, use-mode, use-command-palette
 │       └── lib/              # utils.ts (cn)
 ├── sandbox/
 │   └── wirst-test/           # local Next.js app to test the CLI output (gitignored)
@@ -275,13 +275,14 @@ registry component is not installable until it is listed there with its `files`,
 | Tooltip   | `@radix-ui/react-tooltip`       | hover info, keyboard hints               |
 | Tabs      | `@radix-ui/react-tabs`          | editor style file tabs                   |
 
-### Layout (3)
+### Layout (4)
 
 | Component     | Notes                                            |
 | ------------- | ------------------------------------------------ |
 | StatusBar     | fixed bottom bar in the brand color              |
 | TopNav        | top nav with logo, breadcrumb and menu           |
 | ThemeSwitcher | floating preset and dark/light button, uses `use-theme` |
+| ModeToggle    | dark/light only, inline or floating, uses `use-mode` |
 
 ### Content (1)
 
@@ -297,9 +298,10 @@ registry component is not installable until it is listed there with its `files`,
 | Skeleton       | no      | shimmer, respects reduced motion    |
 | CommandPalette | `cmdk`  | ⌘K, search, groups, shortcuts       |
 
-### Hooks (2)
+### Hooks (3)
 
-- `use-theme`, controls preset and dark/light
+- `use-theme`, controls preset and dark/light, built on `use-mode`
+- `use-mode`, controls dark/light only
 - `use-command-palette`, controls open state and command registration
 
 ---

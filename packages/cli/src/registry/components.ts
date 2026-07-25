@@ -106,12 +106,20 @@ export const COMPONENTS: RegistryComponent[] = [
     registryDeps: [],
   },
   {
+    name: "use-mode",
+    description: "Hook that manages dark/light mode with localStorage persistence",
+    category: "hooks",
+    files: ["hooks/use-mode.ts"],
+    deps: [],
+    registryDeps: [],
+  },
+  {
     name: "use-theme",
     description: "Hook that manages theme + dark/light mode with localStorage persistence",
     category: "hooks",
     files: ["hooks/use-theme.ts"],
     deps: [],
-    registryDeps: [],
+    registryDeps: ["use-mode"],
   },
   {
     name: "theme-switcher",
@@ -120,6 +128,14 @@ export const COMPONENTS: RegistryComponent[] = [
     files: ["layout/theme-switcher.tsx"],
     deps: [],
     registryDeps: ["use-theme"],
+  },
+  {
+    name: "mode-toggle",
+    description: "Dark/light only toggle, inline or floating, with no-flash ModeScript helper",
+    category: "layout",
+    files: ["layout/mode-toggle.tsx"],
+    deps: ["class-variance-authority"],
+    registryDeps: ["use-mode"],
   },
   {
     name: "command-palette",

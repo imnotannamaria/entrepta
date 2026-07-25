@@ -707,6 +707,59 @@ function ThemeSwitcherPreview() {
   );
 }
 
+function ModeGlyph({ mode, size }: { mode: "dark" | "light"; size: "sm" | "md" }) {
+  return (
+    <span
+      className={`inline-grid place-items-center rounded-full border border-[var(--border-subtle)] leading-none ${
+        size === "sm" ? "w-3.5 h-3.5 text-[9px]" : "w-4 h-4 text-[10px]"
+      }`}
+      style={{
+        background: mode === "dark" ? "#09090b" : "#fafafa",
+        color: mode === "dark" ? "#fafafa" : "#09090b",
+      }}
+    >
+      {mode === "dark" ? "◗" : "◖"}
+    </span>
+  );
+}
+
+function ModeTogglePreview() {
+  const shell =
+    "inline-flex items-center justify-center font-mono uppercase tracking-[0.08em] rounded-[var(--radius-md)] border border-[var(--border-subtle)] bg-[var(--bg-surface)] text-[var(--fg-secondary)]";
+  return (
+    <div aria-hidden className="w-full max-w-md flex flex-col gap-6">
+      <div className="flex flex-col gap-3">
+        <span className="font-mono text-[10px] uppercase tracking-[0.08em] text-[var(--fg-muted)]">
+          {"// icon"}
+        </span>
+        <div className="flex items-center gap-3">
+          <span className={`${shell} h-9 w-9`}>
+            <ModeGlyph mode="dark" size="md" />
+          </span>
+          <span className={`${shell} h-7 w-7`}>
+            <ModeGlyph mode="light" size="sm" />
+          </span>
+        </div>
+      </div>
+      <div className="flex flex-col gap-3">
+        <span className="font-mono text-[10px] uppercase tracking-[0.08em] text-[var(--fg-muted)]">
+          {"// labeled"}
+        </span>
+        <div className="flex items-center gap-3">
+          <span className={`${shell} h-9 px-3 gap-2 text-[11px]`}>
+            <ModeGlyph mode="dark" size="md" />
+            dark
+          </span>
+          <span className={`${shell} h-7 px-2.5 gap-2 text-[10px]`}>
+            <ModeGlyph mode="light" size="sm" />
+            light
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 const PREVIEWS: Record<string, React.ReactNode> = {
   button: <ButtonPreview />,
   badge: <BadgePreview />,
@@ -719,6 +772,7 @@ const PREVIEWS: Record<string, React.ReactNode> = {
   "status-bar": <StatusBarPreview />,
   "top-nav": <TopNavPreview />,
   "theme-switcher": <ThemeSwitcherPreview />,
+  "mode-toggle": <ModeTogglePreview />,
   toast: <ToastPreview />,
   skeleton: <SkeletonPreview />,
   "command-palette": <CommandPalettePreview />,
