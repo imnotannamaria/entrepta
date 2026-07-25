@@ -62,9 +62,7 @@ async function anyExists(cwd: string, files: string[]): Promise<boolean> {
     try {
       await fs.access(path.join(cwd, file));
       return true;
-    } catch {
-      // continue
-    }
+    } catch {}
   }
   return false;
 }

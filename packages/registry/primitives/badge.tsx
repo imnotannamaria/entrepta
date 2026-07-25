@@ -30,7 +30,6 @@ const badgeVariants = cva(
       },
     },
     compoundVariants: [
-      // solid
       {
         variant: "solid",
         color: "neutral",
@@ -61,7 +60,6 @@ const badgeVariants = cva(
         color: "info",
         className: "bg-[var(--status-info)] text-[var(--bg-canvas)]",
       },
-      // soft
       {
         variant: "soft",
         color: "neutral",
@@ -92,7 +90,6 @@ const badgeVariants = cva(
         color: "info",
         className: "bg-[var(--status-info-soft)] text-[var(--status-info-fg)]",
       },
-      // outline
       {
         variant: "outline",
         color: "neutral",

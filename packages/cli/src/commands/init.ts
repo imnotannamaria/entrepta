@@ -17,7 +17,6 @@ export async function init(options: { theme?: string; overwrite: boolean }) {
   const framework = await detectFramework(cwd);
   log.info(`Framework: ${framework.name}`);
 
-  // resolve theme
   let theme: Theme;
   if (options.theme !== undefined) {
     if (!THEMES.includes(options.theme as Theme)) {
@@ -47,7 +46,6 @@ export async function init(options: { theme?: string; overwrite: boolean }) {
     theme = answer.theme as Theme;
   }
 
-  // write entrepta.json
   const config = {
     $schema: "https://entrepta.vercel.app/schema.json",
     theme,
@@ -85,7 +83,6 @@ export async function init(options: { theme?: string; overwrite: boolean }) {
     log.success("Created entrepta.json");
   }
 
-  // write globals.css
   let registryRoot: string;
   try {
     registryRoot = getRegistryRoot();
@@ -124,7 +121,6 @@ export async function init(options: { theme?: string; overwrite: boolean }) {
     log.success(`Created ${framework.cssPath}`);
   }
 
-  // write lib/utils.ts
   const utilsPath = path.join(cwd, framework.utilsPath);
   await ensureDir(path.dirname(utilsPath));
   const utilsExists = await fileExists(utilsPath);
@@ -142,7 +138,6 @@ export function cn(...inputs: ClassValue[]) {
     log.success(`Created ${framework.utilsPath}`);
   }
 
-  // install peer deps
   log.step("Installing dependencies...");
   const pm = await detectPackageManager(cwd);
   try {

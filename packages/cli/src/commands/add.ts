@@ -21,7 +21,6 @@ export async function add(components: string[], options: { overwrite: boolean })
     return;
   }
 
-  // interactive selection if no args
   let selected: string[] = components;
   if (selected.length === 0) {
     const { picks } = await prompts({
@@ -40,7 +39,6 @@ export async function add(components: string[], options: { overwrite: boolean })
     selected = picks as string[];
   }
 
-  // validate names before resolving
   const known = new Set(COMPONENTS.map((c) => c.name));
   const unknown = selected.filter((name) => !known.has(name));
   if (unknown.length > 0) {
@@ -52,7 +50,6 @@ export async function add(components: string[], options: { overwrite: boolean })
     process.exit(1);
   }
 
-  // resolve dependencies (including transitive)
   const toInstall = resolveComponents(selected);
 
   let registryRoot: string;
@@ -115,7 +112,6 @@ export async function add(components: string[], options: { overwrite: boolean })
     allNpmDeps.push(...component.deps);
   }
 
-  // install npm deps
   const uniqueDeps = [...new Set(allNpmDeps)];
   if (uniqueDeps.length > 0) {
     log.step("Installing dependencies...");
