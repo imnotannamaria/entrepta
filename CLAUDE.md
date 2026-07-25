@@ -333,9 +333,14 @@ pnpm test
 pnpm changeset
 pnpm changeset:status
 
-# release
+# release, manual fallback only, see below
 pnpm release
 ```
+
+Releases are automated. A push to `main` carrying changesets makes
+`.github/workflows/release.yml` open a "Version Packages" PR with the bumps and
+the CHANGELOG. Merging that PR publishes both packages to npm and pushes the
+tags. `pnpm release` is the manual path, for when the workflow is broken.
 
 Running the local CLI in another project:
 
@@ -374,6 +379,8 @@ pnpm dlx file:"$(pwd)/../entrepta/packages/cli" init
 - Monorepo: pnpm workspaces and Turborepo
 - Light mode is implemented, dark stays the default
 - Packages are published: `@entrepta/cli` and `@entrepta/registry`
+- Publishing runs on CI through the Changesets action, with a version PR in
+  between. `scripts/release.sh` stays as the manual fallback
 - Docs live at https://entrepta.vercel.app/
 
 ---

@@ -13,6 +13,7 @@
     "changeset": "changeset",
     "changeset:status": "changeset status",
     "changeset:version": "changeset version",
+    "changeset:publish": "changeset publish",
     "release": "bash scripts/release.sh",
     "prepare": "husky"
   },
