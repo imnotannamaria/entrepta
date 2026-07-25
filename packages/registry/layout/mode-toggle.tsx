@@ -56,10 +56,32 @@ const ICON_SIZE: Record<NonNullable<VariantProps<typeof modeToggle>["size"]>, nu
   md: 14,
 };
 
+// Both icons stay mounted and stacked so the swap can cross-fade. They turn in
+// opposite directions, which reads like a dial. The globals.css reduced-motion
+// block flattens the transition for anyone who asks for less movement.
+const ICON_BASE =
+  "col-start-1 row-start-1 transition-[opacity,rotate,scale] duration-[var(--motion-base)] ease-[var(--ease-out)]";
+const ICON_IN = "opacity-100 rotate-0 scale-100";
+
 /** Sun in light mode, moon in dark mode. Shows the mode you are in, not the one you get. */
 function ModeIcon({ mode, size }: { mode: ThemeMode; size: number }) {
-  const Icon = mode === "dark" ? Moon : Sun;
-  return <Icon aria-hidden style={{ width: size, height: size, strokeWidth: 1.5 }} />;
+  const iconStyle = { width: size, height: size, strokeWidth: 1.5 };
+  return (
+    <span
+      aria-hidden
+      className="relative inline-grid place-items-center shrink-0"
+      style={{ width: size, height: size }}
+    >
+      <Moon
+        className={cn(ICON_BASE, mode === "dark" ? ICON_IN : "opacity-0 rotate-90 scale-50")}
+        style={iconStyle}
+      />
+      <Sun
+        className={cn(ICON_BASE, mode === "light" ? ICON_IN : "opacity-0 -rotate-90 scale-50")}
+        style={iconStyle}
+      />
+    </span>
+  );
 }
 
 const ModeToggle = React.forwardRef<HTMLButtonElement, ModeToggleProps>(

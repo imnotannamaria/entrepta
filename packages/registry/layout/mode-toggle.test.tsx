@@ -55,12 +55,19 @@ describe("ModeToggle", () => {
     );
   });
 
-  it("shows a moon in dark mode and a sun in light mode", async () => {
+  it("fades the moon out and the sun in when the mode flips", async () => {
     const user = userEvent.setup();
     const { container } = render(<ModeToggle />);
-    expect(container.querySelector("svg")?.getAttribute("class")).toContain("lucide-moon");
+    const moon = () => container.querySelector(".lucide-moon")?.getAttribute("class") ?? "";
+    const sun = () => container.querySelector(".lucide-sun")?.getAttribute("class") ?? "";
+
+    // Both icons stay mounted so the swap can animate; opacity says which one shows.
+    expect(moon()).toContain("opacity-100");
+    expect(sun()).toContain("opacity-0");
+
     await user.click(screen.getByRole("button"));
-    expect(container.querySelector("svg")?.getAttribute("class")).toContain("lucide-sun");
+    expect(moon()).toContain("opacity-0");
+    expect(sun()).toContain("opacity-100");
   });
 
   it("labeled variant shows the mode name", () => {

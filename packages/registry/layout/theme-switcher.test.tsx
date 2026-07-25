@@ -75,19 +75,20 @@ describe("ThemeSwitcher", () => {
     expect(document.documentElement.getAttribute("data-mode")).toBe("light");
   });
 
-  it("shows a moon in dark mode and a sun in light mode", async () => {
+  it("fades the moon out and the sun in when the mode flips", async () => {
     const user = userEvent.setup();
     render(<ThemeSwitcher themes={THEMES} />);
     await user.click(screen.getByRole("button", { name: /Theme: entrepta/i }));
-    const modeRow = screen.getByRole("button", { name: /→ light/i });
-    expect(modeRow.querySelector("svg")?.getAttribute("class")).toContain("lucide-moon");
-    await user.click(modeRow);
-    expect(
-      screen
-        .getByRole("button", { name: /→ dark/i })
-        .querySelector("svg")
-        ?.getAttribute("class")
-    ).toContain("lucide-sun");
+
+    // Both icons stay mounted so the swap can animate; opacity says which one shows.
+    const darkRow = screen.getByRole("button", { name: /→ light/i });
+    expect(darkRow.querySelector(".lucide-moon")?.getAttribute("class")).toContain("opacity-100");
+    expect(darkRow.querySelector(".lucide-sun")?.getAttribute("class")).toContain("opacity-0");
+
+    await user.click(darkRow);
+    const lightRow = screen.getByRole("button", { name: /→ dark/i });
+    expect(lightRow.querySelector(".lucide-moon")?.getAttribute("class")).toContain("opacity-0");
+    expect(lightRow.querySelector(".lucide-sun")?.getAttribute("class")).toContain("opacity-100");
   });
 
   it("hideModeToggle removes the mode section and the trigger label", async () => {

@@ -19,15 +19,27 @@ interface ThemeSwitcherProps
   liveLabel?: string;
 }
 
+// Both icons stay mounted and stacked so the swap can cross-fade. They turn in
+// opposite directions, which reads like a dial. The globals.css reduced-motion
+// block flattens the transition for anyone who asks for less movement.
+const ICON_BASE =
+  "col-start-1 row-start-1 text-[var(--fg-primary)] transition-[opacity,rotate,scale] duration-[var(--motion-base)] ease-[var(--ease-out)]";
+const ICON_IN = "opacity-100 rotate-0 scale-100";
+const ICON_STYLE = { width: 14, height: 14, strokeWidth: 1.5 };
+
 /** Sun in light mode, moon in dark mode. Shows the mode you are in, not the one you get. */
 function ModeIcon({ mode }: { mode: ThemeMode }) {
-  const Icon = mode === "dark" ? Moon : Sun;
   return (
-    <Icon
-      aria-hidden
-      className="text-[var(--fg-primary)]"
-      style={{ width: 14, height: 14, strokeWidth: 1.5 }}
-    />
+    <span aria-hidden className="relative inline-grid place-items-center w-4 h-4 shrink-0">
+      <Moon
+        className={cn(ICON_BASE, mode === "dark" ? ICON_IN : "opacity-0 rotate-90 scale-50")}
+        style={ICON_STYLE}
+      />
+      <Sun
+        className={cn(ICON_BASE, mode === "light" ? ICON_IN : "opacity-0 -rotate-90 scale-50")}
+        style={ICON_STYLE}
+      />
+    </span>
   );
 }
 
