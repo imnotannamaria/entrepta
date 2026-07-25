@@ -342,6 +342,11 @@ Releases are automated. A push to `main` carrying changesets makes
 the CHANGELOG. Merging that PR publishes both packages to npm and pushes the
 tags. `pnpm release` is the manual path, for when the workflow is broken.
 
+Publishing authenticates through npm trusted publishing (OIDC). Both packages
+name this repo and `release.yml` as their trusted publisher, so there is no npm
+token in the repo secrets. Renaming or moving that workflow file breaks the
+release until the trusted publisher is updated on npmjs.com.
+
 Running the local CLI in another project:
 
 ```bash
@@ -381,6 +386,8 @@ pnpm dlx file:"$(pwd)/../entrepta/packages/cli" init
 - Packages are published: `@entrepta/cli` and `@entrepta/registry`
 - Publishing runs on CI through the Changesets action, with a version PR in
   between. `scripts/release.sh` stays as the manual fallback
+- npm auth is trusted publishing (OIDC), no stored token. This is what forced
+  pnpm to the 10 line, since OIDC publishing does not exist in pnpm 9
 - Docs live at https://entrepta.vercel.app/
 
 ---
