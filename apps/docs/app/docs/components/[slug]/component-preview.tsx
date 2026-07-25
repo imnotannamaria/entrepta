@@ -67,7 +67,7 @@ import {
   TooltipShortcut,
   TooltipTrigger,
 } from "@entrepta/registry/primitives/tooltip";
-import { FileCode, GitBranch, Home, Settings, Zap } from "lucide-react";
+import { FileCode, GitBranch, Home, Moon, Settings, Sun, Zap } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -658,11 +658,8 @@ function ThemeSwitcherPreview() {
         </div>
         <div className="flex items-center justify-between gap-2 px-2 py-1.5 rounded-[var(--radius-sm)]">
           <span className="flex items-center gap-2.5">
-            <span
-              className="inline-grid place-items-center w-4 h-4 rounded-full border border-[var(--border-subtle)] text-[10px] leading-none"
-              style={{ background: "#09090b", color: "#fafafa" }}
-            >
-              ◗
+            <span className="inline-grid place-items-center w-4 h-4 shrink-0 text-[var(--fg-primary)]">
+              <Moon style={{ width: 14, height: 14, strokeWidth: 1.5 }} />
             </span>
             <span className="text-[var(--fg-primary)]">dark</span>
           </span>
@@ -708,19 +705,9 @@ function ThemeSwitcherPreview() {
 }
 
 function ModeGlyph({ mode, size }: { mode: "dark" | "light"; size: "sm" | "md" }) {
-  return (
-    <span
-      className={`inline-grid place-items-center rounded-full border border-[var(--border-subtle)] leading-none ${
-        size === "sm" ? "w-3.5 h-3.5 text-[9px]" : "w-4 h-4 text-[10px]"
-      }`}
-      style={{
-        background: mode === "dark" ? "#09090b" : "#fafafa",
-        color: mode === "dark" ? "#fafafa" : "#09090b",
-      }}
-    >
-      {mode === "dark" ? "◗" : "◖"}
-    </span>
-  );
+  const Icon = mode === "dark" ? Moon : Sun;
+  const px = size === "sm" ? 12 : 14;
+  return <Icon style={{ width: px, height: px, strokeWidth: 1.5 }} />;
 }
 
 function ModeTogglePreview() {

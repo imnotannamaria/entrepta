@@ -75,6 +75,21 @@ describe("ThemeSwitcher", () => {
     expect(document.documentElement.getAttribute("data-mode")).toBe("light");
   });
 
+  it("shows a moon in dark mode and a sun in light mode", async () => {
+    const user = userEvent.setup();
+    render(<ThemeSwitcher themes={THEMES} />);
+    await user.click(screen.getByRole("button", { name: /Theme: entrepta/i }));
+    const modeRow = screen.getByRole("button", { name: /→ light/i });
+    expect(modeRow.querySelector("svg")?.getAttribute("class")).toContain("lucide-moon");
+    await user.click(modeRow);
+    expect(
+      screen
+        .getByRole("button", { name: /→ dark/i })
+        .querySelector("svg")
+        ?.getAttribute("class")
+    ).toContain("lucide-sun");
+  });
+
   it("hideModeToggle removes the mode section and the trigger label", async () => {
     const user = userEvent.setup();
     render(<ThemeSwitcher themes={THEMES} hideModeToggle />);

@@ -1,6 +1,7 @@
 "use client";
 
 import { type VariantProps, cva } from "class-variance-authority";
+import { Moon, Sun } from "lucide-react";
 import * as React from "react";
 import { type ThemeMode, useMode } from "../hooks/use-mode";
 import { cn } from "../lib/utils";
@@ -50,10 +51,16 @@ interface ModeToggleProps
   onModeChange?: (mode: ThemeMode) => void;
 }
 
-const GLYPH_SIZE: Record<NonNullable<VariantProps<typeof modeToggle>["size"]>, string> = {
-  sm: "w-3.5 h-3.5 text-[9px]",
-  md: "w-4 h-4 text-[10px]",
+const ICON_SIZE: Record<NonNullable<VariantProps<typeof modeToggle>["size"]>, number> = {
+  sm: 12,
+  md: 14,
 };
+
+/** Sun in light mode, moon in dark mode. Shows the mode you are in, not the one you get. */
+function ModeIcon({ mode, size }: { mode: ThemeMode; size: number }) {
+  const Icon = mode === "dark" ? Moon : Sun;
+  return <Icon aria-hidden style={{ width: size, height: size, strokeWidth: 1.5 }} />;
+}
 
 const ModeToggle = React.forwardRef<HTMLButtonElement, ModeToggleProps>(
   (
@@ -88,6 +95,7 @@ const ModeToggle = React.forwardRef<HTMLButtonElement, ModeToggleProps>(
         aria-pressed={mode === "light"}
         onClick={handleClick}
         data-mode-toggle
+        data-mode={mode}
         className={cn(
           modeToggle({ variant, size }),
           position && `fixed z-50 shadow-[0_4px_12px_rgba(0,0,0,0.3)] ${POSITION_CLASS[position]}`,
@@ -95,19 +103,7 @@ const ModeToggle = React.forwardRef<HTMLButtonElement, ModeToggleProps>(
         )}
         {...buttonProps}
       >
-        <span
-          aria-hidden
-          className={cn(
-            "inline-grid place-items-center rounded-full border border-[var(--border-subtle)] leading-none",
-            GLYPH_SIZE[size ?? "md"]
-          )}
-          style={{
-            background: mode === "dark" ? "#09090b" : "#fafafa",
-            color: mode === "dark" ? "#fafafa" : "#09090b",
-          }}
-        >
-          {mode === "dark" ? "◗" : "◖"}
-        </span>
+        <ModeIcon mode={mode} size={ICON_SIZE[size ?? "md"]} />
         {variant === "labeled" && <span>{mode}</span>}
       </button>
     );

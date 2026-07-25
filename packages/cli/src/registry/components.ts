@@ -126,7 +126,7 @@ export const COMPONENTS: RegistryComponent[] = [
     description: "Floating theme + mode picker with no-flash ThemeScript helper",
     category: "layout",
     files: ["layout/theme-switcher.tsx"],
-    deps: [],
+    deps: ["lucide-react"],
     registryDeps: ["use-theme"],
   },
   {
@@ -134,7 +134,7 @@ export const COMPONENTS: RegistryComponent[] = [
     description: "Dark/light only toggle, inline or floating, with no-flash ModeScript helper",
     category: "layout",
     files: ["layout/mode-toggle.tsx"],
-    deps: ["class-variance-authority"],
+    deps: ["class-variance-authority", "lucide-react"],
     registryDeps: ["use-mode"],
   },
   {

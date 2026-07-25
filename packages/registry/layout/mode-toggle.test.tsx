@@ -55,6 +55,14 @@ describe("ModeToggle", () => {
     );
   });
 
+  it("shows a moon in dark mode and a sun in light mode", async () => {
+    const user = userEvent.setup();
+    const { container } = render(<ModeToggle />);
+    expect(container.querySelector("svg")?.getAttribute("class")).toContain("lucide-moon");
+    await user.click(screen.getByRole("button"));
+    expect(container.querySelector("svg")?.getAttribute("class")).toContain("lucide-sun");
+  });
+
   it("labeled variant shows the mode name", () => {
     render(<ModeToggle variant="labeled" />);
     expect(screen.getByRole("button")).toHaveTextContent("dark");

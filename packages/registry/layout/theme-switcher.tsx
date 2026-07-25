@@ -1,6 +1,8 @@
 "use client";
 
+import { Moon, Sun } from "lucide-react";
 import * as React from "react";
+import type { ThemeMode } from "../hooks/use-mode";
 import { type ThemeOption, type UseThemeOptions, useTheme } from "../hooks/use-theme";
 import { cn } from "../lib/utils";
 
@@ -15,6 +17,18 @@ interface ThemeSwitcherProps
   hideModeToggle?: boolean;
   /** Label for the screen-reader-only live region. Default `"Active theme"`. */
   liveLabel?: string;
+}
+
+/** Sun in light mode, moon in dark mode. Shows the mode you are in, not the one you get. */
+function ModeIcon({ mode }: { mode: ThemeMode }) {
+  const Icon = mode === "dark" ? Moon : Sun;
+  return (
+    <Icon
+      aria-hidden
+      className="text-[var(--fg-primary)]"
+      style={{ width: 14, height: 14, strokeWidth: 1.5 }}
+    />
+  );
 }
 
 const POSITION_CLASS: Record<SwitcherPosition, string> = {
@@ -101,19 +115,13 @@ const ThemeSwitcher = React.forwardRef<HTMLDivElement, ThemeSwitcherProps>(
                 <button
                   type="button"
                   aria-pressed={mode === "light"}
+                  data-mode={mode}
                   onClick={toggleMode}
                   className="flex items-center justify-between gap-2 px-2 py-1.5 rounded-[var(--radius-sm)] hover:bg-[var(--bg-hover-soft)] focus-visible:outline-none focus-visible:bg-[var(--bg-hover-soft)] transition-colors text-left"
                 >
                   <span className="flex items-center gap-2.5">
-                    <span
-                      aria-hidden
-                      className="inline-grid place-items-center w-4 h-4 rounded-full border border-[var(--border-subtle)] text-[10px] leading-none"
-                      style={{
-                        background: mode === "dark" ? "#09090b" : "#fafafa",
-                        color: mode === "dark" ? "#fafafa" : "#09090b",
-                      }}
-                    >
-                      {mode === "dark" ? "◗" : "◖"}
+                    <span aria-hidden className="inline-grid place-items-center w-4 h-4 shrink-0">
+                      <ModeIcon mode={mode} />
                     </span>
                     <span className="text-[var(--fg-primary)]">{mode}</span>
                   </span>

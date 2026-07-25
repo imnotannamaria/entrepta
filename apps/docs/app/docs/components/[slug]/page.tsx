@@ -553,7 +553,7 @@ import { Button } from "@/components/entrepta/button"
     description:
       "Floating theme + dark/light picker. Drives `data-theme` and `data-mode` on `<html>` and persists to localStorage. Ships with a `<ThemeScript>` helper that runs pre-paint to avoid flashes.",
     install: "theme-switcher",
-    dependencies: [],
+    dependencies: ["lucide-react"],
     extraFiles: ["hooks/use-theme.ts", "hooks/use-mode.ts"],
     usage: `import {
   ThemeScript, ThemeSwitcher,
@@ -624,7 +624,7 @@ const THEMES = [
     description:
       "Dark/light switch with no theme picker. Drives `data-mode` on `<html>` and persists to localStorage. Renders inline by default, or floats in a corner with `position`. Ships with a `<ModeScript>` helper that runs pre-paint to avoid flashes.",
     install: "mode-toggle",
-    dependencies: ["class-variance-authority"],
+    dependencies: ["class-variance-authority", "lucide-react"],
     extraFiles: ["hooks/use-mode.ts"],
     usage: `import {
   ModeScript, ModeToggle,
