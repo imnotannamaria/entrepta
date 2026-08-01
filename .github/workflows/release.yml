@@ -33,6 +33,12 @@ jobs:
           cache: pnpm
           registry-url: https://registry.npmjs.org
 
+      # npm trusted publishing needs npm >=11.5.1. The npm bundled with a
+      # given Node 22 build lags behind that, so pin it explicitly rather
+      # than gamble on whatever ships with the runner today.
+      - name: Update npm
+        run: npm install -g npm@latest
+
       - name: Install dependencies
         run: pnpm install
 
@@ -47,18 +53,18 @@ jobs:
 
       # With changesets pending, this opens or updates the "Version Packages"
       # PR. With none pending, which is what merging that PR looks like, it
-      # publishes to npm and pushes the tags. changeset publish shells out to
-      # pnpm publish, so workspace:* in the CLI becomes the real registry
-      # version, and the packages go out in dependency order.
+      # runs scripts/npm-publish-ci.sh to publish and pushes the tags.
       #
-      # Auth is npm trusted publishing: both packages name this repo and this
-      # file as their trusted publisher, so the job gets a short-lived
-      # credential over OIDC and no token is stored anywhere.
+      # That script exists instead of the default `changeset publish` because
+      # changeset publish always shells out to `pnpm publish` when it finds a
+      # pnpm-lock.yaml, and pnpm publish's own passthrough to npm does not
+      # reliably do npm's OIDC trusted-publishing handshake. See the comment
+      # at the top of the script for the pnpm issue this is tracked on.
       - name: Create version PR or publish
         uses: changesets/action@v1
         with:
           version: pnpm changeset:version
-          publish: pnpm changeset:publish
+          publish: bash scripts/npm-publish-ci.sh
           commit: "chore: version packages"
           title: "chore: version packages"
         env:
