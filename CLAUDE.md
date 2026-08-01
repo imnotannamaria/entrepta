@@ -388,6 +388,13 @@ pnpm dlx file:"$(pwd)/../entrepta/packages/cli" init
   between. `scripts/release.sh` stays as the manual fallback
 - npm auth is trusted publishing (OIDC), no stored token. This is what forced
   pnpm to the 10 line, since OIDC publishing does not exist in pnpm 9
+- CI publishes with `scripts/npm-publish-ci.sh`, not `changeset publish`
+  directly. `changeset publish` always shells out to `pnpm publish` when it
+  finds a pnpm-lock.yaml, and that command's own passthrough to npm does not
+  reliably complete npm's OIDC handshake (confirmed against this repo: it
+  404s). The script packs with `pnpm pack`, which still does the workspace:*
+  rewrite, then publishes the resulting tarball with plain `npm publish`,
+  where OIDC works
 - Docs live at https://entrepta.vercel.app/
 
 ---
