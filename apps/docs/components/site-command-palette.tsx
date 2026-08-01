@@ -183,6 +183,18 @@ export function SiteCommandPaletteProvider({ children }: { children: ReactNode }
               </CommandItem>
               <CommandItem
                 icon={<Box {...ICON_PROPS} />}
+                onSelect={() => go("/docs/components/theme-switcher")}
+              >
+                ThemeSwitcher
+              </CommandItem>
+              <CommandItem
+                icon={<Box {...ICON_PROPS} />}
+                onSelect={() => go("/docs/components/mode-toggle")}
+              >
+                ModeToggle
+              </CommandItem>
+              <CommandItem
+                icon={<Box {...ICON_PROPS} />}
                 onSelect={() => go("/docs/components/toast")}
               >
                 Toast

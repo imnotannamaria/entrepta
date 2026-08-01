@@ -102,10 +102,10 @@ entrepta/
 │   └── registry/             # @entrepta/registry, source of truth
 │       ├── styles/           # globals.css + themes/*.css
 │       ├── primitives/       # button, badge, input, card, dialog, dropdown, tooltip, tabs
-│       ├── layout/           # status-bar, top-nav, theme-switcher
+│       ├── layout/           # status-bar, top-nav, theme-switcher, mode-toggle
 │       ├── content/          # code-block
 │       ├── feedback/         # toast, skeleton, command-palette
-│       ├── hooks/            # use-theme, use-command-palette
+│       ├── hooks/            # use-theme, use-mode, use-command-palette
 │       └── lib/              # utils.ts (cn)
 ├── sandbox/
 │   └── wirst-test/           # local Next.js app to test the CLI output (gitignored)
@@ -275,13 +275,14 @@ registry component is not installable until it is listed there with its `files`,
 | Tooltip   | `@radix-ui/react-tooltip`       | hover info, keyboard hints               |
 | Tabs      | `@radix-ui/react-tabs`          | editor style file tabs                   |
 
-### Layout (3)
+### Layout (4)
 
 | Component     | Notes                                            |
 | ------------- | ------------------------------------------------ |
 | StatusBar     | fixed bottom bar in the brand color              |
 | TopNav        | top nav with logo, breadcrumb and menu           |
 | ThemeSwitcher | floating preset and dark/light button, uses `use-theme` |
+| ModeToggle    | dark/light only, inline or floating, uses `use-mode` |
 
 ### Content (1)
 
@@ -297,9 +298,10 @@ registry component is not installable until it is listed there with its `files`,
 | Skeleton       | no      | shimmer, respects reduced motion    |
 | CommandPalette | `cmdk`  | ⌘K, search, groups, shortcuts       |
 
-### Hooks (2)
+### Hooks (3)
 
-- `use-theme`, controls preset and dark/light
+- `use-theme`, controls preset and dark/light, built on `use-mode`
+- `use-mode`, controls dark/light only
 - `use-command-palette`, controls open state and command registration
 
 ---
@@ -331,9 +333,19 @@ pnpm test
 pnpm changeset
 pnpm changeset:status
 
-# release
+# release, manual fallback only, see below
 pnpm release
 ```
+
+Releases are automated. A push to `main` carrying changesets makes
+`.github/workflows/release.yml` open a "Version Packages" PR with the bumps and
+the CHANGELOG. Merging that PR publishes both packages to npm and pushes the
+tags. `pnpm release` is the manual path, for when the workflow is broken.
+
+Publishing authenticates through npm trusted publishing (OIDC). Both packages
+name this repo and `release.yml` as their trusted publisher, so there is no npm
+token in the repo secrets. Renaming or moving that workflow file breaks the
+release until the trusted publisher is updated on npmjs.com.
 
 Running the local CLI in another project:
 
@@ -372,6 +384,10 @@ pnpm dlx file:"$(pwd)/../entrepta/packages/cli" init
 - Monorepo: pnpm workspaces and Turborepo
 - Light mode is implemented, dark stays the default
 - Packages are published: `@entrepta/cli` and `@entrepta/registry`
+- Publishing runs on CI through the Changesets action, with a version PR in
+  between. `scripts/release.sh` stays as the manual fallback
+- npm auth is trusted publishing (OIDC), no stored token. This is what forced
+  pnpm to the 10 line, since OIDC publishing does not exist in pnpm 9
 - Docs live at https://entrepta.vercel.app/
 
 ---

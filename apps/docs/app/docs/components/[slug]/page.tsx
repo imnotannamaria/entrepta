@@ -553,8 +553,8 @@ import { Button } from "@/components/entrepta/button"
     description:
       "Floating theme + dark/light picker. Drives `data-theme` and `data-mode` on `<html>` and persists to localStorage. Ships with a `<ThemeScript>` helper that runs pre-paint to avoid flashes.",
     install: "theme-switcher",
-    dependencies: [],
-    extraFiles: ["hooks/use-theme.ts"],
+    dependencies: ["lucide-react"],
+    extraFiles: ["hooks/use-theme.ts", "hooks/use-mode.ts"],
     usage: `import {
   ThemeScript, ThemeSwitcher,
 } from "@/components/entrepta/theme-switcher"
@@ -615,6 +615,64 @@ const THEMES = [
         type: "boolean",
         default: "false",
         description: "Lock mode to `defaultMode`. Useful for dark-only sites.",
+      },
+    ],
+  },
+  "mode-toggle": {
+    title: "ModeToggle",
+    category: "Layout",
+    description:
+      "Dark/light switch with no theme picker. Drives `data-mode` on `<html>` and persists to localStorage. Renders inline by default, or floats in a corner with `position`. Ships with a `<ModeScript>` helper that runs pre-paint to avoid flashes.",
+    install: "mode-toggle",
+    dependencies: ["class-variance-authority", "lucide-react"],
+    extraFiles: ["hooks/use-mode.ts"],
+    usage: `import {
+  ModeScript, ModeToggle,
+} from "@/components/entrepta/mode-toggle"
+
+// In your root <head>, before React hydrates:
+<ModeScript />
+
+// Inline, drop it in a nav or a toolbar:
+<ModeToggle />
+<ModeToggle variant="labeled" size="sm" />
+
+// Floating, same anchors as ThemeSwitcher:
+<ModeToggle position="bottom-right" />`,
+    props: [
+      {
+        name: "variant",
+        type: '"icon" | "labeled"',
+        default: '"icon"',
+        description: "`labeled` adds the current mode name next to the glyph.",
+      },
+      {
+        name: "size",
+        type: '"sm" | "md"',
+        default: '"md"',
+        description: "Height and padding scale.",
+      },
+      {
+        name: "position",
+        type: '"bottom-right" | "bottom-left" | "top-right" | "top-left"',
+        description: "Anchors the button to a screen corner. Omit to keep it inline.",
+      },
+      {
+        name: "defaultMode",
+        type: '"dark" | "light"',
+        default: '"dark"',
+        description: "Mode to use when nothing is stored.",
+      },
+      {
+        name: "storageKey",
+        type: "string",
+        default: '"entrepta"',
+        description: "Prefix for the localStorage key (`:mode`). Match it to ThemeSwitcher.",
+      },
+      {
+        name: "onModeChange",
+        type: "(mode: ThemeMode) => void",
+        description: "Fires after the mode changes.",
       },
     ],
   },

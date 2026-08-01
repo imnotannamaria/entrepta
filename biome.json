@@ -30,6 +30,6 @@
     }
   },
   "files": {
-    "ignore": ["node_modules", ".next", "dist", ".turbo", "*.min.js", ".claude/**"]
+    "ignore": ["node_modules", ".next", "dist", ".turbo", "*.min.js", ".claude/**", "sandbox/**"]
   }
 }

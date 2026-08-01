@@ -4,7 +4,7 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: "Components",
   description:
-    "All entrepta components: Button, Badge, Input, Card, Dialog, Dropdown, Tooltip, Tabs, StatusBar, TopNav, Toast, Skeleton, CommandPalette, CodeBlock.",
+    "All entrepta components: Button, Badge, Input, Card, Dialog, Dropdown, Tooltip, Tabs, StatusBar, TopNav, ThemeSwitcher, ModeToggle, Toast, Skeleton, CommandPalette, CodeBlock.",
   alternates: { canonical: "/docs/components" },
 };
 
@@ -60,6 +60,11 @@ const COMPONENTS = [
         href: "/docs/components/theme-switcher",
         desc: "Floating theme + dark/light picker",
       },
+      {
+        name: "ModeToggle",
+        href: "/docs/components/mode-toggle",
+        desc: "Dark/light only, inline or floating",
+      },
     ],
   },
   {
@@ -96,7 +101,7 @@ export default function ComponentsIndex() {
         Components
       </h1>
       <p className="font-sans text-base text-[var(--fg-secondary)] leading-relaxed mb-10">
-        14 components across 4 categories. All copy-paste via CLI or manual.
+        16 components across 4 categories. All copy-paste via CLI or manual.
       </p>
 
       <div className="flex flex-col gap-10">
