@@ -22,3 +22,6 @@ out
 sandbox/
 # typescript
 *.tsbuildinfo
+
+# claude
+.claude
