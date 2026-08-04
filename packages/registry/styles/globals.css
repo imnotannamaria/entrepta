@@ -89,6 +89,22 @@
   --status-error-soft: rgba(244, 63, 94, 0.12);
   --status-info-soft: rgba(129, 140, 248, 0.12);
 
+  /* chart — categorical series. --chart-1 follows the theme, the rest are
+     fixed so the palette stays readable in all six presets. Every value
+     clears 3:1 against --bg-surface, checked in both modes.
+     Above three series, do not rely on colour alone: give the extra series
+     a dashed stroke or a direct label. */
+  --chart-1: var(--fg-brand);
+  --chart-2: var(--zinc-300);
+  --chart-3: var(--zinc-500);
+  --chart-4: #38bdf8;
+  --chart-5: #2dd4bf;
+  --chart-6: #e879f9;
+
+  --chart-grid: var(--border-subtle);
+  --chart-axis: var(--fg-secondary);
+  --chart-cursor: var(--bg-surface-brand);
+
   /* ============================================================
      SPACING
      ============================================================ */
@@ -403,6 +419,13 @@ button:focus-visible,
   --bg-hover-strong: rgba(0, 0, 0, 0.08);
   --bg-chrome: rgba(0, 0, 0, 0.03);
 
+  /* The zinc ramp has to flip: what reads on #18181b vanishes on white.
+     The 400-level accents drop to 600 for the same reason. */
+  --chart-2: var(--zinc-700);
+  --chart-4: #0284c7;
+  --chart-5: #0d9488;
+  --chart-6: #c026d3;
+
   color-scheme: light;
 }
 
@@ -424,6 +447,22 @@ button:focus-visible,
   --bg-hover-soft: rgba(255, 255, 255, 0.04);
   --bg-hover-strong: rgba(255, 255, 255, 0.08);
   --bg-chrome: rgba(0, 0, 0, 0.3);
+
+  /* Undo the light-mode chart flip — a chart in here sits on a dark surface
+     even when the page is light. */
+  --chart-2: var(--zinc-300);
+  --chart-4: #38bdf8;
+  --chart-5: #2dd4bf;
+  --chart-6: #e879f9;
+
+  /* These four alias other tokens that this block overrides. A var() in a
+     custom property is substituted once, on the element that declares it,
+     then inherits as a literal — so the :root copies would carry the page's
+     values in here. Redeclaring re-runs the substitution in this scope. */
+  --chart-1: var(--fg-brand);
+  --chart-grid: var(--border-subtle);
+  --chart-axis: var(--fg-secondary);
+  --chart-cursor: var(--bg-surface-brand);
 
   color-scheme: dark;
 }
