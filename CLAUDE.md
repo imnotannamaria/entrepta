@@ -198,8 +198,10 @@ inks cannot be derived from the brand, so every theme file sets them.
 `styles/themes.contrast.test.ts` measures every pair in all 12 combinations
 straight from the CSS: 4.5 for `--fg-on-brand` on the brand, 4.5 for
 `--fg-brand-text` on canvas and card, 5.0 on the tint, and 4.5 for
-`--fg-muted` on canvas, card and overlay. Change a theme hex and that test says
-whether it still holds.
+`--fg-muted` on canvas, card and overlay and for each `--status-*-fg` on the
+canvas, a card and its own soft tint. Light mode sets darker status inks
+(emerald-700, amber-800, rose-700, indigo-700); the 400s only work on dark.
+Change a hex and that test says whether it still holds.
 
 ### Semantic tokens
 

@@ -72,3 +72,26 @@ describe("FieldError", () => {
     expect(alert.querySelector("[aria-hidden]")?.textContent).toBe("// ");
   });
 });
+
+describe("Field with the registry controls", () => {
+  it("turns an Input and a Textarea red when it has an error", async () => {
+    const { Input } = await import("./input");
+    render(
+      <>
+        <Field id="a" label="a" error="bad">
+          <Input />
+        </Field>
+        <Field id="b" label="b" error="bad">
+          <Textarea />
+        </Field>
+      </>
+    );
+    const [input, textarea] = screen.getAllByRole("textbox");
+    expect(input.parentElement).toHaveClass(
+      "has-[[aria-invalid=true]]:border-[var(--status-error)]"
+    );
+    expect(input).toHaveAttribute("aria-invalid", "true");
+    expect(textarea).toHaveClass("aria-invalid:border-[var(--status-error)]");
+    expect(textarea).toHaveAttribute("aria-invalid", "true");
+  });
+});

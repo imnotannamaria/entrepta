@@ -18,7 +18,10 @@ const probe: HTMLSpanElement | null = (() => {
   if (typeof document === "undefined" || !document.body) return null;
   const el = document.createElement("span");
   el.setAttribute("aria-hidden", "true");
-  el.style.cssText = "position:absolute;opacity:0;pointer-events:none;width:0;height:0";
+  // the reduced-motion reset gives every element a 0.01ms transition; on the probe that
+  // would make each read land mid-transition, so it is switched off here
+  el.style.cssText =
+    "position:absolute;opacity:0;pointer-events:none;width:0;height:0;transition:none !important";
   document.body.appendChild(el);
   return el;
 })();
@@ -190,4 +193,12 @@ export const INK_PAIRS: InkPair[] = [
   { ink: "--fg-muted", on: "--bg-canvas", min: 4.5, note: "metadata on the page" },
   { ink: "--fg-muted", on: "--bg-card", min: 4.5, note: "metadata on a card" },
   { ink: "--fg-muted", on: "--bg-overlay", min: 4.5, note: "metadata in a dialog" },
+  {
+    ink: "--status-success-fg",
+    on: "--status-success-soft",
+    over: "--bg-canvas",
+    min: 4.5,
+    note: "a soft success badge",
+  },
+  { ink: "--status-error-fg", on: "--bg-card", min: 4.5, note: "a field error on a card" },
 ];

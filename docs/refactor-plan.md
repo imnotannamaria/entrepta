@@ -869,18 +869,66 @@ v2 migration guide.
 
 **Checklist**
 
-- [ ] Color, Typography and Motion rewritten; Accessibility and Rules added
-- [ ] `lib/rules.ts` as the single source
-- [ ] A page for every new component, with a preview
-- [ ] The 63 brand-as-text sites in the docs sorted
-- [ ] Docs sidebar with the new sections
-- [ ] `globals.css` sync test
-- [ ] Migration guide
-- [ ] README
+- [x] Color, Typography and Motion rewritten; Accessibility and Rules added
+- [x] `lib/rules.ts` as the single source
+- [x] A page for every new component, with a preview
+- [x] The 63 brand-as-text sites in the docs sorted
+- [x] Docs sidebar with the new sections
+- [x] `globals.css` sync test
+- [x] Migration guide
+- [x] README
 
 **Done when** every manifest item has a page, and the Accessibility page shows the same numbers
 the test measures.
 
+
+**Notes from the work**
+
+- Phase 7's "one manifest" moved here, because every new page would otherwise have been
+  written into six lists. The manifest is `packages/registry/manifest.ts`; the CLI imports it
+  by package name and tsup bundles it (`noExternal`), so the published CLI does not load
+  TypeScript at runtime. The docs derive the install command, the npm deps (transitively) and
+  the Manual tab files from it. That also fixed a coupling: the Manual tab used to build the
+  file path from the docs category, which Forms and Motion would have broken.
+- Docs data is split in two: `lib/component-index.ts` (slug, title, section, and the whole docs
+  nav), small enough for the client sidebar, mobile menu and palette; and `lib/components.ts`
+  (description, usage, props), server only. Sections: Primitives, Forms, Layout, Content,
+  Feedback, Motion. Input moved to Forms.
+- Tests in the docs app: every manifest component has an index entry, page text and a preview;
+  nothing has a page the CLI cannot install; every hook and lib file is reached through some
+  component; every component is in the nav; every nav page is in the sitemap; and globals.css
+  matches the registry's apart from the docs-only `@source` and runtime themes. That sync test
+  caught two comment lines Phase 1 had dropped.
+- Hooks and lib files are documented on the pages of the components that pull them in
+  (`use-url-filter` on FilterPill, `motion-lib` on Motion, `color-contrast` on Accessibility)
+  rather than on pages of their own.
+- The Color page and the Accessibility page read tokens live and measure contrast with the
+  registry's `color-contrast.ts`, for the theme and mode in use. With reduced motion the
+  numbers were blank: the reset gives every element a 0.01ms transition, so the probe was read
+  mid-transition. The probe now has `transition: none !important`.
+- Brand as text in the docs: 70 sites today. 25 moved to `--fg-brand-text` (eyebrows, small
+  labels, links, flags, prop names, code in previews). The rest keep `--fg-brand`: `$`, `◆`,
+  `//` and arrows, `<em>` in large titles, and the logo's dot.
+- Found in the visual pass and fixed:
+  - Field marked its control `aria-invalid`, but Input and Textarea only turned red through
+    `state="error"`. Both now style `aria-invalid` too (Input through `has-[...]` on its
+    wrapper), and `state="error"` sets `aria-invalid`.
+  - The status inks (`--status-*-fg`, the 400s) were never redeclared for light mode, where
+    they measure 1.6 to 2.9 on white: soft Badges, Toasts, FieldError and the ChromeMessage
+    error prompt all failed. Light mode now uses emerald-700, amber-800, rose-700 and
+    indigo-700, `[data-surface="dark"]` restores the 400s, and the contrast test checks each
+    status ink on the canvas, a card and its own soft tint in all 12 combinations. The
+    portfolio has the same gap.
+- The scale test reads the docs source too, so size examples cannot be written literally.
+  `lib/rules.ts` escapes them inside a plain string; the migration guide builds them by
+  interpolation, because Biome's formatter undoes escapes in template literals.
+- Theme scripts need `suppressHydrationWarning` on `<html>`: now said on the Accessibility,
+  ThemeSwitcher and ModeToggle pages and in the migration guide.
+- Visual pass, automated part: every sitemap page (47) at 375px in both modes, with no overflow
+  and no errors beyond the Vercel Analytics script, which only exists on Vercel. The
+  person-looking part is still open.
+- Left for Phase 7: the home page still has em-dashes in three strings and in the install
+  snippet.
 **Visual pass**
 
 - The foundations pages in all 12 combinations; the live numbers change with the theme.

@@ -66,6 +66,16 @@ const CHECKS: Check[] = [
   { ink: "--fg-muted", on: "--bg-canvas", min: 4.5 },
   { ink: "--fg-muted", on: "--bg-card", min: 4.5 },
   { ink: "--fg-muted", on: "--bg-overlay", min: 4.5 },
+  ...(["success", "warning", "error", "info"] as const).flatMap((status): Check[] => [
+    { ink: `--status-${status}-fg`, on: "--bg-canvas", min: 4.5 },
+    { ink: `--status-${status}-fg`, on: "--bg-card", min: 4.5 },
+    {
+      ink: `--status-${status}-fg`,
+      on: `--status-${status}-soft`,
+      tintOver: "--bg-canvas",
+      min: 4.5,
+    },
+  ]),
 ];
 
 function measure(set: Record<string, string>, check: Check): number {

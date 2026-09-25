@@ -19,7 +19,7 @@ export type ComponentDoc = {
 export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
   button: {
     description:
-      "Primary action element with 4 variants, 3 sizes, and a loading state. Extends all native <button> attributes.",
+      "Primary action element with 4 variants, 3 sizes and a loading state. buttonVariants lives in its own file with no use client, so a server component can style a link as a button.",
     usage: `import { Button } from "@/components/entrepta/button"
 
 <Button>./projects.sh →</Button>
@@ -55,7 +55,8 @@ export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
     ],
   },
   badge: {
-    description: "Inline status chip. 3 variants × 6 semantic colors × 2 sizes.",
+    description:
+      "Inline status chip in 3 variants, 6 colors and 2 sizes. Every variant uses an ink measured for its fill.",
     usage: `import { Badge } from "@/components/entrepta/badge"
 
 <Badge variant="solid" color="brand">FEATURED</Badge>
@@ -173,7 +174,7 @@ export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
   },
   dialog: {
     description:
-      "Accessible modal via Radix UI. Composed of trigger, overlay, content, header, and footer sub-components.",
+      "Accessible modal on Radix, on the overlay surface. Composed of trigger, overlay, content, header and footer parts.",
     usage: `import {
   Dialog, DialogTrigger, DialogContent,
   DialogHeader, DialogLabel, DialogTitle,
@@ -477,7 +478,7 @@ import { TabNav, TabNavLink } from "@/components/entrepta/tabs"
   },
   "theme-switcher": {
     description:
-      "Floating theme + dark/light picker. Drives `data-theme` and `data-mode` on `<html>` and persists to localStorage. Ships with a `<ThemeScript>` helper that runs pre-paint to avoid flashes.",
+      "Floating theme and dark/light picker. Drives data-theme and data-mode on <html> and remembers the choice. It needs every theme in your CSS: run init with --themes=all. ThemeScript sets the attributes before paint; add suppressHydrationWarning to your <html>.",
     usage: `import {
   ThemeScript, ThemeSwitcher,
 } from "@/components/entrepta/theme-switcher"
@@ -544,7 +545,7 @@ const THEMES = [
   },
   "mode-toggle": {
     description:
-      "Dark/light switch with no theme picker. Drives `data-mode` on `<html>` and persists to localStorage. Renders inline by default, or floats in a corner with `position`. Ships with a `<ModeScript>` helper that runs pre-paint to avoid flashes.",
+      "Dark/light switch with no theme picker. Drives data-mode on <html> and remembers the choice. Inline by default, or floating with position. ModeScript sets the mode before paint; add suppressHydrationWarning to your <html>.",
     usage: `import {
   ModeScript, ModeToggle,
 } from "@/components/entrepta/mode-toggle"
@@ -632,7 +633,7 @@ toast("New update available")`,
   },
   skeleton: {
     description:
-      "Animated shimmer placeholder that respects prefers-reduced-motion. Use SkeletonText for multi-line text blocks.",
+      "Shimmer placeholder that respects reduced motion. Offset each piece with delay so a card moves as one wave. For grids of hundreds, use the .skeleton-sweep class instead.",
     usage: `import { Skeleton, SkeletonText } from "@/components/entrepta/skeleton"
 
 // Avatar + text row
@@ -666,7 +667,7 @@ toast("New update available")`,
   },
   "command-palette": {
     description:
-      "⌘K command palette built with cmdk. Centered modal with ◆ brand-tinted selection, esc-to-close chip, and a status foot showing keyboard hints. Wire global shortcut with useCommandPalette.",
+      "⌘K command palette built on cmdk. A centered modal on the overlay surface, a ◆ on each group, an esc chip, and a footer of keyboard hints that wraps on phones. Wire the shortcut with useCommandPalette.",
     usage: `import {
   Command, CommandDialog, CommandInput,
   CommandList, CommandGroup, CommandItem, CommandEmpty,
@@ -729,7 +730,7 @@ export function MyPalette() {
   },
   "code-block": {
     description:
-      "Code container with optional macOS-style chrome, filename and language labels, and a one-click copy button. Pass raw code via the `code` prop; provide `children` for syntax-highlighted JSX rendering.",
+      "Code container with optional window chrome, filename and language labels, and a copy button that says so when the copy fails. Pass raw code in code, or children for highlighted JSX.",
     usage: `import { CodeBlock } from "@/components/entrepta/code-block"
 
 // Plain copy-paste snippet
@@ -740,7 +741,7 @@ export function MyPalette() {
   variant="terminal"
 />
 
-// Custom highlighted body — copy still grabs the raw code
+// Custom highlighted body; copy still grabs the raw code
 <CodeBlock code={raw} filename="tokens.css" language="css">
   <span className="text-[var(--fg-brand)]">--fg-brand</span>: #7C6BFF;
 </CodeBlock>`,

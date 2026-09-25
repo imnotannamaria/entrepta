@@ -10,14 +10,16 @@ npx @entrepta/cli@latest init
 
 ## What you get
 
-16 components across 4 categories, all written in React 19 and styled with Tailwind v4 + CSS variables.
+33 components across 6 sections, written in React 19 and styled with Tailwind v4 and CSS variables.
 
-- **Primitives**: Button, Badge, Input, Card, Dialog, Dropdown, Tooltip, Tabs
-- **Layout**: StatusBar, TopNav, ThemeSwitcher, ModeToggle
-- **Feedback**: Toast, Skeleton, CommandPalette
-- **Content**: CodeBlock
+- **Primitives**: Button, Badge, Card, Dialog, Dropdown, Tooltip, Tabs
+- **Forms**: Input, Textarea, Switch, Field, FilterPill
+- **Layout**: StatusBar, TopNav, ThemeSwitcher, ModeToggle, Titlebar, Sidebar, PageOutline
+- **Content**: CodeBlock, Diamond, SectHead, doc parts
+- **Feedback**: Toast, Skeleton, CommandPalette, ChromeMessage, PageLoading
+- **Motion**: Reveal, TypeIn, RollingNumber, Spotlight, ArrowLink
 
-Plus 6 theme presets you can switch with one flag: `entrepta`, `blossom`, `marmalade`, `julia`, `ivy`, `bosco`.
+Plus 6 theme presets: `entrepta`, `blossom`, `marmalade`, `julia`, `ivy`, `bosco`. Pick one, or install all six and switch at runtime. Every text color clears WCAG AA in all 12 theme and mode combinations, and a test measures it on every change.
 
 ## Two ways to install
 
@@ -26,9 +28,12 @@ Plus 6 theme presets you can switch with one flag: `entrepta`, `blossom`, `marma
 ```bash
 npx @entrepta/cli@latest init --theme=ivy
 npx @entrepta/cli@latest add button card command-palette
+
+# all six themes, switchable at runtime
+npx @entrepta/cli@latest init --theme=ivy --themes=all
 ```
 
-The CLI writes your `globals.css`, sets up `lib/utils.ts`, installs peer deps, and copies the components into your project.
+The CLI writes your `globals.css`, sets up `lib/utils.ts`, installs peer deps, and copies the components into your project, along with anything they import.
 
 ### By hand
 
@@ -70,7 +75,8 @@ export function Hero() {
 - CSS variables for all design tokens
 - TypeScript strict
 - class-variance-authority for variants
-- lucide-react icons (1.5px stroke)
+- Phosphor icons
+- `motion`, only for the four components that animate through JavaScript
 
 ## Project layout
 
@@ -79,7 +85,7 @@ entrepta/
 ├── apps/
 │   └── docs/          Next.js site at entrepta.vercel.app
 ├── packages/
-│   ├── cli/           npx @entrepta/cli@latest — init, add
+│   ├── cli/           npx @entrepta/cli@latest: init, add
 │   └── registry/      source of truth for components, tokens, themes
 ```
 

@@ -60,4 +60,11 @@ describe("docs coverage", () => {
     );
     expect(unlinked).toEqual([]);
   });
+
+  it("puts every docs page in the sitemap", async () => {
+    const { default: sitemap } = await import("../app/sitemap");
+    const urls = new Set(sitemap().map((e) => new URL(e.url).pathname));
+    const missing = DOCS_NAV.flatMap((g) => g.items.map((i) => i.href)).filter((h) => !urls.has(h));
+    expect(missing).toEqual([]);
+  });
 });

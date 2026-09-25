@@ -1,3 +1,4 @@
+import { COMPONENT_INDEX } from "@/lib/component-index";
 import type { MetadataRoute } from "next";
 
 const SITE_URL = "https://entrepta.vercel.app";
@@ -14,28 +15,9 @@ const STATIC_ROUTES: { path: string; priority: number; changeFrequency: "weekly"
   { path: "/docs/foundations/typography", priority: 0.6, changeFrequency: "monthly" },
   { path: "/docs/foundations/spacing", priority: 0.6, changeFrequency: "monthly" },
   { path: "/docs/foundations/motion", priority: 0.6, changeFrequency: "monthly" },
-];
-
-// Keep in sync with the COMPONENTS keys in app/docs/components/[slug]/page.tsx.
-// Next.js page modules cannot export anything other than the reserved names,
-// so the list is duplicated here on purpose.
-const COMPONENT_SLUGS = [
-  "button",
-  "badge",
-  "input",
-  "card",
-  "dialog",
-  "dropdown",
-  "tooltip",
-  "tabs",
-  "status-bar",
-  "top-nav",
-  "theme-switcher",
-  "mode-toggle",
-  "toast",
-  "skeleton",
-  "command-palette",
-  "code-block",
+  { path: "/docs/foundations/accessibility", priority: 0.6, changeFrequency: "monthly" },
+  { path: "/docs/foundations/rules", priority: 0.6, changeFrequency: "monthly" },
+  { path: "/docs/migrating-to-v2", priority: 0.7, changeFrequency: "monthly" },
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -48,7 +30,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: r.priority,
   }));
 
-  const componentEntries = COMPONENT_SLUGS.map((slug) => ({
+  const componentEntries = COMPONENT_INDEX.map(({ slug }) => ({
     url: `${SITE_URL}/docs/components/${slug}`,
     lastModified,
     changeFrequency: "monthly" as const,

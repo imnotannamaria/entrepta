@@ -17,6 +17,8 @@ const textareaVariants = cva(
     "hover:border-[var(--fg-muted)]",
     "focus:border-[var(--fg-brand)] focus:shadow-[0_0_0_3px_var(--bg-surface-brand)]",
     "disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-40",
+    // an invalid textarea, such as one a Field marks, looks like the error state
+    "aria-invalid:border-[var(--status-error)] aria-invalid:focus:shadow-[0_0_0_3px_var(--status-error-soft)]",
   ],
   {
     variants: {

@@ -618,6 +618,12 @@ select:autofill {
   --bg-hover-strong: rgba(0, 0, 0, 0.08);
   --bg-chrome: rgba(0, 0, 0, 0.03);
 
+  /* the 400 status inks are for dark backgrounds; on white they fall to about 2:1 */
+  --status-success-fg: #047857;
+  --status-warning-fg: #92400e;
+  --status-error-fg: #be123c;
+  --status-info-fg: #4338ca;
+
   /* a wash that reads on a dark card vanishes on white, so light mixes more */
   --bg-spotlight: color-mix(in srgb, var(--fg-brand) 26%, transparent);
   --shadow-card-hover: 0 8px 24px rgba(0, 0, 0, 0.1);
@@ -652,6 +658,11 @@ select:autofill {
 
   --bg-spotlight: color-mix(in srgb, var(--fg-brand) 15%, transparent);
   --shadow-card-hover: 0 8px 24px rgba(0, 0, 0, 0.3);
+
+  --status-success-fg: var(--emerald-400);
+  --status-warning-fg: var(--amber-400);
+  --status-error-fg: var(--rose-400);
+  --status-info-fg: var(--indigo-400);
 
   color-scheme: dark;
 }

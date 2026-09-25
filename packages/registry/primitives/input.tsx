@@ -14,6 +14,9 @@ const inputWrapperVariants = cva(
     "hover:border-[var(--fg-muted)]",
     "focus-within:border-[var(--fg-brand)] focus-within:shadow-[0_0_0_3px_var(--bg-surface-brand)]",
     "has-[:disabled]:opacity-40 has-[:disabled]:pointer-events-none",
+    // an invalid input, such as one a Field marks, looks like the error state
+    "has-[[aria-invalid=true]]:border-[var(--status-error)]",
+    "has-[[aria-invalid=true]]:focus-within:shadow-[0_0_0_3px_var(--status-error-soft)]",
   ],
   {
     variants: {
@@ -67,7 +70,12 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
             $
           </span>
         )}
-        <input ref={ref} className={inputBaseClass} {...props} />
+        <input
+          ref={ref}
+          aria-invalid={state === "error" || undefined}
+          className={inputBaseClass}
+          {...props}
+        />
         {variant === "command" && (
           <kbd
             aria-hidden
