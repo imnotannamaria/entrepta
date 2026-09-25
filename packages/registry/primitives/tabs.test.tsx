@@ -165,3 +165,60 @@ describe("TabNav", () => {
     expect(onClose).toHaveBeenCalled();
   });
 });
+
+describe("variant window", () => {
+  it("adds decorative window dots hidden from screen readers, with no buttons", () => {
+    const { container } = render(
+      <TabNav aria-label="Pages" variant="window">
+        <TabNavLink href="/" active>
+          home.tsx
+        </TabNavLink>
+      </TabNav>
+    );
+    const dots = container.querySelector("[data-window-dots]");
+    expect(dots).toHaveAttribute("aria-hidden");
+    expect(dots?.querySelectorAll("button")).toHaveLength(0);
+    expect(screen.getByRole("navigation", { name: "Pages" })).toBeInTheDocument();
+  });
+
+  it("shows end as meta from 768px, and a strip has no dots", () => {
+    const { container } = render(
+      <Tabs defaultValue="a">
+        <TabsList variant="window" end={<span>main</span>}>
+          <TabsTrigger value="a">a.tsx</TabsTrigger>
+        </TabsList>
+      </Tabs>
+    );
+    expect(screen.getByText("main").parentElement).toHaveClass("hidden", "md:flex");
+    render(
+      <Tabs defaultValue="a">
+        <TabsList>
+          <TabsTrigger value="a">b.tsx</TabsTrigger>
+        </TabsList>
+      </Tabs>
+    );
+    expect(container.ownerDocument.querySelectorAll("[data-window-dots]")).toHaveLength(1);
+  });
+
+  it("grows a Phosphor icon on hover and fills it when active", () => {
+    function FakeIcon(props: { weight?: string; className?: string }) {
+      return <svg data-weight={props.weight} className={props.className} />;
+    }
+    const { container } = render(
+      <Tabs defaultValue="a">
+        <TabsList>
+          <TabsTrigger value="a" icon={FakeIcon as never}>
+            a.tsx
+          </TabsTrigger>
+          <TabsTrigger value="b" icon={FakeIcon as never}>
+            b.tsx
+          </TabsTrigger>
+        </TabsList>
+      </Tabs>
+    );
+    const [active, idle] = container.querySelectorAll("svg");
+    expect(active).toHaveAttribute("data-weight", "fill");
+    expect(idle).toHaveAttribute("data-weight", "regular");
+    expect(idle).toHaveClass("group-hover:scale-115");
+  });
+});

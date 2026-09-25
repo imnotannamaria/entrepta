@@ -19,7 +19,7 @@ export interface RegistryComponent {
 export const COMPONENTS: RegistryComponent[] = [
   {
     name: "button",
-    description: "Primary action button with 4 variants and loading state",
+    description: "Primary action button with 4 variants, icon sizes and a loading state",
     category: "primitives",
     files: ["primitives/button.tsx", "primitives/button-variants.ts"],
     deps: ["class-variance-authority", "@phosphor-icons/react", "@radix-ui/react-slot"],
@@ -29,10 +29,10 @@ export const COMPONENTS: RegistryComponent[] = [
   },
   {
     name: "badge",
-    description: "Status badge, solid/soft/outline across 6 semantic colors",
+    description: "Status badge, solid/soft/outline across 6 semantic colors, with a dot or an icon",
     category: "primitives",
     files: ["primitives/badge.tsx"],
-    deps: ["class-variance-authority"],
+    deps: ["class-variance-authority", "@phosphor-icons/react"],
     registryDeps: [],
     usage: `<Badge variant="soft" color="success" dot>shipped</Badge>`,
     exports: ["Badge", "badgeVariants"],
@@ -136,7 +136,7 @@ export const COMPONENTS: RegistryComponent[] = [
   {
     name: "tabs",
     description:
-      "Editor file tabs, in place or as routes, with a travelling underline and a close button",
+      "Editor file tabs, in place or as routes, with a travelling underline, a close button and a title bar variant",
     category: "primitives",
     files: ["primitives/tabs.tsx"],
     deps: ["@radix-ui/react-tabs", "@radix-ui/react-slot", "@phosphor-icons/react", "motion"],
@@ -188,7 +188,7 @@ export const COMPONENTS: RegistryComponent[] = [
     description: "Toast notifications via Sonner, styled with entrepta tokens",
     category: "feedback",
     files: ["feedback/toast.tsx"],
-    deps: ["sonner"],
+    deps: ["sonner", "@phosphor-icons/react"],
     registryDeps: [],
     usage: `<Toaster /> then toast.success("saved")`,
     exports: ["Toaster", "toast"],
@@ -356,6 +356,16 @@ export const COMPONENTS: RegistryComponent[] = [
     exports: ["Switch"],
   },
   {
+    name: "checkbox",
+    description: "Checkbox over a native input, with a label, a description and a mixed state",
+    category: "primitives",
+    files: ["primitives/checkbox.tsx"],
+    deps: [],
+    registryDeps: [],
+    usage: `<Checkbox label="button" description="4 variants" defaultChecked />`,
+    exports: ["Checkbox"],
+  },
+  {
     name: "textarea",
     description: "Multi-line text field in sans, with an error state",
     category: "primitives",
@@ -452,15 +462,5 @@ export const COMPONENTS: RegistryComponent[] = [
     registryDeps: ["diamond", "motion-lib"],
     usage: `<PageOutline items={SECTIONS} file="about.md" />`,
     exports: ["PageOutline"],
-  },
-  {
-    name: "titlebar",
-    description: "40px editor title bar with window dots, a tab row and meta",
-    category: "layout",
-    files: ["layout/titlebar.tsx"],
-    deps: [],
-    registryDeps: [],
-    usage: `<Titlebar meta="main"><TabNav aria-label="Pages">…</TabNav></Titlebar>`,
-    exports: ["Titlebar"],
   },
 ];

@@ -11,17 +11,43 @@ import {
 } from "@/lib/agents-md";
 import { COMPONENT_INDEX, SECTIONS } from "@/lib/component-index";
 import { THEMES } from "@/lib/theme";
+import { cn } from "@/lib/utils";
 import { CodeBlock } from "@entrepta/registry/content/code-block";
 import { useUrlFilter } from "@entrepta/registry/hooks/use-url-filter";
 import { Button } from "@entrepta/registry/primitives/button";
-import { CheckIcon, DownloadSimpleIcon, WarningIcon } from "@phosphor-icons/react";
-import { useCallback, useMemo, useState, useSyncExternalStore } from "react";
+import { Checkbox } from "@entrepta/registry/primitives/checkbox";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogLabel,
+  DialogTitle,
+} from "@entrepta/registry/primitives/dialog";
+import {
+  CheckIcon,
+  DownloadSimpleIcon,
+  MoonIcon,
+  RobotIcon,
+  SunIcon,
+  WarningIcon,
+} from "@phosphor-icons/react";
+import { useCallback, useEffect, useMemo, useState, useSyncExternalStore } from "react";
 
 const THEME_IDS = THEMES.map((t) => t.id);
 const MODES = ["dark", "light"] as const;
 const THEMES_MODES = ["single", "all"] as const;
+const OPEN = ["open"] as const;
 const DEFAULT_COMPONENTS = ["button", "card", "code-block"];
 const SLUGS = new Set(COMPONENT_INDEX.map((c) => c.slug));
+
+/** The dialog's open state, in `?agents=open`: shareable, and the back button closes it. */
+export function useAgentsDialog() {
+  const [state, setState] = useUrlFilter("agents", OPEN);
+  const open = state === "open";
+  const setOpen = useCallback((next: boolean) => setState(next ? "open" : null), [setState]);
+  return { open, setOpen };
+}
 
 /**
  * The picked components, kept in `?c=button,card`, the same way use-url-filter
@@ -53,7 +79,7 @@ function useUrlList(param: string): [string[] | null, (next: string[]) => void] 
     (next: string[]) => {
       const params = new URLSearchParams(window.location.search);
       params.set(param, next.join(","));
-      window.history.pushState(null, "", `${window.location.pathname}?${params}#agents`);
+      window.history.pushState(null, "", `${window.location.pathname}?${params}`);
       window.dispatchEvent(new Event(event));
     },
     [param, event]
@@ -61,41 +87,70 @@ function useUrlList(param: string): [string[] | null, (next: string[]) => void] 
   return [value, write];
 }
 
-function Choice<T extends string>({
+/** A numbered step of the form. */
+function Step({
+  num,
+  title,
+  children,
+}: {
+  num: string;
+  title: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <section className="flex flex-col gap-4 border-b border-[var(--border-subtle)] px-6 py-6 last:border-b-0">
+      <h3 className="m-0 flex items-baseline gap-2 font-mono text-mono-xs font-normal uppercase tracking-[0.08em] text-[var(--fg-muted)]">
+        <span className="text-[var(--fg-brand-text)]">{num}</span>
+        {title}
+      </h3>
+      {children}
+    </section>
+  );
+}
+
+type Option<T extends string> = { value: T; label: string; icon?: React.ReactNode };
+
+/** A segmented radio group over native radios. */
+function Segmented<T extends string>({
   legend,
   name,
   options,
   value,
   onChange,
-  label = (v) => v,
 }: {
   legend: string;
   name: string;
-  options: readonly T[];
+  options: Option<T>[];
   value: T;
   onChange: (next: T) => void;
-  label?: (value: T) => string;
 }) {
   return (
-    <fieldset className="m-0 min-w-0 border-0 p-0">
-      <legend className="mb-2 p-0 font-mono text-mono-xs uppercase tracking-[0.08em] text-[var(--fg-muted)]">
+    <fieldset className="m-0 flex min-w-0 flex-col gap-2 border-0 p-0">
+      <legend className="mb-2 p-0 font-mono text-mono-sm text-[var(--fg-secondary)]">
         {legend}
       </legend>
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap gap-1 rounded-[var(--radius-md)] border border-[var(--border-subtle)] bg-[var(--bg-canvas)] p-1">
         {options.map((option) => (
           <label
-            key={option}
-            className="inline-flex h-7 cursor-pointer items-center gap-1.5 rounded-[var(--radius-sm)] border border-[var(--border-subtle)] px-2.5 font-mono text-mono-sm text-[var(--fg-muted)] transition-colors has-[:checked]:border-[var(--fg-brand)] has-[:checked]:bg-[var(--bg-surface-brand)] has-[:checked]:text-[var(--fg-brand-text)] has-[:focus-visible]:shadow-[0_0_0_3px_var(--bg-surface-brand)]"
+            key={option.value}
+            className={cn(
+              "inline-flex h-7 flex-1 cursor-pointer items-center justify-center gap-1.5 whitespace-nowrap",
+              "rounded-[var(--radius-sm)] px-2.5 font-mono text-mono-sm text-[var(--fg-muted)]",
+              "transition-colors duration-[var(--motion-fast)] hover:text-[var(--fg-secondary)]",
+              "has-[:checked]:bg-[var(--bg-surface-brand)] has-[:checked]:text-[var(--fg-brand-text)]",
+              "has-[:focus-visible]:shadow-[0_0_0_2px_var(--ring)]"
+            )}
           >
             <input
               type="radio"
               name={name}
-              value={option}
-              checked={value === option}
-              onChange={() => onChange(option)}
+              value={option.value}
+              checked={value === option.value}
+              onChange={() => onChange(option.value)}
               className="sr-only"
             />
-            {label(option)}
+            {option.icon}
+            {option.label}
           </label>
         ))}
       </div>
@@ -105,7 +160,7 @@ function Choice<T extends string>({
 
 type DownloadState = "idle" | "done" | "error";
 
-export function AgentsConfigurator() {
+function Configurator() {
   const [framework, setFramework] = useUrlFilter("fw", FRAMEWORKS);
   const [theme, setTheme] = useUrlFilter("theme", THEME_IDS);
   const [mode, setMode] = useUrlFilter("mode", MODES);
@@ -138,10 +193,16 @@ export function AgentsConfigurator() {
   const count = new Set([...options.components, ...required.keys()]).size;
 
   const toggle = (slug: string) => {
-    const next = options.components.includes(slug)
-      ? options.components.filter((s) => s !== slug)
-      : [...options.components, slug];
-    setPicked(next);
+    setPicked(
+      options.components.includes(slug)
+        ? options.components.filter((s) => s !== slug)
+        : [...options.components, slug]
+    );
+  };
+
+  const toggleSection = (slugs: string[], all: boolean) => {
+    const rest = options.components.filter((s) => !slugs.includes(s));
+    setPicked(all ? rest : [...rest, ...slugs]);
   };
 
   const save = () => {
@@ -160,108 +221,169 @@ export function AgentsConfigurator() {
   };
 
   return (
-    <div className="grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,420px)_minmax(0,1fr)]">
-      <form className="flex min-w-0 flex-col gap-6" onSubmit={(e) => e.preventDefault()}>
-        <Choice
-          legend="framework"
-          name="fw"
-          options={FRAMEWORKS}
-          value={options.framework}
-          onChange={setFramework}
-          label={(v) => FRAMEWORK_LABELS[v]}
-        />
-        <Choice
-          legend="theme"
-          name="theme"
-          options={THEME_IDS}
-          value={options.theme}
-          onChange={setTheme}
-        />
-        <Choice
-          legend="default mode"
-          name="mode"
-          options={MODES}
-          value={options.mode}
-          onChange={setMode}
-        />
-        <Choice
-          legend="themes"
-          name="themes"
-          options={THEMES_MODES}
-          value={options.themes}
-          onChange={setThemes}
-          label={(v) => (v === "single" ? "one, fixed" : "all six, at runtime")}
-        />
-        <Choice
-          legend="package manager"
-          name="pm"
-          options={PACKAGE_MANAGERS}
-          value={options.pm}
-          onChange={setPm}
-        />
-        <Choice
-          legend="file name"
-          name="file"
-          options={FILE_NAMES}
-          value={options.fileName}
-          onChange={setFileName}
-        />
+    <div className="grid min-h-0 flex-1 grid-cols-1 overflow-y-auto lg:grid-cols-[minmax(0,440px)_minmax(0,1fr)] lg:overflow-hidden">
+      <form
+        className="flex min-w-0 flex-col lg:overflow-y-auto lg:border-r lg:border-[var(--border-subtle)]"
+        onSubmit={(e) => e.preventDefault()}
+      >
+        <DialogHeader className="border-b border-[var(--border-subtle)] px-6 pt-6 pb-5">
+          <DialogLabel>agents.md</DialogLabel>
+          <DialogTitle>
+            Your <em>AGENTS.md</em>, ready to paste.
+          </DialogTitle>
+          <DialogDescription>
+            It tells a coding agent how to install entrepta, where things live, which token goes
+            where, and how each component is used. The link keeps your choices.
+          </DialogDescription>
+        </DialogHeader>
 
-        <fieldset className="m-0 min-w-0 border-0 p-0">
-          <legend className="mb-2 p-0 font-mono text-mono-xs uppercase tracking-[0.08em] text-[var(--fg-muted)]">
-            components
-          </legend>
-          <div className="flex flex-col gap-4">
-            {SECTIONS.map((section) => (
-              <div key={section}>
-                <div className="mb-1.5 font-mono text-mono-xs text-[var(--fg-secondary)]">
-                  {section}
-                </div>
-                <div className="flex flex-wrap gap-x-4 gap-y-1.5">
-                  {COMPONENT_INDEX.filter((c) => c.section === section).map((c) => {
-                    const neededBy = required.get(c.slug);
-                    const checked = options.components.includes(c.slug) || Boolean(neededBy);
-                    return (
-                      <label
-                        key={c.slug}
-                        className="inline-flex cursor-pointer items-center gap-1.5 font-mono text-mono-sm text-[var(--fg-secondary)] has-[:disabled]:cursor-default"
-                        title={neededBy ? `needed by ${neededBy}` : undefined}
-                      >
-                        <input
-                          type="checkbox"
-                          checked={checked}
+        <Step num="01" title="project">
+          <Segmented
+            legend="Framework"
+            name="fw"
+            options={FRAMEWORKS.map((v) => ({
+              value: v,
+              label: FRAMEWORK_LABELS[v].replace("Next.js ", ""),
+            }))}
+            value={options.framework}
+            onChange={setFramework}
+          />
+          <Segmented
+            legend="Package manager"
+            name="pm"
+            options={PACKAGE_MANAGERS.map((v) => ({ value: v, label: v }))}
+            value={options.pm}
+            onChange={setPm}
+          />
+        </Step>
+
+        <Step num="02" title="look">
+          <fieldset className="m-0 flex min-w-0 flex-col border-0 p-0">
+            <legend className="mb-2 p-0 font-mono text-mono-sm text-[var(--fg-secondary)]">
+              Theme
+            </legend>
+            <div className="grid grid-cols-2 gap-1.5 sm:grid-cols-3">
+              {THEMES.map((t) => (
+                <label
+                  key={t.id}
+                  className={cn(
+                    "flex h-9 cursor-pointer items-center gap-2 rounded-[var(--radius-sm)] border px-2.5",
+                    "border-[var(--border-subtle)] font-mono text-mono-sm text-[var(--fg-muted)]",
+                    "transition-colors hover:border-[var(--border-strong)] hover:text-[var(--fg-secondary)]",
+                    "has-[:checked]:border-[var(--border-brand-strong)] has-[:checked]:bg-[var(--bg-surface-brand)]",
+                    "has-[:checked]:text-[var(--fg-primary)]",
+                    "has-[:focus-visible]:shadow-[0_0_0_2px_var(--ring)]"
+                  )}
+                >
+                  <input
+                    type="radio"
+                    name="theme"
+                    value={t.id}
+                    checked={options.theme === t.id}
+                    onChange={() => setTheme(t.id)}
+                    className="sr-only"
+                  />
+                  <span
+                    aria-hidden
+                    className="size-3 shrink-0 rounded-full ring-1 ring-[var(--border-strong)]"
+                    style={{ background: t.color }}
+                  />
+                  {t.id}
+                </label>
+              ))}
+            </div>
+          </fieldset>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <Segmented
+              legend="Default mode"
+              name="mode"
+              options={[
+                { value: "dark", label: "dark", icon: <MoonIcon aria-hidden size={12} /> },
+                { value: "light", label: "light", icon: <SunIcon aria-hidden size={12} /> },
+              ]}
+              value={options.mode}
+              onChange={setMode}
+            />
+            <Segmented
+              legend="Themes installed"
+              name="themes"
+              options={[
+                { value: "single", label: "one" },
+                { value: "all", label: "all six" },
+              ]}
+              value={options.themes}
+              onChange={setThemes}
+            />
+          </div>
+        </Step>
+
+        <Step num="03" title={`components · ${count} picked`}>
+          <div className="flex flex-col gap-5">
+            {SECTIONS.map((section) => {
+              const items = COMPONENT_INDEX.filter((c) => c.section === section);
+              const slugs = items.map((c) => c.slug);
+              const on = slugs.filter(
+                (s) => options.components.includes(s) || required.has(s)
+              ).length;
+              const all = slugs.every((s) => options.components.includes(s));
+              return (
+                <div key={section} className="flex flex-col gap-3">
+                  <div className="flex items-center justify-between gap-3">
+                    <Checkbox
+                      label={section}
+                      checked={all}
+                      indeterminate={on > 0 && !all}
+                      onChange={() => toggleSection(slugs, all)}
+                    />
+                    <span className="font-mono text-mono-xs text-[var(--fg-muted)] tabular-nums">
+                      {on}/{items.length}
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-2 gap-x-4 gap-y-2.5 pl-6.5">
+                    {items.map((c) => {
+                      const neededBy = required.get(c.slug);
+                      return (
+                        <Checkbox
+                          key={c.slug}
+                          label={c.title}
+                          description={neededBy ? `via ${neededBy}` : undefined}
+                          checked={options.components.includes(c.slug) || Boolean(neededBy)}
                           disabled={Boolean(neededBy)}
                           onChange={() => toggle(c.slug)}
-                          className="h-3.5 w-3.5 accent-[var(--fg-brand)]"
                         />
-                        {c.title}
-                        {neededBy && (
-                          <span className="text-mono-xs text-[var(--fg-muted)]">
-                            via {neededBy}
-                          </span>
-                        )}
-                      </label>
-                    );
-                  })}
+                      );
+                    })}
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
-        </fieldset>
+        </Step>
+
+        <Step num="04" title="file">
+          <Segmented
+            legend="File name"
+            name="file"
+            options={FILE_NAMES.map((v) => ({ value: v, label: v }))}
+            value={options.fileName}
+            onChange={setFileName}
+          />
+        </Step>
       </form>
 
-      <div className="flex min-w-0 flex-col gap-3">
-        <div className="flex flex-wrap items-center justify-between gap-3">
+      <div className="flex min-h-[480px] min-w-0 flex-col gap-3 bg-[var(--bg-canvas)] p-4 sm:p-6 lg:min-h-0">
+        <div className="flex flex-wrap items-center justify-between gap-3 lg:pr-10">
           <p aria-live="polite" className="m-0 font-mono text-mono-sm text-[var(--fg-muted)]">
-            {`${options.fileName} updated, ${count} ${count === 1 ? "component" : "components"}`}
+            <span className="text-[var(--fg-primary)]">{options.fileName}</span>
+            {` · ${count} ${count === 1 ? "component" : "components"} · ${markdown.split("\n").length} lines`}
           </p>
-          <Button type="button" variant="secondary" size="sm" onClick={save}>
+          <Button type="button" size="sm" onClick={save}>
             {download === "done" ? (
-              <CheckIcon aria-hidden size={12} className="text-[var(--status-success)]" />
+              <CheckIcon aria-hidden size={14} weight="bold" />
             ) : download === "error" ? (
-              <WarningIcon aria-hidden size={12} className="text-[var(--status-error)]" />
+              <WarningIcon aria-hidden size={14} />
             ) : (
-              <DownloadSimpleIcon aria-hidden size={12} />
+              <DownloadSimpleIcon aria-hidden size={14} weight="bold" />
             )}
             {download === "done"
               ? "downloaded"
@@ -275,9 +397,65 @@ export function AgentsConfigurator() {
           filename={options.fileName}
           language="md"
           variant="terminal"
-          className="max-h-[640px] overflow-y-auto [&_pre]:whitespace-pre-wrap [&_pre]:break-words"
+          className="flex min-h-0 flex-1 flex-col [&_pre]:text-mono-sm [&>div:last-child]:min-h-0 [&>div:last-child]:flex-1 [&>div:last-child]:overflow-auto [&_pre]:whitespace-pre-wrap [&_pre]:break-words"
         />
       </div>
     </div>
+  );
+}
+
+/** The header button and the dialog it opens. Also opened by `?agents=open` and `#agents`. */
+export function AgentsDialog() {
+  const { open, setOpen } = useAgentsDialog();
+
+  // links from before the dialog pointed at the home page's #agents section
+  useEffect(() => {
+    const fromHash = () => {
+      if (window.location.hash === "#agents") {
+        window.history.replaceState(null, "", window.location.pathname + window.location.search);
+        setOpen(true);
+      }
+    };
+    fromHash();
+    window.addEventListener("hashchange", fromHash);
+    return () => window.removeEventListener("hashchange", fromHash);
+  }, [setOpen]);
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <Button
+        type="button"
+        variant="secondary"
+        size="sm"
+        onClick={() => setOpen(true)}
+        className="group/agents max-sm:w-8 max-sm:px-0"
+      >
+        <RobotIcon
+          aria-hidden
+          size={14}
+          className="text-[var(--fg-brand)] transition-transform duration-200 group-hover/agents:scale-115"
+        />
+        <span className="max-sm:sr-only">AGENTS.md</span>
+      </Button>
+      <DialogContent
+        aria-describedby={undefined}
+        className="h-[min(820px,calc(100dvh-32px))] max-w-[1120px] gap-0 overflow-hidden p-0"
+      >
+        {open && <Configurator />}
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+/** Opens the dialog from anywhere on the page, such as a call to action. */
+export function OpenAgentsButton({
+  className,
+  children,
+}: { className?: string; children: React.ReactNode }) {
+  const { setOpen } = useAgentsDialog();
+  return (
+    <button type="button" className={className} onClick={() => setOpen(true)}>
+      {children}
+    </button>
   );
 }

@@ -127,4 +127,25 @@ describe("Badge", () => {
     const { container } = render(<Badge className="my-class">cls</Badge>);
     expect(container.firstChild).toHaveClass("my-class");
   });
+
+  it("renders a Phosphor icon in place of the dot, sized to the badge", () => {
+    function FakeIcon(props: { size?: number; "aria-hidden"?: boolean }) {
+      return <svg data-size={props.size} aria-hidden={props["aria-hidden"]} />;
+    }
+    const { container, rerender } = render(
+      <Badge icon={FakeIcon as never} dot>
+        shipped
+      </Badge>
+    );
+    expect(container.querySelectorAll("svg")).toHaveLength(1);
+    expect(container.querySelector("svg")).toHaveAttribute("data-size", "12");
+    expect(container.querySelector("svg")).toHaveAttribute("aria-hidden", "true");
+    expect(container.querySelector(".rounded-full")).toBeNull();
+    rerender(
+      <Badge icon={FakeIcon as never} size="sm">
+        shipped
+      </Badge>
+    );
+    expect(container.querySelector("svg")).toHaveAttribute("data-size", "10");
+  });
 });

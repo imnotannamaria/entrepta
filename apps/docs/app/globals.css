@@ -51,6 +51,9 @@
    ============================================================ */
 
 :root {
+  /* native controls, scrollbars and Chrome's autofill fallback follow the mode */
+  color-scheme: dark;
+
   /* zinc (neutrals) */
   --zinc-950: #09090b;
   --zinc-900: #18181b;
@@ -346,6 +349,9 @@ select:-webkit-autofill {
   box-shadow: inset 0 0 0 1000px var(--bg-surface);
   -webkit-text-fill-color: var(--fg-primary);
   caret-color: var(--fg-primary);
+  /* where the shadow cannot paint, such as the preview while a suggestion is
+     hovered, this holds Chrome's own fill off for a week */
+  transition: background-color 600000s 0s, color 600000s 0s;
 }
 
 input:autofill,
@@ -404,6 +410,62 @@ select:autofill {
   *::-webkit-scrollbar-corner {
     background: transparent;
   }
+}
+
+/* ============================================================
+   OVERLAYS
+   Menus, tooltips and dialogs fade and rise in, and close faster
+   than they open. Radix waits for the exit animation before it
+   unmounts. Plain classes rather than an animation plugin, so a
+   copied component needs nothing but this file.
+   ============================================================ */
+
+@keyframes overlay-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes overlay-out {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes pop-in {
+  from {
+    opacity: 0;
+    transform: translateY(var(--pop-from, -4px)) scale(0.97);
+  }
+}
+
+@keyframes pop-out {
+  to {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+}
+
+.motion-fade[data-state="open"] {
+  animation: overlay-in var(--motion-base) var(--ease-out);
+}
+
+.motion-fade[data-state="closed"] {
+  animation: overlay-out var(--motion-fast) ease-in;
+}
+
+.motion-pop[data-state="open"],
+.motion-pop[data-state="delayed-open"],
+.motion-pop[data-state="instant-open"] {
+  animation: pop-in var(--motion-base) var(--ease-out);
+}
+
+.motion-pop[data-state="closed"] {
+  animation: pop-out var(--motion-fast) ease-in;
+}
+
+.motion-pop[data-side="top"] {
+  --pop-from: 4px;
 }
 
 /* ============================================================

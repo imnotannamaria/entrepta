@@ -38,5 +38,14 @@ export function depsFor(name: string): string[] {
   return [...new Set(installClosure(name).flatMap((c) => c.deps))];
 }
 
-/** Items a user picks. Hooks and lib files arrive as their dependencies. */
-export const PICKABLE = COMPONENTS.filter((c) => c.category !== "hooks" && c.category !== "lib");
+/**
+ * Components with no page of their own. They arrive as a dependency of the ones
+ * that use them, and are described there: Diamond is the ◆ inside Card, Dialog,
+ * Field and Tabs.
+ */
+export const NO_PAGE = new Set(["diamond"]);
+
+/** Items a user picks. Hooks, lib files and NO_PAGE items arrive as dependencies. */
+export const PICKABLE = COMPONENTS.filter(
+  (c) => c.category !== "hooks" && c.category !== "lib" && !NO_PAGE.has(c.name)
+);

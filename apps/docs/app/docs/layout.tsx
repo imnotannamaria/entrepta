@@ -13,7 +13,7 @@ export default function DocsLayout({ children }: { children: React.ReactNode }) 
         <main
           id="main-content"
           tabIndex={-1}
-          className="flex-1 min-w-0 px-4 sm:px-8 lg:px-12 py-8 sm:py-10"
+          className="flex-1 min-w-0 px-4 sm:px-8 lg:px-12 pt-8 sm:pt-10 pb-24 sm:pb-32"
         >
           {children}
         </main>

@@ -173,12 +173,17 @@ npx @entrepta/cli@latest add button card dialog --overwrite`}
       </section>
 
       <section>
-        <DocSubhead count="4 changes">Components</DocSubhead>
+        <DocSubhead count="5 changes">Components</DocSubhead>
         <ul className="m-0 flex max-w-2xl list-none flex-col gap-3 p-0 font-mono text-mono-sm text-[var(--fg-secondary)]">
           <li>
             <span className="text-[var(--fg-primary)]">Tabs.</span> The × is a real button next to
             the tab, on the active tab only. Route tabs use the new TabNav and TabNavLink. Tabs now
             depend on motion.
+          </li>
+          <li>
+            <span className="text-[var(--fg-primary)]">Dropdown and Toast.</span> Both sit on the
+            overlay surface. A highlighted menu row takes the brand tint instead of an edge bar, and
+            a toast shows its status as an icon tile. The Toaster adds a close button.
           </li>
           <li>
             <span className="text-[var(--fg-primary)]">StatusBar.</span> position="static" puts it

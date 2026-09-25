@@ -1,7 +1,6 @@
 "use client";
 
 import { CodeBlock } from "@entrepta/registry/content/code-block";
-import { Diamond } from "@entrepta/registry/content/diamond";
 import {
   DisplayH2,
   DocLabel,
@@ -28,7 +27,6 @@ import { Skeleton, SkeletonText } from "@entrepta/registry/feedback/skeleton";
 import { PageOutline } from "@entrepta/registry/layout/page-outline";
 import { Sidebar } from "@entrepta/registry/layout/sidebar";
 import { StatusBar, StatusBarItem, StatusBarSeparator } from "@entrepta/registry/layout/status-bar";
-import { Titlebar } from "@entrepta/registry/layout/titlebar";
 import {
   TopNav,
   TopNavBreadcrumb,
@@ -58,6 +56,7 @@ import {
   CardTerminalBody,
   CardTitle,
 } from "@entrepta/registry/primitives/card";
+import { Checkbox } from "@entrepta/registry/primitives/checkbox";
 import {
   Dialog,
   DialogContent,
@@ -70,10 +69,13 @@ import {
 } from "@entrepta/registry/primitives/dialog";
 import {
   DropdownMenu,
+  DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuDestructiveItem,
   DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
   DropdownMenuSeparator,
   DropdownMenuShortcut,
   DropdownMenuTrigger,
@@ -93,34 +95,89 @@ import {
   TooltipTrigger,
 } from "@entrepta/registry/primitives/tooltip";
 import {
+  ArrowRightIcon,
+  BracketsCurlyIcon,
+  CaretDownIcon,
+  CheckIcon,
   FileCodeIcon,
+  FileMdIcon,
+  FileTsxIcon,
   GearIcon,
   GitBranchIcon,
   HouseIcon,
+  HouseLineIcon,
+  InfoIcon,
   LightningIcon,
+  MagnifyingGlassIcon,
   MoonIcon,
+  PlusIcon,
+  RocketLaunchIcon,
+  SignOutIcon,
+  SparkleIcon,
   SunIcon,
   TagIcon,
+  TerminalWindowIcon,
+  UserIcon,
+  UserSquareIcon,
+  WarningIcon,
+  XIcon,
 } from "@phosphor-icons/react";
 import { useState } from "react";
 import { toast } from "sonner";
 
+/** One labelled row of a preview. */
+function Demo({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <div className="flex flex-col gap-2.5">
+      <span className="font-mono text-mono-xs uppercase tracking-[0.08em] text-[var(--fg-muted)]">
+        {label}
+      </span>
+      <div className="flex flex-wrap items-center gap-3">{children}</div>
+    </div>
+  );
+}
+
 function ButtonPreview() {
   const [loading, setLoading] = useState(false);
   return (
-    <div className="flex flex-col gap-6 w-full max-w-md">
-      <div className="flex flex-wrap items-center gap-3">
+    <div className="flex w-full max-w-xl flex-col gap-7">
+      <Demo label="variants">
         <Button>./projects.sh →</Button>
         <Button variant="secondary">$ npx @entrepta/cli@latest init</Button>
         <Button variant="ghost">cat contact.txt</Button>
         <Button variant="command">npx @entrepta/cli add button</Button>
-      </div>
-      <div className="flex flex-wrap items-center gap-3">
+      </Demo>
+      <Demo label="with an icon">
+        <Button>
+          <RocketLaunchIcon aria-hidden size={14} weight="fill" /> deploy
+        </Button>
+        <Button variant="secondary">
+          <GitBranchIcon aria-hidden size={14} /> new branch
+        </Button>
+        <Button
+          variant="ghost"
+          className="[&_svg]:transition-transform hover:[&_svg]:translate-x-0.5"
+        >
+          read the docs <ArrowRightIcon aria-hidden size={14} />
+        </Button>
+      </Demo>
+      <Demo label="icon only">
+        <Button size="icon-sm" variant="ghost" aria-label="Search">
+          <MagnifyingGlassIcon aria-hidden size={14} />
+        </Button>
+        <Button size="icon-md" variant="secondary" aria-label="Settings">
+          <GearIcon aria-hidden size={16} />
+        </Button>
+        <Button size="icon-lg" aria-label="Add a component">
+          <PlusIcon aria-hidden size={18} weight="bold" />
+        </Button>
+      </Demo>
+      <Demo label="sizes">
         <Button size="sm">small 32h</Button>
         <Button size="md">medium 40h</Button>
         <Button size="lg">large 48h</Button>
-      </div>
-      <div className="flex flex-wrap items-center gap-3">
+      </Demo>
+      <Demo label="states">
         <Button
           loading={loading}
           onClick={() => {
@@ -128,48 +185,60 @@ function ButtonPreview() {
             setTimeout(() => setLoading(false), 2000);
           }}
         >
-          Click to load
+          click to load
         </Button>
-        <Button disabled>Disabled</Button>
-      </div>
+        <Button disabled>disabled</Button>
+      </Demo>
     </div>
   );
 }
 
 function BadgePreview() {
   const colors = ["neutral", "brand", "success", "warning", "error", "info"] as const;
+  const icons = {
+    neutral: TagIcon,
+    brand: SparkleIcon,
+    success: CheckIcon,
+    warning: WarningIcon,
+    error: XIcon,
+    info: InfoIcon,
+  } as const;
   return (
-    <div className="flex flex-col gap-4 w-full max-w-md">
-      <div className="flex flex-wrap items-center gap-2">
+    <div className="flex w-full max-w-xl flex-col gap-6">
+      {(["solid", "soft", "outline"] as const).map((variant) => (
+        <Demo key={variant} label={variant}>
+          {colors.map((color) => (
+            <Badge key={color} variant={variant} color={color}>
+              {color}
+            </Badge>
+          ))}
+        </Demo>
+      ))}
+      <Demo label="with an icon">
+        <Badge variant="soft" color="success" icon={CheckIcon}>
+          passing
+        </Badge>
+        <Badge variant="soft" color="error" icon={XIcon}>
+          failed
+        </Badge>
+        <Badge variant="outline" color="brand" icon={GitBranchIcon}>
+          main
+        </Badge>
+        <Badge variant="solid" color="brand" icon={SparkleIcon}>
+          NEW
+        </Badge>
         {colors.map((color) => (
-          <Badge key={color} variant="solid" color={color}>
+          <Badge key={color} size="sm" variant="soft" color={color} icon={icons[color]}>
             {color}
           </Badge>
         ))}
-      </div>
-      <div className="flex flex-wrap items-center gap-2">
-        {colors.map((color) => (
-          <Badge key={color} variant="soft" color={color}>
-            {color}
-          </Badge>
-        ))}
-      </div>
-      <div className="flex flex-wrap items-center gap-2">
-        {colors.map((color) => (
-          <Badge key={color} variant="outline" color={color}>
-            {color}
-          </Badge>
-        ))}
-      </div>
-      <div className="flex flex-wrap items-center gap-2">
+      </Demo>
+      <Demo label="with a dot">
         <Badge variant="soft" color="success" dot>
           open to work
         </Badge>
         <Badge variant="soft" color="warning" dot>
           partial
-        </Badge>
-        <Badge variant="soft" color="error" dot>
-          error
         </Badge>
         <Badge variant="soft" color="info" dot>
           syncing
@@ -177,7 +246,7 @@ function BadgePreview() {
         <Badge variant="soft" color="neutral" dot>
           idle
         </Badge>
-      </div>
+      </Demo>
     </div>
   );
 }
@@ -305,32 +374,37 @@ function DialogPreview() {
 }
 
 function DropdownPreview() {
+  const [wrap, setWrap] = useState(true);
+  const [panel, setPanel] = useState("terminal");
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="secondary">~/options ↓</Button>
+        <Button variant="secondary">
+          ~/options <CaretDownIcon aria-hidden size={12} />
+        </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent>
+      <DropdownMenuContent className="w-60">
         <DropdownMenuLabel>account</DropdownMenuLabel>
         <DropdownMenuItem>
-          profile.tsx
+          <UserIcon aria-hidden size={14} /> profile.tsx
           <DropdownMenuShortcut>⌘P</DropdownMenuShortcut>
         </DropdownMenuItem>
         <DropdownMenuItem>
-          settings.json
+          <GearIcon aria-hidden size={14} /> settings.json
           <DropdownMenuShortcut>⌘,</DropdownMenuShortcut>
         </DropdownMenuItem>
-        <DropdownMenuItem>billing</DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuLabel>workspace</DropdownMenuLabel>
-        <DropdownMenuItem>
-          new project
-          <DropdownMenuShortcut>⌘N</DropdownMenuShortcut>
-        </DropdownMenuItem>
-        <DropdownMenuItem>switch theme</DropdownMenuItem>
+        <DropdownMenuLabel>view</DropdownMenuLabel>
+        <DropdownMenuCheckboxItem checked={wrap} onCheckedChange={setWrap}>
+          word wrap
+        </DropdownMenuCheckboxItem>
+        <DropdownMenuRadioGroup value={panel} onValueChange={setPanel}>
+          <DropdownMenuRadioItem value="terminal">terminal</DropdownMenuRadioItem>
+          <DropdownMenuRadioItem value="problems">problems</DropdownMenuRadioItem>
+        </DropdownMenuRadioGroup>
         <DropdownMenuSeparator />
         <DropdownMenuDestructiveItem>
-          rm -rf session
+          <SignOutIcon aria-hidden size={14} /> rm -rf session
           <DropdownMenuShortcut>⌘⇧Q</DropdownMenuShortcut>
         </DropdownMenuDestructiveItem>
       </DropdownMenuContent>
@@ -384,57 +458,104 @@ function TooltipPreview() {
 }
 
 function TabsPreview() {
+  const [route, setRoute] = useState("home");
+  const routes = [
+    { id: "home", name: "home.tsx", icon: HouseLineIcon },
+    { id: "about", name: "about.md", icon: UserSquareIcon },
+    { id: "blog", name: "blog/", icon: FileMdIcon },
+    { id: "projects", name: "projects/", icon: TerminalWindowIcon },
+  ];
   return (
-    <div className="w-full max-w-2xl border border-[var(--border-subtle)] rounded-[var(--radius-md)] overflow-hidden">
-      <Tabs defaultValue="home">
-        <TabsList>
-          <TabsTrigger value="home" onClose={() => {}}>
-            home.tsx
-          </TabsTrigger>
-          <TabsTrigger value="about" onClose={() => {}}>
-            about.md
-          </TabsTrigger>
-          <TabsTrigger value="stack" onClose={() => {}}>
-            stack.json
-          </TabsTrigger>
-          <TabsTrigger value="contact" onClose={() => {}}>
-            contact.txt
-          </TabsTrigger>
-        </TabsList>
-        <TabsContent value="home" className="p-5 font-mono text-mono-md text-[var(--fg-secondary)]">
-          <div>
-            <span className="text-[var(--fg-muted)]">{"// "}</span>landing page
-          </div>
-          <div className="mt-1">
-            <span className="text-[var(--fg-brand-text)]">export default</span> function Home()
-          </div>
-        </TabsContent>
-        <TabsContent
-          value="about"
-          className="p-5 font-sans text-body-md text-[var(--fg-secondary)] leading-relaxed"
-        >
-          Engineer building a personal design system. Dark-first, IDE-style, opinionated.
-        </TabsContent>
-        <TabsContent
-          value="stack"
-          className="p-5 font-mono text-mono-md text-[var(--fg-secondary)]"
-        >
-          <div>
-            <span className="text-[var(--fg-muted)]">"framework":</span>{" "}
-            <span className="text-[var(--status-success-fg)]">"next-15"</span>
-          </div>
-          <div>
-            <span className="text-[var(--fg-muted)]">"react":</span>{" "}
-            <span className="text-[var(--status-success-fg)]">"19"</span>
-          </div>
-        </TabsContent>
-        <TabsContent
-          value="contact"
-          className="p-5 font-mono text-mono-md text-[var(--fg-secondary)]"
-        >
-          a2002aninha22@gmail.com
-        </TabsContent>
-      </Tabs>
+    <div className="flex w-full max-w-2xl flex-col gap-7">
+      <Demo label="with icons · hover one">
+        <div className="w-full overflow-hidden rounded-[var(--radius-md)] border border-[var(--border-subtle)]">
+          <Tabs defaultValue="home">
+            <TabsList>
+              <TabsTrigger value="home" icon={FileTsxIcon} onClose={() => {}}>
+                home.tsx
+              </TabsTrigger>
+              <TabsTrigger value="about" icon={FileMdIcon} onClose={() => {}}>
+                about.md
+              </TabsTrigger>
+              <TabsTrigger value="stack" icon={BracketsCurlyIcon} onClose={() => {}}>
+                stack.json
+              </TabsTrigger>
+            </TabsList>
+            <TabsContent
+              value="home"
+              className="p-5 font-mono text-mono-md text-[var(--fg-secondary)]"
+            >
+              <span className="text-[var(--fg-brand-text)]">export default</span> function Home()
+            </TabsContent>
+            <TabsContent
+              value="about"
+              className="p-5 font-sans text-body-md leading-relaxed text-[var(--fg-secondary)]"
+            >
+              Engineer building a personal design system. Dark-first, IDE-style, opinionated.
+            </TabsContent>
+            <TabsContent
+              value="stack"
+              className="p-5 font-mono text-mono-md text-[var(--fg-secondary)]"
+            >
+              <span className="text-[var(--fg-muted)]">"framework":</span>{" "}
+              <span className="text-[var(--status-success-fg)]">"next-15"</span>
+            </TabsContent>
+          </Tabs>
+        </div>
+      </Demo>
+
+      <Demo label="variant window · the title bar">
+        <div className="w-full overflow-hidden rounded-[var(--radius-md)] border border-[var(--border-subtle)]">
+          <TabNav
+            aria-label="Preview pages"
+            variant="window"
+            after={
+              <button
+                type="button"
+                aria-label="Open command palette"
+                className="focus-ring flex shrink-0 cursor-pointer items-center px-3 font-mono text-mono-md text-[var(--fg-muted)] transition-colors hover:text-[var(--fg-primary)]"
+              >
+                +
+              </button>
+            }
+            end={
+              <span className="flex items-center gap-1.5">
+                <span className="size-1.5 rounded-full bg-[var(--fg-brand)]" />
+                main
+              </span>
+            }
+          >
+            {routes.map((r) => (
+              <TabNavLink
+                key={r.id}
+                href={`#${r.id}`}
+                active={route === r.id}
+                icon={r.icon}
+                onClick={(e) => {
+                  e.preventDefault();
+                  setRoute(r.id);
+                }}
+                onClose={r.id !== "home" ? () => setRoute("home") : undefined}
+              >
+                {r.name}
+              </TabNavLink>
+            ))}
+          </TabNav>
+          <div className="h-16 bg-[var(--bg-surface)]" />
+        </div>
+      </Demo>
+
+      <Demo label="without icons · the ◆ marks the active tab">
+        <div className="w-full overflow-hidden rounded-[var(--radius-md)] border border-[var(--border-subtle)]">
+          <Tabs defaultValue="home">
+            <TabsList>
+              <TabsTrigger value="home">home.tsx</TabsTrigger>
+              <TabsTrigger value="about">about.md</TabsTrigger>
+              <TabsTrigger value="contact">contact.txt</TabsTrigger>
+            </TabsList>
+          </Tabs>
+        </div>
+      </Demo>
     </div>
   );
 }
@@ -513,61 +634,45 @@ function TopNavPreview() {
 }
 
 function ToastPreview() {
+  const fire: [string, () => void][] = [
+    [
+      "success",
+      () => toast.success("Build passed", { description: "33 components compiled in 1.4s" }),
+    ],
+    [
+      "error",
+      () =>
+        toast.error("Type error in button.tsx", {
+          description: "Property 'variant' does not exist on type 'ButtonProps'",
+        }),
+    ],
+    [
+      "warning",
+      () =>
+        toast.warning("Deprecated token", {
+          description: "--fg-brand-on-tint is now --fg-brand-text",
+        }),
+    ],
+    [
+      "info",
+      () => toast.info("Update available", { description: "entrepta 2.0 is ready to install" }),
+    ],
+    [
+      "with action",
+      () =>
+        toast("Snapshot saved", {
+          description: "~/projects/entrepta/snapshot.json",
+          action: { label: "undo", onClick: () => toast("Snapshot restored") },
+        }),
+    ],
+  ];
   return (
     <div className="flex flex-wrap gap-3">
-      <Button
-        variant="secondary"
-        size="sm"
-        onClick={() =>
-          toast.success("Build passed", {
-            description: "12 components compiled in 1.4s",
-          })
-        }
-      >
-        success
-      </Button>
-      <Button
-        variant="secondary"
-        size="sm"
-        onClick={() =>
-          toast.error("Type error in button.tsx", {
-            description: "Property 'variant' does not exist on type 'ButtonProps'",
-          })
-        }
-      >
-        error
-      </Button>
-      <Button
-        variant="secondary"
-        size="sm"
-        onClick={() =>
-          toast.warning("Deprecated API", {
-            description: "useTheme() will be removed in v1.0. Use ThemeProvider instead.",
-          })
-        }
-      >
-        warning
-      </Button>
-      <Button
-        variant="secondary"
-        size="sm"
-        onClick={() =>
-          toast.info("Update available", {
-            description: "entrepta@0.2.0 is ready to install",
-          })
-        }
-      >
-        info
-      </Button>
-      <Button
-        variant="secondary"
-        size="sm"
-        onClick={() =>
-          toast("Snapshot saved", { description: "~/projects/entrepta/snapshot.json" })
-        }
-      >
-        default
-      </Button>
+      {fire.map(([label, run]) => (
+        <Button key={label} variant="secondary" size="sm" onClick={run}>
+          {label}
+        </Button>
+      ))}
     </div>
   );
 }
@@ -792,15 +897,33 @@ function ModeTogglePreview() {
   );
 }
 
-function DiamondPreview() {
+function CheckboxPreview() {
+  const items = ["button", "badge", "card"];
+  const [picked, setPicked] = useState<string[]>(["button"]);
+  const all = picked.length === items.length;
   return (
-    <div className="flex flex-col gap-3 font-mono uppercase tracking-[0.08em] text-[var(--fg-secondary)]">
-      <span className="inline-flex items-center gap-1.5 text-mono-xs">
-        <Diamond size={9} /> mono-xs · 9px
-      </span>
-      <span className="inline-flex items-center gap-1.5 text-mono-sm">
-        <Diamond size={10} /> mono-sm · 10px
-      </span>
+    <div className="flex flex-col gap-4">
+      <Checkbox
+        label="primitives"
+        checked={all}
+        indeterminate={picked.length > 0 && !all}
+        onChange={() => setPicked(all ? [] : items)}
+      />
+      <div className="flex flex-col gap-3 pl-6">
+        {items.map((item) => (
+          <Checkbox
+            key={item}
+            label={item}
+            checked={picked.includes(item)}
+            onChange={() =>
+              setPicked(
+                picked.includes(item) ? picked.filter((p) => p !== item) : [...picked, item]
+              )
+            }
+          />
+        ))}
+        <Checkbox label="diamond" description="needed by card" checked disabled />
+      </div>
     </div>
   );
 }
@@ -853,34 +976,6 @@ function FilterPillPreview() {
           onClick={() => setType(type === t ? null : t)}
         />
       ))}
-    </div>
-  );
-}
-
-function TitlebarPreview() {
-  const [active, setActive] = useState("home");
-  return (
-    <div className="w-full max-w-2xl overflow-hidden rounded-[var(--radius-md)] border border-[var(--border-subtle)]">
-      <Titlebar meta={<span>main</span>}>
-        <TabNav aria-label="Preview pages">
-          {["home", "about"].map((name) => (
-            <TabNavLink
-              key={name}
-              href={`#${name}`}
-              active={active === name}
-              icon={name === "home" ? HouseIcon : FileCodeIcon}
-              onClick={(e) => {
-                e.preventDefault();
-                setActive(name);
-              }}
-              onClose={name === "about" ? () => setActive("home") : undefined}
-            >
-              {name === "home" ? "home.tsx" : "about.md"}
-            </TabNavLink>
-          ))}
-        </TabNav>
-      </Titlebar>
-      <div className="h-16 bg-[var(--bg-surface)]" />
     </div>
   );
 }
@@ -1087,12 +1182,11 @@ const PREVIEWS: Record<string, React.ReactNode> = {
   skeleton: <SkeletonPreview />,
   "command-palette": <CommandPalettePreview />,
   "code-block": <CodeBlockPreview />,
-  diamond: <DiamondPreview />,
+  checkbox: <CheckboxPreview />,
   switch: <SwitchPreview />,
   textarea: <TextareaPreview />,
   field: <FieldPreview />,
   "filter-pill": <FilterPillPreview />,
-  titlebar: <TitlebarPreview />,
   sidebar: <SidebarPreview />,
   "page-outline": <PageOutlinePreview />,
   "sect-head": <SectHeadPreview />,

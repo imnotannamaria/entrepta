@@ -9,24 +9,25 @@ export function DocsSidebar() {
   const pathname = usePathname();
 
   return (
-    <nav className="flex flex-col gap-6 py-8">
+    <nav aria-label="Docs" className="flex flex-col gap-7 pt-8 pb-24">
       {DOCS_NAV.map((section) => (
         <div key={section.heading}>
-          <div className="font-mono text-mono-xs uppercase tracking-widest text-[var(--fg-muted)] px-3 mb-2">
+          <div className="mb-2 px-3 font-mono text-mono-xs uppercase tracking-widest text-[var(--fg-muted)]">
             {section.heading}
           </div>
-          <ul className="flex flex-col">
+          <ul className="flex flex-col gap-0.5">
             {section.items.map((item) => {
               const active = pathname === item.href;
               return (
                 <li key={item.href}>
                   <Link
                     href={item.href}
+                    aria-current={active ? "page" : undefined}
                     className={cn(
-                      "flex items-center h-8 px-3 rounded-[var(--radius-sm)] font-mono text-mono-sm transition-colors",
+                      "flex h-8 items-center rounded-[var(--radius-sm)] px-3 font-mono text-mono-sm transition-colors",
                       active
-                        ? "bg-[var(--bg-surface-elevated)] text-[var(--fg-primary)]"
-                        : "text-[var(--fg-muted)] hover:text-[var(--fg-secondary)] hover:bg-[var(--bg-surface)]"
+                        ? "bg-[var(--bg-surface)] text-[var(--fg-primary)]"
+                        : "text-[var(--fg-muted)] hover:bg-[var(--bg-hover-soft)] hover:text-[var(--fg-secondary)]"
                     )}
                   >
                     {active && (

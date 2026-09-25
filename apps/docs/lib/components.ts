@@ -19,10 +19,16 @@ export type ComponentDoc = {
 export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
   button: {
     description:
-      "Primary action element with 4 variants, 3 sizes and a loading state. buttonVariants lives in its own file with no use client, so a server component can style a link as a button.",
+      "Primary action element with 4 variants, 3 sizes, 3 square icon sizes and a loading state. An icon goes in as a child, before or after the label. buttonVariants lives in its own file with no use client, so a server component can style a link as a button.",
     usage: `import { Button } from "@/components/entrepta/button"
+import { ArrowRightIcon, GearIcon, RocketLaunchIcon } from "@phosphor-icons/react"
 
 <Button>./projects.sh →</Button>
+<Button><RocketLaunchIcon aria-hidden size={14} /> deploy</Button>
+<Button variant="secondary">docs <ArrowRightIcon aria-hidden size={14} /></Button>
+<Button variant="ghost" size="icon-md" aria-label="Settings">
+  <GearIcon aria-hidden size={16} />
+</Button>
 <Button variant="secondary">$ npx @entrepta/cli@latest init</Button>
 <Button variant="ghost">cat contact.txt</Button>
 <Button variant="command">npx @entrepta/cli@latest add button</Button>
@@ -36,9 +42,10 @@ export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
       },
       {
         name: "size",
-        type: '"sm" | "md" | "lg"',
+        type: '"sm" | "md" | "lg" | "icon-sm" | "icon-md" | "icon-lg"',
         default: '"md"',
-        description: "Height and padding scale",
+        description:
+          "Height and padding. The icon sizes are square: name the button with aria-label",
       },
       {
         name: "loading",
@@ -56,9 +63,12 @@ export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
   },
   badge: {
     description:
-      "Inline status chip in 3 variants, 6 colors and 2 sizes. Every variant uses an ink measured for its fill.",
+      "Inline status chip in 3 variants, 6 colors and 2 sizes, with a dot or an icon. Every variant uses an ink measured for its fill.",
     usage: `import { Badge } from "@/components/entrepta/badge"
+import { CheckIcon, GitBranchIcon } from "@phosphor-icons/react"
 
+<Badge variant="soft" color="success" icon={CheckIcon}>passing</Badge>
+<Badge variant="outline" color="brand" icon={GitBranchIcon}>main</Badge>
 <Badge variant="solid" color="brand">FEATURED</Badge>
 <Badge variant="soft" color="success" dot>open to work</Badge>
 <Badge variant="outline" color="error">deprecated</Badge>
@@ -87,6 +97,12 @@ export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
         type: "boolean",
         default: "false",
         description: "Renders a colored status dot before the label",
+      },
+      {
+        name: "icon",
+        type: "Icon",
+        description:
+          "A Phosphor icon component before the label, sized to the badge. Wins over dot",
       },
     ],
   },
@@ -221,13 +237,14 @@ import { Button } from "@/components/entrepta/button"
   },
   dropdown: {
     description:
-      "Context menu via Radix DropdownMenu. Supports items, separators, labels, shortcuts, and keyboard navigation.",
+      "Context menu on Radix, on the overlay surface. The highlighted row takes the brand tint and its icon and shortcut turn brand. Items, icons, labels, shortcuts, checkbox and radio items, submenus and keyboard navigation.",
     usage: `import {
   DropdownMenu, DropdownMenuTrigger, DropdownMenuContent,
   DropdownMenuItem, DropdownMenuSeparator,
   DropdownMenuLabel, DropdownMenuShortcut,
   DropdownMenuDestructiveItem,
 } from "@/components/entrepta/dropdown"
+import { GearIcon, UserIcon } from "@phosphor-icons/react"
 
 <DropdownMenu>
   <DropdownMenuTrigger asChild>
@@ -236,9 +253,12 @@ import { Button } from "@/components/entrepta/button"
   <DropdownMenuContent>
     <DropdownMenuLabel>account</DropdownMenuLabel>
     <DropdownMenuItem>
-      profile.tsx <DropdownMenuShortcut>⌘P</DropdownMenuShortcut>
+      <UserIcon aria-hidden size={14} /> profile.tsx
+      <DropdownMenuShortcut>⌘P</DropdownMenuShortcut>
     </DropdownMenuItem>
-    <DropdownMenuItem>settings.json</DropdownMenuItem>
+    <DropdownMenuItem>
+      <GearIcon aria-hidden size={14} /> settings.json
+    </DropdownMenuItem>
     <DropdownMenuSeparator />
     <DropdownMenuDestructiveItem>rm -rf session</DropdownMenuDestructiveItem>
   </DropdownMenuContent>
@@ -313,28 +333,33 @@ import { Button } from "@/components/entrepta/button"
   },
   tabs: {
     description:
-      "Editor file tabs. Tabs switches a panel in place; TabNav is a row of route links. One brand underline travels to the active tab, and the active tab can show a close button.",
+      'Editor file tabs. Tabs switches a panel in place; TabNav is a row of route links. One brand underline travels to the active tab, a Phosphor icon fills when active and grows on hover, and the active tab can show a close button. variant="window" makes either row the editor\'s title bar.',
     usage: `import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/entrepta/tabs"
+import { FileTsxIcon, FileMdIcon, BracketsCurlyIcon } from "@phosphor-icons/react"
 
 <Tabs defaultValue="home">
   <TabsList>
-    <TabsTrigger value="home" onClose={() => {}}>home.tsx</TabsTrigger>
-    <TabsTrigger value="about" onClose={() => {}}>about.md</TabsTrigger>
-    <TabsTrigger value="stack" onClose={() => {}}>stack.json</TabsTrigger>
+    <TabsTrigger value="home" icon={FileTsxIcon} onClose={() => {}}>home.tsx</TabsTrigger>
+    <TabsTrigger value="about" icon={FileMdIcon} onClose={() => {}}>about.md</TabsTrigger>
+    <TabsTrigger value="stack" icon={BracketsCurlyIcon} onClose={() => {}}>stack.json</TabsTrigger>
   </TabsList>
   <TabsContent value="home" className="p-5">…</TabsContent>
   <TabsContent value="about" className="p-5">…</TabsContent>
   <TabsContent value="stack" className="p-5">…</TabsContent>
 </Tabs>
 
-// Tabs that are routes: pass active, render your router's link with asChild
+// Without an icon, the active tab gets a ◆
+<TabsTrigger value="home">home.tsx</TabsTrigger>
+
+// Tabs that are routes, as the editor's title bar:
+// pass active, render your router's link with asChild
 import { TabNav, TabNavLink } from "@/components/entrepta/tabs"
 
-<TabNav aria-label="Pages">
-  <TabNavLink asChild active={pathname === "/"}>
+<TabNav aria-label="Pages" variant="window" end={<span>main</span>}>
+  <TabNavLink asChild active={pathname === "/"} icon={HouseLineIcon}>
     <Link href="/">home.tsx</Link>
   </TabNavLink>
-  <TabNavLink asChild active={pathname === "/about"}>
+  <TabNavLink asChild active={pathname === "/about"} icon={UserSquareIcon}>
     <Link href="/about">about.md</Link>
   </TabNavLink>
 </TabNav>`,
@@ -355,9 +380,22 @@ import { TabNav, TabNavLink } from "@/components/entrepta/tabs"
         description: "Callback when active tab changes",
       },
       {
+        name: "variant",
+        type: '"strip" | "window"',
+        default: '"strip"',
+        description: "window adds the window dots and shows end as meta (TabsList, TabNav)",
+      },
+      {
+        name: "end",
+        type: "ReactNode",
+        description:
+          "Pinned right, outside the scroller. Meta from 768px in a window (TabsList, TabNav)",
+      },
+      {
         name: "icon",
         type: "ReactNode | Icon",
-        description: "An element, or a Phosphor icon that fills when active. Defaults to ◆",
+        description:
+          "An element, or a Phosphor icon that fills when active and grows on hover. Defaults to ◆",
       },
       {
         name: "onClose",
@@ -598,7 +636,7 @@ const THEMES = [
   },
   toast: {
     description:
-      "Notification toasts via Sonner with entrepta tokens. Mount <Toaster> once in root layout, then call toast() anywhere.",
+      "Notification toasts via Sonner, on the overlay surface. The status shows as a tinted icon tile and a glow in the corner, and each status has its own icon shape. Mount <Toaster> once in the root layout, then call toast() anywhere.",
     usage: `import { Toaster } from "@/components/entrepta/toast"
 import { toast } from "sonner"
 
@@ -609,7 +647,9 @@ import { toast } from "sonner"
 toast.success("Component copied!")
 toast.error("Build failed")
 toast.warning("Deprecated API used")
-toast("New update available")`,
+toast("New update available", {
+  action: { label: "reload", onClick: () => location.reload() },
+})`,
     props: [
       {
         name: "position",
@@ -786,16 +826,34 @@ export function MyPalette() {
       },
     ],
   },
-  diamond: {
+  checkbox: {
     description:
-      "The ◆ brand mark before a label. Always hidden from screen readers. Sized as a glyph, 9px beside mono-xs and 10px beside mono-sm.",
-    usage: `import { Diamond } from "@/components/entrepta/diamond"
+      "A native checkbox under a drawn box. The check draws itself in on the brand fill. Takes a label, a muted description, and an indeterminate state for a select all.",
+    usage: `import { Checkbox } from "@/components/entrepta/checkbox"
 
-<span className="inline-flex items-center gap-1.5 font-mono text-mono-sm uppercase">
-  <Diamond size={10} />
-  latest post
-</span>`,
-    props: [{ name: "size", type: "9 | 10", default: "9", description: "Glyph size in px" }],
+<Checkbox label="button" defaultChecked />
+<Checkbox label="diamond" description="needed by card" checked disabled />
+<Checkbox
+  label="primitives"
+  checked={all}
+  indeterminate={some && !all}
+  onChange={toggleAll}
+/>`,
+    props: [
+      { name: "label", type: "ReactNode", description: "Clickable label beside the box" },
+      {
+        name: "description",
+        type: "ReactNode",
+        description: "Muted line under the label, read as the description",
+      },
+      {
+        name: "indeterminate",
+        type: "boolean",
+        default: "false",
+        description: "The mixed state, a dash on the brand fill",
+      },
+      { name: "checked", type: "boolean", description: "Controlled state, like a native input" },
+    ],
   },
   switch: {
     description:
@@ -886,24 +944,6 @@ const [type, setType] = useUrlFilter("type", TYPES)
         type: "[value, set]",
         description: "Hook: reads and writes ?param=value with pushState, prerender safe",
       },
-    ],
-  },
-  titlebar: {
-    description:
-      "The editor's top bar, 40px tall: three decorative window dots, your tab row, and meta on the right.",
-    usage: `import { Titlebar } from "@/components/entrepta/titlebar"
-import { TabNav, TabNavLink } from "@/components/entrepta/tabs"
-
-<Titlebar meta={<span>main</span>}>
-  <TabNav aria-label="Pages">
-    <TabNavLink asChild active={pathname === "/"}>
-      <Link href="/">home.tsx</Link>
-    </TabNavLink>
-  </TabNav>
-</Titlebar>`,
-    props: [
-      { name: "children", type: "ReactNode", description: "The tab row, usually a TabNav" },
-      { name: "meta", type: "ReactNode", description: "Right side. Hidden below 768px" },
     ],
   },
   sidebar: {

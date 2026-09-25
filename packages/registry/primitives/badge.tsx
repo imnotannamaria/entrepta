@@ -1,5 +1,6 @@
 "use client";
 
+import type { Icon } from "@phosphor-icons/react";
 import { type VariantProps, cva } from "class-variance-authority";
 import * as React from "react";
 import { cn } from "../lib/utils";
@@ -145,22 +146,33 @@ export interface BadgeProps
     VariantProps<typeof badgeVariants> {
   /** Render a colored status dot before the label */
   dot?: boolean;
+  /** A Phosphor icon component before the label, sized to the badge. Takes the place of the dot. */
+  icon?: Icon;
 }
 
 const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
-  ({ className, variant, color, size, dot, children, ...props }, ref) => {
+  ({ className, variant, color, size, dot, icon: BadgeIcon, children, ...props }, ref) => {
     const resolvedColor = color ?? "neutral";
     return (
       <span ref={ref} className={cn(badgeVariants({ variant, color, size }), className)} {...props}>
-        {dot && (
-          <span
+        {BadgeIcon ? (
+          <BadgeIcon
             aria-hidden
-            className={cn(
-              "inline-block rounded-full shrink-0",
-              size === "sm" ? "size-1.5" : "size-2",
-              dotColorClass[resolvedColor]
-            )}
+            size={size === "sm" ? 10 : 12}
+            weight="bold"
+            className="shrink-0"
           />
+        ) : (
+          dot && (
+            <span
+              aria-hidden
+              className={cn(
+                "inline-block rounded-full shrink-0",
+                size === "sm" ? "size-1.5" : "size-2",
+                dotColorClass[resolvedColor]
+              )}
+            />
+          )
         )}
         {children}
       </span>

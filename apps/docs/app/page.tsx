@@ -1,6 +1,6 @@
-import { AgentsConfigurator } from "@/components/agents-configurator";
+import { OpenAgentsButton } from "@/components/agents-configurator";
 import { CommandPaletteTrigger } from "@/components/command-palette-trigger";
-import { HomeIdePreview } from "@/components/home-ide-preview";
+import { CopyInit, HomeShowcase, ThemeRow } from "@/components/home-hero";
 import { HomeInstall } from "@/components/home-install";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteNav } from "@/components/site-nav";
@@ -12,6 +12,7 @@ import { THEMES } from "@/lib/theme";
 import { Diamond } from "@entrepta/registry/content/diamond";
 import { Reveal } from "@entrepta/registry/motion/reveal";
 import { RollingNumber } from "@entrepta/registry/motion/rolling-number";
+import { TypeIn } from "@entrepta/registry/motion/type-in";
 import { Badge } from "@entrepta/registry/primitives/badge";
 import { buttonVariants } from "@entrepta/registry/primitives/button-variants";
 import {
@@ -26,6 +27,7 @@ import {
   CardTitle,
 } from "@entrepta/registry/primitives/card";
 import { Switch } from "@entrepta/registry/primitives/switch";
+import { CheckIcon } from "@phosphor-icons/react/dist/ssr";
 import Link from "next/link";
 
 const PRINCIPLES = [
@@ -117,10 +119,15 @@ const SECTION_PREVIEWS: Record<(typeof SECTIONS)[number], React.ReactNode> = {
     </div>
   ),
   Feedback: (
-    <div className="rounded-[var(--radius-md)] border border-l-2 border-[var(--border-subtle)] border-l-[var(--status-success)] bg-[var(--bg-surface)] px-3 py-2 font-mono text-mono-sm shadow-[var(--shadow-card-hover)]">
-      <div className="mb-0.5 text-[var(--fg-primary)]">Build passed</div>
-      <div className="font-sans text-mono-sm text-[var(--fg-secondary)]">
-        33 components compiled in 1.4s
+    <div className="flex items-start gap-3 rounded-[var(--radius-md)] border border-[var(--border-strong)] bg-[var(--bg-overlay)] p-3 font-mono shadow-[var(--shadow-card-hover)] [background-image:radial-gradient(140%_120%_at_0%_0%,color-mix(in_srgb,var(--status-success)_12%,transparent),transparent_55%)]">
+      <span className="grid size-6 shrink-0 place-items-center rounded-[var(--radius-sm)] bg-[var(--status-success-soft)] text-[var(--status-success-fg)]">
+        <CheckIcon aria-hidden size={13} weight="bold" />
+      </span>
+      <div className="flex flex-col gap-0.5 pt-0.5">
+        <div className="text-mono-md text-[var(--fg-primary)]">Build passed</div>
+        <div className="font-sans text-mono-sm text-[var(--fg-secondary)]">
+          {COMPONENT_INDEX.length} components compiled in 1.4s
+        </div>
       </div>
     </div>
   ),
@@ -159,9 +166,11 @@ const INSTALL_STEPS = [
 ];
 
 const HERO_STATS = [
-  { dt: "tokens", dd: String(tokenCount()) },
   { dt: "components", dd: String(COMPONENT_INDEX.length) },
   { dt: "themes", dd: String(THEMES.length) },
+  { dt: "tokens", dd: String(tokenCount()) },
+  // every theme in dark and light, each ink measured by a test
+  { dt: "AA pairs", dd: String(THEMES.length * 2) },
 ];
 
 export default function Home() {
@@ -171,54 +180,80 @@ export default function Home() {
 
       <main id="main-content" tabIndex={-1} className="pt-14 pb-10 sm:pb-16">
         {/* ── HERO ── */}
-        <section className="max-w-[1280px] mx-auto px-6 sm:px-12 pt-20 sm:pt-28 pb-16 grid grid-cols-1 lg:grid-cols-[1fr_440px] gap-16 items-start">
-          <div>
-            <div className="font-mono text-mono-sm text-[var(--fg-muted)] mb-6 inline-flex items-center gap-3 uppercase tracking-[0.06em]">
-              <span>design system</span>
-              <span className="border border-[var(--border-subtle)] rounded-[3px] px-1.5 py-0.5 text-[var(--fg-brand-text)] normal-case tracking-normal">
-                v2.0
-              </span>
-              <span>by anna maria</span>
+        <section className="relative overflow-hidden">
+          {/* a dot grid that fades out from the top */}
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0 [background-image:radial-gradient(var(--border-strong)_1px,transparent_1px)] [background-size:24px_24px] [mask-image:radial-gradient(ellipse_70%_60%_at_50%_0%,#000_30%,transparent_100%)]"
+          />
+          <div className="relative mx-auto max-w-[1280px] px-4 pt-16 pb-16 sm:px-12 sm:pt-24">
+            <div className="mx-auto flex max-w-4xl flex-col items-center text-center">
+              <Link
+                href="/docs/migrating-to-v2"
+                className="group mb-8 inline-flex items-center gap-2 rounded-full border border-[var(--border-subtle)] bg-[var(--bg-card)] py-1 pr-3 pl-1.5 font-mono text-mono-sm text-[var(--fg-secondary)] transition-colors hover:border-[var(--border-brand)] hover:text-[var(--fg-primary)]"
+              >
+                <Badge variant="solid" color="brand" size="sm" className="rounded-full">
+                  v2.0
+                </Badge>
+                {`${COMPONENT_INDEX.length} components · ${THEMES.length} themes · motion`}
+                <span
+                  aria-hidden
+                  className="text-[var(--fg-brand-text)] transition-transform group-hover:translate-x-0.5"
+                >
+                  →
+                </span>
+              </Link>
+
+              <h1 className="m-0 mb-7 font-serif text-display-md font-normal text-[var(--fg-primary)] sm:text-display-lg lg:text-display-xl">
+                <TypeIn text="A design system," by="word" className="block" />
+                <TypeIn
+                  text="posed as an IDE."
+                  emphasis="posed as an IDE."
+                  by="word"
+                  delay={0.25}
+                  className="block"
+                />
+              </h1>
+
+              <p className="m-0 mb-10 max-w-2xl text-balance font-sans text-body-lg text-[var(--fg-secondary)] sm:text-heading-md sm:font-normal">
+                <strong className="font-medium text-[var(--fg-primary)]">entrepta</strong> is a
+                dark-first React library you copy into your repo: tabs, a command palette, a status
+                bar, serif italic next to mono. Every ink is measured in six themes.
+              </p>
+
+              <div className="mb-10 flex flex-wrap items-center justify-center gap-3">
+                <Link href="/docs/components" className={buttonVariants({ size: "lg" })}>
+                  browse components <span aria-hidden>→</span>
+                </Link>
+                <CopyInit />
+                <CommandPaletteTrigger />
+              </div>
+
+              <ThemeRow />
             </div>
 
-            <h1 className="font-serif text-[clamp(40px,6vw,80px)] leading-[1.02] font-normal tracking-[-0.02em] text-[var(--fg-primary)] mb-8">
-              A personal <em className="italic text-[var(--fg-brand)]">design system</em>,<br />
-              posed as an <span className="text-[var(--fg-muted)]">IDE.</span>
-            </h1>
-
-            <p className="font-sans text-body-lg sm:text-heading-md text-[var(--fg-secondary)] leading-relaxed max-w-xl mb-10">
-              <strong className="text-[var(--fg-primary)] font-medium">entrepta</strong> is a
-              dark-first component library you copy into your repo. Tokens, forms, editor chrome and
-              motion, with every ink measured in six themes. Built around editor metaphors: tabs,
-              command palette, status bar, file paths, inline comments, shell prompts.
-            </p>
-
-            <div className="flex flex-wrap gap-3 mb-12">
-              <Link href="/docs/components" className={buttonVariants({ size: "lg" })}>
-                browse components <span aria-hidden>→</span>
-              </Link>
-              <Link href="#install" className={buttonVariants({ variant: "command", size: "lg" })}>
-                npx @entrepta/cli@latest init
-              </Link>
-              <CommandPaletteTrigger />
+            <div className="mt-16 sm:mt-20">
+              <Reveal>
+                <HomeShowcase />
+              </Reveal>
             </div>
 
-            <dl className="grid grid-cols-3 gap-3">
+            <dl className="mx-auto mt-14 grid max-w-3xl grid-cols-2 gap-px overflow-hidden rounded-[var(--radius-md)] border border-[var(--border-subtle)] bg-[var(--border-subtle)] sm:grid-cols-4">
               {HERO_STATS.map((s) => (
                 <div
                   key={s.dt}
-                  className="border border-[var(--border-subtle)] rounded-[var(--radius-sm)] p-3"
+                  className="flex flex-col items-center gap-1 bg-[var(--bg-canvas)] px-4 py-5"
                 >
-                  <dt className="font-mono text-mono-xs text-[var(--fg-muted)] uppercase tracking-[0.08em] mb-1">
+                  <dd className="order-1 m-0 font-serif text-display-md text-[var(--fg-primary)]">
+                    <RollingNumber value={s.dd} height={40} />
+                  </dd>
+                  <dt className="order-2 font-mono text-mono-xs uppercase tracking-[0.08em] text-[var(--fg-muted)]">
                     {s.dt}
                   </dt>
-                  <dd className="font-mono text-mono-md text-[var(--fg-primary)]">{s.dd}</dd>
                 </div>
               ))}
             </dl>
           </div>
-
-          <HomeIdePreview />
         </section>
 
         {/* ── INSTALL ── */}
@@ -549,29 +584,6 @@ export default function Home() {
           </div>
         </section>
 
-        {/* ── AGENTS.MD ── */}
-        <section
-          id="agents"
-          className="max-w-[1280px] mx-auto px-6 sm:px-12 py-20 border-t border-[var(--border-subtle)]"
-        >
-          <div className="mb-10">
-            <div className="font-mono text-mono-sm text-[var(--fg-brand-text)] uppercase tracking-[0.08em] mb-3">
-              · for your coding agent
-            </div>
-            <h2 className="font-serif text-[clamp(32px,4vw,56px)] font-normal leading-tight tracking-tight text-[var(--fg-primary)]">
-              Your <em className="italic text-[var(--fg-brand)]">AGENTS.md</em>,
-              <br />
-              <span className="text-[var(--fg-muted)]">ready to paste.</span>
-            </h2>
-            <p className="mt-4 font-sans text-body-lg text-[var(--fg-secondary)] max-w-xl leading-relaxed">
-              Pick your framework, theme and components. You get the file that tells an agent how to
-              install entrepta, where things live, which token goes where, and how each component is
-              used. The link keeps your choices, so you can share it.
-            </p>
-          </div>
-          <AgentsConfigurator />
-        </section>
-
         {/* ── CTA STRIP ── */}
         <section className="max-w-[1280px] mx-auto px-6 sm:px-12 py-20 border-t border-[var(--border-subtle)]">
           <SpotlightCard variant="featured" className="p-12 sm:p-16 text-center">
@@ -593,12 +605,9 @@ export default function Home() {
                 <Link href="/docs/components" className={buttonVariants({ size: "lg" })}>
                   browse components <span aria-hidden>→</span>
                 </Link>
-                <Link
-                  href="#agents"
-                  className={buttonVariants({ variant: "secondary", size: "lg" })}
-                >
+                <OpenAgentsButton className={buttonVariants({ variant: "secondary", size: "lg" })}>
                   get your AGENTS.md
-                </Link>
+                </OpenAgentsButton>
               </div>
             </div>
           </SpotlightCard>

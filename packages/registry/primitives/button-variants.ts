@@ -4,6 +4,7 @@ import { type VariantProps, cva } from "class-variance-authority";
 export const buttonVariants = cva(
   [
     "group relative inline-flex items-center justify-center gap-2 shrink-0 whitespace-nowrap",
+    "[&_svg]:shrink-0",
     "font-mono font-medium",
     "border rounded-[var(--radius-md)]",
     "transition-all duration-150 ease-out",
@@ -36,6 +37,10 @@ export const buttonVariants = cva(
         sm: "h-8 px-3 text-mono-sm",
         md: "h-10 px-4 text-mono-md",
         lg: "h-12 px-6 text-body-lg",
+        // square, for an icon alone: give the button an aria-label
+        "icon-sm": "size-8 text-mono-sm",
+        "icon-md": "size-10 text-mono-md",
+        "icon-lg": "size-12 text-body-lg",
       },
     },
     defaultVariants: {

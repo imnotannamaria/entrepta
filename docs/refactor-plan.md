@@ -1098,6 +1098,29 @@ Smaller than the ones above, each with a recommendation.
 
 ---
 
+## Review round 1 (after Phase 8, from Anna's visual pass)
+
+- [x] Checkbox component, native input, drawn check, description, indeterminate
+- [x] AGENTS.md configurator moved out of the home page into a dialog opened from the header,
+      kept in `?agents=open` so the link still shares; old `#agents` links still open it
+- [x] Docs sidebar: gap between items, hover on a quieter surface than the active item
+- [x] Button: icon sizes (`icon-sm`, `icon-md`, `icon-lg`) and icon demos. Badge: `icon` prop
+- [x] Dropdown on the overlay surface; the highlighted row takes the brand tint, no edge bar
+- [x] Tabs: icon demos with the grow on hover (`scale-115`, as in the portfolio)
+- [x] Autofill: reproduced with CDP `Autofill.trigger`. The filled state was already right;
+      `:root` now declares `color-scheme: dark` and the autofill rule holds Chrome's fill off
+      with a long transition, for the states the inset shadow cannot paint
+- [x] Titlebar folded into the tabs as `variant="window"`
+- [x] Diamond has no docs page; it arrives with the components that use it
+- [x] Toast rebuilt on unstyled sonner: icon tile and corner glow per status, close button
+- [x] More room at the end of docs pages and of the sidebar
+- [x] Home hero rebuilt: a working editor window made of the components, live theme swatches
+- Found on the way: `animate-in` and friends were dead classes (no animation plugin), so no
+  overlay animated. Replaced by `motion-fade` and `motion-pop` in `globals.css`. `useTheme`
+  instances now stay in step, so the hero swatches and the floating switcher agree
+
+---
+
 ## Out of scope
 
 - UI sound effects

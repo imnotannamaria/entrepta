@@ -93,4 +93,24 @@ describe("Button", () => {
     const { container } = render(<Button className="custom-class">Custom</Button>);
     expect(container.firstChild).toHaveClass("custom-class");
   });
+
+  it("has square icon sizes, named by aria-label", () => {
+    render(
+      <Button size="icon-md" variant="ghost" aria-label="Settings">
+        <svg aria-hidden />
+      </Button>
+    );
+    const button = screen.getByRole("button", { name: "Settings" });
+    expect(button).toHaveClass("size-10");
+    expect(button).not.toHaveClass("px-4");
+  });
+
+  it("keeps an icon beside the label from shrinking", () => {
+    const { container } = render(
+      <Button>
+        <svg aria-hidden /> deploy
+      </Button>
+    );
+    expect(container.firstChild).toHaveClass("[&_svg]:shrink-0");
+  });
 });

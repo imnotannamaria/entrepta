@@ -37,20 +37,13 @@ export function MobileNav() {
 
       <DialogPrimitive.Portal>
         <DialogPrimitive.Overlay
-          className={
-            "fixed inset-0 z-50 bg-black/60 backdrop-blur-[4px] " +
-            "data-[state=open]:animate-in data-[state=closed]:animate-out " +
-            "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 duration-200"
-          }
+          className={"fixed inset-0 z-50 bg-black/60 backdrop-blur-[4px] " + "motion-fade"}
         />
         <DialogPrimitive.Content
           className={
             "fixed right-0 top-0 bottom-0 z-50 w-[min(85vw,360px)] " +
             "bg-[var(--bg-canvas)] border-l border-[var(--border-subtle)] " +
-            "flex flex-col " +
-            "data-[state=open]:animate-in data-[state=closed]:animate-out " +
-            "data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right " +
-            "duration-200 ease-out"
+            "flex flex-col motion-fade"
           }
         >
           <DialogPrimitive.Title className="sr-only">Navigation</DialogPrimitive.Title>
@@ -70,11 +63,11 @@ export function MobileNav() {
             </DialogPrimitive.Close>
           </div>
 
-          <nav className="flex-1 overflow-y-auto px-4 py-5">
+          <nav className="flex-1 overflow-y-auto px-4 pt-5 pb-16">
             <div className="font-mono text-mono-xs uppercase tracking-widest text-[var(--fg-muted)] mb-3">
               Site
             </div>
-            <ul className="flex flex-col mb-8">
+            <ul className="mb-8 flex flex-col gap-0.5">
               {TOP_LINKS.map((l) => (
                 <li key={l.href}>
                   <Link
@@ -94,7 +87,7 @@ export function MobileNav() {
                   <div className="font-mono text-mono-xs uppercase tracking-widest text-[var(--fg-muted)] px-2 mb-2">
                     {section.heading}
                   </div>
-                  <ul className="flex flex-col">
+                  <ul className="flex flex-col gap-0.5">
                     {section.items.map((item) => {
                       const active = pathname === item.href;
                       return (
@@ -103,8 +96,8 @@ export function MobileNav() {
                             href={item.href}
                             className={`flex items-center h-8 px-2 rounded-[var(--radius-sm)] font-mono text-mono-sm transition-colors ${
                               active
-                                ? "bg-[var(--bg-surface-elevated)] text-[var(--fg-primary)]"
-                                : "text-[var(--fg-muted)] hover:bg-[var(--bg-surface)] hover:text-[var(--fg-secondary)]"
+                                ? "bg-[var(--bg-surface)] text-[var(--fg-primary)]"
+                                : "text-[var(--fg-muted)] hover:bg-[var(--bg-hover-soft)] hover:text-[var(--fg-secondary)]"
                             }`}
                           >
                             {active && (

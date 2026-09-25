@@ -2,6 +2,7 @@
 
 import { TopNav, TopNavLink, TopNavMenu } from "@entrepta/registry/layout/top-nav";
 import Link from "next/link";
+import { AgentsDialog } from "./agents-configurator";
 import { Logo } from "./logo";
 import { MobileNav } from "./mobile-nav";
 
@@ -26,6 +27,7 @@ export function SiteNav() {
                 github
               </TopNavLink>
             </TopNavMenu>
+            <AgentsDialog />
             <MobileNav />
           </>
         }

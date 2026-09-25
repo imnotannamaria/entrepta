@@ -106,9 +106,9 @@ entrepta/
 │       ├── manifest.ts       # every installable item: files, deps, registryDeps, usage, exports
 │       ├── styles/           # globals.css + themes/*.css
 │       ├── primitives/       # button, badge, input, card, dialog, dropdown, tooltip, tabs,
-│       │                     # switch, textarea, field, filter-pill
+│       │                     # checkbox, switch, textarea, field, filter-pill
 │       ├── layout/           # status-bar, top-nav, theme-switcher, mode-toggle,
-│       │                     # titlebar, sidebar, page-outline
+│       │                     # sidebar, page-outline
 │       ├── content/          # code-block, diamond, sect-head, doc-parts
 │       ├── feedback/         # toast, skeleton, command-palette, chrome-message, page-loading
 │       ├── motion/           # reveal, type-in, rolling-number, spotlight, arrow-link
@@ -341,24 +341,25 @@ Vite. Aliases are relative to it, and `add` writes each file under it.
 - `styles/globals.css`, reset, tokens, fonts, type utilities, light mode
 - `styles/themes/*.css`, the 6 presets
 
-### Primitives (12)
+### Primitives (13)
 
 | Component | Radix                           | Notes                                   |
 | --------- | ------------------------------- | --------------------------------------- |
-| Button    | `@radix-ui/react-slot`          | 4 variants, 3 sizes, loading state       |
-| Badge     | no                              | solid/soft/outline across 6 colors       |
+| Button    | `@radix-ui/react-slot`          | 4 variants, 3 sizes, 3 square icon sizes, loading state |
+| Badge     | no                              | solid/soft/outline across 6 colors, a dot or an `icon` |
 | Input     | no                              | text, search, command (⌘K)               |
 | Card      | no                              | default/featured/terminal/data, sm/md/xl |
 | Dialog    | `@radix-ui/react-dialog`        | base for modals                          |
-| Dropdown  | `@radix-ui/react-dropdown-menu` | context menus, theme switcher            |
+| Dropdown  | `@radix-ui/react-dropdown-menu` | on the overlay surface, highlighted row in the brand tint |
 | Tooltip   | `@radix-ui/react-tooltip`       | hover info, keyboard hints               |
-| Tabs      | `@radix-ui/react-tabs`          | in place (Tabs) or routes (TabNav), travelling underline, × on the active tab |
+| Tabs      | `@radix-ui/react-tabs`          | in place (Tabs) or routes (TabNav), travelling underline, × on the active tab, icons that grow on hover, `variant="window"` is the title bar |
+| Checkbox  | no                              | native checkbox, drawn check, description, indeterminate |
 | Switch    | no                              | native checkbox with `role="switch"`     |
 | Textarea  | no                              | sans prose, mono placeholder, error state |
 | Field     | no                              | label, control, error or hint, wires `aria-describedby` and `aria-invalid` |
 | FilterPill | no                             | `aria-pressed` toggle, pairs with `use-url-filter` |
 
-### Layout (7)
+### Layout (6)
 
 | Component     | Notes                                            |
 | ------------- | ------------------------------------------------ |
@@ -366,7 +367,6 @@ Vite. Aliases are relative to it, and `add` writes each file under it.
 | TopNav        | top nav with logo, breadcrumb and menu           |
 | ThemeSwitcher | floating preset and dark/light button, uses `use-theme` |
 | ModeToggle    | dark/light only, inline or floating, uses `use-mode` |
-| Titlebar      | 40px bar: window dots, a TabNav, meta on the right |
 | Sidebar       | 56px icon rail, a ◆ travels to the active item, `linkComponent` for routers |
 | PageOutline   | sticky scrollspy outline from 1100px, `scrollContainer` prop |
 
@@ -375,11 +375,11 @@ Vite. Aliases are relative to it, and `add` writes each file under it.
 | Component | Notes                                                    |
 | --------- | -------------------------------------------------------- |
 | CodeBlock | code with filename header, copy button, visible failure  |
-| Diamond   | the `◆` brand mark before a label, always `aria-hidden`  |
+| Diamond   | the `◆` before a label, `aria-hidden`. No docs page: it comes with what uses it |
 | SectHead  | the `$ command` rule that opens a section                |
 | doc-parts | DocLabel, Section, DisplayH2, Prose, Em, Strong          |
 
-Card, Dialog and ThemeSwitcher import Diamond from `content/`. The CLI rewrites
+Card, Dialog, Field, Tabs and ThemeSwitcher import Diamond from `content/`. The CLI rewrites
 an import between categories (`../content/diamond`) to a sibling (`./diamond`),
 and `registryDeps` makes sure the file is copied. A manifest test checks that
 every such import is covered.
@@ -388,7 +388,7 @@ every such import is covered.
 
 | Component      | Lib     | Notes                              |
 | -------------- | ------- | ---------------------------------- |
-| Toast          | `sonner`| success/warning/error/info          |
+| Toast          | `sonner`| unstyled sonner, status as an icon tile and a corner glow |
 | Skeleton       | no      | shimmer, respects reduced motion    |
 | CommandPalette | `cmdk`  | ⌘K, search, groups, shortcuts       |
 | ChromeMessage  | no      | 404 and error screens, server safe  |
@@ -544,6 +544,14 @@ pnpm dlx file:"$(pwd)/../entrepta/packages/cli" init
   404s). The script packs with `pnpm pack`, which still does the workspace:*
   rewrite, then publishes the resulting tarball with plain `npm publish`,
   where OIDC works
+- No colored bar on the edge of a highlighted or hovered item, anywhere. A
+  highlighted menu row takes the brand tint, a toast carries its status in an
+  icon tile, a nav item gets a surface and a dot
+- The title bar is a variant of the tabs (`variant="window"`), not a component
+  of its own: two tab rows that differ only by window dots were one component
+- Overlays animate with plain CSS (`motion-fade`, `motion-pop` in
+  `globals.css`), not an animation plugin, so a copied component needs nothing
+  else. `:root` declares `color-scheme: dark` for native controls and autofill
 - Docs live at https://entrepta.vercel.app/
 
 ---

@@ -1,68 +1,56 @@
-import { render } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
-import { Toaster } from "./toast";
+import { act, render, screen } from "@testing-library/react";
+import { afterEach, describe, expect, it } from "vitest";
+import { Toaster, toast } from "./toast";
 
-function getStyle(container: HTMLElement) {
-  return container.querySelector("style")?.textContent ?? "";
+async function show(fire: () => void) {
+  render(<Toaster />);
+  await act(async () => {
+    fire();
+  });
+}
+
+function toastEl(title: string) {
+  return screen.getByText(title).closest("[data-sonner-toast]") as HTMLElement;
 }
 
 describe("Toaster", () => {
-  it("renders without crashing", () => {
-    const { container } = render(<Toaster />);
-    expect(container).toBeInTheDocument();
+  afterEach(() => {
+    act(() => {
+      toast.dismiss();
+    });
   });
 
-  it("injects style tag with sonner data-attribute selectors", () => {
-    const { container } = render(<Toaster />);
-    expect(getStyle(container)).toContain("[data-sonner-toast]");
+  it("renders a toast with its title and description", async () => {
+    await show(() => toast("Snapshot saved", { description: "~/snapshot.json" }));
+    expect(await screen.findByText("Snapshot saved")).toBeInTheDocument();
+    expect(screen.getByText("~/snapshot.json")).toBeInTheDocument();
   });
 
-  it("applies radius-md and the design-spec drop shadow", () => {
-    const { container } = render(<Toaster />);
-    const style = getStyle(container);
-    expect(style).toContain("border-radius: var(--radius-md)");
-    expect(style).toContain("box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5)");
+  it("is unstyled by sonner and dressed on the overlay surface", async () => {
+    await show(() => toast("Plain"));
+    await screen.findByText("Plain");
+    const el = toastEl("Plain");
+    expect(el).toHaveAttribute("data-styled", "false");
+    expect(el).toHaveClass("bg-[var(--bg-overlay)]", "shadow-[var(--shadow-overlay)]");
   });
 
-  it("uses mono for title and sans for description", () => {
-    const { container } = render(<Toaster />);
-    const style = getStyle(container);
-    expect(style).toMatch(/\[data-title\][^}]*var\(--font-mono\)/);
-    expect(style).toMatch(/\[data-description\][^}]*var\(--font-sans\)/);
+  it("carries the status in a tinted icon tile, not a colored edge", async () => {
+    await show(() => toast.success("Build passed"));
+    await screen.findByText("Build passed");
+    const el = toastEl("Build passed");
+    expect(el).toHaveAttribute("data-type", "success");
+    expect(el.className).not.toMatch(/border-l/);
+    const icon = el.querySelector("[data-icon]");
+    expect(icon).toHaveClass(
+      "group-data-[type=success]/toast:bg-[var(--status-success-soft)]",
+      "group-data-[type=success]/toast:text-[var(--status-success-fg)]"
+    );
+    expect(icon?.querySelector("svg")).toHaveAttribute("aria-hidden", "true");
   });
 
-  it("applies success border-left-color token", () => {
-    const { container } = render(<Toaster />);
-    const style = getStyle(container);
-    expect(style).toContain('data-type="success"');
-    expect(style).toContain("var(--status-success)");
-  });
-
-  it("applies error border-left-color token", () => {
-    const { container } = render(<Toaster />);
-    const style = getStyle(container);
-    expect(style).toContain('data-type="error"');
-    expect(style).toContain("var(--status-error)");
-  });
-
-  it("applies warning and info border-left-color tokens", () => {
-    const { container } = render(<Toaster />);
-    const style = getStyle(container);
-    expect(style).toContain('data-type="warning"');
-    expect(style).toContain("var(--status-warning)");
-    expect(style).toContain('data-type="info"');
-    expect(style).toContain("var(--status-info)");
-  });
-
-  it("sets min-width 320px and padding 12 16 to match design", () => {
-    const { container } = render(<Toaster />);
-    const style = getStyle(container);
-    expect(style).toContain("min-width: 320px");
-    expect(style).toContain("padding: 12px 16px");
-  });
-
-  it("uses dark theme by default", () => {
-    render(<Toaster />);
-    expect(document.body).toBeInTheDocument();
+  it("has a close button with an accessible name", async () => {
+    await show(() => toast.error("Type error"));
+    await screen.findByText("Type error");
+    expect(screen.getByRole("button", { name: /close/i })).toBeInTheDocument();
   });
 });

@@ -18,8 +18,11 @@ import { cn } from "../lib/utils";
  *   is active stays in your project: pass `active`.
  *
  * Both share the scroller that fades only the edge with hidden tabs, one brand
- * underline that travels to the active tab, an icon that fills when active, and
- * a × on the active tab when closing it leads somewhere.
+ * underline that travels to the active tab, an icon that fills when active and
+ * grows on hover, and a × on the active tab when closing it leads somewhere.
+ *
+ * `variant="window"` turns either row into the editor's title bar: three window
+ * dots first, and `end` as muted meta on the right, hidden below 768px.
  */
 
 type TabIcon = React.ReactNode | Icon;
@@ -61,10 +64,64 @@ function useFadeMask(ref: React.RefObject<HTMLElement | null>, deps: unknown[]) 
   return { maskImage: mask, WebkitMaskImage: mask } as React.CSSProperties;
 }
 
+type RowVariant = "strip" | "window";
+
 const rowClass = cn(
-  "flex min-h-10 min-w-0 items-stretch",
+  "flex min-h-10 min-w-0 items-stretch select-none",
   "border-b border-[var(--border-subtle)] bg-[var(--bg-canvas)]"
 );
+
+function WindowDots() {
+  return (
+    <div
+      aria-hidden
+      data-window-dots
+      className="group/dots flex w-[84px] shrink-0 items-center gap-1.5 border-r border-[var(--border-subtle)] px-3"
+    >
+      {["--status-error", "--status-warning", "--status-success"].map((tone) => (
+        <span
+          key={tone}
+          className="h-3 w-3 rounded-full opacity-85 transition-[opacity,transform] duration-[var(--motion-fast)] group-hover/dots:scale-110 group-hover/dots:opacity-100"
+          style={{ background: `var(${tone})` }}
+        />
+      ))}
+    </div>
+  );
+}
+
+/** The row around a scroller: window dots, the tabs, `after`, then `end` pinned right. */
+function Row({
+  variant,
+  className,
+  after,
+  end,
+  children,
+}: {
+  variant: RowVariant;
+  className?: string;
+  after?: React.ReactNode;
+  end?: React.ReactNode;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className={cn(rowClass, className)} data-variant={variant}>
+      {variant === "window" && <WindowDots />}
+      {children}
+      {after}
+      {end && (
+        <div
+          className={cn(
+            "ml-auto flex shrink-0 items-stretch",
+            variant === "window" &&
+              "hidden items-center gap-4 px-4 font-mono text-mono-sm text-[var(--fg-muted)] md:flex"
+          )}
+        >
+          {end}
+        </div>
+      )}
+    </div>
+  );
+}
 
 const scrollerClass = cn(
   "flex min-w-0 items-stretch overflow-x-auto",
@@ -91,7 +148,10 @@ function TabGlyph({ icon, active }: { icon?: TabIcon; active: boolean }) {
   if (React.isValidElement(icon)) {
     return (
       <span
-        className={cn("inline-flex shrink-0", active ? "text-[var(--fg-brand)]" : "text-inherit")}
+        className={cn(
+          "inline-flex shrink-0 transition-transform duration-200 ease-[var(--ease-out)] group-hover:scale-115",
+          active ? "text-[var(--fg-brand)]" : "text-inherit"
+        )}
       >
         {icon}
       </span>
@@ -104,7 +164,7 @@ function TabGlyph({ icon, active }: { icon?: TabIcon; active: boolean }) {
       size={15}
       weight={active ? "fill" : "regular"}
       className={cn(
-        "shrink-0 transition-transform duration-200 ease-[var(--ease-out)] group-hover:scale-110",
+        "shrink-0 transition-transform duration-200 ease-[var(--ease-out)] group-hover:scale-115",
         active && "text-[var(--fg-brand)]"
       )}
     />
@@ -194,6 +254,8 @@ const Tabs = React.forwardRef<
 Tabs.displayName = "Tabs";
 
 interface TabsListProps extends React.ComponentPropsWithoutRef<typeof TabsPrimitive.List> {
+  /** `window` adds the window dots and styles `end` as title bar meta. */
+  variant?: RowVariant;
   /** Right after the last tab, outside the scroller, such as a `+` button. */
   after?: React.ReactNode;
   /** Pinned to the far end of the row, outside the scroller. */
@@ -201,14 +263,14 @@ interface TabsListProps extends React.ComponentPropsWithoutRef<typeof TabsPrimit
 }
 
 const TabsList = React.forwardRef<React.ComponentRef<typeof TabsPrimitive.List>, TabsListProps>(
-  ({ className, style, after, end, children, ...props }, ref) => {
+  ({ className, style, variant = "strip", after, end, children, ...props }, ref) => {
     const innerRef = React.useRef<HTMLDivElement>(null);
     React.useImperativeHandle(ref, () => innerRef.current as HTMLDivElement);
     const count = React.Children.count(children);
     const mask = useFadeMask(innerRef, [count]);
 
     return (
-      <div className={cn(rowClass, className)}>
+      <Row variant={variant} className={className} after={after} end={end}>
         <TabsPrimitive.List
           ref={innerRef}
           className={scrollerClass}
@@ -217,9 +279,7 @@ const TabsList = React.forwardRef<React.ComponentRef<typeof TabsPrimitive.List>,
         >
           {children}
         </TabsPrimitive.List>
-        {after}
-        {end && <div className="ml-auto flex shrink-0 items-stretch">{end}</div>}
-      </div>
+      </Row>
     );
   }
 );
@@ -280,13 +340,15 @@ TabsContent.displayName = "TabsContent";
 interface TabNavProps extends React.HTMLAttributes<HTMLElement> {
   /** Names the landmark: "Pages". */
   "aria-label": string;
+  /** `window` adds the window dots and styles `end` as title bar meta. */
+  variant?: RowVariant;
   after?: React.ReactNode;
   end?: React.ReactNode;
 }
 
-/** A `<nav>` of route tabs. */
+/** A `<nav>` of route tabs. With `variant="window"`, the editor's title bar. */
 const TabNav = React.forwardRef<HTMLElement, TabNavProps>(
-  ({ className, style, after, end, children, ...props }, ref) => {
+  ({ className, style, variant = "strip", after, end, children, ...props }, ref) => {
     const innerRef = React.useRef<HTMLElement>(null);
     React.useImperativeHandle(ref, () => innerRef.current as HTMLElement);
     const layoutId = React.useId();
@@ -295,13 +357,11 @@ const TabNav = React.forwardRef<HTMLElement, TabNavProps>(
 
     return (
       <StripContext.Provider value={{ layoutId }}>
-        <div className={cn(rowClass, className)}>
+        <Row variant={variant} className={className} after={after} end={end}>
           <nav ref={innerRef} className={scrollerClass} style={{ ...mask, ...style }} {...props}>
             {children}
           </nav>
-          {after}
-          {end && <div className="ml-auto flex shrink-0 items-stretch">{end}</div>}
-        </div>
+        </Row>
       </StripContext.Provider>
     );
   }
