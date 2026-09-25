@@ -1045,12 +1045,13 @@ project it came from.
 
 **Checklist: release**
 
-- [ ] Changesets: major for `@entrepta/registry` (1.2.0 to 2.0.0) and `@entrepta/cli` (1.1.0 to
+- [x] Changesets: major for `@entrepta/registry` (1.2.0 to 2.0.0) and `@entrepta/cli` (1.1.0 to
       2.0.0), summarizing the breaking changes and linking the migration guide
-- [ ] entrepta's CLAUDE.md: §2 (Phosphor, motion), §3 (the `motion/` folder, the manifest), §4
+- [x] entrepta's CLAUDE.md: §2 (Phosphor, motion), §3 (the `motion/` folder, the manifest), §4
       (principle 6), §5 (tokens and inks), §7 (inventory), §10 (decisions: `@theme static`,
       motion as a dependency, Phosphor, a framework-agnostic registry, imports across
-      categories, runtime themes in `init`, `--fg-brand-text`)
+      categories, runtime themes in `init`, `--fg-brand-text`). Kept up to date phase by phase,
+      and AGENTS.md mirrors it under a sync test
 - [ ] `v2` into `main` through a reviewed PR
 - [ ] After the merge: check the "Version Packages" PR and the npm publish
 
