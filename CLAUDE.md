@@ -51,12 +51,14 @@ is generic. Anyone can use it.
 - React 19 and Next.js 15 (App Router) as the reference setup
 - Tailwind v4 for utility classes
 - Radix UI primitives where a11y logic matters (Dialog, Dropdown, Tooltip, Tabs)
-- Plain CSS variables for tokens, not Tailwind v4 `@theme`, so the system works
-  in any setup and not only Tailwind
+- Plain CSS variables for tokens. The one exception is the type scale, declared
+  in a Tailwind v4 `@theme static` block so it generates `text-*` utilities
 - TypeScript strict
 - class-variance-authority (cva) for variants
 - clsx and tailwind-merge (the `cn` helper) for class composition
-- lucide-react for icons (1.5px stroke)
+- Phosphor (`@phosphor-icons/react`) for icons, using the `*Icon` names. A file
+  without `"use client"` imports from `@phosphor-icons/react/dist/ssr`: the
+  package root is the client build and breaks `next build` from a server file
 - cmdk for the command palette, sonner for toasts
 
 ### Repo tooling
@@ -101,12 +103,15 @@ entrepta/
 │   │       └── index.ts
 │   └── registry/             # @entrepta/registry, source of truth
 │       ├── styles/           # globals.css + themes/*.css
-│       ├── primitives/       # button, badge, input, card, dialog, dropdown, tooltip, tabs
-│       ├── layout/           # status-bar, top-nav, theme-switcher, mode-toggle
-│       ├── content/          # code-block
-│       ├── feedback/         # toast, skeleton, command-palette
-│       ├── hooks/            # use-theme, use-mode, use-command-palette
-│       └── lib/              # utils.ts (cn)
+│       ├── primitives/       # button, badge, input, card, dialog, dropdown, tooltip, tabs,
+│       │                     # switch, textarea, field, filter-pill
+│       ├── layout/           # status-bar, top-nav, theme-switcher, mode-toggle,
+│       │                     # titlebar, sidebar, page-outline
+│       ├── content/          # code-block, diamond, sect-head, doc-parts
+│       ├── feedback/         # toast, skeleton, command-palette, chrome-message, page-loading
+│       ├── motion/           # reveal, type-in, rolling-number, spotlight, arrow-link
+│       ├── hooks/            # use-theme, use-mode, use-command-palette, use-url-filter
+│       └── lib/              # utils.ts (cn), motion.ts, color-contrast.ts
 ├── sandbox/
 │   └── wirst-test/           # local Next.js app to test the CLI output (gitignored)
 ├── scripts/release.sh
@@ -138,7 +143,10 @@ entrepta/
    states. Status colors only for status. Everything else is black, white and
    cool gray.
 5. **High density, clear hierarchy.** 12 column grid, 24px gutters, 1280px max.
-6. **Motion subtle or none.** 120 to 320ms, ease-out, no exaggerated spring.
+6. **Motion with a job.** Entrances, counters and light that follows the cursor,
+   each one earning its place. UI feedback stays at 120 to 320ms, ease-out.
+   Every animation has a reduced-motion path, including the ones driven by JS,
+   which the global CSS reset cannot reach.
 
 ---
 
@@ -147,7 +155,11 @@ entrepta/
 ### Model
 
 - The user picks one theme out of 6 presets: `npx entrepta init --theme=entrepta`
-- The CLI writes the CSS vars for that theme into `app/globals.css`
+- `init` also asks whether the project wants that one theme fixed
+  (`--themes=single`) or all six switchable at runtime (`--themes=all`)
+- `single` writes the chosen theme's vars into `app/globals.css`. `all` writes
+  the six under `:root[data-theme="<id>"]`, with the chosen one also on bare
+  `:root` as the default. The `ThemeSwitcher` only works with `all`
 - Any later customization is done by editing those vars in the user project.
   There is no runtime theme provider.
 - Dark and light mode is separate from the preset. Any preset works in both.
@@ -165,9 +177,29 @@ entrepta/
 | ivy       | forest green | `#35A365` | Calm, grounded                  |
 | bosco     | deep blue    | `#2563EB` | Technical, steady               |
 
+Light mode uses a darker shade of each brand (entrepta light is `#6656FF`).
+
 Each preset only overrides the brand tokens (`--fg-brand`, `--fg-brand-hover`,
-`--bg-surface-brand`, `--ring`). Everything else (zinc neutrals, status colors,
-spacing, type) is shared, which keeps the IDE personality in any color.
+`--fg-on-brand`, `--fg-brand-text`, `--bg-surface-brand`, `--ring`). Everything
+else (zinc neutrals, status colors, spacing, type) is shared, which keeps the
+IDE personality in any color.
+
+### Which brand token for which job
+
+| Token              | Use it for                                                      |
+| ------------------ | --------------------------------------------------------------- |
+| `--fg-brand`       | Fills, borders, glyphs (`◆`, `$`), and text 24px and up         |
+| `--fg-on-brand`    | Text on a `--fg-brand` fill: primary button, solid badge, status bar |
+| `--fg-brand-text`  | Brand-colored text below 24px, on the canvas, a card or the tint |
+| `--bg-surface-brand` | The brand tint behind soft badges and selected items          |
+
+`--fg-brand` as body text fails AA in 4 of 12 theme and mode combinations. The
+inks cannot be derived from the brand, so every theme file sets them.
+`styles/themes.contrast.test.ts` measures every pair in all 12 combinations
+straight from the CSS: 4.5 for `--fg-on-brand` on the brand, 4.5 for
+`--fg-brand-text` on canvas and card, 5.0 on the tint, and 4.5 for
+`--fg-muted` on canvas, card and overlay. Change a theme hex and that test says
+whether it still holds.
 
 ### Semantic tokens
 
@@ -176,20 +208,30 @@ Source of truth is `packages/registry/styles/globals.css`. Short version:
 ```css
 :root {
   /* surfaces */
-  --bg-canvas: #09090B;          /* zinc-950 */
-  --bg-surface: #18181B;         /* zinc-900 */
+  --bg-canvas: #09090B;          /* zinc-950, the page */
+  --bg-card: #0B0B0E;            /* cards, a hair above the canvas */
+  --bg-card-hover: #121216;
+  --bg-surface: #18181B;         /* zinc-900, what sits above a card */
+  --bg-overlay: #0E0E10;         /* dialogs and the command palette */
   --bg-surface-elevated: rgba(39, 39, 42, 0.6);
   --bg-surface-brand: <by theme>;
 
   /* foreground */
   --fg-primary: #FAFAFA;         /* zinc-50 */
   --fg-secondary: #A1A1AA;       /* zinc-400 */
-  --fg-muted: #71717A;           /* zinc-500 */
+  --fg-muted: #8A8A92;           /* passes AA; light mode keeps zinc-500 */
   --fg-brand: <by theme>;
 
   /* borders */
   --border-subtle: #27272A;      /* zinc-800 */
   --border-strong: #3F3F46;      /* zinc-700 */
+
+  /* brand accents, color-mix of --fg-brand, so they follow every theme */
+  --border-brand: 35%;  --border-brand-strong: 60%;
+  --shadow-brand: 20%;  --fg-brand-glow: 50%;  --bg-spotlight: 15% (26% light);
+
+  /* shadows */
+  --shadow-card-hover, --shadow-lift-brand, --shadow-overlay
 
   /* status */
   --status-success: #10B981;
@@ -199,8 +241,32 @@ Source of truth is `packages/registry/styles/globals.css`. Short version:
 }
 ```
 
-Radius, spacing, motion, fonts, type utilities and the light mode block all live
-in the same file.
+Radius, spacing, motion, fonts and the light mode block all live in the same
+file. Every token that differs between modes is also redeclared in
+`[data-surface="dark"]`, or a dark surface inside a light page inherits the
+light value.
+
+### Type scale
+
+Ten steps in a `@theme static` block, each with its line height:
+
+| Step       | Size / leading | Step      | Size / leading |
+| ---------- | -------------- | --------- | -------------- |
+| display-xl | 80 / 0.95      | body-lg   | 16 / 1.6       |
+| display-lg | 64 / 1         | body-md   | 14 / 1.5       |
+| display-md | 40 / 1.1       | mono-md   | 14 / 1.5       |
+| heading-lg | 24 / 1.3       | mono-sm   | 12 / 1.4       |
+| heading-md | 18 / 1.4       | mono-xs   | 10 / 1.3       |
+
+The display steps also carry their tracking. Use them as utilities
+(`text-mono-sm`) or as variables (`var(--text-mono-sm)`). A step sets size and
+leading, never the family: pair it with `font-serif`, `font-sans` or
+`font-mono`. No arbitrary sizes (`text-[13px]`) and no Tailwind default steps
+(`text-sm`). `styles/type-scale.test.ts` enforces both. Inline `fontSize` is
+only for glyphs such as `◆`, at 18px or less.
+
+The scale is registered in `cn` (`lib/utils.ts`) so tailwind-merge does not read
+`text-mono-sm` as a color and drop it.
 
 `apps/docs/app/globals.css` and `sandbox/wirst-test/app/globals.css` are copies.
 Any token change has to land in all three.
@@ -214,7 +280,8 @@ Published as `@entrepta/cli` with the bin `entrepta`.
 | Command                       | What it does                                          |
 | ----------------------------- | ----------------------------------------------------- |
 | `npx entrepta init`           | Sets up the project, prompts for the theme            |
-| `npx entrepta init --theme=X` | Same, skipping the theme prompt                       |
+| `npx entrepta init --theme=X` | Same, skipping the prompts, with one fixed theme      |
+| `--themes=single\|all`         | On `init`: one fixed theme, or all six at runtime     |
 | `npx entrepta add <comp...>`  | Copies one or more components into the project        |
 | `npx entrepta add`            | Interactive mode, lists components to pick            |
 | `--overwrite`                 | Flag on both commands, allows replacing existing files |
@@ -239,6 +306,7 @@ registry component is not installable until it is listed there with its `files`,
 {
   "$schema": "https://entrepta.dev/schema.json",
   "theme": "entrepta",
+  "themes": "single",
   "tsx": true,
   "rsc": true,
   "tailwind": {
@@ -262,47 +330,86 @@ registry component is not installable until it is listed there with its `files`,
 - `styles/globals.css`, reset, tokens, fonts, type utilities, light mode
 - `styles/themes/*.css`, the 6 presets
 
-### Primitives (8)
+### Primitives (12)
 
 | Component | Radix                           | Notes                                   |
 | --------- | ------------------------------- | --------------------------------------- |
 | Button    | `@radix-ui/react-slot`          | 4 variants, 3 sizes, loading state       |
 | Badge     | no                              | solid/soft/outline across 6 colors       |
 | Input     | no                              | text, search, command (⌘K)               |
-| Card      | no                              | default/featured/terminal/data           |
+| Card      | no                              | default/featured/terminal/data, sm/md/xl |
 | Dialog    | `@radix-ui/react-dialog`        | base for modals                          |
 | Dropdown  | `@radix-ui/react-dropdown-menu` | context menus, theme switcher            |
 | Tooltip   | `@radix-ui/react-tooltip`       | hover info, keyboard hints               |
-| Tabs      | `@radix-ui/react-tabs`          | editor style file tabs                   |
+| Tabs      | `@radix-ui/react-tabs`          | in place (Tabs) or routes (TabNav), travelling underline, × on the active tab |
+| Switch    | no                              | native checkbox with `role="switch"`     |
+| Textarea  | no                              | sans prose, mono placeholder, error state |
+| Field     | no                              | label, control, error or hint, wires `aria-describedby` and `aria-invalid` |
+| FilterPill | no                             | `aria-pressed` toggle, pairs with `use-url-filter` |
 
-### Layout (4)
+### Layout (7)
 
 | Component     | Notes                                            |
 | ------------- | ------------------------------------------------ |
-| StatusBar     | fixed bottom bar in the brand color              |
+| StatusBar     | bottom bar in the brand color, `fixed` or `static` |
 | TopNav        | top nav with logo, breadcrumb and menu           |
 | ThemeSwitcher | floating preset and dark/light button, uses `use-theme` |
 | ModeToggle    | dark/light only, inline or floating, uses `use-mode` |
+| Titlebar      | 40px bar: window dots, a TabNav, meta on the right |
+| Sidebar       | 56px icon rail, a ◆ travels to the active item, `linkComponent` for routers |
+| PageOutline   | sticky scrollspy outline from 1100px, `scrollContainer` prop |
 
-### Content (1)
+### Content (4)
 
-| Component | Notes                                     |
-| --------- | ----------------------------------------- |
-| CodeBlock | code with filename header and copy button |
+| Component | Notes                                                    |
+| --------- | -------------------------------------------------------- |
+| CodeBlock | code with filename header, copy button, visible failure  |
+| Diamond   | the `◆` brand mark before a label, always `aria-hidden`  |
+| SectHead  | the `$ command` rule that opens a section                |
+| doc-parts | DocLabel, Section, DisplayH2, Prose, Em, Strong          |
 
-### Feedback (3)
+Card, Dialog and ThemeSwitcher import Diamond from `content/`. The CLI rewrites
+an import between categories (`../content/diamond`) to a sibling (`./diamond`),
+and `registryDeps` makes sure the file is copied. A manifest test checks that
+every such import is covered.
+
+### Feedback (5)
 
 | Component      | Lib     | Notes                              |
 | -------------- | ------- | ---------------------------------- |
 | Toast          | `sonner`| success/warning/error/info          |
 | Skeleton       | no      | shimmer, respects reduced motion    |
 | CommandPalette | `cmdk`  | ⌘K, search, groups, shortcuts       |
+| ChromeMessage  | no      | 404 and error screens, server safe  |
+| PageLoading    | no      | CSS only, extra lines only on a long wait |
 
-### Hooks (3)
+### Motion (5)
+
+`motion` is a dependency of the four items that animate through JS. The
+rest of the system does not need it, and ArrowLink is CSS only.
+
+| Component     | Notes                                                          |
+| ------------- | -------------------------------------------------------------- |
+| Reveal        | rise and fade in once on screen, `useReveal` for motion elements |
+| TypeIn        | text assembling piece by piece, full sentence always in the DOM |
+| RollingNumber | odometer digits, `useRollOnHover` spends the entrance delay once |
+| Spotlight     | brand glow trailing the cursor on a spring, moved by transform  |
+| ArrowLink     | arrow that travels, brand rule that wipes in, `asChild` for routers |
+
+Rules they follow: `whileInView` with `once`, never `animate`; every one calls
+`useReducedMotion()`; the real text is always in the DOM (`sr-only` copies, not
+`aria-label` on a span); nothing in the registry imports `next/*`. The CSS side
+(`.type-line`, `.type-fade`, `.type-caret`, `.type-late`, the load dots) lives
+in `globals.css` for what must move before hydration. `lib/motion.ts` holds
+`EASE_OUT`, `revealViewport` and `STAGGER_LIMIT`, and the CLI copies it to the
+`lib` alias.
+
+### Hooks (4)
 
 - `use-theme`, controls preset and dark/light, built on `use-mode`
 - `use-mode`, controls dark/light only
 - `use-command-palette`, controls open state and command registration
+- `use-url-filter`, a filter kept in the URL query, prerender safe
 
 ---
 
@@ -377,7 +484,31 @@ pnpm dlx file:"$(pwd)/../entrepta/packages/cli" init
 ## 10. Decisions made
 
 - Stack: Next.js 15, React 19, Tailwind v4, Radix UI
-- Tokens: plain CSS variables, not Tailwind `@theme`
+- Tokens: plain CSS variables. The type scale is the exception: a
+  `@theme static` block, so it generates `text-*` utilities and still emits
+  every variable on `:root` for plain CSS. `globals.css` already imports
+  `tailwindcss`, so this costs no compatibility. The old `.t-*` classes are gone
+- Font sizes come only from the ten scale steps, enforced by a test
+- `init` copies `lib/utils.ts` from the registry, so `cn` has one source
+- Brand ink: `--fg-on-brand` for text on a brand fill and `--fg-brand-text` for
+  brand-colored text, set per theme and checked by a contrast test. `--fg-brand`
+  stays for fills, borders, glyphs and large text
+- `init --themes=all` writes the six themes under `data-theme`, so the
+  ThemeSwitcher works in user projects. `init --theme=x` alone stays
+  non-interactive and writes one theme
+- Icons: Phosphor, not lucide. A source test fails if a file without
+  `"use client"` imports the Phosphor root, or if `lucide-react` comes back
+- Registry files may import across categories; the CLI flattens them into one
+  folder and rewrites the paths
+- The registry typechecks with `moduleResolution: "Bundler"`, like the projects
+  that consume it. NodeNext cannot read Phosphor's type declarations
+- Motion: `motion` is a dependency only of the items that use it. Principle 6
+  became "motion with a job", with a reduced-motion path for everything
+- The registry imports nothing from `next/*`; routes stay in the user's project.
+  A source test enforces it
+- Routes stay in the user's project. Single-link components take `asChild`,
+  lists of links take `linkComponent`, and which item is current is an `active`
+  prop. doc-parts carries no entrance, so it does not pull in `motion`
 - Distribution: copy-paste through the CLI, not an npm component package
 - Themes: 6 fixed presets, no theme generator
 - Lint: Biome, not ESLint plus Prettier

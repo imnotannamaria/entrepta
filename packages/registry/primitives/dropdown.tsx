@@ -1,7 +1,7 @@
 "use client";
 
+import { CaretRightIcon, CheckIcon, CircleIcon } from "@phosphor-icons/react";
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
-import { Check, ChevronRight, Circle } from "lucide-react";
 import * as React from "react";
 import { cn } from "../lib/utils";
 
@@ -28,7 +28,7 @@ const dropdownContentClass = cn(
 const dropdownItemClass = cn(
   "relative flex cursor-default select-none items-center gap-3",
   "rounded-[var(--radius-sm)] px-3 py-2",
-  "font-mono text-[13px] text-[var(--fg-secondary)]",
+  "font-mono text-mono-md text-[var(--fg-secondary)]",
   "outline-none transition-colors duration-150",
   "focus:bg-[var(--bg-surface-elevated)] focus:text-[var(--fg-primary)] focus:shadow-[inset_2px_0_0_var(--fg-brand)]",
   "data-[state=open]:bg-[var(--bg-surface-elevated)]",
@@ -103,11 +103,7 @@ const DropdownMenuCheckboxItem = React.forwardRef<
   >
     <span className="absolute left-2.5 flex h-3.5 w-3.5 items-center justify-center">
       <DropdownMenuPrimitive.ItemIndicator>
-        <Check
-          aria-hidden
-          style={{ width: 12, height: 12, strokeWidth: 2 }}
-          className="text-[var(--fg-brand)]"
-        />
+        <CheckIcon aria-hidden size={12} className="text-[var(--fg-brand)]" />
       </DropdownMenuPrimitive.ItemIndicator>
     </span>
     {children}
@@ -126,11 +122,7 @@ const DropdownMenuRadioItem = React.forwardRef<
   >
     <span className="absolute left-2.5 flex h-3.5 w-3.5 items-center justify-center">
       <DropdownMenuPrimitive.ItemIndicator>
-        <Circle
-          aria-hidden
-          style={{ width: 7, height: 7 }}
-          className="fill-[var(--fg-brand)] stroke-[var(--fg-brand)]"
-        />
+        <CircleIcon aria-hidden size={7} weight="fill" className="text-[var(--fg-brand)]" />
       </DropdownMenuPrimitive.ItemIndicator>
     </span>
     {children}
@@ -148,11 +140,7 @@ const DropdownMenuSubTrigger = React.forwardRef<
     {...props}
   >
     {children}
-    <ChevronRight
-      aria-hidden
-      className="ml-auto text-[var(--fg-muted)]"
-      style={{ width: 14, height: 14, strokeWidth: 1.5 }}
-    />
+    <CaretRightIcon aria-hidden className="ml-auto text-[var(--fg-muted)]" size={14} />
   </DropdownMenuPrimitive.SubTrigger>
 ));
 DropdownMenuSubTrigger.displayName = DropdownMenuPrimitive.SubTrigger.displayName;
@@ -165,7 +153,7 @@ const DropdownMenuLabel = React.forwardRef<
     ref={ref}
     className={cn(
       "px-3 pt-3 pb-2",
-      "font-mono text-[10px] uppercase tracking-[0.08em] text-[var(--fg-muted)]",
+      "font-mono text-mono-xs uppercase tracking-[0.08em] text-[var(--fg-muted)]",
       inset && "pl-9",
       className
     )}
@@ -189,7 +177,7 @@ DropdownMenuSeparator.displayName = DropdownMenuPrimitive.Separator.displayName;
 const DropdownMenuShortcut = ({ className, ...props }: React.HTMLAttributes<HTMLSpanElement>) => (
   <span
     className={cn(
-      "ml-auto font-mono text-[11px] text-[var(--fg-muted)] tracking-[0.04em]",
+      "ml-auto font-mono text-mono-sm text-[var(--fg-muted)] tracking-[0.04em]",
       className
     )}
     {...props}

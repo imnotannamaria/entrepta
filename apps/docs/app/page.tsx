@@ -107,9 +107,12 @@ const COMPONENT_CATEGORIES = [
     count: "4 components",
     href: "/docs/components/status-bar",
     preview: (
-      <div className="flex bg-[var(--bg-canvas)] border border-[var(--border-subtle)] rounded-[var(--radius-sm)] overflow-hidden font-mono text-[11px]">
+      <div className="flex bg-[var(--bg-canvas)] border border-[var(--border-subtle)] rounded-[var(--radius-sm)] overflow-hidden font-mono text-mono-sm">
         <span className="inline-flex items-center gap-1.5 px-3 py-1.5 text-[var(--fg-primary)] bg-[var(--bg-surface)] border-r border-[var(--border-subtle)]">
-          <span className="text-[var(--fg-brand)] text-[9px] leading-none">◆</span> home.tsx
+          <span className="text-[var(--fg-brand)] leading-none" style={{ fontSize: 9 }}>
+            ◆
+          </span>{" "}
+          home.tsx
         </span>
         <span className="px-3 py-1.5 text-[var(--fg-muted)] border-r border-[var(--border-subtle)]">
           about.md
@@ -126,9 +129,9 @@ const COMPONENT_CATEGORIES = [
     count: "3 components",
     href: "/docs/components/toast",
     preview: (
-      <div className="px-3 py-2 bg-[var(--bg-surface)] border border-[var(--border-subtle)] border-l-2 border-l-[var(--status-success)] rounded-[var(--radius-md)] font-mono text-[11px] shadow-[0_4px_12px_rgba(0,0,0,0.3)]">
-        <div className="text-[var(--fg-primary)] text-[12px] mb-0.5">Build passed</div>
-        <div className="font-sans text-[11px] text-[var(--fg-secondary)]">
+      <div className="px-3 py-2 bg-[var(--bg-surface)] border border-[var(--border-subtle)] border-l-2 border-l-[var(--status-success)] rounded-[var(--radius-md)] font-mono text-mono-sm shadow-[0_4px_12px_rgba(0,0,0,0.3)]">
+        <div className="text-[var(--fg-primary)] text-mono-sm mb-0.5">Build passed</div>
+        <div className="font-sans text-mono-sm text-[var(--fg-secondary)]">
           12 components compiled in 1.4s
         </div>
       </div>
@@ -142,12 +145,12 @@ const COMPONENT_CATEGORIES = [
     count: "1 component",
     href: "/docs/components/code-block",
     preview: (
-      <div className="rounded-[var(--radius-sm)] border border-[var(--border-subtle)] bg-[var(--bg-surface)] overflow-hidden font-mono text-[11px]">
+      <div className="rounded-[var(--radius-sm)] border border-[var(--border-subtle)] bg-[var(--bg-surface)] overflow-hidden font-mono text-mono-sm">
         <div className="flex items-center gap-2 px-3 py-1.5 bg-black/30 border-b border-[var(--border-subtle)]">
           <span className="w-2 h-2 rounded-full bg-[var(--status-error)] opacity-60" />
           <span className="w-2 h-2 rounded-full bg-[var(--status-warning)] opacity-60" />
           <span className="w-2 h-2 rounded-full bg-[var(--status-success)] opacity-60" />
-          <span className="ml-auto text-[10px] uppercase tracking-[0.08em] text-[var(--fg-brand)]">
+          <span className="ml-auto text-mono-xs uppercase tracking-[0.08em] text-[var(--fg-brand-text)]">
             bash
           </span>
         </div>
@@ -192,9 +195,9 @@ const COMPONENT_CATEGORIES = [
     count: "2 commands",
     href: "/docs/cli",
     preview: (
-      <div className="px-3 py-2 bg-[var(--bg-canvas)] border border-[var(--border-subtle)] rounded-[var(--radius-sm)] font-mono text-[11px] text-[var(--fg-secondary)]">
+      <div className="px-3 py-2 bg-[var(--bg-canvas)] border border-[var(--border-subtle)] rounded-[var(--radius-sm)] font-mono text-mono-sm text-[var(--fg-secondary)]">
         <span className="text-[var(--fg-muted)]">$</span> npx{" "}
-        <span className="text-[var(--fg-brand)]">@entrepta/cli@latest</span> add button
+        <span className="text-[var(--fg-brand-text)]">@entrepta/cli@latest</span> add button
       </div>
     ),
   },
@@ -233,9 +236,9 @@ export default function Home() {
         {/* ── HERO ── */}
         <section className="max-w-[1280px] mx-auto px-6 sm:px-12 pt-20 sm:pt-28 pb-16 grid grid-cols-1 lg:grid-cols-[1fr_440px] gap-16 items-start">
           <div>
-            <div className="font-mono text-[11px] text-[var(--fg-muted)] mb-6 inline-flex items-center gap-3 uppercase tracking-[0.06em]">
+            <div className="font-mono text-mono-sm text-[var(--fg-muted)] mb-6 inline-flex items-center gap-3 uppercase tracking-[0.06em]">
               <span>design system</span>
-              <span className="border border-[var(--border-subtle)] rounded-[3px] px-1.5 py-0.5 text-[var(--fg-brand)] normal-case tracking-normal">
+              <span className="border border-[var(--border-subtle)] rounded-[3px] px-1.5 py-0.5 text-[var(--fg-brand-text)] normal-case tracking-normal">
                 v1.0
               </span>
               <span>by anna maria</span>
@@ -246,7 +249,7 @@ export default function Home() {
               posed as an <span className="text-[var(--fg-muted)]">IDE.</span>
             </h1>
 
-            <p className="font-sans text-base sm:text-lg text-[var(--fg-secondary)] leading-relaxed max-w-xl mb-10">
+            <p className="font-sans text-body-lg sm:text-heading-md text-[var(--fg-secondary)] leading-relaxed max-w-xl mb-10">
               <strong className="text-[var(--fg-primary)] font-medium">entrepta</strong> is a
               dark-first component library you copy into your repo. Foundations, primitives, layout
               and feedback components. Built around editor metaphors: tabs, command palette, status
@@ -273,10 +276,10 @@ export default function Home() {
                   key={s.dt}
                   className="border border-[var(--border-subtle)] rounded-[var(--radius-sm)] p-3"
                 >
-                  <dt className="font-mono text-[10px] text-[var(--fg-muted)] uppercase tracking-[0.08em] mb-1">
+                  <dt className="font-mono text-mono-xs text-[var(--fg-muted)] uppercase tracking-[0.08em] mb-1">
                     {s.dt}
                   </dt>
-                  <dd className="font-mono text-sm text-[var(--fg-primary)]">{s.dd}</dd>
+                  <dd className="font-mono text-mono-md text-[var(--fg-primary)]">{s.dd}</dd>
                 </div>
               ))}
             </dl>
@@ -291,7 +294,7 @@ export default function Home() {
           className="max-w-[1280px] mx-auto px-6 sm:px-12 py-20 border-t border-[var(--border-subtle)]"
         >
           <div className="mb-10">
-            <div className="font-mono text-[11px] text-[var(--fg-brand)] uppercase tracking-[0.08em] mb-3">
+            <div className="font-mono text-mono-sm text-[var(--fg-brand-text)] uppercase tracking-[0.08em] mb-3">
               · getting started
             </div>
             <h2 className="font-serif text-[clamp(32px,4vw,56px)] font-normal leading-tight tracking-tight text-[var(--fg-primary)]">
@@ -299,7 +302,7 @@ export default function Home() {
               <br />
               <span className="text-[var(--fg-muted)]">You own the code.</span>
             </h2>
-            <p className="mt-4 font-sans text-base text-[var(--fg-secondary)] max-w-lg leading-relaxed">
+            <p className="mt-4 font-sans text-body-lg text-[var(--fg-secondary)] max-w-lg leading-relaxed">
               entrepta ships as CSS tokens + copy-paste components. No runtime SDK, no telemetry in
               the components you copy. Drop it into any Next.js project and start shipping.
             </p>
@@ -325,7 +328,7 @@ export default function Home() {
                 ].map((r, i) => (
                   <div
                     key={r.k}
-                    className={`flex items-center justify-between font-mono text-[12px] ${
+                    className={`flex items-center justify-between font-mono text-mono-sm ${
                       i > 0 ? "border-t border-[var(--border-subtle)] pt-3" : ""
                     }`}
                   >
@@ -338,7 +341,7 @@ export default function Home() {
                 <CardComment>mit · open source</CardComment>
                 <Link
                   href="/docs"
-                  className="text-[var(--fg-brand)] hover:opacity-80 transition-opacity"
+                  className="text-[var(--fg-brand-text)] hover:opacity-80 transition-opacity"
                 >
                   read the docs ↗
                 </Link>
@@ -358,7 +361,7 @@ export default function Home() {
               <br />
               One product personality.
             </h2>
-            <span className="font-mono text-[11px] text-[var(--fg-muted)] hidden sm:inline-block mt-2 uppercase tracking-[0.08em]">
+            <span className="font-mono text-mono-sm text-[var(--fg-muted)] hidden sm:inline-block mt-2 uppercase tracking-[0.08em]">
               section 1.2 · brief
             </span>
           </div>
@@ -369,7 +372,7 @@ export default function Home() {
                 <CardHeader>
                   <CardLabel>principle {p.num}</CardLabel>
                 </CardHeader>
-                <CardTitle className="text-[20px]">{p.title}</CardTitle>
+                <CardTitle className="text-heading-md">{p.title}</CardTitle>
                 <CardDescription>{p.desc}</CardDescription>
                 <CardFooter>
                   <CardComment>{p.tag}</CardComment>
@@ -386,7 +389,7 @@ export default function Home() {
         >
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-12 items-start">
             <div>
-              <div className="font-mono text-[11px] text-[var(--fg-brand)] uppercase tracking-[0.08em] mb-3">
+              <div className="font-mono text-mono-sm text-[var(--fg-brand-text)] uppercase tracking-[0.08em] mb-3">
                 · a11y
               </div>
               <h2 className="font-serif text-[clamp(32px,4vw,56px)] font-normal leading-tight tracking-tight text-[var(--fg-primary)]">
@@ -394,7 +397,7 @@ export default function Home() {
                 <br />
                 <span className="text-[var(--fg-muted)]">default.</span>
               </h2>
-              <p className="mt-4 font-sans text-base text-[var(--fg-secondary)] max-w-md leading-relaxed">
+              <p className="mt-4 font-sans text-body-lg text-[var(--fg-secondary)] max-w-md leading-relaxed">
                 Built on Radix primitives so keyboard navigation, focus management, and ARIA
                 semantics come for free. The docs site adds the rest: skip links, live regions, and
                 motion that respects user preferences.
@@ -437,10 +440,10 @@ export default function Home() {
               ].map((row) => (
                 <li
                   key={row.k}
-                  className="grid grid-cols-[140px_1fr] gap-4 items-baseline py-3 border-b border-[var(--border-subtle)] font-mono text-[12px]"
+                  className="grid grid-cols-[140px_1fr] gap-4 items-baseline py-3 border-b border-[var(--border-subtle)] font-mono text-mono-sm"
                 >
-                  <span className="text-[var(--fg-brand)] inline-flex items-center gap-1.5">
-                    <span aria-hidden className="text-[10px] leading-none">
+                  <span className="text-[var(--fg-brand-text)] inline-flex items-center gap-1.5">
+                    <span aria-hidden className="text-mono-xs leading-none text-[var(--fg-brand)]">
                       ◆
                     </span>
                     {row.k}
@@ -459,7 +462,7 @@ export default function Home() {
         >
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-12 items-start">
             <div>
-              <div className="font-mono text-[11px] text-[var(--fg-brand)] uppercase tracking-[0.08em] mb-3">
+              <div className="font-mono text-mono-sm text-[var(--fg-brand-text)] uppercase tracking-[0.08em] mb-3">
                 · security
               </div>
               <h2 className="font-serif text-[clamp(32px,4vw,56px)] font-normal leading-tight tracking-tight text-[var(--fg-primary)]">
@@ -467,7 +470,7 @@ export default function Home() {
                 <br />
                 <span className="text-[var(--fg-muted)]">design.</span>
               </h2>
-              <p className="mt-4 font-sans text-base text-[var(--fg-secondary)] max-w-md leading-relaxed">
+              <p className="mt-4 font-sans text-body-lg text-[var(--fg-secondary)] max-w-md leading-relaxed">
                 entrepta ships as copy-paste source — no runtime SDK, no telemetry, no remote code.
                 The CLI guards against path traversal via aliases, the docs site sets a strict CSP
                 and the usual hardening headers, and dependencies stay tight and audited.
@@ -506,10 +509,10 @@ export default function Home() {
               ].map((row) => (
                 <li
                   key={row.k}
-                  className="grid grid-cols-[140px_1fr] gap-4 items-baseline py-3 border-b border-[var(--border-subtle)] font-mono text-[12px]"
+                  className="grid grid-cols-[140px_1fr] gap-4 items-baseline py-3 border-b border-[var(--border-subtle)] font-mono text-mono-sm"
                 >
-                  <span className="text-[var(--fg-brand)] inline-flex items-center gap-1.5">
-                    <span aria-hidden className="text-[10px] leading-none">
+                  <span className="text-[var(--fg-brand-text)] inline-flex items-center gap-1.5">
+                    <span aria-hidden className="text-mono-xs leading-none text-[var(--fg-brand)]">
                       ◆
                     </span>
                     {row.k}
@@ -543,7 +546,7 @@ export default function Home() {
                     <CardLabel>{cat.label}</CardLabel>
                     <CardMeta>{cat.num}</CardMeta>
                   </CardHeader>
-                  <CardTitle className="text-[20px]">{cat.name}</CardTitle>
+                  <CardTitle className="text-heading-md">{cat.name}</CardTitle>
                   <CardDescription>{cat.desc}</CardDescription>
                   <CardContent>{cat.preview}</CardContent>
                   <CardFooter>
@@ -565,15 +568,15 @@ export default function Home() {
             className="p-12 sm:p-16 text-center bg-[radial-gradient(ellipse_at_top,var(--bg-surface-brand),transparent_60%)]"
           >
             <div className="flex flex-col items-center gap-6">
-              <div className="font-mono text-[11px] uppercase tracking-[0.08em] text-[var(--fg-brand)]">
+              <div className="font-mono text-mono-sm uppercase tracking-[0.08em] text-[var(--fg-brand-text)]">
                 · ready to ship
               </div>
               <h2 className="font-serif text-[clamp(36px,5vw,72px)] font-normal leading-none tracking-tight text-[var(--fg-primary)]">
                 Start <em className="italic text-[var(--fg-brand)]">building.</em>
               </h2>
-              <p className="font-sans text-base text-[var(--fg-secondary)] max-w-md leading-relaxed">
+              <p className="font-sans text-body-lg text-[var(--fg-secondary)] max-w-md leading-relaxed">
                 Every token, every component, every state. Laid out in the docs. Press{" "}
-                <kbd className="font-mono text-xs border border-[var(--border-strong)] rounded-[3px] px-1.5 py-0.5 text-[var(--fg-muted)]">
+                <kbd className="font-mono text-mono-sm border border-[var(--border-strong)] rounded-[3px] px-1.5 py-0.5 text-[var(--fg-muted)]">
                   ⌘K
                 </kbd>{" "}
                 to jump anywhere.

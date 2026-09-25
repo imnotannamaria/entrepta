@@ -1,4 +1,5 @@
 import "@testing-library/jest-dom";
+import { installIntersectionObserver, installMatchMedia } from "./media";
 
 // cmdk and some Radix components use ResizeObserver which jsdom doesn't implement
 global.ResizeObserver = class ResizeObserver {
@@ -37,3 +38,8 @@ Object.defineProperty(window, "localStorage", {
   configurable: true,
   value: storageShim,
 });
+
+// Motion reads prefers-reduced-motion through matchMedia and plays whileInView
+// through IntersectionObserver; jsdom has neither.
+installMatchMedia();
+installIntersectionObserver();

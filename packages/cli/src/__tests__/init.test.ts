@@ -56,6 +56,13 @@ const mockInstallDeps = vi.mocked(installDeps);
 
 const GLOBALS_CSS = "/* globals */";
 const THEME_CSS = "/* theme */";
+const UTILS_TS = "/* registry cn */";
+
+const themeStub = (id: string) =>
+  `${THEME_CSS}\n:root {\n  --fg-brand: ${id};\n}\n\n:root[data-mode="light"] {\n  --fg-brand: ${id}-light;\n}\n`;
+
+const written = (suffix: string) =>
+  String(mockWriteFile.mock.calls.find(([p]) => String(p).endsWith(suffix))?.[1]);
 
 let exitSpy: { mockRestore: () => void };
 
@@ -66,7 +73,9 @@ beforeEach(() => {
   // Registry CSS files
   mockReadFile.mockImplementation(async (p) => {
     if (String(p).endsWith("globals.css")) return GLOBALS_CSS as never;
-    if (String(p).includes("themes/")) return THEME_CSS as never;
+    const themeFile = /themes\/([a-z]+)\.css$/.exec(String(p));
+    if (themeFile) return themeStub(themeFile[1]) as never;
+    if (String(p).endsWith("lib/utils.ts")) return UTILS_TS as never;
     throw new Error(`unexpected readFile: ${p}`);
   });
   mockWriteFile.mockResolvedValue(undefined as never);
@@ -96,7 +105,9 @@ describe("init", () => {
     });
 
     it("shows select prompt when no --theme flag provided", async () => {
-      mockPrompts.mockResolvedValueOnce({ theme: "julia" } as never);
+      mockPrompts
+        .mockResolvedValueOnce({ themes: "single" } as never)
+        .mockResolvedValueOnce({ theme: "julia" } as never);
       await init({ theme: undefined, overwrite: false });
       expect(mockPrompts).toHaveBeenCalledWith(
         expect.objectContaining({ type: "select", name: "theme" })
@@ -104,7 +115,9 @@ describe("init", () => {
     });
 
     it("exits when prompt is dismissed without selection", async () => {
-      mockPrompts.mockResolvedValueOnce({ theme: undefined } as never);
+      mockPrompts
+        .mockResolvedValueOnce({ themes: "single" } as never)
+        .mockResolvedValueOnce({ theme: undefined } as never);
       await expect(init({ theme: undefined, overwrite: false })).rejects.toThrow("exit:1");
       expect(log.error).toHaveBeenCalled();
     });
@@ -113,6 +126,62 @@ describe("init", () => {
       await expect(init({ theme: "invalid-theme", overwrite: false })).rejects.toThrow("exit:1");
       expect(log.error).toHaveBeenCalledWith(expect.stringContaining("Invalid theme"));
       expect(mockPrompts).not.toHaveBeenCalled();
+    });
+  });
+
+  describe("themes mode", () => {
+    it("stays non-interactive with --theme alone and writes one theme", async () => {
+      await init({ theme: "ivy", overwrite: false });
+      expect(mockPrompts).not.toHaveBeenCalled();
+      expect(mockWriteConfig).toHaveBeenCalledWith(
+        expect.any(String),
+        expect.objectContaining({ theme: "ivy", themes: "single" })
+      );
+      const css = written("globals.css");
+      expect(css).toContain(":root {\n  --fg-brand: ivy;");
+      expect(css).not.toContain("data-theme");
+    });
+
+    it("asks how themes should work when no flag is given", async () => {
+      mockPrompts
+        .mockResolvedValueOnce({ themes: "all" } as never)
+        .mockResolvedValueOnce({ theme: "julia" } as never);
+      await init({ overwrite: false });
+      expect(mockPrompts).toHaveBeenNthCalledWith(
+        1,
+        expect.objectContaining({ type: "select", name: "themes" })
+      );
+      expect(mockPrompts).toHaveBeenNthCalledWith(
+        2,
+        expect.objectContaining({ name: "theme", message: "Choose the default theme:" })
+      );
+    });
+
+    it("writes all six themes under data-theme with --themes=all", async () => {
+      await init({ theme: "bosco", themes: "all", overwrite: false });
+      expect(mockWriteConfig).toHaveBeenCalledWith(
+        expect.any(String),
+        expect.objectContaining({ theme: "bosco", themes: "all" })
+      );
+      const css = written("globals.css");
+      expect(css).toContain(GLOBALS_CSS);
+      for (const id of ["entrepta", "blossom", "marmalade", "julia", "ivy", "bosco"]) {
+        expect(css).toContain(`:root[data-theme="${id}"] {\n  --fg-brand: ${id};`);
+        expect(css).toContain(
+          `:root[data-theme="${id}"][data-mode="light"] {\n  --fg-brand: ${id}-light;`
+        );
+      }
+      // the default keeps bare :root, and comes before the other five
+      const defaultAt = css.indexOf(':root,\n:root[data-theme="bosco"] {');
+      expect(defaultAt).toBeGreaterThan(-1);
+      expect(defaultAt).toBeLessThan(css.indexOf(':root[data-theme="entrepta"] {'));
+    });
+
+    it("exits with code 1 when --themes is not single or all", async () => {
+      await expect(init({ theme: "ivy", themes: "some", overwrite: false })).rejects.toThrow(
+        "exit:1"
+      );
+      expect(log.error).toHaveBeenCalledWith(expect.stringContaining("--themes"));
     });
   });
 
@@ -126,12 +195,12 @@ describe("init", () => {
       expect(content).toContain(THEME_CSS);
     });
 
-    it("writes lib/utils.ts with cn helper", async () => {
+    it("copies lib/utils.ts from the registry", async () => {
       await init({ theme: "entrepta", overwrite: false });
+      expect(mockReadFile).toHaveBeenCalledWith("/fake/registry/lib/utils.ts", "utf-8");
       const utilsCall = mockWriteFile.mock.calls.find(([p]) => String(p).endsWith("utils.ts"));
       expect(utilsCall).toBeDefined();
-      expect(String(utilsCall?.[1])).toContain("twMerge");
-      expect(String(utilsCall?.[1])).toContain("clsx");
+      expect(utilsCall?.[1]).toBe(UTILS_TS);
     });
 
     it("creates entrepta.json config with correct structure", async () => {

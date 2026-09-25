@@ -27,10 +27,13 @@ export async function add(components: string[], options: { overwrite: boolean })
       type: "multiselect",
       name: "picks",
       message: "Select components to add:",
-      choices: COMPONENTS.map((c) => ({
-        title: `${c.name}  — ${c.description}`,
-        value: c.name,
-      })),
+      // hooks and lib files arrive as dependencies of the components that need them
+      choices: COMPONENTS.filter((c) => c.category !== "hooks" && c.category !== "lib").map(
+        (c) => ({
+          title: `${c.name}  ${c.description}`,
+          value: c.name,
+        })
+      ),
     });
     if (!picks || picks.length === 0) {
       log.warn("No components selected.");
@@ -43,7 +46,7 @@ export async function add(components: string[], options: { overwrite: boolean })
   const unknown = selected.filter((name) => !known.has(name));
   if (unknown.length > 0) {
     log.error(`Unknown component(s): ${unknown.join(", ")}`);
-    const available = COMPONENTS.filter((c) => c.category !== "hooks")
+    const available = COMPONENTS.filter((c) => c.category !== "hooks" && c.category !== "lib")
       .map((c) => c.name)
       .join(", ");
     log.info(`Available: ${available}`);
@@ -72,8 +75,12 @@ export async function add(components: string[], options: { overwrite: boolean })
 
     for (const file of component.files) {
       const src = path.join(registryRoot, file);
-      const isHook = component.category === "hooks";
-      const baseAlias = isHook ? (config.aliases.hooks ?? "@/hooks") : config.aliases.components;
+      const baseAlias =
+        component.category === "hooks"
+          ? (config.aliases.hooks ?? "@/hooks")
+          : component.category === "lib"
+            ? (config.aliases.lib ?? "@/lib")
+            : config.aliases.components;
       const destRelative = path.join(baseAlias.replace("@/", ""), path.basename(file));
       const dest = path.join(cwd, destRelative);
 
@@ -104,7 +111,12 @@ export async function add(components: string[], options: { overwrite: boolean })
       }
 
       let content = await fs.readFile(src, "utf-8");
-      content = rewriteImports(content, config.aliases.utils, config.aliases.hooks);
+      content = rewriteImports(
+        content,
+        config.aliases.utils,
+        config.aliases.hooks,
+        config.aliases.lib ?? "@/lib"
+      );
       await fs.writeFile(dest, content, "utf-8");
       log.success(`Copied ${destRelative}`);
     }
@@ -153,7 +165,18 @@ export function resolveComponents(names: string[]): string[] {
   return [...resolved];
 }
 
-function rewriteImports(content: string, utilsAlias: string, hooksAlias: string): string {
+/**
+ * Registry files import across folders (`../lib/utils`, `../hooks/use-mode`,
+ * `../content/diamond`). In a user project every component lands in one
+ * folder, so those paths are rewritten to the configured aliases, and imports
+ * between component categories become siblings.
+ */
+export function rewriteImports(
+  content: string,
+  utilsAlias: string,
+  hooksAlias: string,
+  libAlias = "@/lib"
+): string {
   // Reject aliases that contain string-breaking characters. We're about to
   // splice them into string literals in source code we're writing to disk;
   // quotes / backslashes / newlines would let a tampered config inject
@@ -161,6 +184,7 @@ function rewriteImports(content: string, utilsAlias: string, hooksAlias: string)
   for (const [name, value] of [
     ["utils", utilsAlias],
     ["hooks", hooksAlias],
+    ["lib", libAlias],
   ] as const) {
     if (/["'\\\n\r`]/.test(value)) {
       throw new Error(
@@ -172,11 +196,20 @@ function rewriteImports(content: string, utilsAlias: string, hooksAlias: string)
   // replacement strings — escape it so the alias is taken literally.
   const safeUtils = utilsAlias.replace(/\$/g, "$$$$");
   const safeHooks = hooksAlias.replace(/\$/g, "$$$$");
+  const safeLib = libAlias.replace(/\$/g, "$$$$");
   return content
     .replace(/from\s+["'](\.\.[/\\])*lib[/\\]utils["']/g, `from "${safeUtils}"`)
     .replace(
+      /from\s+["']\.\.[/\\]lib[/\\]([A-Za-z0-9_-]+)["']/g,
+      (_match, name: string) => `from "${safeLib}/${name.replace(/\$/g, "$$$$")}"`
+    )
+    .replace(
       /from\s+["']\.\.[/\\]hooks[/\\]([A-Za-z0-9_-]+)["']/g,
       (_match, name: string) => `from "${safeHooks}/${name.replace(/\$/g, "$$$$")}"`
+    )
+    .replace(
+      /from\s+["']\.\.[/\\](?:primitives|layout|content|feedback|motion)[/\\]([A-Za-z0-9_-]+)["']/g,
+      (_match, name: string) => `from "./${name}"`
     );
 }
 

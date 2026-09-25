@@ -82,13 +82,25 @@ describe("CodeBlock", () => {
     await waitFor(() => expect(button).toHaveAttribute("data-state", "idle"), { timeout: 500 });
   });
 
-  it("does not throw when navigator.clipboard is unavailable", async () => {
+  it("shows a failed state when navigator.clipboard is unavailable", async () => {
     Object.defineProperty(navigator, "clipboard", { configurable: true, value: undefined });
     render(<CodeBlock code={SAMPLE} />);
     const button = screen.getByRole("button", { name: /copy code/i });
     expect(() => fireEvent.click(button)).not.toThrow();
-    // Still flips to copied state since we don't gate on a working clipboard
-    await waitFor(() => expect(button).toHaveAttribute("data-state", "copied"));
+    await waitFor(() => expect(button).toHaveAttribute("data-state", "error"));
+    expect(button).toHaveAccessibleName("Copy failed");
+    expect(button).toHaveTextContent("copy failed");
+  });
+
+  it("shows a failed state when the clipboard rejects the write", async () => {
+    Object.defineProperty(navigator, "clipboard", {
+      configurable: true,
+      value: { writeText: vi.fn(async () => Promise.reject(new Error("denied"))) },
+    });
+    render(<CodeBlock code={SAMPLE} />);
+    const button = screen.getByRole("button", { name: /copy code/i });
+    fireEvent.click(button);
+    await waitFor(() => expect(button).toHaveAttribute("data-state", "error"));
   });
 
   it("renders the copy button by default but hides it when showCopy is false", () => {

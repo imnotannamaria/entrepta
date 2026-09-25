@@ -22,9 +22,10 @@ const COMMANDS = [
   {
     cmd: "npx @entrepta/cli@latest init",
     title: "init",
-    desc: "Bootstraps a project. Writes globals.css, lib/utils.ts, and entrepta.json. Prompts for a theme.",
+    desc: "Bootstraps a project. Writes globals.css, lib/utils.ts, and entrepta.json. Prompts for a theme, and for one fixed theme or all six.",
     flags: [
-      { flag: "--theme=<preset>", desc: "Skip the theme prompt" },
+      { flag: "--theme=<preset>", desc: "Skip the prompts. Writes one fixed theme" },
+      { flag: "--themes=all", desc: "Write all six themes, switchable with data-theme" },
       { flag: "--overwrite", desc: "Overwrite existing files without asking" },
     ],
   },
@@ -82,12 +83,12 @@ npx @entrepta/cli@latest add button`}
               <span className="text-[var(--fg-brand)]">$</span> npx @entrepta/cli@latest init
               <span className="text-[var(--fg-muted)]"> --theme=entrepta</span>
             </div>
-            <div className="text-[var(--fg-muted)] text-[11px] pl-3">→ wrote app/globals.css</div>
-            <div className="text-[var(--fg-muted)] text-[11px] pl-3">→ created entrepta.json</div>
+            <div className="text-[var(--fg-muted)] text-mono-sm pl-3">→ wrote app/globals.css</div>
+            <div className="text-[var(--fg-muted)] text-mono-sm pl-3">→ created entrepta.json</div>
             <div className="text-[var(--fg-secondary)] mt-2">
               <span className="text-[var(--fg-brand)]">$</span> npx @entrepta/cli@latest add button
             </div>
-            <div className="text-[var(--fg-muted)] text-[11px] pl-3">
+            <div className="text-[var(--fg-muted)] text-mono-sm pl-3">
               → copied components/entrepta/button.tsx
             </div>
           </div>
@@ -107,10 +108,10 @@ npx @entrepta/cli@latest add button`}
                     : `${c.flags.length} flag${c.flags.length > 1 ? "s" : ""}`}
                 </CardMeta>
               </CardHeader>
-              <CardTitle className="font-mono text-[15px] text-[var(--fg-primary)]">
+              <CardTitle className="font-mono text-mono-md text-[var(--fg-primary)]">
                 <span className="text-[var(--fg-brand)]">$</span> {c.cmd}
               </CardTitle>
-              <p className="font-sans text-[13px] leading-relaxed text-[var(--fg-secondary)] m-0">
+              <p className="font-sans text-body-md leading-relaxed text-[var(--fg-secondary)] m-0">
                 {c.desc}
               </p>
               {c.flags.length > 0 && (
@@ -118,9 +119,9 @@ npx @entrepta/cli@latest add button`}
                   {c.flags.map((f) => (
                     <div
                       key={f.flag}
-                      className="grid grid-cols-[220px_1fr] gap-3 items-center font-mono text-[12px]"
+                      className="grid grid-cols-[220px_1fr] gap-3 items-center font-mono text-mono-sm"
                     >
-                      <code className="text-[var(--fg-brand)]">{f.flag}</code>
+                      <code className="text-[var(--fg-brand-text)]">{f.flag}</code>
                       <span className="text-[var(--fg-muted)]">{f.desc}</span>
                     </div>
                   ))}

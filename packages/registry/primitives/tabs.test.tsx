@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "./tabs";
+import { TabNav, TabNavLink, Tabs, TabsContent, TabsList, TabsTrigger } from "./tabs";
 
 function TestTabs() {
   return (
@@ -64,21 +64,27 @@ describe("Tabs", () => {
     expect(onChange).toHaveBeenCalledWith("b");
   });
 
-  it("renders close affordance on tab when onClose is provided", () => {
+  it("shows a real close button on the active tab only", () => {
     render(
       <Tabs defaultValue="a">
         <TabsList>
           <TabsTrigger value="a" onClose={() => {}}>
             Closable
           </TabsTrigger>
+          <TabsTrigger value="b" onClose={() => {}}>
+            Other
+          </TabsTrigger>
         </TabsList>
         <TabsContent value="a">A</TabsContent>
       </Tabs>
     );
-    expect(screen.getByTitle("Close tab")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Close Closable" })).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Close Other" })).toBeNull();
+    // a sibling of the tab, not nested inside it
+    expect(screen.getByRole("tab", { name: /Closable/ }).querySelector("button")).toBeNull();
   });
 
-  it("invokes onClose when close affordance is clicked", () => {
+  it("invokes onClose when the close button is clicked", async () => {
     const onClose = vi.fn();
     render(
       <Tabs defaultValue="a">
@@ -90,8 +96,7 @@ describe("Tabs", () => {
         <TabsContent value="a">A</TabsContent>
       </Tabs>
     );
-    const closeEl = screen.getByTitle("Close tab");
-    closeEl.dispatchEvent(new MouseEvent("mousedown", { bubbles: true }));
+    await userEvent.click(screen.getByRole("button", { name: "Close Closable" }));
     expect(onClose).toHaveBeenCalled();
   });
 
@@ -99,5 +104,64 @@ describe("Tabs", () => {
     render(<TestTabs />);
     const activeTab = screen.getByRole("tab", { name: /Tab A/ });
     expect(activeTab.textContent).toContain("◆");
+  });
+
+  it("draws one brand underline, under the active tab, and moves it on switch", async () => {
+    const { container } = render(<TestTabs />);
+    expect(container.querySelectorAll("[data-tab-underline]")).toHaveLength(1);
+    await userEvent.click(screen.getByRole("tab", { name: /Tab B/ }));
+    const underline = container.querySelectorAll("[data-tab-underline]");
+    expect(underline).toHaveLength(1);
+    expect(underline[0].parentElement).toContainElement(screen.getByRole("tab", { name: /Tab B/ }));
+  });
+
+  it("keeps its own height instead of collapsing to the labels", () => {
+    const { container } = render(<TestTabs />);
+    expect(container.querySelector('[role="tablist"]')?.parentElement).toHaveClass("min-h-10");
+  });
+});
+
+describe("TabNav", () => {
+  it("is a named nav landmark of links, with the active one marked as the current page", () => {
+    render(
+      <TabNav aria-label="Pages">
+        <TabNavLink href="/" active>
+          home.tsx
+        </TabNavLink>
+        <TabNavLink href="/about">about.md</TabNavLink>
+      </TabNav>
+    );
+    expect(screen.getByRole("navigation", { name: "Pages" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /home\.tsx/ })).toHaveAttribute("aria-current", "page");
+    expect(screen.getByRole("link", { name: /about\.md/ })).not.toHaveAttribute("aria-current");
+  });
+
+  it("renders your router's link with asChild", () => {
+    render(
+      <TabNav aria-label="Pages">
+        <TabNavLink asChild active>
+          <a href="/blog" data-router-link>
+            blog/
+          </a>
+        </TabNavLink>
+      </TabNav>
+    );
+    const link = screen.getByRole("link", { name: /blog\// });
+    expect(link).toHaveAttribute("data-router-link");
+    expect(link).toHaveAttribute("aria-current", "page");
+    expect(link.textContent).toContain("◆");
+  });
+
+  it("closes the active route tab from a sibling button", async () => {
+    const onClose = vi.fn();
+    render(
+      <TabNav aria-label="Pages">
+        <TabNavLink href="/blog/post" active onClose={onClose}>
+          post.mdx
+        </TabNavLink>
+      </TabNav>
+    );
+    await userEvent.click(screen.getByRole("button", { name: "Close post.mdx" }));
+    expect(onClose).toHaveBeenCalled();
   });
 });

@@ -1,6 +1,17 @@
 "use client";
 
 import { CodeBlock } from "@entrepta/registry/content/code-block";
+import { Diamond } from "@entrepta/registry/content/diamond";
+import {
+  DisplayH2,
+  DocLabel,
+  Em,
+  Prose,
+  Section,
+  Strong,
+} from "@entrepta/registry/content/doc-parts";
+import { SectHead } from "@entrepta/registry/content/sect-head";
+import { ChromeMessage } from "@entrepta/registry/feedback/chrome-message";
 import {
   Command,
   CommandDialog,
@@ -12,8 +23,12 @@ import {
   CommandList,
   CommandSeparator,
 } from "@entrepta/registry/feedback/command-palette";
+import { PageLoading } from "@entrepta/registry/feedback/page-loading";
 import { Skeleton, SkeletonText } from "@entrepta/registry/feedback/skeleton";
-import { StatusBarItem, StatusBarSeparator } from "@entrepta/registry/layout/status-bar";
+import { PageOutline } from "@entrepta/registry/layout/page-outline";
+import { Sidebar } from "@entrepta/registry/layout/sidebar";
+import { StatusBar, StatusBarItem, StatusBarSeparator } from "@entrepta/registry/layout/status-bar";
+import { Titlebar } from "@entrepta/registry/layout/titlebar";
 import {
   TopNav,
   TopNavBreadcrumb,
@@ -23,6 +38,11 @@ import {
   TopNavMenu,
   TopNavSeparator,
 } from "@entrepta/registry/layout/top-nav";
+import { ArrowLink } from "@entrepta/registry/motion/arrow-link";
+import { Reveal } from "@entrepta/registry/motion/reveal";
+import { RollingNumber, useRollOnHover } from "@entrepta/registry/motion/rolling-number";
+import { Spotlight, useSpotlight } from "@entrepta/registry/motion/spotlight";
+import { TypeIn } from "@entrepta/registry/motion/type-in";
 import { Badge } from "@entrepta/registry/primitives/badge";
 import { Button } from "@entrepta/registry/primitives/button";
 import {
@@ -58,8 +78,13 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@entrepta/registry/primitives/dropdown";
+import { Field } from "@entrepta/registry/primitives/field";
+import { FilterPill } from "@entrepta/registry/primitives/filter-pill";
 import { Input } from "@entrepta/registry/primitives/input";
+import { Switch } from "@entrepta/registry/primitives/switch";
+import { TabNav, TabNavLink } from "@entrepta/registry/primitives/tabs";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@entrepta/registry/primitives/tabs";
+import { Textarea } from "@entrepta/registry/primitives/textarea";
 import {
   Tooltip,
   TooltipContent,
@@ -67,7 +92,16 @@ import {
   TooltipShortcut,
   TooltipTrigger,
 } from "@entrepta/registry/primitives/tooltip";
-import { FileCode, GitBranch, Home, Moon, Settings, Sun, Zap } from "lucide-react";
+import {
+  FileCodeIcon,
+  GearIcon,
+  GitBranchIcon,
+  HouseIcon,
+  LightningIcon,
+  MoonIcon,
+  SunIcon,
+  TagIcon,
+} from "@phosphor-icons/react";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -79,7 +113,7 @@ function ButtonPreview() {
         <Button>./projects.sh →</Button>
         <Button variant="secondary">$ npx @entrepta/cli@latest init</Button>
         <Button variant="ghost">cat contact.txt</Button>
-        <Button variant="command">npx @entrepta/cli@latest add button</Button>
+        <Button variant="command">npx @entrepta/cli add button</Button>
       </div>
       <div className="flex flex-wrap items-center gap-3">
         <Button size="sm">small 32h</Button>
@@ -212,7 +246,7 @@ function CardPreview() {
         <CardTerminalBody>
           <div>
             <span className="text-[var(--fg-muted)]">$</span> npx{" "}
-            <span className="text-[var(--fg-brand)]">@entrepta/cli@latest</span> init
+            <span className="text-[var(--fg-brand-text)]">@entrepta/cli@latest</span> init
           </div>
           <div>
             <span className="text-[var(--fg-muted)]">$</span> npx @entrepta/cli@latest add{" "}
@@ -230,10 +264,10 @@ function CardPreview() {
           </Badge>
         </CardHeader>
         <CardContent>
-          <div className="font-serif text-5xl text-[var(--fg-primary)] leading-none">
+          <div className="font-serif text-display-md text-[var(--fg-primary)] leading-none">
             <em className="italic text-[var(--fg-brand)]">11</em>
           </div>
-          <div className="font-mono text-xs text-[var(--fg-muted)] mt-1">repos shipped</div>
+          <div className="font-mono text-mono-sm text-[var(--fg-muted)] mt-1">repos shipped</div>
         </CardContent>
         <CardFooter>
           <CardComment>consistent</CardComment>
@@ -367,21 +401,24 @@ function TabsPreview() {
             contact.txt
           </TabsTrigger>
         </TabsList>
-        <TabsContent value="home" className="p-5 font-mono text-[13px] text-[var(--fg-secondary)]">
+        <TabsContent value="home" className="p-5 font-mono text-mono-md text-[var(--fg-secondary)]">
           <div>
             <span className="text-[var(--fg-muted)]">{"// "}</span>landing page
           </div>
           <div className="mt-1">
-            <span className="text-[var(--fg-brand)]">export default</span> function Home()
+            <span className="text-[var(--fg-brand-text)]">export default</span> function Home()
           </div>
         </TabsContent>
         <TabsContent
           value="about"
-          className="p-5 font-sans text-[13px] text-[var(--fg-secondary)] leading-relaxed"
+          className="p-5 font-sans text-body-md text-[var(--fg-secondary)] leading-relaxed"
         >
           Engineer building a personal design system. Dark-first, IDE-style, opinionated.
         </TabsContent>
-        <TabsContent value="stack" className="p-5 font-mono text-[13px] text-[var(--fg-secondary)]">
+        <TabsContent
+          value="stack"
+          className="p-5 font-mono text-mono-md text-[var(--fg-secondary)]"
+        >
           <div>
             <span className="text-[var(--fg-muted)]">"framework":</span>{" "}
             <span className="text-[var(--status-success-fg)]">"next-15"</span>
@@ -393,7 +430,7 @@ function TabsPreview() {
         </TabsContent>
         <TabsContent
           value="contact"
-          className="p-5 font-mono text-[13px] text-[var(--fg-secondary)]"
+          className="p-5 font-mono text-mono-md text-[var(--fg-secondary)]"
         >
           a2002aninha22@gmail.com
         </TabsContent>
@@ -406,26 +443,31 @@ function StatusBarPreview() {
   return (
     <div className="w-full max-w-2xl border border-[var(--border-subtle)] rounded-[var(--radius-md)] overflow-hidden">
       <div className="bg-[var(--bg-surface)] h-20 flex items-center justify-center">
-        <p className="font-mono text-xs text-[var(--fg-muted)]">page content</p>
+        <p className="font-mono text-mono-sm text-[var(--fg-muted)]">page content</p>
       </div>
-      <div className="flex items-center justify-between gap-4 py-1.5 px-4 bg-[var(--fg-brand)] font-mono text-[11px] text-[var(--zinc-50)]">
-        <div className="flex items-center gap-4">
-          <StatusBarItem icon={<GitBranch style={{ width: 10, height: 10, strokeWidth: 1.5 }} />}>
-            main
-          </StatusBarItem>
-          <StatusBarSeparator />
-          <StatusBarItem>0 errors</StatusBarItem>
-          <StatusBarSeparator />
-          <StatusBarItem>2 warnings</StatusBarItem>
-        </div>
-        <div className="flex items-center gap-4">
-          <StatusBarItem>TypeScript</StatusBarItem>
-          <StatusBarSeparator />
-          <StatusBarItem>UTF-8</StatusBarItem>
-          <StatusBarSeparator />
-          <StatusBarItem>Ln 1, Col 1</StatusBarItem>
-        </div>
-      </div>
+      {/* flex overrides the bar's own hidden-below-640px, so the preview shows at every width */}
+      <StatusBar
+        position="static"
+        className="flex"
+        left={
+          <>
+            <StatusBarItem icon={<GitBranchIcon size={10} />}>main</StatusBarItem>
+            <StatusBarSeparator />
+            <StatusBarItem>0 errors</StatusBarItem>
+            <StatusBarSeparator />
+            <StatusBarItem>2 warnings</StatusBarItem>
+          </>
+        }
+        right={
+          <>
+            <StatusBarItem>TypeScript</StatusBarItem>
+            <StatusBarSeparator />
+            <StatusBarItem>UTF-8</StatusBarItem>
+            <StatusBarSeparator />
+            <StatusBarItem>Ln 1, Col 1</StatusBarItem>
+          </>
+        }
+      />
     </div>
   );
 }
@@ -464,7 +506,7 @@ function TopNavPreview() {
         }
       />
       <div className="bg-[var(--bg-surface)] h-20 flex items-center justify-center">
-        <p className="font-mono text-xs text-[var(--fg-muted)]">page content</p>
+        <p className="font-mono text-mono-sm text-[var(--fg-muted)]">page content</p>
       </div>
     </div>
   );
@@ -549,7 +591,7 @@ function CommandPalettePreview() {
     <div className="flex flex-col items-center gap-4">
       <Button variant="secondary" onClick={() => setOpen(true)}>
         open palette{" "}
-        <kbd className="ml-2 px-1 font-mono text-[11px] border border-[var(--border-strong)] rounded-[3px] text-[var(--fg-muted)]">
+        <kbd className="ml-2 px-1 font-mono text-mono-sm border border-[var(--border-strong)] rounded-[3px] text-[var(--fg-muted)]">
           ⌘K
         </kbd>
       </Button>
@@ -560,14 +602,14 @@ function CommandPalettePreview() {
             <CommandEmpty>No results.</CommandEmpty>
             <CommandGroup heading="pages">
               <CommandItem
-                icon={<Home style={{ width: 13, height: 13, strokeWidth: 1.5 }} />}
+                icon={<HouseIcon size={13} />}
                 shortcut="⌘1"
                 onSelect={() => setOpen(false)}
               >
                 home.tsx
               </CommandItem>
               <CommandItem
-                icon={<FileCode style={{ width: 13, height: 13, strokeWidth: 1.5 }} />}
+                icon={<FileCodeIcon size={13} />}
                 shortcut="⌘2"
                 onSelect={() => setOpen(false)}
               >
@@ -577,14 +619,14 @@ function CommandPalettePreview() {
             <CommandSeparator />
             <CommandGroup heading="components">
               <CommandItem
-                icon={<Zap style={{ width: 13, height: 13, strokeWidth: 1.5 }} />}
+                icon={<LightningIcon size={13} />}
                 shortcut="B"
                 onSelect={() => setOpen(false)}
               >
                 Button
               </CommandItem>
               <CommandItem
-                icon={<Zap style={{ width: 13, height: 13, strokeWidth: 1.5 }} />}
+                icon={<LightningIcon size={13} />}
                 shortcut="Bd"
                 onSelect={() => setOpen(false)}
               >
@@ -594,14 +636,14 @@ function CommandPalettePreview() {
             <CommandSeparator />
             <CommandGroup heading="actions">
               <CommandItem
-                icon={<GitBranch style={{ width: 13, height: 13, strokeWidth: 1.5 }} />}
+                icon={<GitBranchIcon size={13} />}
                 shortcut="⌘⇧D"
                 onSelect={() => setOpen(false)}
               >
                 Deploy to production
               </CommandItem>
               <CommandItem
-                icon={<Settings style={{ width: 13, height: 13, strokeWidth: 1.5 }} />}
+                icon={<GearIcon size={13} />}
                 shortcut="⌘,"
                 onSelect={() => setOpen(false)}
               >
@@ -648,26 +690,26 @@ function ThemeSwitcherPreview() {
     { id: "bosco", label: "bosco", color: "#2563EB", active: false },
   ];
   return (
-    <div className="w-full max-w-md flex flex-col items-end gap-3 font-mono text-[11px]">
+    <div className="w-full max-w-md flex flex-col items-end gap-3 font-mono text-mono-sm">
       <div
         aria-hidden
         className="flex flex-col gap-1 p-2 rounded-[var(--radius-md)] border border-[var(--border-subtle)] bg-[var(--bg-surface)] shadow-[0_8px_24px_rgba(0,0,0,0.4)] min-w-[200px]"
       >
-        <div className="px-2 py-1 text-[10px] uppercase tracking-[0.08em] text-[var(--fg-muted)] border-b border-[var(--border-subtle)] mb-1">
+        <div className="px-2 py-1 text-mono-xs uppercase tracking-[0.08em] text-[var(--fg-muted)] border-b border-[var(--border-subtle)] mb-1">
           mode
         </div>
         <div className="flex items-center justify-between gap-2 px-2 py-1.5 rounded-[var(--radius-sm)]">
           <span className="flex items-center gap-2.5">
             <span className="inline-grid place-items-center w-4 h-4 shrink-0 text-[var(--fg-primary)]">
-              <Moon style={{ width: 14, height: 14, strokeWidth: 1.5 }} />
+              <MoonIcon size={14} />
             </span>
             <span className="text-[var(--fg-primary)]">dark</span>
           </span>
-          <span className="text-[var(--fg-muted)] text-[10px] uppercase tracking-[0.08em]">
+          <span className="text-[var(--fg-muted)] text-mono-xs uppercase tracking-[0.08em]">
             → light
           </span>
         </div>
-        <div className="px-2 py-1 text-[10px] uppercase tracking-[0.08em] text-[var(--fg-muted)] border-b border-[var(--border-subtle)] mt-2 mb-1">
+        <div className="px-2 py-1 text-mono-xs uppercase tracking-[0.08em] text-[var(--fg-muted)] border-b border-[var(--border-subtle)] mt-2 mb-1">
           theme
         </div>
         {themes.map((t) => (
@@ -686,7 +728,9 @@ function ThemeSwitcherPreview() {
             >
               {t.label}
             </span>
-            {t.active && <span className="text-[var(--fg-brand)] text-[10px] leading-none">◆</span>}
+            {t.active && (
+              <span className="text-[var(--fg-brand)] text-mono-xs leading-none">◆</span>
+            )}
           </div>
         ))}
       </div>
@@ -695,9 +739,11 @@ function ThemeSwitcherPreview() {
           className="inline-block w-3.5 h-3.5 rounded-full border border-[var(--border-subtle)]"
           style={{ background: "#7C6BFF" }}
         />
-        <span className="text-[var(--fg-muted)] uppercase tracking-[0.08em] text-[10px]">dark</span>
+        <span className="text-[var(--fg-muted)] uppercase tracking-[0.08em] text-mono-xs">
+          dark
+        </span>
       </div>
-      <p className="self-start text-[10px] text-[var(--fg-muted)] uppercase tracking-[0.08em]">
+      <p className="self-start text-mono-xs text-[var(--fg-muted)] uppercase tracking-[0.08em]">
         {"// live switcher sits in the corner of every docs page"}
       </p>
     </div>
@@ -705,9 +751,8 @@ function ThemeSwitcherPreview() {
 }
 
 function ModeGlyph({ mode, size }: { mode: "dark" | "light"; size: "sm" | "md" }) {
-  const Icon = mode === "dark" ? Moon : Sun;
-  const px = size === "sm" ? 12 : 14;
-  return <Icon style={{ width: px, height: px, strokeWidth: 1.5 }} />;
+  const Icon = mode === "dark" ? MoonIcon : SunIcon;
+  return <Icon size={size === "sm" ? 12 : 14} />;
 }
 
 function ModeTogglePreview() {
@@ -716,7 +761,7 @@ function ModeTogglePreview() {
   return (
     <div aria-hidden className="w-full max-w-md flex flex-col gap-6">
       <div className="flex flex-col gap-3">
-        <span className="font-mono text-[10px] uppercase tracking-[0.08em] text-[var(--fg-muted)]">
+        <span className="font-mono text-mono-xs uppercase tracking-[0.08em] text-[var(--fg-muted)]">
           {"// icon"}
         </span>
         <div className="flex items-center gap-3">
@@ -729,20 +774,298 @@ function ModeTogglePreview() {
         </div>
       </div>
       <div className="flex flex-col gap-3">
-        <span className="font-mono text-[10px] uppercase tracking-[0.08em] text-[var(--fg-muted)]">
+        <span className="font-mono text-mono-xs uppercase tracking-[0.08em] text-[var(--fg-muted)]">
           {"// labeled"}
         </span>
         <div className="flex items-center gap-3">
-          <span className={`${shell} h-9 px-3 gap-2 text-[11px]`}>
+          <span className={`${shell} h-9 px-3 gap-2 text-mono-sm`}>
             <ModeGlyph mode="dark" size="md" />
             dark
           </span>
-          <span className={`${shell} h-7 px-2.5 gap-2 text-[10px]`}>
+          <span className={`${shell} h-7 px-2.5 gap-2 text-mono-xs`}>
             <ModeGlyph mode="light" size="sm" />
             light
           </span>
         </div>
       </div>
+    </div>
+  );
+}
+
+function DiamondPreview() {
+  return (
+    <div className="flex flex-col gap-3 font-mono uppercase tracking-[0.08em] text-[var(--fg-secondary)]">
+      <span className="inline-flex items-center gap-1.5 text-mono-xs">
+        <Diamond size={9} /> mono-xs · 9px
+      </span>
+      <span className="inline-flex items-center gap-1.5 text-mono-sm">
+        <Diamond size={10} /> mono-sm · 10px
+      </span>
+    </div>
+  );
+}
+
+function SwitchPreview() {
+  const [on, setOn] = useState(true);
+  return (
+    <div className="flex flex-col gap-4">
+      <Switch label="send me a copy" checked={on} onChange={(e) => setOn(e.target.checked)} />
+      <Switch label="notifications" />
+      <Switch label="disabled" disabled />
+    </div>
+  );
+}
+
+function TextareaPreview() {
+  return (
+    <div className="flex w-full max-w-md flex-col gap-4">
+      <Textarea placeholder="// what are you building?" />
+      <Textarea state="error" defaultValue="too short" rows={2} />
+    </div>
+  );
+}
+
+function FieldPreview() {
+  return (
+    <form className="flex w-full max-w-md flex-col gap-4" onSubmit={(e) => e.preventDefault()}>
+      <Field id="preview-email" label="email" required hint="we never share it">
+        <Input type="email" placeholder="you@domain.dev" required />
+      </Field>
+      <Field id="preview-message" label="message" required error="Tell me a bit more.">
+        <Textarea rows={3} />
+      </Field>
+    </form>
+  );
+}
+
+function FilterPillPreview() {
+  const [type, setType] = useState<string | null>("film");
+  const counts: Record<string, number> = { film: 12, book: 3, album: 7 };
+  return (
+    <div className="flex flex-wrap gap-2">
+      {Object.keys(counts).map((t) => (
+        <FilterPill
+          key={t}
+          label={t}
+          count={counts[t]}
+          icon={TagIcon}
+          active={type === t}
+          onClick={() => setType(type === t ? null : t)}
+        />
+      ))}
+    </div>
+  );
+}
+
+function TitlebarPreview() {
+  const [active, setActive] = useState("home");
+  return (
+    <div className="w-full max-w-2xl overflow-hidden rounded-[var(--radius-md)] border border-[var(--border-subtle)]">
+      <Titlebar meta={<span>main</span>}>
+        <TabNav aria-label="Preview pages">
+          {["home", "about"].map((name) => (
+            <TabNavLink
+              key={name}
+              href={`#${name}`}
+              active={active === name}
+              icon={name === "home" ? HouseIcon : FileCodeIcon}
+              onClick={(e) => {
+                e.preventDefault();
+                setActive(name);
+              }}
+              onClose={name === "about" ? () => setActive("home") : undefined}
+            >
+              {name === "home" ? "home.tsx" : "about.md"}
+            </TabNavLink>
+          ))}
+        </TabNav>
+      </Titlebar>
+      <div className="h-16 bg-[var(--bg-surface)]" />
+    </div>
+  );
+}
+
+function SidebarPreview() {
+  const [active, setActive] = useState("home");
+  const items = [
+    { id: "home", label: "Home", href: "#home", icon: HouseIcon },
+    { id: "files", label: "Files", href: "#files", icon: FileCodeIcon },
+    { id: "branch", label: "Branch", href: "#branch", icon: GitBranchIcon },
+    { id: "settings", label: "Settings", href: "#settings", icon: GearIcon },
+  ];
+  return (
+    <div
+      className="flex h-60 overflow-hidden rounded-[var(--radius-md)] border border-[var(--border-subtle)]"
+      onClickCapture={(e) => {
+        const link = (e.target as HTMLElement).closest("a");
+        if (!link) return;
+        e.preventDefault();
+        setActive(link.getAttribute("href")?.slice(1) ?? "home");
+      }}
+    >
+      <Sidebar items={items} active={active} label="Preview" />
+      <div className="w-56 bg-[var(--bg-surface)]" />
+    </div>
+  );
+}
+
+function PageOutlinePreview() {
+  return (
+    <div className="flex w-full max-w-md justify-center overflow-hidden rounded-[var(--radius-md)] border border-[var(--border-subtle)]">
+      <PageOutline
+        className="!block !static w-64"
+        file="about.md"
+        items={[
+          { id: "outline-intro", label: "intro", level: 1 },
+          { id: "outline-career", label: "career", level: 2, count: 4 },
+          { id: "outline-education", label: "education", level: 3 },
+        ]}
+        footer={<span>3 sections</span>}
+      />
+    </div>
+  );
+}
+
+function SectHeadPreview() {
+  return (
+    <div className="w-full max-w-xl">
+      <SectHead cmd="ls ./work --featured" meta="4 projects" as="span" />
+      <SectHead cmd="cat ./off-the-clock" meta="updated today" as="span" />
+    </div>
+  );
+}
+
+function DocPartsPreview() {
+  return (
+    <div className="w-full max-w-xl">
+      <Section variant="first" className="pb-0">
+        <DocLabel>about</DocLabel>
+        <DisplayH2>
+          Engineer, <em>mostly</em>.
+        </DisplayH2>
+        <Prose className="mt-4 mb-0">
+          I build <Strong>design systems</Strong> and ship them as <Em>copy-paste</Em> code.
+        </Prose>
+      </Section>
+    </div>
+  );
+}
+
+function ChromeMessagePreview() {
+  return (
+    <div className="w-full overflow-hidden rounded-[var(--radius-md)] border border-[var(--border-subtle)]">
+      <ChromeMessage
+        className="min-h-0 py-8"
+        command="cat ./this-page"
+        output="cat: ./this-page: No such file or directory"
+        title="Page not found."
+        note="it moved, or it never existed"
+        action={<ArrowLink href="#">go home</ArrowLink>}
+      />
+    </div>
+  );
+}
+
+function PageLoadingPreview() {
+  const [run, setRun] = useState(0);
+  return (
+    <div className="flex w-full flex-col items-center gap-4">
+      <div className="w-full overflow-hidden rounded-[var(--radius-md)] border border-[var(--border-subtle)]">
+        <PageLoading
+          key={run}
+          className="min-h-0 py-10"
+          command="ls ./log"
+          crumb="log"
+          label="the log"
+          steps={["reading entries", "reading covers"]}
+        />
+      </div>
+      <Button size="sm" variant="secondary" onClick={() => setRun((r) => r + 1)}>
+        replay
+      </Button>
+    </div>
+  );
+}
+
+function RevealPreview() {
+  const [run, setRun] = useState(0);
+  return (
+    <div className="flex w-full max-w-xl flex-col items-center gap-4">
+      <div key={run} className="grid w-full grid-cols-3 gap-3">
+        {["one", "two", "three"].map((label, i) => (
+          <Reveal key={label} index={i}>
+            <Card size="sm">
+              <CardHeader>
+                <CardLabel>{label}</CardLabel>
+              </CardHeader>
+            </Card>
+          </Reveal>
+        ))}
+      </div>
+      <Button size="sm" variant="secondary" onClick={() => setRun((r) => r + 1)}>
+        replay
+      </Button>
+    </div>
+  );
+}
+
+function TypeInPreview() {
+  const [run, setRun] = useState(0);
+  return (
+    <div className="flex flex-col items-center gap-4">
+      <TypeIn
+        key={run}
+        as="p"
+        text="Build with entrepta."
+        emphasis="entrepta"
+        className="m-0 font-serif text-display-md text-[var(--fg-primary)]"
+      />
+      <Button size="sm" variant="secondary" onClick={() => setRun((r) => r + 1)}>
+        replay
+      </Button>
+    </div>
+  );
+}
+
+function RollingNumberPreview() {
+  const roll = useRollOnHover(0.2);
+  return (
+    <div className="flex flex-col items-center gap-2" {...roll.handlers}>
+      <RollingNumber
+        value={128}
+        cycle={roll.cycle}
+        delay={roll.delay}
+        height={44}
+        className="font-serif text-display-md text-[var(--fg-primary)]"
+      />
+      <span className="font-mono text-mono-sm text-[var(--fg-muted)]">hover to roll</span>
+    </div>
+  );
+}
+
+function SpotlightPreview() {
+  const { onMouseMove, spotlight } = useSpotlight(420);
+  return (
+    <Card className="w-full max-w-md" onMouseMove={onMouseMove}>
+      <Spotlight {...spotlight} />
+      <CardHeader>
+        <CardLabel>spotlight</CardLabel>
+        <CardMeta>move the cursor</CardMeta>
+      </CardHeader>
+      <CardTitle>
+        Light that <em>follows</em>.
+      </CardTitle>
+    </Card>
+  );
+}
+
+function ArrowLinkPreview() {
+  return (
+    <div className="flex flex-col items-start gap-3">
+      <ArrowLink href="#">read the docs</ArrowLink>
+      <ArrowLink href="https://github.com" external>
+        github
+      </ArrowLink>
     </div>
   );
 }
@@ -764,13 +1087,30 @@ const PREVIEWS: Record<string, React.ReactNode> = {
   skeleton: <SkeletonPreview />,
   "command-palette": <CommandPalettePreview />,
   "code-block": <CodeBlockPreview />,
+  diamond: <DiamondPreview />,
+  switch: <SwitchPreview />,
+  textarea: <TextareaPreview />,
+  field: <FieldPreview />,
+  "filter-pill": <FilterPillPreview />,
+  titlebar: <TitlebarPreview />,
+  sidebar: <SidebarPreview />,
+  "page-outline": <PageOutlinePreview />,
+  "sect-head": <SectHeadPreview />,
+  "doc-parts": <DocPartsPreview />,
+  "chrome-message": <ChromeMessagePreview />,
+  "page-loading": <PageLoadingPreview />,
+  reveal: <RevealPreview />,
+  "type-in": <TypeInPreview />,
+  "rolling-number": <RollingNumberPreview />,
+  spotlight: <SpotlightPreview />,
+  "arrow-link": <ArrowLinkPreview />,
 };
 
 export function ComponentPreview({ slug }: { slug: string }) {
   return (
     <div className="w-full flex items-center justify-center">
       {PREVIEWS[slug] ?? (
-        <p className="font-mono text-xs text-[var(--fg-muted)]">No preview available</p>
+        <p className="font-mono text-mono-sm text-[var(--fg-muted)]">No preview available</p>
       )}
     </div>
   );

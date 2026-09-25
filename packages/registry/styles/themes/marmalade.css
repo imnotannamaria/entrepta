@@ -1,17 +1,27 @@
 /* ============================================================
-   marmalade theme — warm orange, editorial and energetic
+   marmalade theme, warm orange, editorial and energetic
    ============================================================ */
+
+/* --fg-on-brand is the ink for text on a --fg-brand fill (a primary button,
+   a solid badge, the status bar). --fg-brand-text is the ink for brand-colored
+   text on the canvas, a card or the --bg-surface-brand tint. Neither can be
+   derived from the brand, so each theme sets both. All of them clear WCAG AA
+   in both modes. Measure again after changing any value here. */
 
 :root {
   --fg-brand: #ff8213;
   --fg-brand-hover: #ff9d45;
+  --fg-on-brand: #09090b;
+  --fg-brand-text: #ff9d45;
   --bg-surface-brand: rgba(255, 130, 19, 0.14);
   --ring: rgba(255, 130, 19, 0.45);
 }
 
 :root[data-mode="light"] {
-  --fg-brand: #d96b00;
-  --fg-brand-hover: #ed7c0c;
-  --bg-surface-brand: rgba(217, 107, 0, 0.08);
-  --ring: rgba(217, 107, 0, 0.4);
+  --fg-brand: #e06800;
+  --fg-brand-hover: #ff8213;
+  --fg-on-brand: #09090b;
+  --fg-brand-text: #a14b00;
+  --bg-surface-brand: rgba(224, 104, 0, 0.08);
+  --ring: rgba(224, 104, 0, 0.4);
 }

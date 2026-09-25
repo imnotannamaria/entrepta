@@ -21,19 +21,19 @@ const Toaster = ({ ...props }: ToasterProps) => (
       }
       [data-sonner-toast] [data-title] {
         font-family: var(--font-mono) !important;
-        font-size: 13px !important;
+        font-size: var(--text-mono-md) !important;
         color: var(--fg-primary) !important;
       }
       [data-sonner-toast] [data-description] {
         font-family: var(--font-sans) !important;
-        font-size: 12px !important;
+        font-size: var(--text-mono-sm) !important;
         line-height: 1.5 !important;
         color: var(--fg-secondary) !important;
       }
       [data-sonner-toast] [data-button] {
         font-family: var(--font-mono) !important;
-        font-size: 12px !important;
-        color: var(--fg-brand) !important;
+        font-size: var(--text-mono-sm) !important;
+        color: var(--fg-brand-text) !important;
         background: transparent !important;
         border: none !important;
         padding: 0 !important;

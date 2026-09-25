@@ -1,5 +1,6 @@
 "use client";
 
+import { COMPONENT_INDEX } from "@/lib/component-index";
 import {
   Command,
   CommandDialog,
@@ -12,7 +13,16 @@ import {
   CommandSeparator,
 } from "@entrepta/registry/feedback/command-palette";
 import { useCommandPalette } from "@entrepta/registry/hooks/use-command-palette";
-import { Box, FileCode, GitBranch, Home, Layout, Palette, Sparkles, Type } from "lucide-react";
+import {
+  CubeIcon,
+  FileCodeIcon,
+  GitBranchIcon,
+  HouseIcon,
+  LayoutIcon,
+  PaletteIcon,
+  SparkleIcon,
+  TextTIcon,
+} from "@phosphor-icons/react";
 import { useRouter } from "next/navigation";
 import { type ReactNode, createContext, useCallback, useContext, useMemo } from "react";
 
@@ -23,7 +33,7 @@ interface SiteCommandPaletteCtx {
 
 const Ctx = createContext<SiteCommandPaletteCtx | null>(null);
 
-const ICON_PROPS = { width: 13, height: 13, strokeWidth: 1.5 };
+const ICON_PROPS = { size: 13 };
 
 export function SiteCommandPaletteProvider({ children }: { children: ReactNode }) {
   const { open, setOpen, toggle } = useCommandPalette();
@@ -56,26 +66,33 @@ export function SiteCommandPaletteProvider({ children }: { children: ReactNode }
             <CommandEmpty>No results.</CommandEmpty>
 
             <CommandGroup heading="pages">
-              <CommandItem icon={<Home {...ICON_PROPS} />} shortcut="⌘1" onSelect={() => go("/")}>
+              <CommandItem
+                icon={<HouseIcon {...ICON_PROPS} />}
+                shortcut="⌘1"
+                onSelect={() => go("/")}
+              >
                 Home
               </CommandItem>
               <CommandItem
-                icon={<FileCode {...ICON_PROPS} />}
+                icon={<FileCodeIcon {...ICON_PROPS} />}
                 shortcut="⌘2"
                 onSelect={() => go("/docs")}
               >
                 Docs · Introduction
               </CommandItem>
               <CommandItem
-                icon={<FileCode {...ICON_PROPS} />}
+                icon={<FileCodeIcon {...ICON_PROPS} />}
                 onSelect={() => go("/docs/installation")}
               >
                 Installation
               </CommandItem>
-              <CommandItem icon={<FileCode {...ICON_PROPS} />} onSelect={() => go("/docs/cli")}>
+              <CommandItem icon={<FileCodeIcon {...ICON_PROPS} />} onSelect={() => go("/docs/cli")}>
                 CLI Reference
               </CommandItem>
-              <CommandItem icon={<Palette {...ICON_PROPS} />} onSelect={() => go("/docs/themes")}>
+              <CommandItem
+                icon={<PaletteIcon {...ICON_PROPS} />}
+                onSelect={() => go("/docs/themes")}
+              >
                 Themes
               </CommandItem>
             </CommandGroup>
@@ -84,146 +101,74 @@ export function SiteCommandPaletteProvider({ children }: { children: ReactNode }
 
             <CommandGroup heading="foundations">
               <CommandItem
-                icon={<Sparkles {...ICON_PROPS} />}
+                icon={<SparkleIcon {...ICON_PROPS} />}
                 onSelect={() => go("/docs/foundations")}
               >
                 Overview
               </CommandItem>
               <CommandItem
-                icon={<Palette {...ICON_PROPS} />}
+                icon={<PaletteIcon {...ICON_PROPS} />}
                 onSelect={() => go("/docs/foundations/color")}
               >
                 Color
               </CommandItem>
               <CommandItem
-                icon={<Type {...ICON_PROPS} />}
+                icon={<TextTIcon {...ICON_PROPS} />}
                 onSelect={() => go("/docs/foundations/typography")}
               >
                 Typography
               </CommandItem>
               <CommandItem
-                icon={<Layout {...ICON_PROPS} />}
+                icon={<LayoutIcon {...ICON_PROPS} />}
                 onSelect={() => go("/docs/foundations/spacing")}
               >
                 Spacing & Grid
               </CommandItem>
               <CommandItem
-                icon={<Sparkles {...ICON_PROPS} />}
+                icon={<SparkleIcon {...ICON_PROPS} />}
                 onSelect={() => go("/docs/foundations/motion")}
               >
                 Radius & Motion
+              </CommandItem>
+              <CommandItem
+                icon={<SparkleIcon {...ICON_PROPS} />}
+                onSelect={() => go("/docs/foundations/accessibility")}
+              >
+                Accessibility
+              </CommandItem>
+              <CommandItem
+                icon={<SparkleIcon {...ICON_PROPS} />}
+                onSelect={() => go("/docs/foundations/rules")}
+              >
+                Rules
               </CommandItem>
             </CommandGroup>
 
             <CommandSeparator />
 
             <CommandGroup heading="components">
-              <CommandItem icon={<Box {...ICON_PROPS} />} onSelect={() => go("/docs/components")}>
+              <CommandItem
+                icon={<CubeIcon {...ICON_PROPS} />}
+                onSelect={() => go("/docs/components")}
+              >
                 All components
               </CommandItem>
-              <CommandItem
-                icon={<Box {...ICON_PROPS} />}
-                onSelect={() => go("/docs/components/button")}
-              >
-                Button
-              </CommandItem>
-              <CommandItem
-                icon={<Box {...ICON_PROPS} />}
-                onSelect={() => go("/docs/components/badge")}
-              >
-                Badge
-              </CommandItem>
-              <CommandItem
-                icon={<Box {...ICON_PROPS} />}
-                onSelect={() => go("/docs/components/input")}
-              >
-                Input
-              </CommandItem>
-              <CommandItem
-                icon={<Box {...ICON_PROPS} />}
-                onSelect={() => go("/docs/components/card")}
-              >
-                Card
-              </CommandItem>
-              <CommandItem
-                icon={<Box {...ICON_PROPS} />}
-                onSelect={() => go("/docs/components/dialog")}
-              >
-                Dialog
-              </CommandItem>
-              <CommandItem
-                icon={<Box {...ICON_PROPS} />}
-                onSelect={() => go("/docs/components/dropdown")}
-              >
-                Dropdown
-              </CommandItem>
-              <CommandItem
-                icon={<Box {...ICON_PROPS} />}
-                onSelect={() => go("/docs/components/tooltip")}
-              >
-                Tooltip
-              </CommandItem>
-              <CommandItem
-                icon={<Box {...ICON_PROPS} />}
-                onSelect={() => go("/docs/components/tabs")}
-              >
-                Tabs
-              </CommandItem>
-              <CommandItem
-                icon={<Box {...ICON_PROPS} />}
-                onSelect={() => go("/docs/components/status-bar")}
-              >
-                StatusBar
-              </CommandItem>
-              <CommandItem
-                icon={<Box {...ICON_PROPS} />}
-                onSelect={() => go("/docs/components/top-nav")}
-              >
-                TopNav
-              </CommandItem>
-              <CommandItem
-                icon={<Box {...ICON_PROPS} />}
-                onSelect={() => go("/docs/components/theme-switcher")}
-              >
-                ThemeSwitcher
-              </CommandItem>
-              <CommandItem
-                icon={<Box {...ICON_PROPS} />}
-                onSelect={() => go("/docs/components/mode-toggle")}
-              >
-                ModeToggle
-              </CommandItem>
-              <CommandItem
-                icon={<Box {...ICON_PROPS} />}
-                onSelect={() => go("/docs/components/toast")}
-              >
-                Toast
-              </CommandItem>
-              <CommandItem
-                icon={<Box {...ICON_PROPS} />}
-                onSelect={() => go("/docs/components/skeleton")}
-              >
-                Skeleton
-              </CommandItem>
-              <CommandItem
-                icon={<Box {...ICON_PROPS} />}
-                onSelect={() => go("/docs/components/command-palette")}
-              >
-                CommandPalette
-              </CommandItem>
-              <CommandItem
-                icon={<Box {...ICON_PROPS} />}
-                onSelect={() => go("/docs/components/code-block")}
-              >
-                CodeBlock
-              </CommandItem>
+              {COMPONENT_INDEX.map((c) => (
+                <CommandItem
+                  key={c.slug}
+                  icon={<CubeIcon {...ICON_PROPS} />}
+                  onSelect={() => go(`/docs/components/${c.slug}`)}
+                >
+                  {c.title}
+                </CommandItem>
+              ))}
             </CommandGroup>
 
             <CommandSeparator />
 
             <CommandGroup heading="links">
               <CommandItem
-                icon={<GitBranch {...ICON_PROPS} />}
+                icon={<GitBranchIcon {...ICON_PROPS} />}
                 onSelect={() => go("https://github.com/imnotannamaria/entrepta")}
               >
                 GitHub repository

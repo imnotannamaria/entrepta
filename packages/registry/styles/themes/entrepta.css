@@ -1,17 +1,27 @@
 /* ============================================================
-   entrepta theme — violet/indigo (default)
+   entrepta theme, violet, the default
    ============================================================ */
+
+/* --fg-on-brand is the ink for text on a --fg-brand fill (a primary button,
+   a solid badge, the status bar). --fg-brand-text is the ink for brand-colored
+   text on the canvas, a card or the --bg-surface-brand tint. Neither can be
+   derived from the brand, so each theme sets both. All of them clear WCAG AA
+   in both modes. Measure again after changing any value here. */
 
 :root {
   --fg-brand: #7c6bff;
   --fg-brand-hover: #9b8eff;
+  --fg-on-brand: #09090b;
+  --fg-brand-text: #9b8eff;
   --bg-surface-brand: rgba(124, 107, 255, 0.15);
   --ring: rgba(124, 107, 255, 0.5);
 }
 
 :root[data-mode="light"] {
-  --fg-brand: #6b5bff;
+  --fg-brand: #6656ff;
   --fg-brand-hover: #5848e0;
-  --bg-surface-brand: rgba(107, 91, 255, 0.08);
-  --ring: rgba(107, 91, 255, 0.4);
+  --fg-on-brand: #fafafa;
+  --fg-brand-text: #5a4cd6;
+  --bg-surface-brand: rgba(102, 86, 255, 0.08);
+  --ring: rgba(102, 86, 255, 0.4);
 }

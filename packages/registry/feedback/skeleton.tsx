@@ -3,10 +3,17 @@ import { cn } from "../lib/utils";
 
 interface SkeletonProps extends React.HTMLAttributes<HTMLDivElement> {
   variant?: "line" | "circle" | "rect";
+  /**
+   * Seconds to offset the shimmer, so a card of pieces reads as one wave
+   * instead of blinking in lockstep. Pass the piece's index times a small
+   * step, such as `i * 0.06`. Applied as a negative delay, so every piece is
+   * already moving on the first frame.
+   */
+  delay?: number;
 }
 
 const Skeleton = React.forwardRef<HTMLDivElement, SkeletonProps>(
-  ({ className, variant = "rect", style, ...props }, ref) => (
+  ({ className, variant = "rect", style, delay = 0, ...props }, ref) => (
     <div
       ref={ref}
       aria-hidden="true"
@@ -15,6 +22,7 @@ const Skeleton = React.forwardRef<HTMLDivElement, SkeletonProps>(
           "linear-gradient(90deg, var(--bg-surface) 0%, var(--bg-surface-elevated) 50%, var(--bg-surface) 100%)",
         backgroundSize: "200% 100%",
         animation: "shimmer 1.5s linear infinite",
+        animationDelay: delay ? `${-delay}s` : undefined,
         ...style,
       }}
       className={cn(

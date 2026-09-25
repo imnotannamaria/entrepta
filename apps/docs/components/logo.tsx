@@ -31,11 +31,11 @@ export function Logo({ className, showTag = false }: LogoProps) {
   return (
     <div className={cn("flex items-center gap-2", className)}>
       <LogoMark className="text-[var(--fg-primary)]" size={22} />
-      <span className="font-serif text-[var(--fg-primary)] text-base leading-none">
+      <span className="font-serif text-[var(--fg-primary)] text-body-lg leading-none">
         entrepta<em className="text-[var(--fg-brand)] not-italic">.</em>
       </span>
       {showTag && (
-        <span className="hidden sm:inline-flex font-mono text-[10px] text-[var(--fg-muted)] border border-[var(--border-subtle)] rounded px-1.5 py-0.5">
+        <span className="hidden sm:inline-flex font-mono text-mono-xs text-[var(--fg-muted)] border border-[var(--border-subtle)] rounded px-1.5 py-0.5">
           v0.1
         </span>
       )}

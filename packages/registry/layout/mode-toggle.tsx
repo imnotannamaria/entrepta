@@ -1,7 +1,7 @@
 "use client";
 
+import { MoonIcon, SunIcon } from "@phosphor-icons/react";
 import { type VariantProps, cva } from "class-variance-authority";
-import { Moon, Sun } from "lucide-react";
 import * as React from "react";
 import { type ThemeMode, useMode } from "../hooks/use-mode";
 import { cn } from "../lib/utils";
@@ -24,8 +24,8 @@ const modeToggle = cva(
         labeled: "gap-2",
       },
       size: {
-        sm: "h-7 text-[10px]",
-        md: "h-9 text-[11px]",
+        sm: "h-7 text-mono-xs",
+        md: "h-9 text-mono-sm",
       },
     },
     compoundVariants: [
@@ -65,20 +65,21 @@ const ICON_IN = "opacity-100 rotate-0 scale-100";
 
 /** Sun in light mode, moon in dark mode. Shows the mode you are in, not the one you get. */
 function ModeIcon({ mode, size }: { mode: ThemeMode; size: number }) {
-  const iconStyle = { width: size, height: size, strokeWidth: 1.5 };
   return (
     <span
       aria-hidden
       className="relative inline-grid place-items-center shrink-0"
       style={{ width: size, height: size }}
     >
-      <Moon
+      <MoonIcon
+        data-icon="moon"
         className={cn(ICON_BASE, mode === "dark" ? ICON_IN : "opacity-0 rotate-90 scale-50")}
-        style={iconStyle}
+        size={size}
       />
-      <Sun
+      <SunIcon
+        data-icon="sun"
         className={cn(ICON_BASE, mode === "light" ? ICON_IN : "opacity-0 -rotate-90 scale-50")}
-        style={iconStyle}
+        size={size}
       />
     </span>
   );

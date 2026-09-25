@@ -1,17 +1,27 @@
 /* ============================================================
-   blossom theme — cherry red, bold and confident
+   blossom theme, cherry red, bold and confident
    ============================================================ */
+
+/* --fg-on-brand is the ink for text on a --fg-brand fill (a primary button,
+   a solid badge, the status bar). --fg-brand-text is the ink for brand-colored
+   text on the canvas, a card or the --bg-surface-brand tint. Neither can be
+   derived from the brand, so each theme sets both. All of them clear WCAG AA
+   in both modes. Measure again after changing any value here. */
 
 :root {
   --fg-brand: #cc2e36;
   --fg-brand-hover: #e04750;
+  --fg-on-brand: #fafafa;
+  --fg-brand-text: #e8787d;
   --bg-surface-brand: rgba(204, 46, 54, 0.14);
   --ring: rgba(204, 46, 54, 0.45);
 }
 
 :root[data-mode="light"] {
-  --fg-brand: #b8262e;
+  --fg-brand: #b02028;
   --fg-brand-hover: #cc2e36;
-  --bg-surface-brand: rgba(184, 38, 46, 0.08);
-  --ring: rgba(184, 38, 46, 0.4);
+  --fg-on-brand: #fafafa;
+  --fg-brand-text: #b02028;
+  --bg-surface-brand: rgba(176, 32, 40, 0.08);
+  --ring: rgba(176, 32, 40, 0.4);
 }

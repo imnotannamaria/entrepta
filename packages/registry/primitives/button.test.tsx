@@ -40,6 +40,14 @@ describe("Button", () => {
   it("applies primary variant class", () => {
     const { container } = render(<Button>Primary</Button>);
     expect(container.firstChild).toHaveClass("bg-[var(--fg-brand)]");
+    expect(container.firstChild).toHaveClass("text-[var(--fg-on-brand)]");
+  });
+
+  it("exports the variants from a module without a client boundary", async () => {
+    const fs = await import("node:fs");
+    const path = await import("node:path");
+    const source = fs.readFileSync(path.join(__dirname, "button-variants.ts"), "utf8");
+    expect(source).not.toMatch(/^["']use client["']/m);
   });
 
   it("applies secondary variant class", () => {

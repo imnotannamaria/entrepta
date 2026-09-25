@@ -25,17 +25,17 @@ const FILES: Record<FileKey, FileMeta> = {
         <span className="text-[var(--status-info)]">:root</span>
         <span className="text-[var(--fg-secondary)]">{" {"}</span>
         {"\n  "}
-        <span className="text-[var(--fg-brand)]">--fg-brand</span>
+        <span className="text-[var(--fg-brand-text)]">--fg-brand</span>
         <span className="text-[var(--fg-secondary)]">: </span>
         <span className="text-[var(--status-success-fg)]">#7C6BFF</span>
         <span className="text-[var(--fg-secondary)]">;</span>
         {"\n  "}
-        <span className="text-[var(--fg-brand)]">--bg-canvas</span>
+        <span className="text-[var(--fg-brand-text)]">--bg-canvas</span>
         <span className="text-[var(--fg-secondary)]">: </span>
         <span className="text-[var(--status-success-fg)]">#09090B</span>
         <span className="text-[var(--fg-secondary)]">;</span>
         {"\n  "}
-        <span className="text-[var(--fg-brand)]">--bg-surface</span>
+        <span className="text-[var(--fg-brand-text)]">--bg-surface</span>
         <span className="text-[var(--fg-secondary)]">: </span>
         <span className="text-[var(--status-success-fg)]">#18181B</span>
         <span className="text-[var(--fg-secondary)]">;</span>
@@ -50,7 +50,7 @@ const FILES: Record<FileKey, FileMeta> = {
         <span className="text-[var(--status-info)]">]</span>
         <span className="text-[var(--fg-secondary)]">{" {"}</span>
         {"\n  "}
-        <span className="text-[var(--fg-brand)]">--fg-brand</span>
+        <span className="text-[var(--fg-brand-text)]">--fg-brand</span>
         <span className="text-[var(--fg-secondary)]">: </span>
         <span className="text-[var(--status-success-fg)]">#35A365</span>
         <span className="text-[var(--fg-secondary)]">;</span>
@@ -73,14 +73,14 @@ const FILES: Record<FileKey, FileMeta> = {
         <span className="text-[var(--status-warning)]">"@/components/entrepta/button"</span>
         {"\n\n"}
         <span className="text-[var(--fg-secondary)]">{"<"}</span>
-        <span className="text-[var(--fg-brand)]">Button</span>
+        <span className="text-[var(--fg-brand-text)]">Button</span>
         <span className="text-[var(--fg-muted)]"> variant</span>
         <span className="text-[var(--fg-secondary)]">=</span>
         <span className="text-[var(--status-warning)]">"primary"</span>
         <span className="text-[var(--fg-secondary)]">{">"}</span>
         <span className="text-[var(--fg-primary)]">Ship</span>
         <span className="text-[var(--fg-secondary)]">{"</"}</span>
-        <span className="text-[var(--fg-brand)]">Button</span>
+        <span className="text-[var(--fg-brand-text)]">Button</span>
         <span className="text-[var(--fg-secondary)]">{">"}</span>
       </>
     ),
@@ -145,7 +145,7 @@ export function HomeIdePreview() {
           const file = FILES[key];
           return (
             <TabsContent key={key} value={key} className="flex flex-1 m-0">
-              <pre className="flex-1 px-5 py-4 font-mono text-[12px] leading-6 overflow-x-auto whitespace-pre">
+              <pre className="flex-1 px-5 py-4 font-mono text-mono-sm leading-6 overflow-x-auto whitespace-pre">
                 {file.code}
               </pre>
             </TabsContent>
@@ -154,7 +154,8 @@ export function HomeIdePreview() {
       </Tabs>
 
       <StatusBar
-        className="static left-auto right-auto bottom-auto z-auto flex"
+        position="static"
+        className="flex"
         left={
           <>
             <StatusBarItem>{activeFile.lang}</StatusBarItem>

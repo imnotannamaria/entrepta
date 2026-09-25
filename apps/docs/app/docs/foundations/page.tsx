@@ -1,4 +1,5 @@
 import { DocPageHeader } from "@/components/doc-page-header";
+import { RULES } from "@/lib/rules";
 import { Button } from "@entrepta/registry/primitives/button";
 import {
   Card,
@@ -25,8 +26,8 @@ const PAGES = [
     num: "01",
     label: "color",
     title: "Color",
-    desc: "Zinc neutrals + brand accent. Primitives, accents, and semantic tokens that components consume.",
-    count: "29 tokens",
+    desc: "Zinc neutrals and one brand. Surfaces, inks and accents, measured live for your theme.",
+    count: "live",
     href: "/docs/foundations/color",
   },
   {
@@ -49,9 +50,25 @@ const PAGES = [
     num: "04",
     label: "motion",
     title: "Radius & Motion",
-    desc: "Soft corners (6–24px). Fast transitions (120–320ms). Shimmer for skeletons. Respects reduced-motion.",
-    count: "9 tokens",
+    desc: "Soft corners from 6 to 24px. Motion with a job: entrances, counters, light. Always a reduced-motion path.",
+    count: "5 components",
     href: "/docs/foundations/motion",
+  },
+  {
+    num: "05",
+    label: "accessibility",
+    title: "Accessibility",
+    desc: "Inks measured in every theme, focus, the skip link, reduced motion, screen reader patterns.",
+    count: "WCAG AA",
+    href: "/docs/foundations/accessibility",
+  },
+  {
+    num: "06",
+    label: "rules",
+    title: "Rules",
+    desc: "The do and don't list, each one written after a real bug.",
+    count: `${RULES.length} rules`,
+    href: "/docs/foundations/rules",
   },
 ];
 
@@ -76,7 +93,7 @@ export default function FoundationsIndex() {
                 <CardLabel>{p.label}</CardLabel>
                 <CardMeta>{p.num}</CardMeta>
               </CardHeader>
-              <CardTitle className="text-[24px]">{p.title}</CardTitle>
+              <CardTitle>{p.title}</CardTitle>
               <CardDescription>{p.desc}</CardDescription>
               <CardFooter>
                 <CardComment>{p.count}</CardComment>

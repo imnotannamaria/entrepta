@@ -13,7 +13,7 @@ export function CommandPaletteTrigger({ className, size = "lg" }: Props) {
   return (
     <Button variant="ghost" size={size} className={className} onClick={open} type="button">
       press{" "}
-      <kbd className="ml-1 px-1.5 py-0.5 font-mono text-[11px] border border-[var(--border-strong)] rounded-[3px] text-[var(--fg-muted)]">
+      <kbd className="ml-1 px-1.5 py-0.5 font-mono text-mono-sm border border-[var(--border-strong)] rounded-[3px] text-[var(--fg-muted)]">
         ⌘K
       </kbd>
     </Button>

@@ -50,6 +50,16 @@ describe("Skeleton", () => {
     expect(el.style.animation).toContain("shimmer");
   });
 
+  it("offsets the shimmer with a negative delay", () => {
+    const { container } = render(<Skeleton delay={0.12} />);
+    expect((container.firstChild as HTMLElement).style.animationDelay).toBe("-0.12s");
+  });
+
+  it("leaves the delay unset by default", () => {
+    const { container } = render(<Skeleton />);
+    expect((container.firstChild as HTMLElement).style.animationDelay).toBe("");
+  });
+
   it("forwards ref", () => {
     const ref = { current: null };
     render(<Skeleton ref={ref} />);

@@ -27,6 +27,42 @@ describe("Badge", () => {
     expect(container.firstChild).toHaveClass("bg-[var(--bg-hover-strong)]");
   });
 
+  it("puts the theme's ink on a solid brand fill", () => {
+    const { container } = render(
+      <Badge variant="solid" color="brand">
+        new
+      </Badge>
+    );
+    expect(container.firstChild).toHaveClass("text-[var(--fg-on-brand)]");
+  });
+
+  it("uses the brand text ink for soft and outline brand", () => {
+    const { container, rerender } = render(
+      <Badge variant="soft" color="brand">
+        beta
+      </Badge>
+    );
+    expect(container.firstChild).toHaveClass("text-[var(--fg-brand-text)]");
+    rerender(
+      <Badge variant="outline" color="brand">
+        beta
+      </Badge>
+    );
+    expect(container.firstChild).toHaveClass("text-[var(--fg-brand-text)]");
+  });
+
+  it("uses a dark ink on every solid status fill", () => {
+    for (const color of ["success", "warning", "error", "info"] as const) {
+      const { container, unmount } = render(
+        <Badge variant="solid" color={color}>
+          {color}
+        </Badge>
+      );
+      expect(container.firstChild).toHaveClass("text-[var(--zinc-950)]");
+      unmount();
+    }
+  });
+
   it("applies soft success with token bg/fg", () => {
     const { container } = render(
       <Badge variant="soft" color="success">

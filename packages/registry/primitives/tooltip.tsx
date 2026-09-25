@@ -28,7 +28,7 @@ const TooltipContent = React.forwardRef<
         "z-50 inline-flex items-center gap-2 whitespace-nowrap",
         "bg-[var(--bg-surface)] border border-[var(--border-strong)]",
         "rounded-[var(--radius-sm)] px-2 py-1",
-        "font-mono text-[11px] text-[var(--fg-primary)]",
+        "font-mono text-mono-sm text-[var(--fg-primary)]",
         "shadow-[0_4px_12px_rgba(0,0,0,0.4)]",
         "animate-in fade-in-0 zoom-in-95 duration-150",
         "data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95",
@@ -44,7 +44,7 @@ TooltipContent.displayName = TooltipPrimitive.Content.displayName;
 
 const TooltipShortcut = ({ className, ...props }: React.HTMLAttributes<HTMLSpanElement>) => (
   <span
-    className={cn("font-mono text-[11px] text-[var(--fg-muted)] tracking-[0.04em]", className)}
+    className={cn("font-mono text-mono-sm text-[var(--fg-muted)] tracking-[0.04em]", className)}
     {...props}
   />
 );

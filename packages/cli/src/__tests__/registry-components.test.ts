@@ -19,7 +19,9 @@ function listRegistryFiles(): string[] {
     "layout",
     "content",
     "feedback",
+    "motion",
     "hooks",
+    "lib",
   ];
   const out: string[] = [];
   for (const dir of dirs) {
@@ -27,6 +29,8 @@ function listRegistryFiles(): string[] {
     if (!fs.existsSync(full)) continue;
     for (const entry of fs.readdirSync(full)) {
       if (entry.endsWith(".test.tsx") || entry.endsWith(".test.ts")) continue;
+      // init writes lib/utils.ts; it is not something to add
+      if (dir === "lib" && entry === "utils.ts") continue;
       if (!entry.endsWith(".tsx") && !entry.endsWith(".ts")) continue;
       out.push(`${dir}/${entry}`);
     }
@@ -39,7 +43,9 @@ const VALID_CATEGORIES: RegistryComponent["category"][] = [
   "layout",
   "content",
   "feedback",
+  "motion",
   "hooks",
+  "lib",
 ];
 
 describe("COMPONENTS registry", () => {
@@ -139,5 +145,56 @@ describe("COMPONENTS registry", () => {
         expect(fs.existsSync(full), `${c.name}: missing file ${file}`).toBe(true);
       }
     }
+  });
+
+  /**
+   * The CLI copies a component's files into one folder and rewrites relative
+   * imports. A file it imports from another folder only arrives if the
+   * component lists its owner in registryDeps.
+   */
+  it("covers every import across registry folders with registryDeps", () => {
+    const owner = new Map(COMPONENTS.flatMap((c) => c.files.map((f) => [f, c.name] as const)));
+    // the CLI resolves registryDeps transitively, so a dep of a dep counts
+    const closure = (name: string, seen = new Set<string>()): Set<string> => {
+      for (const dep of COMPONENTS.find((c) => c.name === name)?.registryDeps ?? []) {
+        if (!seen.has(dep)) {
+          seen.add(dep);
+          closure(dep, seen);
+        }
+      }
+      return seen;
+    };
+    const missing: string[] = [];
+    for (const c of COMPONENTS) {
+      for (const file of c.files) {
+        const source = fs.readFileSync(path.join(REGISTRY_ROOT, file), "utf8");
+        for (const [, dir, name] of source.matchAll(/from\s+["']\.\.\/([a-z]+)\/([\w-]+)["']/g)) {
+          if (dir === "lib" && name === "utils") continue;
+          const target = [...owner.keys()].find(
+            (f) => f.replace(/\.tsx?$/, "") === `${dir}/${name}`
+          );
+          const dep = target ? owner.get(target) : undefined;
+          if (!dep || !closure(c.name).has(dep)) missing.push(`${c.name} imports ${dir}/${name}`);
+        }
+      }
+    }
+    expect(missing).toEqual([]);
+  });
+
+  it("lists every npm package a component imports in its deps", () => {
+    const missing: string[] = [];
+    for (const c of COMPONENTS) {
+      for (const file of c.files) {
+        const source = fs.readFileSync(path.join(REGISTRY_ROOT, file), "utf8");
+        for (const [, spec] of source.matchAll(/from\s+["']([^."'][^"']*)["']/g)) {
+          const pkg = spec.startsWith("@")
+            ? spec.split("/").slice(0, 2).join("/")
+            : spec.split("/")[0];
+          if (pkg === "react" || pkg === "react-dom") continue;
+          if (!c.deps.includes(pkg)) missing.push(`${c.name}: ${pkg}`);
+        }
+      }
+    }
+    expect([...new Set(missing)]).toEqual([]);
   });
 });

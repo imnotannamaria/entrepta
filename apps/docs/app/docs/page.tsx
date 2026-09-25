@@ -102,7 +102,7 @@ export default function DocsIntro() {
             <CardLabel>brief</CardLabel>
             <CardMeta>{"// section 1.1"}</CardMeta>
           </CardHeader>
-          <CardTitle className="text-[22px]">
+          <CardTitle>
             Dark-first. <em>Editor-shaped.</em> Yours to own.
           </CardTitle>
           <CardDescription>
@@ -129,11 +129,11 @@ export default function DocsIntro() {
           <div className="flex flex-col gap-3">
             {QUICK_START.map((s) => (
               <div key={s.num} className="flex items-baseline gap-3">
-                <span className="text-[var(--fg-muted)] text-[11px] w-5 shrink-0">{s.num}</span>
+                <span className="text-[var(--fg-muted)] text-mono-sm w-5 shrink-0">{s.num}</span>
                 <span className="text-[var(--fg-secondary)] flex-1 min-w-0 break-all">
                   <span className="text-[var(--fg-brand)]">$</span> {s.cmd}
                 </span>
-                <span className="text-[var(--fg-muted)] text-[11px] hidden md:inline shrink-0">
+                <span className="text-[var(--fg-muted)] text-mono-sm hidden md:inline shrink-0">
                   {"// "}
                   {s.comment}
                 </span>
@@ -150,7 +150,7 @@ export default function DocsIntro() {
             {FILES.map((f, i) => (
               <div
                 key={f.file}
-                className={`grid grid-cols-[20px_220px_1fr] gap-3 items-center py-3 font-mono text-[12px] ${
+                className={`grid grid-cols-[20px_220px_1fr] gap-3 items-center py-3 font-mono text-mono-sm ${
                   i > 0 ? "border-t border-[var(--border-subtle)]" : ""
                 }`}
               >
@@ -173,7 +173,7 @@ export default function DocsIntro() {
                   <CardLabel>{p.label}</CardLabel>
                   <CardMeta>{p.num}</CardMeta>
                 </CardHeader>
-                <CardTitle className="text-[20px]">{p.title}</CardTitle>
+                <CardTitle className="text-heading-md">{p.title}</CardTitle>
                 <CardDescription>{p.desc}</CardDescription>
                 <CardFooter>
                   <span />

@@ -34,6 +34,22 @@ describe("StatusBar", () => {
     render(<StatusBar ref={ref} />);
     expect(ref.current).toBeInstanceOf(HTMLDivElement);
   });
+
+  it("is fixed to the viewport by default", () => {
+    const { container } = render(<StatusBar />);
+    expect(container.firstChild).toHaveClass("fixed", "bottom-0");
+  });
+
+  it("sits in the layout with position static", () => {
+    const { container } = render(<StatusBar position="static" />);
+    expect(container.firstChild).toHaveClass("relative");
+    expect(container.firstChild).not.toHaveClass("fixed");
+  });
+
+  it("uses the theme's ink on the brand fill", () => {
+    const { container } = render(<StatusBar />);
+    expect(container.firstChild).toHaveClass("bg-[var(--fg-brand)]", "text-[var(--fg-on-brand)]");
+  });
 });
 
 describe("StatusBarItem", () => {

@@ -7,12 +7,12 @@ export function SiteFooter() {
       <div className="max-w-[1280px] mx-auto px-4 sm:px-8 lg:px-12 pt-12 sm:pt-16 grid grid-cols-2 sm:grid-cols-[1fr_auto_auto_auto] gap-8 sm:gap-12">
         <div className="col-span-2 sm:col-span-1">
           <Logo className="mb-4" />
-          <p className="font-sans text-sm text-[var(--fg-muted)] max-w-xs leading-relaxed">
+          <p className="font-sans text-body-md text-[var(--fg-muted)] max-w-xs leading-relaxed">
             A personal design system, posed as an IDE. Dark-first, built by Anna Maria.
           </p>
         </div>
         <div className="flex flex-col gap-3">
-          <h4 className="font-mono text-[10px] uppercase tracking-widest text-[var(--fg-muted)]">
+          <h4 className="font-mono text-mono-xs uppercase tracking-widest text-[var(--fg-muted)]">
             System
           </h4>
           <ul className="flex flex-col gap-2">
@@ -25,7 +25,7 @@ export function SiteFooter() {
               <li key={l.href}>
                 <Link
                   href={l.href}
-                  className="font-mono text-xs text-[var(--fg-muted)] hover:text-[var(--fg-secondary)] transition-colors"
+                  className="font-mono text-mono-sm text-[var(--fg-muted)] hover:text-[var(--fg-secondary)] transition-colors"
                 >
                   {l.label}
                 </Link>
@@ -34,7 +34,7 @@ export function SiteFooter() {
           </ul>
         </div>
         <div className="flex flex-col gap-3">
-          <h4 className="font-mono text-[10px] uppercase tracking-widest text-[var(--fg-muted)]">
+          <h4 className="font-mono text-mono-xs uppercase tracking-widest text-[var(--fg-muted)]">
             Components
           </h4>
           <ul className="flex flex-col gap-2">
@@ -47,7 +47,7 @@ export function SiteFooter() {
               <li key={l.href}>
                 <Link
                   href={l.href}
-                  className="font-mono text-xs text-[var(--fg-muted)] hover:text-[var(--fg-secondary)] transition-colors"
+                  className="font-mono text-mono-sm text-[var(--fg-muted)] hover:text-[var(--fg-secondary)] transition-colors"
                 >
                   {l.label}
                 </Link>
@@ -56,7 +56,7 @@ export function SiteFooter() {
           </ul>
         </div>
         <div className="flex flex-col gap-3">
-          <h4 className="font-mono text-[10px] uppercase tracking-widest text-[var(--fg-muted)]">
+          <h4 className="font-mono text-mono-xs uppercase tracking-widest text-[var(--fg-muted)]">
             Resources
           </h4>
           <ul className="flex flex-col gap-2">
@@ -73,7 +73,7 @@ export function SiteFooter() {
                   href={l.href}
                   target="_blank"
                   rel="noreferrer"
-                  className="font-mono text-xs text-[var(--fg-muted)] hover:text-[var(--fg-secondary)] transition-colors"
+                  className="font-mono text-mono-sm text-[var(--fg-muted)] hover:text-[var(--fg-secondary)] transition-colors"
                 >
                   {l.label}
                 </a>
@@ -83,8 +83,8 @@ export function SiteFooter() {
         </div>
       </div>
       <div className="max-w-[1280px] mx-auto px-4 sm:px-8 lg:px-12 mt-10 sm:mt-12 pt-6 border-t border-[var(--border-subtle)] flex items-center justify-between gap-3">
-        <span className="font-mono text-[10px] text-[var(--fg-muted)]">v0.1 · 2026</span>
-        <span className="font-mono text-[10px] text-[var(--fg-muted)]">built with entrepta</span>
+        <span className="font-mono text-mono-xs text-[var(--fg-muted)]">v0.1 · 2026</span>
+        <span className="font-mono text-mono-xs text-[var(--fg-muted)]">built with entrepta</span>
       </div>
     </footer>
   );

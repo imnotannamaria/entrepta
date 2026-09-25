@@ -1,7 +1,8 @@
 "use client";
 
-import { Moon, Sun } from "lucide-react";
+import { MoonIcon, SunIcon } from "@phosphor-icons/react";
 import * as React from "react";
+import { Diamond } from "../content/diamond";
 import type { ThemeMode } from "../hooks/use-mode";
 import { type ThemeOption, type UseThemeOptions, useTheme } from "../hooks/use-theme";
 import { cn } from "../lib/utils";
@@ -25,19 +26,20 @@ interface ThemeSwitcherProps
 const ICON_BASE =
   "col-start-1 row-start-1 text-[var(--fg-primary)] transition-[opacity,rotate,scale] duration-[var(--motion-base)] ease-[var(--ease-out)]";
 const ICON_IN = "opacity-100 rotate-0 scale-100";
-const ICON_STYLE = { width: 14, height: 14, strokeWidth: 1.5 };
 
 /** Sun in light mode, moon in dark mode. Shows the mode you are in, not the one you get. */
 function ModeIcon({ mode }: { mode: ThemeMode }) {
   return (
     <span aria-hidden className="relative inline-grid place-items-center w-4 h-4 shrink-0">
-      <Moon
+      <MoonIcon
+        data-icon="moon"
         className={cn(ICON_BASE, mode === "dark" ? ICON_IN : "opacity-0 rotate-90 scale-50")}
-        style={ICON_STYLE}
+        size={14}
       />
-      <Sun
+      <SunIcon
+        data-icon="sun"
         className={cn(ICON_BASE, mode === "light" ? ICON_IN : "opacity-0 -rotate-90 scale-50")}
-        style={ICON_STYLE}
+        size={14}
       />
     </span>
   );
@@ -105,7 +107,7 @@ const ThemeSwitcher = React.forwardRef<HTMLDivElement, ThemeSwitcherProps>(
     return (
       <div
         ref={containerRef}
-        className={cn("fixed z-50 font-mono text-[11px]", POSITION_CLASS[position], className)}
+        className={cn("fixed z-50 font-mono text-mono-sm", POSITION_CLASS[position], className)}
         data-theme-switcher
         {...divProps}
       >
@@ -121,7 +123,7 @@ const ThemeSwitcher = React.forwardRef<HTMLDivElement, ThemeSwitcherProps>(
           >
             {showModeToggle && (
               <>
-                <div className="px-2 py-1 text-[10px] uppercase tracking-[0.08em] text-[var(--fg-muted)] border-b border-[var(--border-subtle)] mb-1">
+                <div className="px-2 py-1 text-mono-xs uppercase tracking-[0.08em] text-[var(--fg-muted)] border-b border-[var(--border-subtle)] mb-1">
                   mode
                 </div>
                 <button
@@ -137,12 +139,12 @@ const ThemeSwitcher = React.forwardRef<HTMLDivElement, ThemeSwitcherProps>(
                     </span>
                     <span className="text-[var(--fg-primary)]">{mode}</span>
                   </span>
-                  <span className="text-[var(--fg-muted)] text-[10px] uppercase tracking-[0.08em]">
+                  <span className="text-[var(--fg-muted)] text-mono-xs uppercase tracking-[0.08em]">
                     {mode === "dark" ? "→ light" : "→ dark"}
                   </span>
                 </button>
 
-                <div className="px-2 py-1 text-[10px] uppercase tracking-[0.08em] text-[var(--fg-muted)] border-b border-[var(--border-subtle)] mt-2 mb-1">
+                <div className="px-2 py-1 text-mono-xs uppercase tracking-[0.08em] text-[var(--fg-muted)] border-b border-[var(--border-subtle)] mt-2 mb-1">
                   theme
                 </div>
               </>
@@ -172,11 +174,7 @@ const ThemeSwitcher = React.forwardRef<HTMLDivElement, ThemeSwitcherProps>(
                   >
                     {t.label}
                   </span>
-                  {isActive && (
-                    <span aria-hidden className="text-[var(--fg-brand)] text-[10px] leading-none">
-                      ◆
-                    </span>
-                  )}
+                  {isActive && <Diamond size={10} />}
                 </button>
               );
             })}
@@ -201,7 +199,7 @@ const ThemeSwitcher = React.forwardRef<HTMLDivElement, ThemeSwitcherProps>(
             style={{ background: currentColor }}
           />
           {showModeToggle && (
-            <span className="text-[var(--fg-muted)] uppercase tracking-[0.08em] text-[10px]">
+            <span className="text-[var(--fg-muted)] uppercase tracking-[0.08em] text-mono-xs">
               {mode}
             </span>
           )}

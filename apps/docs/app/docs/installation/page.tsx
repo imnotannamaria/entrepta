@@ -54,12 +54,12 @@ export default function InstallationPage() {
             {REQUIREMENTS.map((r, i) => (
               <div
                 key={r.label}
-                className={`grid grid-cols-[140px_1fr] gap-3 items-center py-3 font-mono text-[12px] ${
+                className={`grid grid-cols-[140px_1fr] gap-3 items-center py-3 font-mono text-mono-sm ${
                   i > 0 ? "border-t border-[var(--border-subtle)]" : ""
                 }`}
               >
                 <span className="text-[var(--fg-primary)] inline-flex items-center gap-1.5">
-                  <span aria-hidden className="text-[10px] text-[var(--fg-brand)] leading-none">
+                  <span aria-hidden className="text-mono-xs text-[var(--fg-brand)] leading-none">
                     ◆
                   </span>
                   {r.label}
@@ -83,20 +83,20 @@ npx @entrepta/cli@latest init --theme=ivy`}
         >
           <div className="flex flex-col gap-3">
             <div>
-              <span className="text-[var(--fg-muted)] text-[11px] mr-3">01</span>
+              <span className="text-[var(--fg-muted)] text-mono-sm mr-3">01</span>
               <span className="text-[var(--fg-brand)]">$</span>{" "}
               <span className="text-[var(--fg-primary)]">npx @entrepta/cli@latest init</span>
-              <span className="text-[var(--fg-muted)] text-[11px] ml-3">
+              <span className="text-[var(--fg-muted)] text-mono-sm ml-3">
                 {"// prompts for a theme"}
               </span>
             </div>
             <div>
-              <span className="text-[var(--fg-muted)] text-[11px] mr-3">02</span>
+              <span className="text-[var(--fg-muted)] text-mono-sm mr-3">02</span>
               <span className="text-[var(--fg-brand)]">$</span>{" "}
               <span className="text-[var(--fg-primary)]">
                 npx @entrepta/cli@latest init --theme=ivy
               </span>
-              <span className="text-[var(--fg-muted)] text-[11px] ml-3">
+              <span className="text-[var(--fg-muted)] text-mono-sm ml-3">
                 {"// skip the prompt"}
               </span>
             </div>
@@ -111,7 +111,7 @@ npx @entrepta/cli@latest init --theme=ivy`}
             {FILES.map((f, i) => (
               <div
                 key={f.path}
-                className={`grid grid-cols-[20px_220px_1fr] gap-3 items-center py-3 font-mono text-[12px] ${
+                className={`grid grid-cols-[20px_220px_1fr] gap-3 items-center py-3 font-mono text-mono-sm ${
                   i > 0 ? "border-t border-[var(--border-subtle)]" : ""
                 }`}
               >
@@ -131,12 +131,12 @@ npx @entrepta/cli@latest init --theme=ivy`}
             <CardLabel>npx @entrepta/cli@latest add</CardLabel>
             <CardMeta>copy paste</CardMeta>
           </CardHeader>
-          <CardTitle className="text-[20px]">
+          <CardTitle className="text-heading-md">
             One command. <em>Three components.</em>
           </CardTitle>
-          <p className="font-sans text-[13px] leading-relaxed text-[var(--fg-secondary)] m-0">
+          <p className="font-sans text-body-md leading-relaxed text-[var(--fg-secondary)] m-0">
             Run{" "}
-            <code className="font-mono text-[var(--fg-brand)]">
+            <code className="font-mono text-[var(--fg-brand-text)]">
               npx @entrepta/cli@latest add button badge input
             </code>{" "}
             and the components land in <code className="font-mono">components/entrepta/</code>. Edit

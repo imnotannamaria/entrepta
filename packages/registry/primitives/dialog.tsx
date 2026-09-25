@@ -1,8 +1,9 @@
 "use client";
 
+import { XIcon } from "@phosphor-icons/react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
-import { X } from "lucide-react";
 import * as React from "react";
+import { Diamond } from "../content/diamond";
 import { cn } from "../lib/utils";
 
 const Dialog = DialogPrimitive.Root;
@@ -40,9 +41,9 @@ const DialogContent = React.forwardRef<
         "fixed left-1/2 top-1/2 z-50 -translate-x-1/2 -translate-y-1/2",
         "flex flex-col gap-4",
         "w-[calc(100vw-32px)] max-w-md",
-        "bg-[var(--bg-surface)] border border-[var(--border-strong)]",
+        "bg-[var(--bg-overlay)] border border-[var(--border-strong)]",
         "rounded-[var(--radius-lg)] p-6",
-        "shadow-[0_24px_48px_rgba(0,0,0,0.6)]",
+        "shadow-[var(--shadow-overlay)]",
         "data-[state=open]:animate-in data-[state=closed]:animate-out",
         "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
         "data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95",
@@ -59,10 +60,11 @@ const DialogContent = React.forwardRef<
           "h-7 w-7 rounded-[var(--radius-sm)]",
           "text-[var(--fg-muted)] hover:text-[var(--fg-primary)] hover:bg-[var(--bg-hover-soft)]",
           "transition-colors duration-150",
-          "focus-visible:outline-none focus-visible:[outline:2px_solid_var(--fg-brand)] focus-visible:outline-offset-2"
+          // the global reset removes outlines on buttons; .focus-ring draws a box-shadow instead
+          "focus-ring"
         )}
       >
-        <X aria-hidden style={{ width: 14, height: 14, strokeWidth: 1.5 }} />
+        <XIcon aria-hidden size={14} />
         <span className="sr-only">Close</span>
       </DialogPrimitive.Close>
     </DialogPrimitive.Content>
@@ -94,7 +96,7 @@ const DialogTitle = React.forwardRef<
   <DialogPrimitive.Title
     ref={ref}
     className={cn(
-      "m-0 font-serif font-normal text-2xl leading-snug text-[var(--fg-primary)]",
+      "m-0 font-serif font-normal text-heading-lg leading-snug text-[var(--fg-primary)]",
       "[&_em]:italic [&_em]:text-[var(--fg-brand)]",
       className
     )}
@@ -110,7 +112,7 @@ const DialogDescription = React.forwardRef<
   <DialogPrimitive.Description
     ref={ref}
     className={cn(
-      "m-0 font-sans text-[13px] leading-relaxed text-[var(--fg-secondary)]",
+      "m-0 font-sans text-body-md leading-relaxed text-[var(--fg-secondary)]",
       className
     )}
     {...props}
@@ -125,14 +127,12 @@ const DialogLabel = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDi
       ref={ref}
       className={cn(
         "inline-flex items-center gap-1.5",
-        "font-mono text-[11px] uppercase tracking-[0.08em] text-[var(--fg-secondary)]",
+        "font-mono text-mono-sm uppercase tracking-[0.08em] text-[var(--fg-secondary)]",
         className
       )}
       {...props}
     >
-      <span aria-hidden className="text-[10px] text-[var(--fg-brand)] leading-none">
-        ◆
-      </span>
+      <Diamond size={10} />
       {children}
     </div>
   )

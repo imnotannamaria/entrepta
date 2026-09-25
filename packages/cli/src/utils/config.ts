@@ -4,6 +4,8 @@ import path from "node:path";
 export interface EntryptaConfig {
   $schema?: string;
   theme: string;
+  /** "all" writes the six themes, switchable through data-theme on <html>. */
+  themes?: "single" | "all";
   tsx: boolean;
   rsc: boolean;
   tailwind: {
