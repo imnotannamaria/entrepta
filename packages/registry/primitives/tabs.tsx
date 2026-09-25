@@ -133,7 +133,8 @@ function tabLabelClass(active: boolean, closable: boolean) {
     "inline-flex h-full items-center gap-2 pl-3 sm:pl-4 font-mono text-mono-sm",
     closable ? "pr-1.5" : "pr-3 sm:pr-4",
     "transition-colors duration-[var(--motion-fast)]",
-    "focus-visible:outline-none focus-visible:bg-[var(--bg-hover-soft)]",
+    // the tab fills the row, so the ring goes inside it
+    "focus-visible:outline-none focus-visible:shadow-[inset_0_0_0_2px_var(--fg-brand)]",
     "disabled:cursor-not-allowed disabled:opacity-40",
     active
       ? "text-[var(--fg-primary)]"

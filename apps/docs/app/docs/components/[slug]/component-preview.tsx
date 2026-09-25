@@ -1,5 +1,6 @@
 "use client";
 
+import { DEFAULT_MODE, DEFAULT_THEME, STORAGE_KEY_PREFIX, THEMES } from "@/lib/theme";
 import { CodeBlock } from "@entrepta/registry/content/code-block";
 import {
   DisplayH2,
@@ -24,9 +25,11 @@ import {
 } from "@entrepta/registry/feedback/command-palette";
 import { PageLoading } from "@entrepta/registry/feedback/page-loading";
 import { Skeleton, SkeletonText } from "@entrepta/registry/feedback/skeleton";
+import { ModeToggle } from "@entrepta/registry/layout/mode-toggle";
 import { PageOutline } from "@entrepta/registry/layout/page-outline";
 import { Sidebar } from "@entrepta/registry/layout/sidebar";
 import { StatusBar, StatusBarItem, StatusBarSeparator } from "@entrepta/registry/layout/status-bar";
+import { ThemeSwitcher } from "@entrepta/registry/layout/theme-switcher";
 import {
   TopNav,
   TopNavBreadcrumb,
@@ -83,6 +86,7 @@ import {
 import { Field } from "@entrepta/registry/primitives/field";
 import { FilterPill } from "@entrepta/registry/primitives/filter-pill";
 import { Input } from "@entrepta/registry/primitives/input";
+import { Kbd } from "@entrepta/registry/primitives/kbd";
 import { Switch } from "@entrepta/registry/primitives/switch";
 import { TabNav, TabNavLink } from "@entrepta/registry/primitives/tabs";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@entrepta/registry/primitives/tabs";
@@ -107,14 +111,11 @@ import {
   HouseIcon,
   HouseLineIcon,
   InfoIcon,
-  LightningIcon,
   MagnifyingGlassIcon,
-  MoonIcon,
   PlusIcon,
   RocketLaunchIcon,
   SignOutIcon,
   SparkleIcon,
-  SunIcon,
   TagIcon,
   TerminalWindowIcon,
   UserIcon,
@@ -690,75 +691,55 @@ function SkeletonPreview() {
   );
 }
 
+function PaletteBody({ onSelect, inline = false }: { onSelect?: () => void; inline?: boolean }) {
+  return (
+    <>
+      {/* the esc chip closes a dialog, so an inline list has none */}
+      <CommandInput placeholder="type to filter…" showEsc={!inline} />
+      <CommandList>
+        <CommandEmpty>No results.</CommandEmpty>
+        <CommandGroup heading="pages">
+          <CommandItem icon={<HouseIcon size={14} />} shortcut="⌘1" onSelect={onSelect}>
+            home.tsx
+          </CommandItem>
+          <CommandItem icon={<FileCodeIcon size={14} />} shortcut="⌘2" onSelect={onSelect}>
+            docs/installation
+          </CommandItem>
+        </CommandGroup>
+        <CommandSeparator />
+        <CommandGroup heading="actions">
+          <CommandItem icon={<RocketLaunchIcon size={14} />} shortcut="⌘⇧D" onSelect={onSelect}>
+            deploy to production
+          </CommandItem>
+          <CommandItem icon={<GearIcon size={14} />} shortcut="⌘," onSelect={onSelect}>
+            settings
+          </CommandItem>
+        </CommandGroup>
+      </CommandList>
+      <CommandFoot />
+    </>
+  );
+}
+
 function CommandPalettePreview() {
   const [open, setOpen] = useState(false);
   return (
-    <div className="flex flex-col items-center gap-4">
-      <Button variant="secondary" onClick={() => setOpen(true)}>
-        open palette{" "}
-        <kbd className="ml-2 px-1 font-mono text-mono-sm border border-[var(--border-strong)] rounded-[3px] text-[var(--fg-muted)]">
-          ⌘K
-        </kbd>
-      </Button>
-      <CommandDialog open={open} onOpenChange={setOpen}>
-        <Command>
-          <CommandInput placeholder="type to filter…" />
-          <CommandList>
-            <CommandEmpty>No results.</CommandEmpty>
-            <CommandGroup heading="pages">
-              <CommandItem
-                icon={<HouseIcon size={13} />}
-                shortcut="⌘1"
-                onSelect={() => setOpen(false)}
-              >
-                home.tsx
-              </CommandItem>
-              <CommandItem
-                icon={<FileCodeIcon size={13} />}
-                shortcut="⌘2"
-                onSelect={() => setOpen(false)}
-              >
-                docs/installation
-              </CommandItem>
-            </CommandGroup>
-            <CommandSeparator />
-            <CommandGroup heading="components">
-              <CommandItem
-                icon={<LightningIcon size={13} />}
-                shortcut="B"
-                onSelect={() => setOpen(false)}
-              >
-                Button
-              </CommandItem>
-              <CommandItem
-                icon={<LightningIcon size={13} />}
-                shortcut="Bd"
-                onSelect={() => setOpen(false)}
-              >
-                Badge
-              </CommandItem>
-            </CommandGroup>
-            <CommandSeparator />
-            <CommandGroup heading="actions">
-              <CommandItem
-                icon={<GitBranchIcon size={13} />}
-                shortcut="⌘⇧D"
-                onSelect={() => setOpen(false)}
-              >
-                Deploy to production
-              </CommandItem>
-              <CommandItem
-                icon={<GearIcon size={13} />}
-                shortcut="⌘,"
-                onSelect={() => setOpen(false)}
-              >
-                Settings
-              </CommandItem>
-            </CommandGroup>
-          </CommandList>
-          <CommandFoot />
+    <div className="flex w-full max-w-xl flex-col gap-7">
+      <Demo label="inline · hover or use the arrows">
+        <Command className="w-full" loop>
+          <PaletteBody inline />
         </Command>
-      </CommandDialog>
+      </Demo>
+      <Demo label="as a dialog">
+        <Button variant="secondary" onClick={() => setOpen(true)}>
+          open palette <Kbd>⌘K</Kbd>
+        </Button>
+        <CommandDialog open={open} onOpenChange={setOpen}>
+          <Command loop>
+            <PaletteBody onSelect={() => setOpen(false)} />
+          </Command>
+        </CommandDialog>
+      </Demo>
     </div>
   );
 }
@@ -786,113 +767,58 @@ npx @entrepta/cli@latest add button card command-palette`}
 }
 
 function ThemeSwitcherPreview() {
-  const themes = [
-    { id: "entrepta", label: "entrepta", color: "#7C6BFF", active: true },
-    { id: "blossom", label: "blossom", color: "#CC2E36", active: false },
-    { id: "marmalade", label: "marmalade", color: "#FF8213", active: false },
-    { id: "julia", label: "julia", color: "#E85A8A", active: false },
-    { id: "ivy", label: "ivy", color: "#35A365", active: false },
-    { id: "bosco", label: "bosco", color: "#2563EB", active: false },
-  ];
   return (
-    <div className="w-full max-w-md flex flex-col items-end gap-3 font-mono text-mono-sm">
-      <div
-        aria-hidden
-        className="flex flex-col gap-1 p-2 rounded-[var(--radius-md)] border border-[var(--border-subtle)] bg-[var(--bg-surface)] shadow-[0_8px_24px_rgba(0,0,0,0.4)] min-w-[200px]"
-      >
-        <div className="px-2 py-1 text-mono-xs uppercase tracking-[0.08em] text-[var(--fg-muted)] border-b border-[var(--border-subtle)] mb-1">
-          mode
-        </div>
-        <div className="flex items-center justify-between gap-2 px-2 py-1.5 rounded-[var(--radius-sm)]">
-          <span className="flex items-center gap-2.5">
-            <span className="inline-grid place-items-center w-4 h-4 shrink-0 text-[var(--fg-primary)]">
-              <MoonIcon size={14} />
-            </span>
-            <span className="text-[var(--fg-primary)]">dark</span>
-          </span>
-          <span className="text-[var(--fg-muted)] text-mono-xs uppercase tracking-[0.08em]">
-            → light
-          </span>
-        </div>
-        <div className="px-2 py-1 text-mono-xs uppercase tracking-[0.08em] text-[var(--fg-muted)] border-b border-[var(--border-subtle)] mt-2 mb-1">
-          theme
-        </div>
-        {themes.map((t) => (
-          <div
-            key={t.id}
-            className="flex items-center gap-2.5 px-2 py-1.5 rounded-[var(--radius-sm)]"
-          >
-            <span
-              className="inline-block w-4 h-4 rounded-full border border-[var(--border-subtle)] shrink-0"
-              style={{ background: t.color }}
-            />
-            <span
-              className={
-                t.active ? "text-[var(--fg-primary)] flex-1" : "text-[var(--fg-secondary)] flex-1"
-              }
-            >
-              {t.label}
-            </span>
-            {t.active && (
-              <span className="text-[var(--fg-brand)] text-mono-xs leading-none">◆</span>
-            )}
-          </div>
-        ))}
-      </div>
-      <div className="flex items-center gap-2 px-2.5 py-2 rounded-[var(--radius-md)] border border-[var(--border-subtle)] bg-[var(--bg-surface)] shadow-[0_4px_12px_rgba(0,0,0,0.3)]">
-        <span
-          className="inline-block w-3.5 h-3.5 rounded-full border border-[var(--border-subtle)]"
-          style={{ background: "#7C6BFF" }}
+    <div className="flex w-full max-w-md flex-col items-center gap-4">
+      {/* the real switcher, placed in the flow instead of the corner: it drives this page */}
+      <div className="flex h-[380px] items-end">
+        <ThemeSwitcher
+          themes={THEMES}
+          defaultTheme={DEFAULT_THEME}
+          defaultMode={DEFAULT_MODE}
+          storageKey={STORAGE_KEY_PREFIX}
+          className="relative right-auto bottom-auto"
         />
-        <span className="text-[var(--fg-muted)] uppercase tracking-[0.08em] text-mono-xs">
-          dark
-        </span>
       </div>
-      <p className="self-start text-mono-xs text-[var(--fg-muted)] uppercase tracking-[0.08em]">
-        {"// live switcher sits in the corner of every docs page"}
+      <p className="m-0 font-mono text-mono-sm text-[var(--fg-muted)]">
+        Click it. It is the same switcher as the one in the corner, and they stay in step.
       </p>
     </div>
   );
 }
 
-function ModeGlyph({ mode, size }: { mode: "dark" | "light"; size: "sm" | "md" }) {
-  const Icon = mode === "dark" ? MoonIcon : SunIcon;
-  return <Icon size={size === "sm" ? 12 : 14} />;
+function ModeTogglePreview() {
+  return (
+    <div className="flex w-full max-w-md flex-col gap-7">
+      <Demo label="icon">
+        <ModeToggle storageKey={STORAGE_KEY_PREFIX} />
+        <ModeToggle storageKey={STORAGE_KEY_PREFIX} size="sm" />
+      </Demo>
+      <Demo label="labeled">
+        <ModeToggle storageKey={STORAGE_KEY_PREFIX} variant="labeled" />
+        <ModeToggle storageKey={STORAGE_KEY_PREFIX} variant="labeled" size="sm" />
+      </Demo>
+    </div>
+  );
 }
 
-function ModeTogglePreview() {
-  const shell =
-    "inline-flex items-center justify-center font-mono uppercase tracking-[0.08em] rounded-[var(--radius-md)] border border-[var(--border-subtle)] bg-[var(--bg-surface)] text-[var(--fg-secondary)]";
+function KbdPreview() {
   return (
-    <div aria-hidden className="w-full max-w-md flex flex-col gap-6">
-      <div className="flex flex-col gap-3">
-        <span className="font-mono text-mono-xs uppercase tracking-[0.08em] text-[var(--fg-muted)]">
-          {"// icon"}
+    <div className="flex w-full max-w-md flex-col gap-7">
+      <Demo label="chip">
+        <Kbd>⌘K</Kbd>
+        <Kbd>esc</Kbd>
+        <Kbd>↵</Kbd>
+        <Kbd>↑↓</Kbd>
+        <span className="flex items-center gap-1 font-mono text-mono-sm text-[var(--fg-muted)]">
+          <Kbd>⌘</Kbd>+<Kbd>⇧</Kbd>+<Kbd>P</Kbd>
         </span>
-        <div className="flex items-center gap-3">
-          <span className={`${shell} h-9 w-9`}>
-            <ModeGlyph mode="dark" size="md" />
-          </span>
-          <span className={`${shell} h-7 w-7`}>
-            <ModeGlyph mode="light" size="sm" />
-          </span>
-        </div>
-      </div>
-      <div className="flex flex-col gap-3">
-        <span className="font-mono text-mono-xs uppercase tracking-[0.08em] text-[var(--fg-muted)]">
-          {"// labeled"}
-        </span>
-        <div className="flex items-center gap-3">
-          <span className={`${shell} h-9 px-3 gap-2 text-mono-sm`}>
-            <ModeGlyph mode="dark" size="md" />
-            dark
-          </span>
-          <span className={`${shell} h-7 px-2.5 gap-2 text-mono-xs`}>
-            <ModeGlyph mode="light" size="sm" />
-            light
-          </span>
-        </div>
-      </div>
+      </Demo>
+      <Demo label="in a button and an input">
+        <Button variant="secondary" size="sm">
+          search <Kbd>/</Kbd>
+        </Button>
+        <Input variant="command" placeholder="run command…" className="w-56" />
+      </Demo>
     </div>
   );
 }
@@ -1182,6 +1108,7 @@ const PREVIEWS: Record<string, React.ReactNode> = {
   skeleton: <SkeletonPreview />,
   "command-palette": <CommandPalettePreview />,
   "code-block": <CodeBlockPreview />,
+  kbd: <KbdPreview />,
   checkbox: <CheckboxPreview />,
   switch: <SwitchPreview />,
   textarea: <TextareaPreview />,

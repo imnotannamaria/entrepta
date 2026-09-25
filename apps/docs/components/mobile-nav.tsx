@@ -2,6 +2,7 @@
 
 import { Logo } from "@/components/logo";
 import { DOCS_NAV } from "@/lib/component-index";
+import { Kbd } from "@entrepta/registry/primitives/kbd";
 import { ListIcon, XIcon } from "@phosphor-icons/react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import Link from "next/link";
@@ -114,11 +115,7 @@ export function MobileNav() {
           </nav>
 
           <div className="border-t border-[var(--border-subtle)] px-4 py-3 font-mono text-mono-xs uppercase tracking-widest text-[var(--fg-muted)]">
-            press{" "}
-            <kbd className="px-1 py-0.5 border border-[var(--border-subtle)] rounded-[3px] text-[var(--fg-secondary)]">
-              ⌘K
-            </kbd>{" "}
-            to search
+            press <Kbd>⌘K</Kbd> to search
           </div>
         </DialogPrimitive.Content>
       </DialogPrimitive.Portal>

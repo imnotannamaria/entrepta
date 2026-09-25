@@ -290,7 +290,7 @@ import { GearIcon, UserIcon } from "@phosphor-icons/react"
   },
   tooltip: {
     description:
-      "Hover popover via Radix Tooltip. Wrap your app in TooltipProvider once at the root. Supports keyboard shortcut hints.",
+      "Hover popover on Radix, on the overlay surface like every other overlay. Wrap your app in TooltipProvider once at the root. TooltipShortcut is a Kbd.",
     usage: `import {
   TooltipProvider, Tooltip, TooltipTrigger,
   TooltipContent, TooltipShortcut,
@@ -328,6 +328,26 @@ import { GearIcon, UserIcon } from "@phosphor-icons/react"
         type: "number",
         default: "8",
         description: "Gap in px from trigger (TooltipContent)",
+      },
+    ],
+  },
+  kbd: {
+    description:
+      "One look for every keyboard hint: a key cap chip, or plain text for rows that already have a surface. Inside a highlighted menu or palette row it takes the brand ink. Dropdown, CommandPalette, Tooltip and Input all use it.",
+    usage: `import { Kbd } from "@/components/entrepta/kbd"
+
+<Kbd>⌘K</Kbd>
+<Button variant="secondary">search <Kbd>/</Kbd></Button>
+<span><Kbd>⌘</Kbd>+<Kbd>⇧</Kbd>+<Kbd>P</Kbd></span>
+
+// in a row with its own surface, such as a menu item
+<Kbd variant="plain">⌘P</Kbd>`,
+    props: [
+      {
+        name: "variant",
+        type: '"chip" | "plain"',
+        default: '"chip"',
+        description: "A bordered key cap, or bare text",
       },
     ],
   },
@@ -516,7 +536,7 @@ import { TabNav, TabNavLink } from "@/components/entrepta/tabs"
   },
   "theme-switcher": {
     description:
-      "Floating theme and dark/light picker. Drives data-theme and data-mode on <html> and remembers the choice. It needs every theme in your CSS: run init with --themes=all. ThemeScript sets the attributes before paint; add suppressHydrationWarning to your <html>.",
+      "Floating theme and dark/light picker, with the same panel, labels and rows as a dropdown. Several on one page stay in step. Drives data-theme and data-mode on <html> and remembers the choice. It needs every theme in your CSS: run init with --themes=all. ThemeScript sets the attributes before paint; add suppressHydrationWarning to your <html>.",
     usage: `import {
   ThemeScript, ThemeSwitcher,
 } from "@/components/entrepta/theme-switcher"
@@ -707,7 +727,7 @@ toast("New update available", {
   },
   "command-palette": {
     description:
-      "⌘K command palette built on cmdk. A centered modal on the overlay surface, a ◆ on each group, an esc chip, and a footer of keyboard hints that wraps on phones. Wire the shortcut with useCommandPalette.",
+      "⌘K command palette built on cmdk, on the overlay surface. Rows highlight like a dropdown: the brand tint, and the icon and shortcut turn brand. A ◆ on each group, and Kbd chips for esc and the footer hints. Use Command alone for an inline list, or inside CommandDialog. Wire the shortcut with useCommandPalette.",
     usage: `import {
   Command, CommandDialog, CommandInput,
   CommandList, CommandGroup, CommandItem, CommandEmpty,

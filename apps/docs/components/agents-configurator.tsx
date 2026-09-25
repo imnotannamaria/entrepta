@@ -134,7 +134,7 @@ function Segmented<T extends string>({
           <label
             key={option.value}
             className={cn(
-              "inline-flex h-7 flex-1 cursor-pointer items-center justify-center gap-1.5 whitespace-nowrap",
+              "relative inline-flex h-7 flex-1 cursor-pointer items-center justify-center gap-1.5 whitespace-nowrap",
               "rounded-[var(--radius-sm)] px-2.5 font-mono text-mono-sm text-[var(--fg-muted)]",
               "transition-colors duration-[var(--motion-fast)] hover:text-[var(--fg-secondary)]",
               "has-[:checked]:bg-[var(--bg-surface-brand)] has-[:checked]:text-[var(--fg-brand-text)]",
@@ -221,7 +221,7 @@ function Configurator() {
   };
 
   return (
-    <div className="grid min-h-0 flex-1 grid-cols-1 overflow-y-auto lg:grid-cols-[minmax(0,440px)_minmax(0,1fr)] lg:overflow-hidden">
+    <div className="grid min-h-0 flex-1 grid-cols-1 overflow-y-auto lg:grid-cols-[minmax(0,440px)_minmax(0,1fr)] lg:overflow-clip">
       <form
         className="flex min-w-0 flex-col lg:overflow-y-auto lg:border-r lg:border-[var(--border-subtle)]"
         onSubmit={(e) => e.preventDefault()}
@@ -267,7 +267,7 @@ function Configurator() {
                 <label
                   key={t.id}
                   className={cn(
-                    "flex h-9 cursor-pointer items-center gap-2 rounded-[var(--radius-sm)] border px-2.5",
+                    "relative flex h-9 cursor-pointer items-center gap-2 rounded-[var(--radius-sm)] border px-2.5",
                     "border-[var(--border-subtle)] font-mono text-mono-sm text-[var(--fg-muted)]",
                     "transition-colors hover:border-[var(--border-strong)] hover:text-[var(--fg-secondary)]",
                     "has-[:checked]:border-[var(--border-brand-strong)] has-[:checked]:bg-[var(--bg-surface-brand)]",
@@ -439,7 +439,7 @@ export function AgentsDialog() {
       </Button>
       <DialogContent
         aria-describedby={undefined}
-        className="h-[min(820px,calc(100dvh-32px))] max-w-[1120px] gap-0 overflow-hidden p-0"
+        className="h-[min(820px,calc(100dvh-32px))] max-w-[1120px] gap-0 overflow-clip p-0"
       >
         {open && <Configurator />}
       </DialogContent>

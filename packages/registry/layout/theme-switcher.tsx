@@ -1,6 +1,6 @@
 "use client";
 
-import { MoonIcon, SunIcon } from "@phosphor-icons/react";
+import { CheckIcon, MoonIcon, SunIcon } from "@phosphor-icons/react";
 import * as React from "react";
 import { Diamond } from "../content/diamond";
 import type { ThemeMode } from "../hooks/use-mode";
@@ -44,6 +44,16 @@ function ModeIcon({ mode }: { mode: ThemeMode }) {
     </span>
   );
 }
+
+// The same label and row as a dropdown menu, so every overlay reads as one family.
+const LABEL =
+  "flex items-center gap-1.5 px-2.5 pt-2.5 pb-1.5 font-mono text-mono-xs uppercase tracking-[0.08em] text-[var(--fg-muted)]";
+const ROW = cn(
+  "group/item flex items-center gap-2.5 rounded-[var(--radius-sm)] px-2.5 py-1.5 text-left",
+  "font-mono text-mono-md text-[var(--fg-secondary)] transition-colors duration-[var(--motion-fast)]",
+  "hover:bg-[var(--bg-surface-brand)] hover:text-[var(--fg-primary)]",
+  "focus-visible:bg-[var(--bg-surface-brand)] focus-visible:text-[var(--fg-primary)] focus-visible:outline-none"
+);
 
 const POSITION_CLASS: Record<SwitcherPosition, string> = {
   "bottom-right": "bottom-12 right-5",
@@ -119,11 +129,16 @@ const ThemeSwitcher = React.forwardRef<HTMLDivElement, ThemeSwitcherProps>(
         {open && (
           <div
             aria-label="Theme settings"
-            className="absolute bottom-[calc(100%+8px)] right-0 flex flex-col gap-1 p-2 rounded-[var(--radius-md)] border border-[var(--border-subtle)] bg-[var(--bg-surface)] shadow-[0_8px_24px_rgba(0,0,0,0.4)] min-w-[180px]"
+            data-state="open"
+            className={cn(
+              "motion-pop absolute right-0 bottom-[calc(100%+8px)] flex min-w-[200px] origin-bottom-right flex-col p-1",
+              "rounded-[var(--radius-md)] border border-[var(--border-strong)] bg-[var(--bg-overlay)] shadow-[var(--shadow-overlay)]"
+            )}
           >
             {showModeToggle && (
               <>
-                <div className="px-2 py-1 text-mono-xs uppercase tracking-[0.08em] text-[var(--fg-muted)] border-b border-[var(--border-subtle)] mb-1">
+                <div className={LABEL}>
+                  <Diamond />
                   mode
                 </div>
                 <button
@@ -131,20 +146,19 @@ const ThemeSwitcher = React.forwardRef<HTMLDivElement, ThemeSwitcherProps>(
                   aria-pressed={mode === "light"}
                   data-mode={mode}
                   onClick={toggleMode}
-                  className="flex items-center justify-between gap-2 px-2 py-1.5 rounded-[var(--radius-sm)] hover:bg-[var(--bg-hover-soft)] focus-visible:outline-none focus-visible:bg-[var(--bg-hover-soft)] transition-colors text-left"
+                  className={cn(ROW, "justify-between")}
                 >
                   <span className="flex items-center gap-2.5">
-                    <span aria-hidden className="inline-grid place-items-center w-4 h-4 shrink-0">
-                      <ModeIcon mode={mode} />
-                    </span>
+                    <ModeIcon mode={mode} />
                     <span className="text-[var(--fg-primary)]">{mode}</span>
                   </span>
-                  <span className="text-[var(--fg-muted)] text-mono-xs uppercase tracking-[0.08em]">
+                  <span className="text-mono-xs uppercase tracking-[0.08em] text-[var(--fg-muted)] transition-colors group-hover/item:text-[var(--fg-brand-text)]">
                     {mode === "dark" ? "→ light" : "→ dark"}
                   </span>
                 </button>
-
-                <div className="px-2 py-1 text-mono-xs uppercase tracking-[0.08em] text-[var(--fg-muted)] border-b border-[var(--border-subtle)] mt-2 mb-1">
+                <div aria-hidden className="-mx-1 my-1 h-px bg-[var(--border-subtle)]" />
+                <div className={LABEL}>
+                  <Diamond />
                   theme
                 </div>
               </>
@@ -158,23 +172,22 @@ const ThemeSwitcher = React.forwardRef<HTMLDivElement, ThemeSwitcherProps>(
                   aria-pressed={isActive}
                   key={t.id}
                   onClick={() => handleSelectTheme(t.id)}
-                  className="group flex items-center gap-2.5 px-2 py-1.5 rounded-[var(--radius-sm)] hover:bg-[var(--bg-hover-soft)] focus-visible:outline-none focus-visible:bg-[var(--bg-hover-soft)] transition-colors text-left"
+                  className={cn(ROW, isActive && "text-[var(--fg-primary)]")}
                 >
                   <span
                     aria-hidden
-                    className="inline-block w-4 h-4 rounded-full border border-[var(--border-subtle)] shrink-0"
+                    className="inline-block size-3.5 shrink-0 rounded-full ring-1 ring-[var(--border-strong)]"
                     style={{ background: dotColor }}
                   />
-                  <span
-                    className={
-                      isActive
-                        ? "text-[var(--fg-primary)] flex-1"
-                        : "text-[var(--fg-secondary)] flex-1 group-hover:text-[var(--fg-primary)] transition-colors"
-                    }
-                  >
-                    {t.label}
-                  </span>
-                  {isActive && <Diamond size={10} />}
+                  <span className="flex-1">{t.label}</span>
+                  {isActive && (
+                    <CheckIcon
+                      aria-hidden
+                      size={12}
+                      weight="bold"
+                      className="text-[var(--fg-brand)]"
+                    />
+                  )}
                 </button>
               );
             })}
@@ -191,7 +204,7 @@ const ThemeSwitcher = React.forwardRef<HTMLDivElement, ThemeSwitcherProps>(
           aria-expanded={open}
           aria-haspopup="menu"
           onClick={() => setOpen((v) => !v)}
-          className="flex items-center gap-2 px-2.5 py-2 rounded-[var(--radius-md)] border border-[var(--border-subtle)] bg-[var(--bg-surface)] hover:border-[var(--border-strong)] focus-visible:outline-none focus-visible:border-[var(--fg-brand)] focus-visible:shadow-[0_0_0_3px_var(--bg-surface-brand)] transition-colors shadow-[0_4px_12px_rgba(0,0,0,0.3)]"
+          className="flex items-center gap-2 px-2.5 py-2 rounded-[var(--radius-md)] border border-[var(--border-strong)] bg-[var(--bg-overlay)] hover:border-[var(--fg-muted)] focus-visible:outline-none focus-visible:border-[var(--fg-brand)] focus-visible:shadow-[0_0_0_3px_var(--bg-surface-brand)] transition-colors shadow-[var(--shadow-card-hover)]"
         >
           <span
             aria-hidden

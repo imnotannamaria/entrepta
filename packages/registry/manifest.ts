@@ -43,7 +43,7 @@ export const COMPONENTS: RegistryComponent[] = [
     category: "primitives",
     files: ["primitives/input.tsx"],
     deps: ["class-variance-authority", "@phosphor-icons/react"],
-    registryDeps: [],
+    registryDeps: ["kbd"],
     usage: `<Input variant="search" placeholder="search…" />`,
     exports: ["Input"],
   },
@@ -100,7 +100,7 @@ export const COMPONENTS: RegistryComponent[] = [
     category: "primitives",
     files: ["primitives/dropdown.tsx"],
     deps: ["@radix-ui/react-dropdown-menu", "@phosphor-icons/react"],
-    registryDeps: [],
+    registryDeps: ["kbd"],
     usage:
       "<DropdownMenu><DropdownMenuTrigger asChild><Button>menu</Button></DropdownMenuTrigger><DropdownMenuContent><DropdownMenuItem>item</DropdownMenuItem></DropdownMenuContent></DropdownMenu>",
     exports: [
@@ -128,7 +128,7 @@ export const COMPONENTS: RegistryComponent[] = [
     category: "primitives",
     files: ["primitives/tooltip.tsx"],
     deps: ["@radix-ui/react-tooltip"],
-    registryDeps: [],
+    registryDeps: ["kbd"],
     usage:
       "<Tooltip><TooltipTrigger asChild><Button>save</Button></TooltipTrigger><TooltipContent>save <TooltipShortcut>⌘S</TooltipShortcut></TooltipContent></Tooltip>",
     exports: ["Tooltip", "TooltipContent", "TooltipProvider", "TooltipShortcut", "TooltipTrigger"],
@@ -243,7 +243,7 @@ export const COMPONENTS: RegistryComponent[] = [
     category: "feedback",
     files: ["feedback/command-palette.tsx"],
     deps: ["cmdk", "@radix-ui/react-dialog", "@phosphor-icons/react"],
-    registryDeps: ["use-command-palette"],
+    registryDeps: ["use-command-palette", "kbd"],
     usage:
       "<CommandDialog open={open} onOpenChange={setOpen}><Command><CommandInput /><CommandList>…</CommandList></Command></CommandDialog>",
     exports: [
@@ -354,6 +354,16 @@ export const COMPONENTS: RegistryComponent[] = [
     registryDeps: [],
     usage: `<Switch label="notifications" />`,
     exports: ["Switch"],
+  },
+  {
+    name: "kbd",
+    description: "A key or a shortcut, as a chip or plain, that turns brand in a highlighted row",
+    category: "primitives",
+    files: ["primitives/kbd.tsx"],
+    deps: [],
+    registryDeps: [],
+    usage: "<Kbd>⌘K</Kbd>",
+    exports: ["Kbd"],
   },
   {
     name: "checkbox",

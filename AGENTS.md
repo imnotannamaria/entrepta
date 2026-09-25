@@ -106,7 +106,7 @@ entrepta/
 │       ├── manifest.ts       # every installable item: files, deps, registryDeps, usage, exports
 │       ├── styles/           # globals.css + themes/*.css
 │       ├── primitives/       # button, badge, input, card, dialog, dropdown, tooltip, tabs,
-│       │                     # checkbox, switch, textarea, field, filter-pill
+│       │                     # kbd, checkbox, switch, textarea, field, filter-pill
 │       ├── layout/           # status-bar, top-nav, theme-switcher, mode-toggle,
 │       │                     # sidebar, page-outline
 │       ├── content/          # code-block, diamond, sect-head, doc-parts
@@ -341,7 +341,7 @@ Vite. Aliases are relative to it, and `add` writes each file under it.
 - `styles/globals.css`, reset, tokens, fonts, type utilities, light mode
 - `styles/themes/*.css`, the 6 presets
 
-### Primitives (13)
+### Primitives (14)
 
 | Component | Radix                           | Notes                                   |
 | --------- | ------------------------------- | --------------------------------------- |
@@ -351,7 +351,8 @@ Vite. Aliases are relative to it, and `add` writes each file under it.
 | Card      | no                              | default/featured/terminal/data, sm/md/xl |
 | Dialog    | `@radix-ui/react-dialog`        | base for modals                          |
 | Dropdown  | `@radix-ui/react-dropdown-menu` | on the overlay surface, highlighted row in the brand tint |
-| Tooltip   | `@radix-ui/react-tooltip`       | hover info, keyboard hints               |
+| Tooltip   | `@radix-ui/react-tooltip`       | hover info on the overlay surface, a Kbd for shortcuts |
+| Kbd       | no                              | every keyboard hint, chip or plain, brand in a highlighted row |
 | Tabs      | `@radix-ui/react-tabs`          | in place (Tabs) or routes (TabNav), travelling underline, × on the active tab, icons that grow on hover, `variant="window"` is the title bar |
 | Checkbox  | no                              | native checkbox, drawn check, description, indeterminate |
 | Switch    | no                              | native checkbox with `role="switch"`     |
@@ -390,7 +391,7 @@ every such import is covered.
 | -------------- | ------- | ---------------------------------- |
 | Toast          | `sonner`| unstyled sonner, status as an icon tile and a corner glow |
 | Skeleton       | no      | shimmer, respects reduced motion    |
-| CommandPalette | `cmdk`  | ⌘K, search, groups, shortcuts       |
+| CommandPalette | `cmdk`  | ⌘K, rows highlight like a dropdown, Kbd hints |
 | ChromeMessage  | no      | 404 and error screens, server safe  |
 | PageLoading    | no      | CSS only, extra lines only on a long wait |
 
@@ -552,6 +553,11 @@ pnpm dlx file:"$(pwd)/../entrepta/packages/cli" init
 - Overlays animate with plain CSS (`motion-fade`, `motion-pop` in
   `globals.css`), not an animation plugin, so a copied component needs nothing
   else. `:root` declares `color-scheme: dark` for native controls and autofill
+- Overlays are one family: Dropdown, CommandPalette, Tooltip, Dialog, the
+  ThemeSwitcher panel and Toast share `--bg-overlay` and `--shadow-overlay`, and
+  every list of rows has the same size and brand tint highlight. Every keyboard
+  hint is a `Kbd`. `test/overlay-family.test.ts` holds them together, so
+  improving one means improving the rest
 - Docs live at https://entrepta.vercel.app/
 
 ---

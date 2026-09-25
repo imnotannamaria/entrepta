@@ -116,7 +116,7 @@ const CodeBlock = React.forwardRef<HTMLDivElement, CodeBlockProps>(
                     "border border-[var(--border-subtle)] bg-[var(--bg-canvas)]",
                     "text-[var(--fg-muted)] hover:text-[var(--fg-primary)] hover:border-[var(--border-strong)]",
                     "transition-colors duration-150",
-                    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)]"
+                    "focus-ring"
                   )}
                 >
                   {copyState === "copied" ? (

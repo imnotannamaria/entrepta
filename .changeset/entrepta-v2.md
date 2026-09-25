@@ -13,11 +13,11 @@ Breaking:
 - Text on a brand fill uses `--fg-on-brand`, and brand-colored text below 24px uses `--fg-brand-text`. entrepta light is `#6656ff`, and four light brands shifted slightly.
 - Dialog and CommandPalette sit on `--bg-overlay`. Dark `--fg-muted` is lighter, and light mode status inks are darker, so every ink clears WCAG AA.
 - Tabs put the close button next to the tab, on the active tab only, and now depend on `motion`.
-- Dropdown and Toast sit on `--bg-overlay`. A highlighted menu row takes the brand tint instead of an edge bar, and a toast shows its status as an icon tile. The Toaster renders sonner unstyled and adds a close button.
+- Dropdown, Toast, Tooltip, CommandPalette and the ThemeSwitcher panel sit on `--bg-overlay` and highlight rows the same way. A highlighted menu row takes the brand tint instead of an edge bar, and a toast shows its status as an icon tile. The Toaster renders sonner unstyled and adds a close button.
 
 New:
 
-- Components: Checkbox, Switch, Textarea, Field, FilterPill, ChromeMessage, PageLoading, SectHead, doc parts, Diamond, Sidebar, PageOutline, TabNav with a window variant for the title bar, and the motion set: Reveal, TypeIn, RollingNumber, Spotlight, ArrowLink.
+- Components: Kbd, Checkbox, Switch, Textarea, Field, FilterPill, ChromeMessage, PageLoading, SectHead, doc parts, Diamond, Sidebar, PageOutline, TabNav with a window variant for the title bar, and the motion set: Reveal, TypeIn, RollingNumber, Spotlight, ArrowLink.
 - Button icon sizes (`icon-sm`, `icon-md`, `icon-lg`) and an `icon` prop on Badge.
 - Tokens for cards, overlays, brand accents and shadows, and a contrast test over all 12 theme and mode combinations.
 - `init --themes=all` installs the six themes for runtime switching, and ThemeSwitchers on one page stay in step.

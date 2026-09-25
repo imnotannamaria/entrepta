@@ -4,6 +4,7 @@ import { CaretRightIcon, CheckIcon, CircleIcon } from "@phosphor-icons/react";
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
 import * as React from "react";
 import { cn } from "../lib/utils";
+import { Kbd } from "./kbd";
 
 const DropdownMenu = DropdownMenuPrimitive.Root;
 const DropdownMenuTrigger = DropdownMenuPrimitive.Trigger;
@@ -176,15 +177,8 @@ const DropdownMenuSeparator = React.forwardRef<
 ));
 DropdownMenuSeparator.displayName = DropdownMenuPrimitive.Separator.displayName;
 
-const DropdownMenuShortcut = ({ className, ...props }: React.HTMLAttributes<HTMLSpanElement>) => (
-  <span
-    className={cn(
-      "ml-auto pl-4 font-mono text-mono-sm tracking-[0.04em] text-[var(--fg-muted)]",
-      "transition-colors group-data-[highlighted]/item:text-[var(--fg-brand-text)]",
-      className
-    )}
-    {...props}
-  />
+const DropdownMenuShortcut = ({ className, ...props }: React.HTMLAttributes<HTMLElement>) => (
+  <Kbd variant="plain" className={cn("ml-auto pl-4", className)} {...props} />
 );
 DropdownMenuShortcut.displayName = "DropdownMenuShortcut";
 

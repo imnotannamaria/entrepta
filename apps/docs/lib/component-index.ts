@@ -17,6 +17,7 @@ export const COMPONENT_INDEX: ComponentEntry[] = [
   { slug: "dialog", title: "Dialog", section: "Primitives" },
   { slug: "dropdown", title: "Dropdown", section: "Primitives" },
   { slug: "tooltip", title: "Tooltip", section: "Primitives" },
+  { slug: "kbd", title: "Kbd", section: "Primitives" },
   { slug: "tabs", title: "Tabs", section: "Primitives" },
   { slug: "input", title: "Input", section: "Forms" },
   { slug: "textarea", title: "Textarea", section: "Forms" },

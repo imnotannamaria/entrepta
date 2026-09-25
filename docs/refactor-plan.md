@@ -1119,6 +1119,16 @@ Smaller than the ones above, each with a recommendation.
   overlay animated. Replaced by `motion-fade` and `motion-pop` in `globals.css`. `useTheme`
   instances now stay in step, so the hero swatches and the floating switcher agree
 
+## Review round 2
+
+- [x] AGENTS.md dialog went blank on picking a file name: focusing a hidden radio scrolled the
+      clipped frame. Radios stay inside their labels and the frame uses `overflow: clip`
+- [x] Overlay family: CommandPalette, Tooltip and the ThemeSwitcher panel follow the Dropdown
+      and the Toast. Same surface, same rows, same highlight, `test/overlay-family.test.ts`
+- [x] Kbd primitive for every keyboard hint
+- [x] ThemeSwitcher and ModeToggle previews show the real components, not copies
+- [x] One focus style: `.focus-ring` on the CodeBlock copy button, an inset brand ring on tabs
+
 ---
 
 ## Out of scope

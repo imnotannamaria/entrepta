@@ -152,7 +152,9 @@ describe("CommandDialog", () => {
         </Command>
       </CommandDialog>
     );
-    expect(screen.getByText(/⌘K to close/)).toBeInTheDocument();
+    for (const key of ["↑↓", "↵", "esc"]) {
+      expect(screen.getAllByText(key).some((el) => el.tagName === "KBD")).toBe(true);
+    }
   });
 
   it("CommandFoot accepts custom children", () => {
@@ -170,5 +172,25 @@ describe("CommandDialog", () => {
     );
     expect(screen.getByText("12 results")).toBeInTheDocument();
     expect(screen.getByText("powered by cmdk")).toBeInTheDocument();
+  });
+
+  it("highlights a selected row like a dropdown row: brand tint, brand icon, brand shortcut", () => {
+    render(
+      <CommandDialog open onOpenChange={() => {}}>
+        <Command>
+          <CommandList>
+            <CommandItem icon={<svg aria-hidden />} shortcut="⌘1">
+              Home
+            </CommandItem>
+          </CommandList>
+        </Command>
+      </CommandDialog>
+    );
+    const item = screen.getByText("Home").closest("[cmdk-item]") as HTMLElement;
+    expect(item).toHaveClass("group/item", "data-[selected=true]:bg-[var(--bg-surface-brand)]");
+    expect(item.querySelector("svg")?.parentElement).toHaveClass(
+      "group-data-[selected=true]/item:text-[var(--fg-brand)]"
+    );
+    expect(screen.getByText("⌘1").tagName).toBe("KBD");
   });
 });

@@ -3,6 +3,7 @@
 import * as TooltipPrimitive from "@radix-ui/react-tooltip";
 import * as React from "react";
 import { cn } from "../lib/utils";
+import { Kbd } from "./kbd";
 
 const TooltipProvider = ({
   delayDuration = 200,
@@ -26,10 +27,10 @@ const TooltipContent = React.forwardRef<
       data-surface="dark"
       className={cn(
         "z-50 inline-flex items-center gap-2 whitespace-nowrap",
-        "bg-[var(--bg-surface)] border border-[var(--border-strong)]",
-        "rounded-[var(--radius-sm)] px-2 py-1",
+        "bg-[var(--bg-overlay)] border border-[var(--border-strong)]",
+        "rounded-[var(--radius-sm)] px-2.5 py-1.5",
         "font-mono text-mono-sm text-[var(--fg-primary)]",
-        "shadow-[0_4px_12px_rgba(0,0,0,0.4)]",
+        "shadow-[var(--shadow-overlay)]",
         "motion-pop origin-[var(--radix-tooltip-content-transform-origin)]",
         className
       )}
@@ -39,12 +40,7 @@ const TooltipContent = React.forwardRef<
 ));
 TooltipContent.displayName = TooltipPrimitive.Content.displayName;
 
-const TooltipShortcut = ({ className, ...props }: React.HTMLAttributes<HTMLSpanElement>) => (
-  <span
-    className={cn("font-mono text-mono-sm text-[var(--fg-muted)] tracking-[0.04em]", className)}
-    {...props}
-  />
-);
+const TooltipShortcut = (props: React.HTMLAttributes<HTMLElement>) => <Kbd {...props} />;
 TooltipShortcut.displayName = "TooltipShortcut";
 
 export { Tooltip, TooltipContent, TooltipProvider, TooltipShortcut, TooltipTrigger };

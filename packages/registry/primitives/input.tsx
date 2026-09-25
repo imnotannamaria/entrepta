@@ -4,6 +4,7 @@ import { MagnifyingGlassIcon } from "@phosphor-icons/react";
 import { type VariantProps, cva } from "class-variance-authority";
 import * as React from "react";
 import { cn } from "../lib/utils";
+import { Kbd } from "./kbd";
 
 const inputWrapperVariants = cva(
   [
@@ -76,15 +77,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           className={inputBaseClass}
           {...props}
         />
-        {variant === "command" && (
-          <kbd
-            aria-hidden
-            className="shrink-0 inline-flex items-center gap-0.5 font-mono text-mono-sm text-[var(--fg-muted)] tracking-wide select-none"
-          >
-            <span>⌘</span>
-            <span>K</span>
-          </kbd>
-        )}
+        {variant === "command" && <Kbd aria-hidden>⌘K</Kbd>}
       </div>
     );
   }

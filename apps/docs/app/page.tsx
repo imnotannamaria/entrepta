@@ -26,6 +26,7 @@ import {
   CardMeta,
   CardTitle,
 } from "@entrepta/registry/primitives/card";
+import { Kbd } from "@entrepta/registry/primitives/kbd";
 import { Switch } from "@entrepta/registry/primitives/switch";
 import { CheckIcon } from "@phosphor-icons/react/dist/ssr";
 import Link from "next/link";
@@ -595,10 +596,7 @@ export default function Home() {
                 Start <em className="italic text-[var(--fg-brand)]">building.</em>
               </h2>
               <p className="font-sans text-body-lg text-[var(--fg-secondary)] max-w-md leading-relaxed">
-                Every token, every component, every state. Laid out in the docs. Press{" "}
-                <kbd className="font-mono text-mono-sm border border-[var(--border-strong)] rounded-[3px] px-1.5 py-0.5 text-[var(--fg-muted)]">
-                  ⌘K
-                </kbd>{" "}
+                Every token, every component, every state. Laid out in the docs. Press <Kbd>⌘K</Kbd>{" "}
                 to jump anywhere.
               </p>
               <div className="flex gap-3 justify-center flex-wrap mt-2">

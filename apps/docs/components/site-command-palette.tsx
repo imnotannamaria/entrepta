@@ -33,7 +33,7 @@ interface SiteCommandPaletteCtx {
 
 const Ctx = createContext<SiteCommandPaletteCtx | null>(null);
 
-const ICON_PROPS = { size: 13 };
+const ICON_PROPS = { size: 14 };
 
 export function SiteCommandPaletteProvider({ children }: { children: ReactNode }) {
   const { open, setOpen, toggle } = useCommandPalette();
