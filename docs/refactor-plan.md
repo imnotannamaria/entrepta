@@ -984,17 +984,51 @@ click.
 
 **Checklist**
 
-- [ ] Stats and counts from the manifest; principles 04 and 06; swatches from `THEMES`
-- [ ] Home cards on the new Card, with Reveal and Spotlight
-- [ ] Manifest moved into the registry, with the `usage` field; docs component lists derived from it
-- [ ] `buildAgentsMd` and its tests
-- [ ] `#agents` section with controls, preview, copy and download
-- [ ] State in the URL
-- [ ] Metadata, and the section's text in the server HTML
+- [x] Stats and counts from the manifest; principles 04 and 06; swatches from `THEMES`
+- [x] Home cards on the new Card, with Reveal and Spotlight
+- [x] Manifest moved into the registry, with the `usage` field; docs component lists derived from it
+- [x] `buildAgentsMd` and its tests
+- [x] `#agents` section with controls, preview, copy and download
+- [x] State in the URL
+- [x] Metadata, and the section's text in the server HTML
 
 **Done when** an AGENTS.md generated for Vite, pnpm, ivy and three components, pasted into a
 clean project, lets an agent install and use those components without opening the docs.
 
+
+**Notes from the work**
+
+- The manifest moved in Phase 6. Here it gained `usage` (one line of JSX) and `exports` (what
+  each component's files export, for the import lines). A CLI test checks both: every
+  component has them, hooks and lib files do not, and `exports` matches the files exactly.
+- Home: hero stats come from the component index, the theme list and a token count read from
+  the registry's `globals.css` at build time (93, where the old page said 69). The "what's
+  inside" grid is one card per docs section, named and counted from the index, plus a themes
+  card painted from `THEMES`. Principles 04 and 06 are rewritten. Cards enter with Reveal; the
+  closing card has the Spotlight. The hero and every section's text are server HTML.
+- Found and fixed on the home page: links wrapped buttons (`<a><button>`), which is invalid
+  and reads badly in screen readers. They are links styled with `buttonVariants`, the reason
+  that file has no `"use client"`. Versions said v1.0; they say v2.0.
+- Configurator (`#agents`): radio groups and checkboxes in fieldsets with legends; components
+  that a picked one needs are checked, locked, and say which one needs them; a short
+  `aria-live` line announces the count; the preview is a CodeBlock (its copy button has the
+  failure state), and download shows done or failed. The choices live in the URL through
+  `use-url-filter` for each single choice and a list hook with the same pattern for
+  components, so a configuration is a link. The server renders the default configuration, so
+  the generated text is in the HTML.
+- Found through the "Done when" test, which followed a generated Vite file in a clean
+  `create vite` project, with the local CLI standing in for the unpublished v2:
+  - The CLI wrote hooks and lib files to the project root in Vite projects while the imports
+    pointed at `src/` (and the components alias read `@/src/components/...`). `init` now
+    records `srcDir` in `entrepta.json`, aliases are relative to it, and `add` resolves them
+    through it. Old configs without `srcDir` keep working. Tests cover both.
+  - The file did not say entrepta needs Tailwind v4, or how to add it per framework. It does
+    now, with the exact Vite alias config.
+  - Field's usage line used Input, which may not be installed. It uses a native input.
+  After that, the Vite app built (typecheck included) and rendered with the ivy brand and the
+  scale in place.
+- A test now keeps CLAUDE.md and AGENTS.md identical apart from the lines that name the agent,
+  and AGENTS.md is committed.
 **Visual pass**
 
 - The whole home page in dark and light, with and without reduced motion.

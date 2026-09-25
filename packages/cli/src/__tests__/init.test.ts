@@ -28,6 +28,7 @@ vi.mock("../utils/detect-framework.js", () => ({
     cssPath: "app/globals.css",
     utilsPath: "lib/utils.ts",
     componentsPath: "components/entrepta",
+    srcDir: "",
   }),
 }));
 
@@ -182,6 +183,34 @@ describe("init", () => {
         "exit:1"
       );
       expect(log.error).toHaveBeenCalledWith(expect.stringContaining("--themes"));
+    });
+  });
+
+  describe("aliases", () => {
+    it("writes aliases relative to srcDir for a Vite project", async () => {
+      const { detectFramework } = await import("../utils/detect-framework.js");
+      vi.mocked(detectFramework).mockResolvedValueOnce({
+        name: "Vite",
+        cssPath: "src/index.css",
+        componentsPath: "src/components/entrepta",
+        utilsPath: "src/lib/utils.ts",
+        srcDir: "src",
+      });
+      await init({ theme: "ivy", overwrite: false });
+      expect(mockWriteConfig).toHaveBeenCalledWith(
+        expect.any(String),
+        expect.objectContaining({
+          srcDir: "src",
+          aliases: expect.objectContaining({ components: "@/components/entrepta", lib: "@/lib" }),
+        })
+      );
+    });
+
+    it("has no srcDir for Next.js, where @/ is the project root", async () => {
+      await init({ theme: "ivy", overwrite: false });
+      const config = mockWriteConfig.mock.calls[0][1];
+      expect(config).not.toHaveProperty("srcDir");
+      expect(config.aliases.components).toBe("@/components/entrepta");
     });
   });
 

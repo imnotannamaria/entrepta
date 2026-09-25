@@ -1,0 +1,340 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`buildAgentsMd > matches the snapshot for next-app 1`] = `
+"# entrepta in this project
+
+This project uses [entrepta](https://entrepta.vercel.app), a dark-first design system with an editor metaphor: tabs, a command palette, a status bar, shell prompts, serif italic next to mono. Its components are copied into the repo as source, so they are this project's code: read them, and edit them when a change calls for it.
+
+Built for Next.js App Router with the entrepta theme.
+
+## Setup
+
+\`\`\`bash
+pnpm dlx @entrepta/cli@latest init --theme=entrepta
+pnpm dlx @entrepta/cli@latest add button card field
+\`\`\`
+
+- \`init\` writes the tokens, \`lib/utils.ts\` with the \`cn\` helper, and \`entrepta.json\`.
+- \`add\` copies each component with whatever it imports and installs its npm packages.
+- It never overwrites a file without \`--overwrite\`. Use that only to take an upstream update, since it replaces local edits.
+- entrepta needs Tailwind CSS v4: install \`tailwindcss\` and \`@tailwindcss/postcss\`, and list \`@tailwindcss/postcss\` in postcss.config.mjs.
+
+## Where things live
+
+- Tokens and global CSS: \`app/globals.css\`
+- Components: \`app/components/entrepta/\`, imported from \`@/app/components/entrepta/<name>\`
+- The \`cn\` helper: \`lib/utils.ts\`
+- Hooks: \`hooks/\`. Shared lib files: \`lib/\`
+
+## Theme and mode
+
+- One theme, \`entrepta\`, is installed. Changing it means running \`init\` again.
+- Default mode: dark. Light mode is \`data-mode="light"\` on \`<html>\`; dark is the absence of it.
+- ThemeScript and ModeScript set these attributes before React loads. Wherever they run, add \`suppressHydrationWarning\` to \`<html>\`.
+
+## Tokens
+
+- Every color is a CSS variable from \`app/globals.css\`. Never write a hex in a component.
+- Surfaces: \`--bg-canvas\` for the page, \`--bg-card\` for cards, \`--bg-surface\` for what sits above a card (menus, tooltips, code), \`--bg-overlay\` for dialogs.
+- Text: \`--fg-primary\`, \`--fg-secondary\`, \`--fg-muted\`. Borders: \`--border-subtle\`, \`--border-strong\`.
+- Brand: \`--fg-brand\` for fills, borders, glyphs and text 24px and up. \`--fg-brand-text\` for brand-colored text below 24px. \`--fg-on-brand\` for text on a brand fill.
+- Brand accents mix from the brand, so they follow the theme: \`--border-brand\`, \`--border-brand-strong\`, \`--bg-surface-brand\`, \`--fg-brand-glow\`. For a new one, use \`color-mix(in srgb, var(--fg-brand) N%, transparent)\`.
+- Status: \`--status-success\`, \`--status-warning\`, \`--status-error\`, \`--status-info\` for fills and dots, \`--status-*-fg\` for text, \`--status-*-soft\` for tints.
+- In Tailwind, write tokens as \`bg-[var(--bg-card)]\` and \`text-[var(--fg-muted)]\`.
+
+## Type
+
+- Font sizes come from ten steps and nothing else: \`text-display-xl\`, \`text-display-lg\`, \`text-display-md\`, \`text-heading-lg\`, \`text-heading-md\`, \`text-body-lg\`, \`text-body-md\`, \`text-mono-md\`, \`text-mono-sm\`, \`text-mono-xs\`.
+- A step sets size and leading, never the family. Pair it with \`font-serif\` (titles, proper nouns), \`font-mono\` (UI, labels, metadata) or \`font-sans\` (long prose).
+- No arbitrary pixel sizes and no Tailwind default size steps.
+- Compose classes with \`cn()\` from the utils file. It knows the scale, so a step and a color class survive together.
+
+## Rules
+
+- Do: Use a CSS variable for every color. Don't: Hardcode a hex in a component. It stops following the theme.
+- Do: Derive brand accents from --fg-brand with color-mix(). Don't: Hardcode the violet. It stops reacting when someone picks another theme.
+- Do: Put --fg-on-brand on a brand fill. Don't: Reach for a fixed near-white. It fails contrast in 7 of the 12 theme and mode pairs.
+- Do: Color brand text below 24px with --fg-brand-text. Don't: Use --fg-brand for small text. It fails AA in 4 of the 12 pairs.
+- Do: Put cards on --bg-card, menus on --bg-surface, dialogs on --bg-overlay. Don't: Fill a grid of cards with --bg-surface. It reads as a field of gray.
+- Do: Size text with the ten scale steps, such as text-mono-sm. Don't: Write text-[13px] or Tailwind's text-sm. A test fails on both.
+- Do: Pick the family at the call site: font-serif, font-sans or font-mono. Don't: Expect a scale step to set the font. It sets size and leading only.
+- Do: Let a row of two halves wrap, and keep each half on one line. Don't: Assume it fits. A card clips with no ellipsis, so overflow looks like missing data.
+- Do: Hide glyphs such as ◆, $ and // with aria-hidden. Don't: Let a screen reader say black diamond suit before every label.
+- Do: Give bare buttons the .focus-ring class. Don't: Rely on outline. The reset removes it from every button.
+- Do: Import Phosphor from @phosphor-icons/react/dist/ssr in files without use client. Don't: Import the package root there. next build fails with an error that names no file.
+- Do: Pass your router's link with asChild or linkComponent, and mark the current item with active. Don't: Import next/link in a copied component. It stops working outside Next.js.
+
+## Accessibility
+
+- Every ink clears WCAG AA on what it sits on, in every theme and mode. Keep each token on the surface it was measured for.
+- Glyphs such as ◆, $ and // carry \`aria-hidden\`.
+- Links get a brand outline on focus. A bare button with no focus style of its own takes the \`.focus-ring\` class.
+- Put \`<a href="#main" class="skip-link">skip to content</a>\` first in \`<body>\`.
+- Wrap each form control in \`Field\`: it wires the label, \`aria-describedby\` and \`aria-invalid\`.
+
+## Components
+
+### Button
+
+\`\`\`tsx
+import { Button, buttonVariants } from "@/app/components/entrepta/button"
+
+<Button variant="primary" size="md">ship it</Button>
+\`\`\`
+
+Docs: https://entrepta.vercel.app/docs/components/button
+
+### Card
+
+\`\`\`tsx
+import { Card, cardVariants, CardHeader, CardLabel, CardMeta, CardTitle, CardDescription, CardContent, CardFooter, CardComment, CardTerminalBar, CardTerminalBody } from "@/app/components/entrepta/card"
+
+<Card><CardHeader><CardLabel>post</CardLabel><CardMeta>2026</CardMeta></CardHeader><CardTitle>Title</CardTitle></Card>
+\`\`\`
+
+Docs: https://entrepta.vercel.app/docs/components/card
+
+### Field
+
+\`\`\`tsx
+import { Field, FieldError, FieldLabel } from "@/app/components/entrepta/field"
+
+<Field id="email" label="email" error={error}><input type="email" /></Field>
+\`\`\`
+
+Docs: https://entrepta.vercel.app/docs/components/field
+
+Also installed as dependencies: \`diamond\`.
+
+## Before calling a UI change done
+
+- Look at it at 375px wide, in dark and light, and with reduced motion on. Tests do not measure text or overflow.
+- A card clips its content with no ellipsis. A row of two halves should wrap, with each half kept on one line.
+"
+`;
+
+exports[`buildAgentsMd > matches the snapshot for next-pages 1`] = `
+"# entrepta in this project
+
+This project uses [entrepta](https://entrepta.vercel.app), a dark-first design system with an editor metaphor: tabs, a command palette, a status bar, shell prompts, serif italic next to mono. Its components are copied into the repo as source, so they are this project's code: read them, and edit them when a change calls for it.
+
+Built for Next.js Pages Router with the entrepta theme.
+
+## Setup
+
+\`\`\`bash
+pnpm dlx @entrepta/cli@latest init --theme=entrepta
+pnpm dlx @entrepta/cli@latest add button card field
+\`\`\`
+
+- \`init\` writes the tokens, \`lib/utils.ts\` with the \`cn\` helper, and \`entrepta.json\`.
+- \`add\` copies each component with whatever it imports and installs its npm packages.
+- It never overwrites a file without \`--overwrite\`. Use that only to take an upstream update, since it replaces local edits.
+- entrepta needs Tailwind CSS v4: install \`tailwindcss\` and \`@tailwindcss/postcss\`, and list \`@tailwindcss/postcss\` in postcss.config.mjs.
+
+## Where things live
+
+- Tokens and global CSS: \`styles/globals.css\`
+- Components: \`components/entrepta/\`, imported from \`@/components/entrepta/<name>\`
+- The \`cn\` helper: \`lib/utils.ts\`
+- Hooks: \`hooks/\`. Shared lib files: \`lib/\`
+
+## Theme and mode
+
+- One theme, \`entrepta\`, is installed. Changing it means running \`init\` again.
+- Default mode: dark. Light mode is \`data-mode="light"\` on \`<html>\`; dark is the absence of it.
+- ThemeScript and ModeScript set these attributes before React loads. Wherever they run, add \`suppressHydrationWarning\` to \`<html>\`.
+
+## Tokens
+
+- Every color is a CSS variable from \`styles/globals.css\`. Never write a hex in a component.
+- Surfaces: \`--bg-canvas\` for the page, \`--bg-card\` for cards, \`--bg-surface\` for what sits above a card (menus, tooltips, code), \`--bg-overlay\` for dialogs.
+- Text: \`--fg-primary\`, \`--fg-secondary\`, \`--fg-muted\`. Borders: \`--border-subtle\`, \`--border-strong\`.
+- Brand: \`--fg-brand\` for fills, borders, glyphs and text 24px and up. \`--fg-brand-text\` for brand-colored text below 24px. \`--fg-on-brand\` for text on a brand fill.
+- Brand accents mix from the brand, so they follow the theme: \`--border-brand\`, \`--border-brand-strong\`, \`--bg-surface-brand\`, \`--fg-brand-glow\`. For a new one, use \`color-mix(in srgb, var(--fg-brand) N%, transparent)\`.
+- Status: \`--status-success\`, \`--status-warning\`, \`--status-error\`, \`--status-info\` for fills and dots, \`--status-*-fg\` for text, \`--status-*-soft\` for tints.
+- In Tailwind, write tokens as \`bg-[var(--bg-card)]\` and \`text-[var(--fg-muted)]\`.
+
+## Type
+
+- Font sizes come from ten steps and nothing else: \`text-display-xl\`, \`text-display-lg\`, \`text-display-md\`, \`text-heading-lg\`, \`text-heading-md\`, \`text-body-lg\`, \`text-body-md\`, \`text-mono-md\`, \`text-mono-sm\`, \`text-mono-xs\`.
+- A step sets size and leading, never the family. Pair it with \`font-serif\` (titles, proper nouns), \`font-mono\` (UI, labels, metadata) or \`font-sans\` (long prose).
+- No arbitrary pixel sizes and no Tailwind default size steps.
+- Compose classes with \`cn()\` from the utils file. It knows the scale, so a step and a color class survive together.
+
+## Rules
+
+- Do: Use a CSS variable for every color. Don't: Hardcode a hex in a component. It stops following the theme.
+- Do: Derive brand accents from --fg-brand with color-mix(). Don't: Hardcode the violet. It stops reacting when someone picks another theme.
+- Do: Put --fg-on-brand on a brand fill. Don't: Reach for a fixed near-white. It fails contrast in 7 of the 12 theme and mode pairs.
+- Do: Color brand text below 24px with --fg-brand-text. Don't: Use --fg-brand for small text. It fails AA in 4 of the 12 pairs.
+- Do: Put cards on --bg-card, menus on --bg-surface, dialogs on --bg-overlay. Don't: Fill a grid of cards with --bg-surface. It reads as a field of gray.
+- Do: Size text with the ten scale steps, such as text-mono-sm. Don't: Write text-[13px] or Tailwind's text-sm. A test fails on both.
+- Do: Pick the family at the call site: font-serif, font-sans or font-mono. Don't: Expect a scale step to set the font. It sets size and leading only.
+- Do: Let a row of two halves wrap, and keep each half on one line. Don't: Assume it fits. A card clips with no ellipsis, so overflow looks like missing data.
+- Do: Hide glyphs such as ◆, $ and // with aria-hidden. Don't: Let a screen reader say black diamond suit before every label.
+- Do: Give bare buttons the .focus-ring class. Don't: Rely on outline. The reset removes it from every button.
+- Do: Import Phosphor from @phosphor-icons/react/dist/ssr in files without use client. Don't: Import the package root there. next build fails with an error that names no file.
+- Do: Pass your router's link with asChild or linkComponent, and mark the current item with active. Don't: Import next/link in a copied component. It stops working outside Next.js.
+
+## Accessibility
+
+- Every ink clears WCAG AA on what it sits on, in every theme and mode. Keep each token on the surface it was measured for.
+- Glyphs such as ◆, $ and // carry \`aria-hidden\`.
+- Links get a brand outline on focus. A bare button with no focus style of its own takes the \`.focus-ring\` class.
+- Put \`<a href="#main" class="skip-link">skip to content</a>\` first in \`<body>\`.
+- Wrap each form control in \`Field\`: it wires the label, \`aria-describedby\` and \`aria-invalid\`.
+
+## Components
+
+### Button
+
+\`\`\`tsx
+import { Button, buttonVariants } from "@/components/entrepta/button"
+
+<Button variant="primary" size="md">ship it</Button>
+\`\`\`
+
+Docs: https://entrepta.vercel.app/docs/components/button
+
+### Card
+
+\`\`\`tsx
+import { Card, cardVariants, CardHeader, CardLabel, CardMeta, CardTitle, CardDescription, CardContent, CardFooter, CardComment, CardTerminalBar, CardTerminalBody } from "@/components/entrepta/card"
+
+<Card><CardHeader><CardLabel>post</CardLabel><CardMeta>2026</CardMeta></CardHeader><CardTitle>Title</CardTitle></Card>
+\`\`\`
+
+Docs: https://entrepta.vercel.app/docs/components/card
+
+### Field
+
+\`\`\`tsx
+import { Field, FieldError, FieldLabel } from "@/components/entrepta/field"
+
+<Field id="email" label="email" error={error}><input type="email" /></Field>
+\`\`\`
+
+Docs: https://entrepta.vercel.app/docs/components/field
+
+Also installed as dependencies: \`diamond\`.
+
+## Before calling a UI change done
+
+- Look at it at 375px wide, in dark and light, and with reduced motion on. Tests do not measure text or overflow.
+- A card clips its content with no ellipsis. A row of two halves should wrap, with each half kept on one line.
+"
+`;
+
+exports[`buildAgentsMd > matches the snapshot for vite 1`] = `
+"# entrepta in this project
+
+This project uses [entrepta](https://entrepta.vercel.app), a dark-first design system with an editor metaphor: tabs, a command palette, a status bar, shell prompts, serif italic next to mono. Its components are copied into the repo as source, so they are this project's code: read them, and edit them when a change calls for it.
+
+Built for Vite with the entrepta theme.
+
+## Setup
+
+\`\`\`bash
+pnpm dlx @entrepta/cli@latest init --theme=entrepta
+pnpm dlx @entrepta/cli@latest add button card field
+\`\`\`
+
+- \`init\` writes the tokens, \`src/lib/utils.ts\` with the \`cn\` helper, and \`entrepta.json\`.
+- \`add\` copies each component with whatever it imports and installs its npm packages.
+- It never overwrites a file without \`--overwrite\`. Use that only to take an upstream update, since it replaces local edits.
+- entrepta needs Tailwind CSS v4: install \`tailwindcss\` and \`@tailwindcss/vite\`, and add \`tailwindcss()\` to the Vite plugins.
+- Imports use \`@/\`, pointing at \`src/\`. Add \`"paths": { "@/*": ["./src/*"] }\` to the compilerOptions in tsconfig.app.json, and \`resolve: { alias: { "@": path.resolve(__dirname, "src") } }\` to vite.config.ts.
+
+## Where things live
+
+- Tokens and global CSS: \`src/index.css\`
+- Components: \`src/components/entrepta/\`, imported from \`@/components/entrepta/<name>\`
+- The \`cn\` helper: \`src/lib/utils.ts\`
+- Hooks: \`src/hooks/\`. Shared lib files: \`src/lib/\`
+
+## Theme and mode
+
+- One theme, \`entrepta\`, is installed. Changing it means running \`init\` again.
+- Default mode: dark. Light mode is \`data-mode="light"\` on \`<html>\`; dark is the absence of it.
+
+## Tokens
+
+- Every color is a CSS variable from \`src/index.css\`. Never write a hex in a component.
+- Surfaces: \`--bg-canvas\` for the page, \`--bg-card\` for cards, \`--bg-surface\` for what sits above a card (menus, tooltips, code), \`--bg-overlay\` for dialogs.
+- Text: \`--fg-primary\`, \`--fg-secondary\`, \`--fg-muted\`. Borders: \`--border-subtle\`, \`--border-strong\`.
+- Brand: \`--fg-brand\` for fills, borders, glyphs and text 24px and up. \`--fg-brand-text\` for brand-colored text below 24px. \`--fg-on-brand\` for text on a brand fill.
+- Brand accents mix from the brand, so they follow the theme: \`--border-brand\`, \`--border-brand-strong\`, \`--bg-surface-brand\`, \`--fg-brand-glow\`. For a new one, use \`color-mix(in srgb, var(--fg-brand) N%, transparent)\`.
+- Status: \`--status-success\`, \`--status-warning\`, \`--status-error\`, \`--status-info\` for fills and dots, \`--status-*-fg\` for text, \`--status-*-soft\` for tints.
+- In Tailwind, write tokens as \`bg-[var(--bg-card)]\` and \`text-[var(--fg-muted)]\`.
+
+## Type
+
+- Font sizes come from ten steps and nothing else: \`text-display-xl\`, \`text-display-lg\`, \`text-display-md\`, \`text-heading-lg\`, \`text-heading-md\`, \`text-body-lg\`, \`text-body-md\`, \`text-mono-md\`, \`text-mono-sm\`, \`text-mono-xs\`.
+- A step sets size and leading, never the family. Pair it with \`font-serif\` (titles, proper nouns), \`font-mono\` (UI, labels, metadata) or \`font-sans\` (long prose).
+- No arbitrary pixel sizes and no Tailwind default size steps.
+- Compose classes with \`cn()\` from the utils file. It knows the scale, so a step and a color class survive together.
+
+## Rules
+
+- Do: Use a CSS variable for every color. Don't: Hardcode a hex in a component. It stops following the theme.
+- Do: Derive brand accents from --fg-brand with color-mix(). Don't: Hardcode the violet. It stops reacting when someone picks another theme.
+- Do: Put --fg-on-brand on a brand fill. Don't: Reach for a fixed near-white. It fails contrast in 7 of the 12 theme and mode pairs.
+- Do: Color brand text below 24px with --fg-brand-text. Don't: Use --fg-brand for small text. It fails AA in 4 of the 12 pairs.
+- Do: Put cards on --bg-card, menus on --bg-surface, dialogs on --bg-overlay. Don't: Fill a grid of cards with --bg-surface. It reads as a field of gray.
+- Do: Size text with the ten scale steps, such as text-mono-sm. Don't: Write text-[13px] or Tailwind's text-sm. A test fails on both.
+- Do: Pick the family at the call site: font-serif, font-sans or font-mono. Don't: Expect a scale step to set the font. It sets size and leading only.
+- Do: Let a row of two halves wrap, and keep each half on one line. Don't: Assume it fits. A card clips with no ellipsis, so overflow looks like missing data.
+- Do: Hide glyphs such as ◆, $ and // with aria-hidden. Don't: Let a screen reader say black diamond suit before every label.
+- Do: Give bare buttons the .focus-ring class. Don't: Rely on outline. The reset removes it from every button.
+- Do: Import Phosphor from @phosphor-icons/react/dist/ssr in files without use client. Don't: Import the package root there. next build fails with an error that names no file.
+- Do: Pass your router's link with asChild or linkComponent, and mark the current item with active. Don't: Import next/link in a copied component. It stops working outside Next.js.
+
+## Accessibility
+
+- Every ink clears WCAG AA on what it sits on, in every theme and mode. Keep each token on the surface it was measured for.
+- Glyphs such as ◆, $ and // carry \`aria-hidden\`.
+- Links get a brand outline on focus. A bare button with no focus style of its own takes the \`.focus-ring\` class.
+- Put \`<a href="#main" class="skip-link">skip to content</a>\` first in \`<body>\`.
+- Wrap each form control in \`Field\`: it wires the label, \`aria-describedby\` and \`aria-invalid\`.
+
+## Components
+
+### Button
+
+\`\`\`tsx
+import { Button, buttonVariants } from "@/components/entrepta/button"
+
+<Button variant="primary" size="md">ship it</Button>
+\`\`\`
+
+Docs: https://entrepta.vercel.app/docs/components/button
+
+### Card
+
+\`\`\`tsx
+import { Card, cardVariants, CardHeader, CardLabel, CardMeta, CardTitle, CardDescription, CardContent, CardFooter, CardComment, CardTerminalBar, CardTerminalBody } from "@/components/entrepta/card"
+
+<Card><CardHeader><CardLabel>post</CardLabel><CardMeta>2026</CardMeta></CardHeader><CardTitle>Title</CardTitle></Card>
+\`\`\`
+
+Docs: https://entrepta.vercel.app/docs/components/card
+
+### Field
+
+\`\`\`tsx
+import { Field, FieldError, FieldLabel } from "@/components/entrepta/field"
+
+<Field id="email" label="email" error={error}><input type="email" /></Field>
+\`\`\`
+
+Docs: https://entrepta.vercel.app/docs/components/field
+
+Also installed as dependencies: \`diamond\`.
+
+## Before calling a UI change done
+
+- Look at it at 375px wide, in dark and light, and with reduced motion on. Tests do not measure text or overflow.
+- A card clips its content with no ellipsis. A row of two halves should wrap, with each half kept on one line.
+"
+`;

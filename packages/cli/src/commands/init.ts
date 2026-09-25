@@ -84,8 +84,10 @@ export async function init(options: { theme?: string; themes?: string; overwrite
       css: framework.cssPath,
       baseColor: "zinc",
     },
+    ...(framework.srcDir ? { srcDir: framework.srcDir } : {}),
     aliases: {
-      components: `@/${framework.componentsPath}`,
+      // aliases are relative to srcDir, which is where `@/` points
+      components: `@/${path.posix.relative(framework.srcDir, framework.componentsPath)}`,
       lib: "@/lib",
       utils: "@/lib/utils",
       hooks: "@/hooks",

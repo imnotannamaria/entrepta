@@ -22,7 +22,7 @@ const PACKAGE_MANAGERS = [
 
 const PEER_DEPS = ["clsx", "tailwind-merge", "class-variance-authority"];
 
-const GLOBALS_CSS_SNIPPET = `/* app/globals.css — paste the tokens block from
+const GLOBALS_CSS_SNIPPET = `/* app/globals.css: paste the tokens block from
    packages/registry/styles/globals.css, then append one
    theme file from packages/registry/styles/themes/. */
 

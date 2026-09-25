@@ -2,7 +2,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import prompts from "prompts";
 import { COMPONENTS } from "../registry/components.js";
-import { readConfig } from "../utils/config.js";
+import { aliasToPath, readConfig } from "../utils/config.js";
 import { log } from "../utils/logger.js";
 import { detectPackageManager, installDeps } from "../utils/package-manager.js";
 import { getRegistryRoot } from "../utils/registry.js";
@@ -81,7 +81,7 @@ export async function add(components: string[], options: { overwrite: boolean })
           : component.category === "lib"
             ? (config.aliases.lib ?? "@/lib")
             : config.aliases.components;
-      const destRelative = path.join(baseAlias.replace("@/", ""), path.basename(file));
+      const destRelative = path.join(aliasToPath(baseAlias, config.srcDir), path.basename(file));
       const dest = path.join(cwd, destRelative);
 
       // Guard against a tampered entrepta.json whose alias escapes the project,

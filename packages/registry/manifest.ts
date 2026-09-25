@@ -10,6 +10,10 @@ export interface RegistryComponent {
   files: string[];
   deps: string[];
   registryDeps: string[];
+  /** One line of JSX showing the component in use. Every component has one; hooks and lib files do not. */
+  usage?: string;
+  /** What its own files export, for import lines. Checked against the files by a test. */
+  exports?: string[];
 }
 
 export const COMPONENTS: RegistryComponent[] = [
@@ -20,6 +24,8 @@ export const COMPONENTS: RegistryComponent[] = [
     files: ["primitives/button.tsx", "primitives/button-variants.ts"],
     deps: ["class-variance-authority", "@phosphor-icons/react", "@radix-ui/react-slot"],
     registryDeps: [],
+    usage: `<Button variant="primary" size="md">ship it</Button>`,
+    exports: ["Button", "buttonVariants"],
   },
   {
     name: "badge",
@@ -28,6 +34,8 @@ export const COMPONENTS: RegistryComponent[] = [
     files: ["primitives/badge.tsx"],
     deps: ["class-variance-authority"],
     registryDeps: [],
+    usage: `<Badge variant="soft" color="success" dot>shipped</Badge>`,
+    exports: ["Badge", "badgeVariants"],
   },
   {
     name: "input",
@@ -36,6 +44,8 @@ export const COMPONENTS: RegistryComponent[] = [
     files: ["primitives/input.tsx"],
     deps: ["class-variance-authority", "@phosphor-icons/react"],
     registryDeps: [],
+    usage: `<Input variant="search" placeholder="search…" />`,
+    exports: ["Input"],
   },
   {
     name: "card",
@@ -44,6 +54,22 @@ export const COMPONENTS: RegistryComponent[] = [
     files: ["primitives/card.tsx"],
     deps: ["class-variance-authority"],
     registryDeps: ["diamond"],
+    usage:
+      "<Card><CardHeader><CardLabel>post</CardLabel><CardMeta>2026</CardMeta></CardHeader><CardTitle>Title</CardTitle></Card>",
+    exports: [
+      "Card",
+      "cardVariants",
+      "CardHeader",
+      "CardLabel",
+      "CardMeta",
+      "CardTitle",
+      "CardDescription",
+      "CardContent",
+      "CardFooter",
+      "CardComment",
+      "CardTerminalBar",
+      "CardTerminalBody",
+    ],
   },
   {
     name: "dialog",
@@ -52,6 +78,21 @@ export const COMPONENTS: RegistryComponent[] = [
     files: ["primitives/dialog.tsx"],
     deps: ["@radix-ui/react-dialog", "@phosphor-icons/react"],
     registryDeps: ["diamond"],
+    usage:
+      "<Dialog><DialogTrigger asChild><Button>open</Button></DialogTrigger><DialogContent><DialogTitle>Title</DialogTitle></DialogContent></Dialog>",
+    exports: [
+      "Dialog",
+      "DialogClose",
+      "DialogContent",
+      "DialogDescription",
+      "DialogFooter",
+      "DialogHeader",
+      "DialogLabel",
+      "DialogOverlay",
+      "DialogPortal",
+      "DialogTitle",
+      "DialogTrigger",
+    ],
   },
   {
     name: "dropdown",
@@ -60,6 +101,26 @@ export const COMPONENTS: RegistryComponent[] = [
     files: ["primitives/dropdown.tsx"],
     deps: ["@radix-ui/react-dropdown-menu", "@phosphor-icons/react"],
     registryDeps: [],
+    usage:
+      "<DropdownMenu><DropdownMenuTrigger asChild><Button>menu</Button></DropdownMenuTrigger><DropdownMenuContent><DropdownMenuItem>item</DropdownMenuItem></DropdownMenuContent></DropdownMenu>",
+    exports: [
+      "DropdownMenu",
+      "DropdownMenuCheckboxItem",
+      "DropdownMenuContent",
+      "DropdownMenuDestructiveItem",
+      "DropdownMenuGroup",
+      "DropdownMenuItem",
+      "DropdownMenuLabel",
+      "DropdownMenuPortal",
+      "DropdownMenuRadioGroup",
+      "DropdownMenuRadioItem",
+      "DropdownMenuSeparator",
+      "DropdownMenuShortcut",
+      "DropdownMenuSub",
+      "DropdownMenuSubContent",
+      "DropdownMenuSubTrigger",
+      "DropdownMenuTrigger",
+    ],
   },
   {
     name: "tooltip",
@@ -68,6 +129,9 @@ export const COMPONENTS: RegistryComponent[] = [
     files: ["primitives/tooltip.tsx"],
     deps: ["@radix-ui/react-tooltip"],
     registryDeps: [],
+    usage:
+      "<Tooltip><TooltipTrigger asChild><Button>save</Button></TooltipTrigger><TooltipContent>save <TooltipShortcut>⌘S</TooltipShortcut></TooltipContent></Tooltip>",
+    exports: ["Tooltip", "TooltipContent", "TooltipProvider", "TooltipShortcut", "TooltipTrigger"],
   },
   {
     name: "tabs",
@@ -77,6 +141,8 @@ export const COMPONENTS: RegistryComponent[] = [
     files: ["primitives/tabs.tsx"],
     deps: ["@radix-ui/react-tabs", "@radix-ui/react-slot", "@phosphor-icons/react", "motion"],
     registryDeps: ["diamond", "motion-lib"],
+    usage: `<Tabs defaultValue="a"><TabsList><TabsTrigger value="a">a.tsx</TabsTrigger></TabsList><TabsContent value="a">…</TabsContent></Tabs>`,
+    exports: ["TabNav", "TabNavLink", "Tabs", "TabsContent", "TabsList", "TabsTrigger"],
   },
   {
     name: "status-bar",
@@ -85,6 +151,9 @@ export const COMPONENTS: RegistryComponent[] = [
     files: ["layout/status-bar.tsx"],
     deps: ["class-variance-authority"],
     registryDeps: [],
+    usage:
+      "<StatusBar left={<StatusBarItem>main</StatusBarItem>} right={<StatusBarItem>UTF-8</StatusBarItem>} />",
+    exports: ["StatusBar", "StatusBarItem", "StatusBarSeparator", "statusBarVariants"],
   },
   {
     name: "top-nav",
@@ -93,6 +162,16 @@ export const COMPONENTS: RegistryComponent[] = [
     files: ["layout/top-nav.tsx"],
     deps: [],
     registryDeps: [],
+    usage: "<TopNav left={<TopNavLogo>…</TopNavLogo>} right={…} />",
+    exports: [
+      "TopNav",
+      "TopNavBreadcrumb",
+      "TopNavLink",
+      "TopNavLogo",
+      "TopNavLogoMark",
+      "TopNavMenu",
+      "TopNavSeparator",
+    ],
   },
   {
     name: "skeleton",
@@ -101,6 +180,8 @@ export const COMPONENTS: RegistryComponent[] = [
     files: ["feedback/skeleton.tsx"],
     deps: [],
     registryDeps: [],
+    usage: `<Skeleton variant="line" delay={i * 0.06} />`,
+    exports: ["Skeleton", "SkeletonText"],
   },
   {
     name: "toast",
@@ -109,6 +190,8 @@ export const COMPONENTS: RegistryComponent[] = [
     files: ["feedback/toast.tsx"],
     deps: ["sonner"],
     registryDeps: [],
+    usage: `<Toaster /> then toast.success("saved")`,
+    exports: ["Toaster", "toast"],
   },
   {
     name: "use-command-palette",
@@ -141,6 +224,8 @@ export const COMPONENTS: RegistryComponent[] = [
     files: ["layout/theme-switcher.tsx"],
     deps: ["@phosphor-icons/react"],
     registryDeps: ["use-theme", "diamond"],
+    usage: "<ThemeSwitcher themes={THEMES} /> with <ThemeScript /> in <head>",
+    exports: ["ThemeScript", "ThemeSwitcher"],
   },
   {
     name: "mode-toggle",
@@ -149,6 +234,8 @@ export const COMPONENTS: RegistryComponent[] = [
     files: ["layout/mode-toggle.tsx"],
     deps: ["class-variance-authority", "@phosphor-icons/react"],
     registryDeps: ["use-mode"],
+    usage: "<ModeToggle /> with <ModeScript /> in <head>",
+    exports: ["ModeScript", "ModeToggle"],
   },
   {
     name: "command-palette",
@@ -157,6 +244,19 @@ export const COMPONENTS: RegistryComponent[] = [
     files: ["feedback/command-palette.tsx"],
     deps: ["cmdk", "@radix-ui/react-dialog", "@phosphor-icons/react"],
     registryDeps: ["use-command-palette"],
+    usage:
+      "<CommandDialog open={open} onOpenChange={setOpen}><Command><CommandInput /><CommandList>…</CommandList></Command></CommandDialog>",
+    exports: [
+      "Command",
+      "CommandDialog",
+      "CommandEmpty",
+      "CommandFoot",
+      "CommandGroup",
+      "CommandInput",
+      "CommandItem",
+      "CommandList",
+      "CommandSeparator",
+    ],
   },
   {
     name: "diamond",
@@ -165,6 +265,8 @@ export const COMPONENTS: RegistryComponent[] = [
     files: ["content/diamond.tsx"],
     deps: [],
     registryDeps: [],
+    usage: "<Diamond size={10} />",
+    exports: ["Diamond"],
   },
   {
     name: "code-block",
@@ -173,6 +275,8 @@ export const COMPONENTS: RegistryComponent[] = [
     files: ["content/code-block.tsx"],
     deps: ["@phosphor-icons/react"],
     registryDeps: [],
+    usage: `<CodeBlock code="npm run dev" language="bash" variant="terminal" />`,
+    exports: ["CodeBlock"],
   },
   {
     name: "motion-lib",
@@ -197,6 +301,8 @@ export const COMPONENTS: RegistryComponent[] = [
     files: ["motion/reveal.tsx"],
     deps: ["motion"],
     registryDeps: ["motion-lib"],
+    usage: "<Reveal index={i}><Card>…</Card></Reveal>",
+    exports: ["Reveal", "useReveal"],
   },
   {
     name: "type-in",
@@ -205,6 +311,8 @@ export const COMPONENTS: RegistryComponent[] = [
     files: ["motion/type-in.tsx"],
     deps: ["motion"],
     registryDeps: ["motion-lib"],
+    usage: `<TypeIn as="h1" text="Build with entrepta." emphasis="entrepta" />`,
+    exports: ["TypeIn"],
   },
   {
     name: "rolling-number",
@@ -213,6 +321,8 @@ export const COMPONENTS: RegistryComponent[] = [
     files: ["motion/rolling-number.tsx"],
     deps: ["motion"],
     registryDeps: [],
+    usage: "<RollingNumber value={128} height={44} />",
+    exports: ["RollingNumber", "useRollOnHover"],
   },
   {
     name: "spotlight",
@@ -221,6 +331,9 @@ export const COMPONENTS: RegistryComponent[] = [
     files: ["motion/spotlight.tsx"],
     deps: ["motion"],
     registryDeps: [],
+    usage:
+      "const { onMouseMove, spotlight } = useSpotlight(); <Card onMouseMove={onMouseMove}><Spotlight {...spotlight} />…</Card>",
+    exports: ["Spotlight", "useSpotlight"],
   },
   {
     name: "arrow-link",
@@ -229,6 +342,8 @@ export const COMPONENTS: RegistryComponent[] = [
     files: ["motion/arrow-link.tsx"],
     deps: ["@phosphor-icons/react", "@radix-ui/react-slot"],
     registryDeps: [],
+    usage: `<ArrowLink href="/docs">read the docs</ArrowLink>`,
+    exports: ["ArrowAffordance", "ArrowLink"],
   },
   {
     name: "switch",
@@ -237,6 +352,8 @@ export const COMPONENTS: RegistryComponent[] = [
     files: ["primitives/switch.tsx"],
     deps: [],
     registryDeps: [],
+    usage: `<Switch label="notifications" />`,
+    exports: ["Switch"],
   },
   {
     name: "textarea",
@@ -245,6 +362,8 @@ export const COMPONENTS: RegistryComponent[] = [
     files: ["primitives/textarea.tsx"],
     deps: ["class-variance-authority"],
     registryDeps: [],
+    usage: `<Textarea placeholder="// your message" />`,
+    exports: ["Textarea", "textareaVariants"],
   },
   {
     name: "field",
@@ -253,6 +372,8 @@ export const COMPONENTS: RegistryComponent[] = [
     files: ["primitives/field.tsx"],
     deps: [],
     registryDeps: ["diamond"],
+    usage: '<Field id="email" label="email" error={error}><input type="email" /></Field>',
+    exports: ["Field", "FieldError", "FieldLabel"],
   },
   {
     name: "filter-pill",
@@ -261,6 +382,8 @@ export const COMPONENTS: RegistryComponent[] = [
     files: ["primitives/filter-pill.tsx"],
     deps: ["@phosphor-icons/react"],
     registryDeps: [],
+    usage: `<FilterPill label="film" count={12} active={type === "film"} onClick={…} />`,
+    exports: ["FilterPill"],
   },
   {
     name: "use-url-filter",
@@ -277,6 +400,8 @@ export const COMPONENTS: RegistryComponent[] = [
     files: ["feedback/chrome-message.tsx"],
     deps: ["class-variance-authority"],
     registryDeps: [],
+    usage: `<ChromeMessage command="cat ./page" title="Page not found." note="it moved" action={…} />`,
+    exports: ["ChromeMessage"],
   },
   {
     name: "page-loading",
@@ -285,6 +410,8 @@ export const COMPONENTS: RegistryComponent[] = [
     files: ["feedback/page-loading.tsx"],
     deps: [],
     registryDeps: [],
+    usage: `<PageLoading command="ls ./log" label="the log" steps={["reading entries"]} />`,
+    exports: ["PageLoading"],
   },
   {
     name: "sect-head",
@@ -293,6 +420,8 @@ export const COMPONENTS: RegistryComponent[] = [
     files: ["content/sect-head.tsx"],
     deps: [],
     registryDeps: [],
+    usage: `<SectHead cmd="ls ./work" meta="4 items" />`,
+    exports: ["SectHead"],
   },
   {
     name: "doc-parts",
@@ -301,6 +430,8 @@ export const COMPONENTS: RegistryComponent[] = [
     files: ["content/doc-parts.tsx"],
     deps: ["class-variance-authority"],
     registryDeps: [],
+    usage: `<Section id="about"><DocLabel>about</DocLabel><DisplayH2>Title</DisplayH2><Prose>…</Prose></Section>`,
+    exports: ["DisplayH2", "DocLabel", "Em", "Prose", "Section", "Strong"],
   },
   {
     name: "sidebar",
@@ -309,6 +440,8 @@ export const COMPONENTS: RegistryComponent[] = [
     files: ["layout/sidebar.tsx"],
     deps: ["@phosphor-icons/react", "motion"],
     registryDeps: ["motion-lib"],
+    usage: `<Sidebar items={ITEMS} active="home" linkComponent={Link} />`,
+    exports: ["Sidebar"],
   },
   {
     name: "page-outline",
@@ -317,6 +450,8 @@ export const COMPONENTS: RegistryComponent[] = [
     files: ["layout/page-outline.tsx"],
     deps: ["motion"],
     registryDeps: ["diamond", "motion-lib"],
+    usage: `<PageOutline items={SECTIONS} file="about.md" />`,
+    exports: ["PageOutline"],
   },
   {
     name: "titlebar",
@@ -325,5 +460,7 @@ export const COMPONENTS: RegistryComponent[] = [
     files: ["layout/titlebar.tsx"],
     deps: [],
     registryDeps: [],
+    usage: `<Titlebar meta="main"><TabNav aria-label="Pages">…</TabNav></Titlebar>`,
+    exports: ["Titlebar"],
   },
 ];

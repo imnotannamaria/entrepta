@@ -1,6 +1,6 @@
 # entrepta
 
-> Project context for Claude Code. Read this file before any task in this repo.
+> Project context for Codex. Read this file before any task in this repo.
 > Keep it updated when decisions change.
 
 ---
@@ -120,7 +120,7 @@ entrepta/
 ├── biome.json
 ├── turbo.json
 ├── pnpm-workspace.yaml
-└── CLAUDE.md
+└── AGENTS.md
 ```
 
 ### Path conventions
@@ -548,7 +548,7 @@ pnpm dlx file:"$(pwd)/../entrepta/packages/cli" init
 
 ---
 
-## 11. How Claude should work here
+## 11. How Codex should work here
 
 - Read this whole file before editing.
 - Before creating a component, check whether it already exists in the registry.

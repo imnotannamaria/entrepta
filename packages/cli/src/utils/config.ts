@@ -6,6 +6,8 @@ export interface EntryptaConfig {
   theme: string;
   /** "all" writes the six themes, switchable through data-theme on <html>. */
   themes?: "single" | "all";
+  /** Where `@/` points, such as "src" for Vite. Aliases resolve relative to it. */
+  srcDir?: string;
   tsx: boolean;
   rsc: boolean;
   tailwind: {
@@ -33,4 +35,13 @@ export async function readConfig(cwd: string): Promise<EntryptaConfig | null> {
 
 export async function writeConfig(cwd: string, config: EntryptaConfig): Promise<void> {
   await fs.writeFile(path.join(cwd, CONFIG_FILE), `${JSON.stringify(config, null, 2)}\n`, "utf-8");
+}
+
+/**
+ * The folder an alias such as `@/hooks` points at, relative to the project root.
+ * An alias without `@/` is taken as a path already.
+ */
+export function aliasToPath(alias: string, srcDir = ""): string {
+  const rest = alias.replace(/^@\//, "");
+  return alias.startsWith("@/") && srcDir ? `${srcDir}/${rest}` : rest;
 }

@@ -197,4 +197,37 @@ describe("COMPONENTS registry", () => {
     }
     expect([...new Set(missing)]).toEqual([]);
   });
+
+  it("gives every component a usage line and its exports; hooks and lib files neither", () => {
+    const wrong = COMPONENTS.flatMap((c) => {
+      const isComponent = c.category !== "hooks" && c.category !== "lib";
+      if (isComponent && (!c.usage || !c.exports?.length)) return [`${c.name}: missing`];
+      if (!isComponent && (c.usage || c.exports)) return [`${c.name}: should have none`];
+      return [];
+    });
+    expect(wrong).toEqual([]);
+  });
+
+  it("lists exactly what each component's files export", () => {
+    const drift: string[] = [];
+    for (const c of COMPONENTS.filter((c) => c.exports)) {
+      const actual = new Set<string>();
+      for (const file of c.files) {
+        const source = fs.readFileSync(path.join(REGISTRY_ROOT, file), "utf8");
+        for (const [, list] of source.matchAll(/^export \{([^}]*)\}/gm)) {
+          for (const part of list.split(",")) {
+            const name = part.trim().split(" as ").pop()?.trim();
+            if (name && !name.startsWith("type ")) actual.add(name);
+          }
+        }
+        for (const [, name] of source.matchAll(/^export (?:const|function) (\w+)/gm))
+          actual.add(name);
+      }
+      const listed = new Set(c.exports);
+      const missing = [...actual].filter((n) => !listed.has(n));
+      const extra = [...listed].filter((n) => !actual.has(n));
+      if (missing.length || extra.length) drift.push(`${c.name}: +${missing} -${extra}`);
+    }
+    expect(drift).toEqual([]);
+  });
 });

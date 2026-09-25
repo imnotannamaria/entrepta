@@ -18,7 +18,8 @@ vi.mock("node:module", () => ({
 
 vi.mock("prompts", () => ({ default: vi.fn() }));
 
-vi.mock("../utils/config.js", () => ({
+vi.mock("../utils/config.js", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("../utils/config.js")>()),
   readConfig: vi.fn(),
 }));
 
@@ -195,6 +196,23 @@ describe("add", () => {
         expect.arrayContaining(["motion"]),
         expect.any(String),
         expect.any(String)
+      );
+    });
+
+    it("writes hooks and lib files under srcDir, where @/ points in a Vite project", async () => {
+      mockReadConfig.mockResolvedValue({
+        ...MOCK_CONFIG,
+        srcDir: "src",
+        aliases: { ...MOCK_CONFIG.aliases, components: "@/components/entrepta" },
+      });
+      await add(["reveal", "mode-toggle"], { overwrite: false });
+      const paths = mockWriteFile.mock.calls.map(([p]) => String(p));
+      expect(paths).toEqual(
+        expect.arrayContaining([
+          "/fake/project/src/lib/motion.ts",
+          "/fake/project/src/hooks/use-mode.ts",
+          "/fake/project/src/components/entrepta/reveal.tsx",
+        ])
       );
     });
 

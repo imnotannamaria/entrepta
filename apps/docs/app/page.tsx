@@ -1,11 +1,19 @@
+import { AgentsConfigurator } from "@/components/agents-configurator";
 import { CommandPaletteTrigger } from "@/components/command-palette-trigger";
 import { HomeIdePreview } from "@/components/home-ide-preview";
 import { HomeInstall } from "@/components/home-install";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteNav } from "@/components/site-nav";
 import { SiteStatusBar } from "@/components/site-status-bar";
+import { SpotlightCard } from "@/components/spotlight-card";
+import { COMPONENT_INDEX, SECTIONS } from "@/lib/component-index";
+import { tokenCount } from "@/lib/stats";
+import { THEMES } from "@/lib/theme";
+import { Diamond } from "@entrepta/registry/content/diamond";
+import { Reveal } from "@entrepta/registry/motion/reveal";
+import { RollingNumber } from "@entrepta/registry/motion/rolling-number";
 import { Badge } from "@entrepta/registry/primitives/badge";
-import { Button } from "@entrepta/registry/primitives/button";
+import { buttonVariants } from "@entrepta/registry/primitives/button-variants";
 import {
   Card,
   CardComment,
@@ -17,6 +25,7 @@ import {
   CardMeta,
   CardTitle,
 } from "@entrepta/registry/primitives/card";
+import { Switch } from "@entrepta/registry/primitives/switch";
 import Link from "next/link";
 
 const PRINCIPLES = [
@@ -41,8 +50,8 @@ const PRINCIPLES = [
   {
     num: "04",
     title: "Color with restraint.",
-    desc: "Brand accent shows up in CTAs, focus rings and featured cards. Emerald is exclusive to positive status. The rest is black, white, cold gray.",
-    tag: "violet-500 · emerald-400 · zinc-*",
+    desc: "The brand shows up in CTAs, focus and featured cards, with an ink measured for every theme. Cards sit a hair above a darker zinc. The rest is black, white and cold gray.",
+    tag: "--fg-brand · --fg-brand-text · zinc",
   },
   {
     num: "05",
@@ -52,156 +61,84 @@ const PRINCIPLES = [
   },
   {
     num: "06",
-    title: "Subtle motion, or none.",
-    desc: "Fast transitions (120–200ms), no springy theatrics. Loading uses shimmer or pulse. The product is not a demo reel.",
-    tag: "120ms · 200ms · 320ms",
+    title: "Motion with a job.",
+    desc: "Entrances, counters and light that follows the cursor, each one earning its place. Every animation has a reduced-motion path, the JavaScript ones included.",
+    tag: "whileInView · once · reduced motion",
   },
 ];
 
-const COMPONENT_CATEGORIES = [
-  {
-    label: "foundations",
-    num: "01–04",
-    name: "Foundations",
-    desc: "Color primitives and semantic tokens, type scale, spacing, radius, motion.",
-    count: "69 tokens",
-    href: "/docs/foundations/color",
-    preview: (
-      <div className="flex gap-1.5">
-        {["#09090B", "#7C6BFF", "#10B981", "#F59E0B", "#F43F5E"].map((c) => (
-          <span
-            key={c}
-            className="w-9 h-9 rounded-[var(--radius-sm)] border border-[var(--border-subtle)]"
-            style={{ background: c }}
-          />
-        ))}
-      </div>
-    ),
-  },
-  {
-    label: "primitives",
-    num: "08",
-    name: "Primitives",
-    desc: "Button, Badge, Input, Card, Dialog, Dropdown, Tooltip, Tabs.",
-    count: "8 components",
-    href: "/docs/components/button",
-    preview: (
-      <div className="flex gap-1.5 flex-wrap items-center">
-        <Badge variant="solid" color="brand">
-          FEATURED
-        </Badge>
-        <Badge variant="soft" color="success" dot>
-          shipped
-        </Badge>
-        <Badge variant="outline" color="neutral">
-          v0.1.0
-        </Badge>
-      </div>
-    ),
-  },
-  {
-    label: "layout",
-    num: "04",
-    name: "Layout",
-    desc: "StatusBar, TopNav, ThemeSwitcher, ModeToggle. The IDE chrome that frames the canvas.",
-    count: "4 components",
-    href: "/docs/components/status-bar",
-    preview: (
-      <div className="flex bg-[var(--bg-canvas)] border border-[var(--border-subtle)] rounded-[var(--radius-sm)] overflow-hidden font-mono text-mono-sm">
-        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 text-[var(--fg-primary)] bg-[var(--bg-surface)] border-r border-[var(--border-subtle)]">
-          <span className="text-[var(--fg-brand)] leading-none" style={{ fontSize: 9 }}>
-            ◆
-          </span>{" "}
-          home.tsx
+/** A preview per docs section. Names and counts come from the component index. */
+const SECTION_PREVIEWS: Record<(typeof SECTIONS)[number], React.ReactNode> = {
+  Primitives: (
+    <div className="flex flex-wrap items-center gap-1.5">
+      <Badge variant="solid" color="brand">
+        FEATURED
+      </Badge>
+      <Badge variant="soft" color="success" dot>
+        shipped
+      </Badge>
+      <Badge variant="outline" color="neutral">
+        v2.0.0
+      </Badge>
+    </div>
+  ),
+  Forms: (
+    <div className="flex flex-col gap-2">
+      <span className="inline-flex items-center gap-1.5 font-mono text-mono-xs uppercase tracking-[0.08em] text-[var(--fg-muted)]">
+        <Diamond /> email <span className="text-[var(--fg-brand)]">*</span>
+      </span>
+      <Switch label="send me a copy" defaultChecked />
+    </div>
+  ),
+  Layout: (
+    <div className="flex overflow-hidden rounded-[var(--radius-sm)] border border-[var(--border-subtle)] bg-[var(--bg-canvas)] font-mono text-mono-sm">
+      <span className="inline-flex items-center gap-1.5 border-r border-[var(--border-subtle)] bg-[var(--bg-surface)] px-3 py-1.5 text-[var(--fg-primary)]">
+        <Diamond /> home.tsx
+      </span>
+      <span className="border-r border-[var(--border-subtle)] px-3 py-1.5 text-[var(--fg-muted)]">
+        about.md
+      </span>
+      <span className="px-3 py-1.5 text-[var(--fg-muted)]">stack.ts</span>
+    </div>
+  ),
+  Content: (
+    <div className="overflow-hidden rounded-[var(--radius-sm)] border border-[var(--border-subtle)] bg-[var(--bg-surface)] font-mono text-mono-sm">
+      <div className="flex items-center gap-2 border-b border-[var(--border-subtle)] bg-[var(--bg-chrome)] px-3 py-1.5">
+        <span className="h-2 w-2 rounded-full bg-[var(--status-error)] opacity-60" />
+        <span className="h-2 w-2 rounded-full bg-[var(--status-warning)] opacity-60" />
+        <span className="h-2 w-2 rounded-full bg-[var(--status-success)] opacity-60" />
+        <span className="ml-auto text-mono-xs uppercase tracking-[0.08em] text-[var(--fg-brand-text)]">
+          bash
         </span>
-        <span className="px-3 py-1.5 text-[var(--fg-muted)] border-r border-[var(--border-subtle)]">
-          about.md
-        </span>
-        <span className="px-3 py-1.5 text-[var(--fg-muted)]">stack.ts</span>
       </div>
-    ),
-  },
-  {
-    label: "feedback",
-    num: "03",
-    name: "Feedback",
-    desc: "Toast, Skeleton, CommandPalette. Interaction signals + loading states.",
-    count: "3 components",
-    href: "/docs/components/toast",
-    preview: (
-      <div className="px-3 py-2 bg-[var(--bg-surface)] border border-[var(--border-subtle)] border-l-2 border-l-[var(--status-success)] rounded-[var(--radius-md)] font-mono text-mono-sm shadow-[0_4px_12px_rgba(0,0,0,0.3)]">
-        <div className="text-[var(--fg-primary)] text-mono-sm mb-0.5">Build passed</div>
-        <div className="font-sans text-mono-sm text-[var(--fg-secondary)]">
-          12 components compiled in 1.4s
-        </div>
+      <div className="px-3 py-2 text-[var(--fg-secondary)]">
+        <span className="text-[var(--fg-brand)]">$</span> npx @entrepta/cli@latest add code-block
       </div>
-    ),
-  },
-  {
-    label: "content",
-    num: "01",
-    name: "Content",
-    desc: "CodeBlock. Snippets with macOS chrome, language label and a one-click copy.",
-    count: "1 component",
-    href: "/docs/components/code-block",
-    preview: (
-      <div className="rounded-[var(--radius-sm)] border border-[var(--border-subtle)] bg-[var(--bg-surface)] overflow-hidden font-mono text-mono-sm">
-        <div className="flex items-center gap-2 px-3 py-1.5 bg-black/30 border-b border-[var(--border-subtle)]">
-          <span className="w-2 h-2 rounded-full bg-[var(--status-error)] opacity-60" />
-          <span className="w-2 h-2 rounded-full bg-[var(--status-warning)] opacity-60" />
-          <span className="w-2 h-2 rounded-full bg-[var(--status-success)] opacity-60" />
-          <span className="ml-auto text-mono-xs uppercase tracking-[0.08em] text-[var(--fg-brand-text)]">
-            bash
-          </span>
-        </div>
-        <div className="px-3 py-2 text-[var(--fg-secondary)]">
-          <span className="text-[var(--fg-brand)]">$</span> npx @entrepta/cli@latest add code-block
-        </div>
+    </div>
+  ),
+  Feedback: (
+    <div className="rounded-[var(--radius-md)] border border-l-2 border-[var(--border-subtle)] border-l-[var(--status-success)] bg-[var(--bg-surface)] px-3 py-2 font-mono text-mono-sm shadow-[var(--shadow-card-hover)]">
+      <div className="mb-0.5 text-[var(--fg-primary)]">Build passed</div>
+      <div className="font-sans text-mono-sm text-[var(--fg-secondary)]">
+        33 components compiled in 1.4s
       </div>
-    ),
-  },
-  {
-    label: "themes",
-    num: "06",
-    name: "Themes",
-    desc: "Six presets. One CLI flag to switch. Same tokens, different personality.",
-    count: "6 presets",
-    href: "/docs/themes",
-    preview: (
-      <div className="flex gap-2">
-        {[
-          { c: "#7C6BFF", n: "entrepta" },
-          { c: "#CC2E36", n: "blossom" },
-          { c: "#FF8213", n: "marmalade" },
-          { c: "#E85A8A", n: "julia" },
-          { c: "#35A365", n: "ivy" },
-          { c: "#2563EB", n: "bosco" },
-        ].map((t) => (
-          <span
-            key={t.n}
-            title={t.n}
-            className="w-6 h-6 rounded-full border border-[var(--border-subtle)]"
-            style={{ background: t.c }}
-          />
-        ))}
-      </div>
-    ),
-  },
-  {
-    label: "cli",
-    num: "02",
-    name: "CLI",
-    desc: "npx @entrepta/cli@latest init · add. Copy-paste without the clipboard.",
-    count: "2 commands",
-    href: "/docs/cli",
-    preview: (
-      <div className="px-3 py-2 bg-[var(--bg-canvas)] border border-[var(--border-subtle)] rounded-[var(--radius-sm)] font-mono text-mono-sm text-[var(--fg-secondary)]">
-        <span className="text-[var(--fg-muted)]">$</span> npx{" "}
-        <span className="text-[var(--fg-brand-text)]">@entrepta/cli@latest</span> add button
-      </div>
-    ),
-  },
-];
+    </div>
+  ),
+  Motion: (
+    <div className="flex items-baseline gap-3 font-mono text-mono-sm text-[var(--fg-muted)]">
+      <RollingNumber
+        value={128}
+        height={40}
+        className="font-serif text-display-md text-[var(--fg-primary)]"
+      />
+      repos shipped
+    </div>
+  ),
+};
+
+const SECTION_FIRST_PAGE = Object.fromEntries(
+  SECTIONS.map((section) => [section, COMPONENT_INDEX.find((c) => c.section === section)?.slug])
+);
 
 const INSTALL_STEPS = [
   {
@@ -222,9 +159,9 @@ const INSTALL_STEPS = [
 ];
 
 const HERO_STATS = [
-  { dt: "tokens", dd: "69" },
-  { dt: "components", dd: "14" },
-  { dt: "themes", dd: "6" },
+  { dt: "tokens", dd: String(tokenCount()) },
+  { dt: "components", dd: String(COMPONENT_INDEX.length) },
+  { dt: "themes", dd: String(THEMES.length) },
 ];
 
 export default function Home() {
@@ -239,7 +176,7 @@ export default function Home() {
             <div className="font-mono text-mono-sm text-[var(--fg-muted)] mb-6 inline-flex items-center gap-3 uppercase tracking-[0.06em]">
               <span>design system</span>
               <span className="border border-[var(--border-subtle)] rounded-[3px] px-1.5 py-0.5 text-[var(--fg-brand-text)] normal-case tracking-normal">
-                v1.0
+                v2.0
               </span>
               <span>by anna maria</span>
             </div>
@@ -251,21 +188,17 @@ export default function Home() {
 
             <p className="font-sans text-body-lg sm:text-heading-md text-[var(--fg-secondary)] leading-relaxed max-w-xl mb-10">
               <strong className="text-[var(--fg-primary)] font-medium">entrepta</strong> is a
-              dark-first component library you copy into your repo. Foundations, primitives, layout
-              and feedback components. Built around editor metaphors: tabs, command palette, status
-              bar, file paths, inline comments, shell prompts.
+              dark-first component library you copy into your repo. Tokens, forms, editor chrome and
+              motion, with every ink measured in six themes. Built around editor metaphors: tabs,
+              command palette, status bar, file paths, inline comments, shell prompts.
             </p>
 
             <div className="flex flex-wrap gap-3 mb-12">
-              <Link href="/docs/components">
-                <Button size="lg">
-                  browse components <span aria-hidden>→</span>
-                </Button>
+              <Link href="/docs/components" className={buttonVariants({ size: "lg" })}>
+                browse components <span aria-hidden>→</span>
               </Link>
-              <Link href="#install">
-                <Button variant="command" size="lg">
-                  npx @entrepta/cli@latest init
-                </Button>
+              <Link href="#install" className={buttonVariants({ variant: "command", size: "lg" })}>
+                npx @entrepta/cli@latest init
               </Link>
               <CommandPaletteTrigger />
             </div>
@@ -303,8 +236,8 @@ export default function Home() {
               <span className="text-[var(--fg-muted)]">You own the code.</span>
             </h2>
             <p className="mt-4 font-sans text-body-lg text-[var(--fg-secondary)] max-w-lg leading-relaxed">
-              entrepta ships as CSS tokens + copy-paste components. No runtime SDK, no telemetry in
-              the components you copy. Drop it into any Next.js project and start shipping.
+              entrepta ships as CSS tokens and copy-paste components. No runtime SDK and no
+              telemetry in what you copy. Drop it into a Next.js or Vite project and start shipping.
             </p>
           </div>
 
@@ -315,7 +248,7 @@ export default function Home() {
               <CardHeader>
                 <CardLabel>@entrepta/cli</CardLabel>
                 <Badge variant="soft" color="brand">
-                  v1.0.1
+                  v2.0.0
                 </Badge>
               </CardHeader>
               <CardContent className="flex flex-col gap-3">
@@ -324,7 +257,7 @@ export default function Home() {
                   { k: "deps", v: "react 19+" },
                   { k: "ships", v: "css vars · components" },
                   { k: "license", v: "MIT" },
-                  { k: "themes", v: "6 presets" },
+                  { k: "themes", v: `${THEMES.length} presets, fixed or at runtime` },
                 ].map((r, i) => (
                   <div
                     key={r.k}
@@ -367,17 +300,19 @@ export default function Home() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {PRINCIPLES.map((p) => (
-              <Card key={p.num}>
-                <CardHeader>
-                  <CardLabel>principle {p.num}</CardLabel>
-                </CardHeader>
-                <CardTitle className="text-heading-md">{p.title}</CardTitle>
-                <CardDescription>{p.desc}</CardDescription>
-                <CardFooter>
-                  <CardComment>{p.tag}</CardComment>
-                </CardFooter>
-              </Card>
+            {PRINCIPLES.map((p, i) => (
+              <Reveal key={p.num} index={i}>
+                <Card className="h-full">
+                  <CardHeader>
+                    <CardLabel>principle {p.num}</CardLabel>
+                  </CardHeader>
+                  <CardTitle className="text-heading-md">{p.title}</CardTitle>
+                  <CardDescription>{p.desc}</CardDescription>
+                  <CardFooter>
+                    <CardComment>{p.tag}</CardComment>
+                  </CardFooter>
+                </Card>
+              </Reveal>
             ))}
           </div>
         </section>
@@ -398,9 +333,9 @@ export default function Home() {
                 <span className="text-[var(--fg-muted)]">default.</span>
               </h2>
               <p className="mt-4 font-sans text-body-lg text-[var(--fg-secondary)] max-w-md leading-relaxed">
-                Built on Radix primitives so keyboard navigation, focus management, and ARIA
-                semantics come for free. The docs site adds the rest: skip links, live regions, and
-                motion that respects user preferences.
+                Built on Radix and native elements, so keyboard, focus and ARIA come for free. Every
+                text color is measured against what it sits on, in every theme, and a test fails the
+                build if one drops below AA.
               </p>
             </div>
             <ul className="flex flex-col gap-0 border-t border-[var(--border-subtle)]">
@@ -411,7 +346,7 @@ export default function Home() {
                 },
                 {
                   k: "focus",
-                  v: "visible 3px brand ring on every focusable surface",
+                  v: "a visible brand ring on links, buttons, fields and menu items",
                 },
                 {
                   k: "screen readers",
@@ -419,11 +354,11 @@ export default function Home() {
                 },
                 {
                   k: "skip link",
-                  v: "press Tab on any page → jump to main content",
+                  v: "press Tab on any page to jump to the main content",
                 },
                 {
                   k: "motion",
-                  v: "prefers-reduced-motion disables animations globally",
+                  v: "reduced motion stops CSS animations and every JS-driven one",
                 },
                 {
                   k: "live regions",
@@ -431,7 +366,7 @@ export default function Home() {
                 },
                 {
                   k: "contrast",
-                  v: "AA targets for body copy; brand reserved for emphasis",
+                  v: "every ink measured against AA in all 12 theme and mode pairs, by a test",
                 },
                 {
                   k: "dark + light",
@@ -471,7 +406,7 @@ export default function Home() {
                 <span className="text-[var(--fg-muted)]">design.</span>
               </h2>
               <p className="mt-4 font-sans text-body-lg text-[var(--fg-secondary)] max-w-md leading-relaxed">
-                entrepta ships as copy-paste source — no runtime SDK, no telemetry, no remote code.
+                entrepta ships as copy-paste source: no runtime SDK, no telemetry, no remote code.
                 The CLI guards against path traversal via aliases, the docs site sets a strict CSP
                 and the usual hardening headers, and dependencies stay tight and audited.
               </p>
@@ -480,7 +415,7 @@ export default function Home() {
               {[
                 {
                   k: "copy-paste",
-                  v: "components land in your repo as plain source — no runtime to compromise",
+                  v: "components land in your repo as plain source, with no runtime to compromise",
                 },
                 {
                   k: "no runtime telemetry",
@@ -504,7 +439,7 @@ export default function Home() {
                 },
                 {
                   k: "deps minimal",
-                  v: "registry has 4 runtime deps, CLI has 3 — easy to keep audited",
+                  v: "few runtime deps, each one justified, so they stay easy to audit",
                 },
               ].map((row) => (
                 <li
@@ -529,44 +464,117 @@ export default function Home() {
           <div className="flex items-end justify-between mb-10 gap-6">
             <h2 className="font-serif text-[clamp(32px,4vw,56px)] font-normal leading-tight tracking-tight text-[var(--fg-primary)]">
               <em className="italic text-[var(--fg-brand)]">What's</em> inside.{" "}
-              <span className="text-[var(--fg-muted)]">Seven categories.</span>
+              <span className="text-[var(--fg-muted)]">
+                {COMPONENT_INDEX.length} components, {SECTIONS.length} sections.
+              </span>
             </h2>
-            <Link href="/docs/components" className="hidden sm:inline-block shrink-0">
-              <Button variant="ghost" size="sm">
-                browse all ↗
-              </Button>
+            <Link
+              href="/docs/components"
+              className={buttonVariants({
+                variant: "ghost",
+                size: "sm",
+                className: "hidden shrink-0 sm:inline-flex",
+              })}
+            >
+              browse all ↗
             </Link>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {COMPONENT_CATEGORIES.map((cat) => (
-              <Link key={cat.label} href={cat.href} className="group block">
-                <Card className="h-full hover:border-[var(--fg-brand)]/40 transition-colors">
+            {SECTIONS.map((section, i) => {
+              const items = COMPONENT_INDEX.filter((c) => c.section === section);
+              return (
+                <Reveal key={section} index={i}>
+                  <Link
+                    href={`/docs/components/${SECTION_FIRST_PAGE[section]}`}
+                    className="group block h-full"
+                  >
+                    <Card className="h-full">
+                      <CardHeader>
+                        <CardLabel>{section.toLowerCase()}</CardLabel>
+                        <CardMeta>{`${items.length} ${items.length === 1 ? "component" : "components"}`}</CardMeta>
+                      </CardHeader>
+                      <CardTitle className="text-heading-md">{section}</CardTitle>
+                      <CardDescription>{items.map((c) => c.title).join(", ")}.</CardDescription>
+                      <CardContent>{SECTION_PREVIEWS[section]}</CardContent>
+                      <CardFooter>
+                        <CardComment>{`${section.toLowerCase()}/`}</CardComment>
+                        <span
+                          aria-hidden
+                          className="text-[var(--fg-brand)] transition-transform group-hover:translate-x-0.5"
+                        >
+                          →
+                        </span>
+                      </CardFooter>
+                    </Card>
+                  </Link>
+                </Reveal>
+              );
+            })}
+            <Reveal index={SECTIONS.length}>
+              <Link href="/docs/themes" className="group block h-full">
+                <Card className="h-full">
                   <CardHeader>
-                    <CardLabel>{cat.label}</CardLabel>
-                    <CardMeta>{cat.num}</CardMeta>
+                    <CardLabel>themes</CardLabel>
+                    <CardMeta>{`${THEMES.length} presets`}</CardMeta>
                   </CardHeader>
-                  <CardTitle className="text-heading-md">{cat.name}</CardTitle>
-                  <CardDescription>{cat.desc}</CardDescription>
-                  <CardContent>{cat.preview}</CardContent>
+                  <CardTitle className="text-heading-md">Themes</CardTitle>
+                  <CardDescription>
+                    One brand per theme, two measured inks each. Fixed, or all six at runtime.
+                  </CardDescription>
+                  <CardContent>
+                    <div className="flex gap-2">
+                      {THEMES.map((t) => (
+                        <span
+                          key={t.id}
+                          title={t.label}
+                          className="h-6 w-6 rounded-full border border-[var(--border-subtle)]"
+                          style={{ background: t.color }}
+                        />
+                      ))}
+                    </div>
+                  </CardContent>
                   <CardFooter>
-                    <CardComment>{cat.count}</CardComment>
-                    <span className="text-[var(--fg-brand)] transition-transform group-hover:translate-x-0.5">
+                    <CardComment>--themes=all</CardComment>
+                    <span
+                      aria-hidden
+                      className="text-[var(--fg-brand)] transition-transform group-hover:translate-x-0.5"
+                    >
                       →
                     </span>
                   </CardFooter>
                 </Card>
               </Link>
-            ))}
+            </Reveal>
           </div>
+        </section>
+
+        {/* ── AGENTS.MD ── */}
+        <section
+          id="agents"
+          className="max-w-[1280px] mx-auto px-6 sm:px-12 py-20 border-t border-[var(--border-subtle)]"
+        >
+          <div className="mb-10">
+            <div className="font-mono text-mono-sm text-[var(--fg-brand-text)] uppercase tracking-[0.08em] mb-3">
+              · for your coding agent
+            </div>
+            <h2 className="font-serif text-[clamp(32px,4vw,56px)] font-normal leading-tight tracking-tight text-[var(--fg-primary)]">
+              Your <em className="italic text-[var(--fg-brand)]">AGENTS.md</em>,
+              <br />
+              <span className="text-[var(--fg-muted)]">ready to paste.</span>
+            </h2>
+            <p className="mt-4 font-sans text-body-lg text-[var(--fg-secondary)] max-w-xl leading-relaxed">
+              Pick your framework, theme and components. You get the file that tells an agent how to
+              install entrepta, where things live, which token goes where, and how each component is
+              used. The link keeps your choices, so you can share it.
+            </p>
+          </div>
+          <AgentsConfigurator />
         </section>
 
         {/* ── CTA STRIP ── */}
         <section className="max-w-[1280px] mx-auto px-6 sm:px-12 py-20 border-t border-[var(--border-subtle)]">
-          <Card
-            variant="featured"
-            className="p-12 sm:p-16 text-center bg-[radial-gradient(ellipse_at_top,var(--bg-surface-brand),transparent_60%)]"
-          >
+          <SpotlightCard variant="featured" className="p-12 sm:p-16 text-center">
             <div className="flex flex-col items-center gap-6">
               <div className="font-mono text-mono-sm uppercase tracking-[0.08em] text-[var(--fg-brand-text)]">
                 · ready to ship
@@ -582,19 +590,18 @@ export default function Home() {
                 to jump anywhere.
               </p>
               <div className="flex gap-3 justify-center flex-wrap mt-2">
-                <Link href="/docs/components">
-                  <Button size="lg">
-                    browse components <span aria-hidden>→</span>
-                  </Button>
+                <Link href="/docs/components" className={buttonVariants({ size: "lg" })}>
+                  browse components <span aria-hidden>→</span>
                 </Link>
-                <Link href="/docs/themes">
-                  <Button variant="secondary" size="lg">
-                    see themes
-                  </Button>
+                <Link
+                  href="#agents"
+                  className={buttonVariants({ variant: "secondary", size: "lg" })}
+                >
+                  get your AGENTS.md
                 </Link>
               </div>
             </div>
-          </Card>
+          </SpotlightCard>
         </section>
 
         <SiteFooter />
