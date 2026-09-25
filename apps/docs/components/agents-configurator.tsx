@@ -275,7 +275,7 @@ export function AgentsConfigurator() {
           filename={options.fileName}
           language="md"
           variant="terminal"
-          className="max-h-[640px] overflow-y-auto"
+          className="max-h-[640px] overflow-y-auto [&_pre]:whitespace-pre-wrap [&_pre]:break-words"
         />
       </div>
     </div>

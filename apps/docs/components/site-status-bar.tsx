@@ -7,7 +7,7 @@ export function SiteStatusBar() {
         <>
           <StatusBarItem>entrepta</StatusBarItem>
           <StatusBarSeparator />
-          <StatusBarItem>v0.1</StatusBarItem>
+          <StatusBarItem>v2.0</StatusBarItem>
           <StatusBarSeparator />
           <StatusBarItem>home</StatusBarItem>
         </>

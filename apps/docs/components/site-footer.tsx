@@ -83,7 +83,7 @@ export function SiteFooter() {
         </div>
       </div>
       <div className="max-w-[1280px] mx-auto px-4 sm:px-8 lg:px-12 mt-10 sm:mt-12 pt-6 border-t border-[var(--border-subtle)] flex items-center justify-between gap-3">
-        <span className="font-mono text-mono-xs text-[var(--fg-muted)]">v0.1 · 2026</span>
+        <span className="font-mono text-mono-xs text-[var(--fg-muted)]">v2.0 · 2026</span>
         <span className="font-mono text-mono-xs text-[var(--fg-muted)]">built with entrepta</span>
       </div>
     </footer>
