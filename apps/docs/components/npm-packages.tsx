@@ -21,9 +21,9 @@ export function NpmPackages() {
           href={p.href}
           target="_blank"
           rel="noreferrer"
-          className="group block rounded-[var(--radius-lg)] focus-visible:outline-none"
+          className="focus-ring group block rounded-[var(--radius-lg)]"
         >
-          <Card className="h-full group-focus-visible:border-[var(--fg-brand)]">
+          <Card className="h-full">
             <CardHeader>
               <CardLabel icon={PackageIcon}>npm</CardLabel>
               <CardMeta>{p.bin ? `bin: ${p.bin}` : "source"}</CardMeta>

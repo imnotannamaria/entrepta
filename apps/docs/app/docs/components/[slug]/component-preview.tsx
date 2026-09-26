@@ -311,7 +311,7 @@ function CardPreview() {
       <Card variant="terminal">
         <CardTerminalBar>
           <CardLabel>install</CardLabel>
-          <CardMeta>v0.1.0</CardMeta>
+          <CardMeta>v2.0.0</CardMeta>
         </CardTerminalBar>
         <CardTerminalBody>
           <div>

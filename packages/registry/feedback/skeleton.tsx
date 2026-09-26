@@ -19,7 +19,8 @@ const Skeleton = React.forwardRef<HTMLDivElement, SkeletonProps>(
       aria-hidden="true"
       style={{
         backgroundImage:
-          "linear-gradient(90deg, var(--bg-surface) 0%, var(--bg-surface-elevated) 50%, var(--bg-surface) 100%)",
+          // translucent, like the sweep, so a piece reads on a card, an overlay or a light page
+          "linear-gradient(90deg, var(--bg-hover-strong) 0%, color-mix(in srgb, var(--fg-primary) 12%, transparent) 50%, var(--bg-hover-strong) 100%)",
         backgroundSize: "200% 100%",
         animation: "shimmer 1.5s linear infinite",
         animationDelay: delay ? `${-delay}s` : undefined,

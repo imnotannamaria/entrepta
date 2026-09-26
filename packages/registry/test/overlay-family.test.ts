@@ -31,7 +31,7 @@ function registryFiles(dir = root): string[] {
     if (entry.name === "node_modules" || entry.name === "test") return [];
     const full = path.join(dir, entry.name);
     if (entry.isDirectory()) return registryFiles(full);
-    return /\.tsx$/.test(entry.name) && !entry.name.endsWith(".test.tsx") ? [full] : [];
+    return /\.tsx?$/.test(entry.name) && !/\.test\.tsx?$/.test(entry.name) ? [full] : [];
   });
 }
 
@@ -61,10 +61,13 @@ describe("overlay family", () => {
   });
 
   it("paints no area in zinc-900: surfaces are near black with the sheen", () => {
-    const gray = registryFiles().filter((file) =>
-      /bg-\[var\(--bg-surface\)\]/.test(fs.readFileSync(file, "utf8"))
-    );
-    expect(gray.map((f) => path.relative(root, f))).toEqual([]);
+    // any use of the token counts, as a class, inline style or CSS; declaring it does not
+    const usesSurface = /var\(--bg-surface\)/;
+    const offenders = [
+      ...registryFiles().filter((file) => usesSurface.test(fs.readFileSync(file, "utf8"))),
+      ...(usesSurface.test(read("styles/globals.css")) ? ["styles/globals.css"] : []),
+    ];
+    expect(offenders.map((f) => path.relative(root, path.resolve(root, f)))).toEqual([]);
   });
 
   it.each(["primitives/card.tsx", "content/code-block.tsx", "primitives/button-variants.ts"])(

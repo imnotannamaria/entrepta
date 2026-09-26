@@ -205,7 +205,8 @@ const CardTerminalBar = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HT
       ref={ref}
       className={cn(
         "flex items-center justify-between gap-3 px-4 py-3",
-        "border-b border-[var(--border-subtle)] bg-[var(--bg-chrome)]",
+        // no band of its own, like the CodeBlock bar: the card's glow shows through
+        "border-b border-[var(--border-subtle)]",
         "font-mono text-mono-sm uppercase tracking-[0.08em] text-[var(--fg-secondary)]",
         className
       )}

@@ -97,7 +97,11 @@ export default function RootLayout({
           {children}
           <ThemeSwitcher />
           {/* above the status bar and the floating theme switcher */}
-          <Toaster position="bottom-right" offset={{ bottom: 96, right: 20 }} />
+          <Toaster
+            position="bottom-right"
+            offset={{ bottom: 96, right: 20 }}
+            mobileOffset={{ bottom: 88, left: 16, right: 16 }}
+          />
         </SiteCommandPaletteProvider>
         <Analytics />
       </body>

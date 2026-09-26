@@ -3,10 +3,10 @@ import { INK_PAIRS, InkTable, type Swatch, SwatchGrid } from "@/components/token
 
 const NEUTRALS = [
   { token: "zinc-950", hex: "#09090B", use: "bg.canvas" },
-  { token: "zinc-900", hex: "#18181B", use: "bg.surface" },
+  { token: "zinc-900", hex: "#18181B", use: "bg.surface, small fills" },
   { token: "zinc-800", hex: "#27272A", use: "border.subtle" },
   { token: "zinc-700", hex: "#3F3F46", use: "border.strong" },
-  { token: "zinc-500", hex: "#71717A", use: "fg.muted in light" },
+  { token: "zinc-500", hex: "#71717A", use: "a reference; light fg.muted is #68686F" },
   { token: "zinc-400", hex: "#A1A1AA", use: "fg.secondary" },
   { token: "zinc-200", hex: "#E4E4E7", use: "text on dark" },
   { token: "zinc-50", hex: "#FAFAFA", use: "fg.primary" },
@@ -26,9 +26,14 @@ const SURFACES: Swatch[] = [
   { token: "--bg-canvas", note: "the page" },
   { token: "--bg-card", note: "cards, a hair above the canvas" },
   { token: "--bg-card-hover", note: "a card under the pointer" },
-  { token: "--bg-surface", note: "what sits above a card: menus, tooltips, code" },
-  { token: "--bg-overlay", note: "dialogs and the command palette" },
-  { token: "--bg-surface-elevated", note: "glass, the data card" },
+  { token: "--bg-overlay", note: "menus, tooltips, code, dialogs, the palette, toasts" },
+  { token: "--bg-field", note: "inputs, textareas, the box of a checkbox or switch" },
+  { token: "--bg-surface", note: "zinc-900: small fills only, never an area" },
+];
+
+const FINISH: Swatch[] = [
+  { token: "--sheen-tint", note: "the brand glow in a corner, 9% dark and 4% light" },
+  { token: "--bg-surface-brand", note: "the tint a highlighted row takes" },
 ];
 
 const FOREGROUND: Swatch[] = [
@@ -115,11 +120,30 @@ export default function ColorPage() {
         <DocSubhead count={`${SURFACES.length} tokens`}>Surfaces</DocSubhead>
         <p className="mb-4 max-w-2xl font-mono text-mono-sm leading-relaxed text-[var(--fg-muted)]">
           <span className="text-[var(--fg-brand)]">{"// "}</span>
-          Cards sit on --bg-card, a hair above the canvas and defined by their border. A grid of
-          zinc-900 cards reads as a field of gray. --bg-surface is for what sits above a card, and
-          --bg-overlay fills anything that covers the page.
+          Cards sit on --bg-card, a hair above the canvas and defined by their border. Anything that
+          covers the page, and code, sits on --bg-overlay. Fields sit on --bg-field. A zinc-900 area
+          reads as a field of gray, so no component paints one.
         </p>
         <SwatchGrid swatches={SURFACES} />
+      </section>
+
+      <section className="mb-14">
+        <DocSubhead count="1 class, 3 tokens">Finish</DocSubhead>
+        <p className="mb-4 max-w-2xl font-mono text-mono-sm leading-relaxed text-[var(--fg-muted)]">
+          <span className="text-[var(--fg-brand)]">{"// "}</span>
+          Every surface has the same finish: near black underneath, the .sheen class for a brand
+          glow in the top-left corner, and --edge-light, a line of light on the top edge, which
+          --shadow-card and --shadow-overlay already carry. Put both on a surface of your own.
+        </p>
+        <div className="mb-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <div className="flex h-24 items-end rounded-[var(--radius-lg)] border border-[var(--border-subtle)] bg-[var(--bg-card)] p-4 font-mono text-mono-sm text-[var(--fg-muted)]">
+            bg-card
+          </div>
+          <div className="sheen flex h-24 items-end rounded-[var(--radius-lg)] border border-[var(--border-subtle)] bg-[var(--bg-card)] p-4 font-mono text-mono-sm text-[var(--fg-muted)] shadow-[var(--shadow-card)]">
+            sheen bg-card shadow-card
+          </div>
+        </div>
+        <SwatchGrid swatches={FINISH} />
       </section>
 
       <section className="mb-14">

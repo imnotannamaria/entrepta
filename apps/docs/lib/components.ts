@@ -163,7 +163,7 @@ import { CheckIcon, GitBranchIcon } from "@phosphor-icons/react"
 <Card variant="terminal">
   <CardTerminalBar>
     <CardLabel>install</CardLabel>
-    <CardMeta>v0.1.0</CardMeta>
+    <CardMeta>v2.0.0</CardMeta>
   </CardTerminalBar>
   <CardTerminalBody>$ npx @entrepta/cli@latest init</CardTerminalBody>
 </Card>`,
@@ -971,9 +971,10 @@ const [type, setType] = useUrlFilter("type", TYPES)
       { name: "count", type: "number", description: "Tally beside the label, at full contrast" },
       { name: "icon", type: "Icon", description: "A Phosphor icon; it fills when active" },
       {
-        name: "useUrlFilter(param, allowed, path?)",
+        name: "useUrlFilter(param, allowed, path?, { replace? })",
         type: "[value, set]",
-        description: "Hook: reads and writes ?param=value with pushState, prerender safe",
+        description:
+          "Hook: reads and writes ?param=value, prerender safe. pushState by default; { replace: true } for a form of options, so back does not walk through each click",
       },
     ],
   },

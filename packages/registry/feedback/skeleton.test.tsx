@@ -14,8 +14,8 @@ describe("Skeleton", () => {
     const { container } = render(<Skeleton />);
     const el = container.firstChild as HTMLElement;
     expect(el.style.backgroundImage).toContain("linear-gradient(90deg");
-    expect(el.style.backgroundImage).toContain("var(--bg-surface)");
-    expect(el.style.backgroundImage).toContain("var(--bg-surface-elevated)");
+    expect(el.style.backgroundImage).toContain("var(--bg-hover-strong)");
+    expect(el.style.backgroundImage).not.toContain("var(--bg-surface)");
   });
 
   it("applies rect variant by default", () => {

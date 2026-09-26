@@ -215,15 +215,16 @@ Source of truth is `packages/registry/styles/globals.css`. Short version:
   --bg-canvas: #09090B;          /* zinc-950, the page */
   --bg-card: #0B0B0E;            /* cards, a hair above the canvas */
   --bg-card-hover: #121216;
-  --bg-surface: #18181B;         /* zinc-900, what sits above a card */
-  --bg-overlay: #0E0E10;         /* dialogs and the command palette */
+  --bg-surface: #18181B;         /* zinc-900, small fills only, never an area */
+  --bg-overlay: #0E0E10;         /* menus, tooltips, code, dialogs, toasts */
+  --bg-field: var(--bg-overlay); /* inputs, textareas, checkbox and switch boxes */
   --bg-surface-elevated: rgba(39, 39, 42, 0.6);
   --bg-surface-brand: <by theme>;
 
   /* foreground */
   --fg-primary: #FAFAFA;         /* zinc-50 */
   --fg-secondary: #A1A1AA;       /* zinc-400 */
-  --fg-muted: #8A8A92;           /* passes AA; light mode keeps zinc-500 */
+  --fg-muted: #8A8A92;           /* passes AA; light mode is #68686F */
   --fg-brand: <by theme>;
 
   /* borders */
@@ -563,8 +564,9 @@ pnpm dlx file:"$(pwd)/../entrepta/packages/cli" init
   light on the top edge (inside `--shadow-card` and `--shadow-overlay`). Fields
   sit on `--bg-field`. No component paints an area in `--bg-surface`
   (zinc-900); the family test fails if one does. The glow is 9% of the brand in
-  dark and 4% in light, the most light mode allows before `--fg-muted` drops
-  under AA, and the contrast test measures labels on its brightest point
+  dark and 4% in light. Light `--fg-muted` is #68686F, not zinc-500, which had
+  no margin on a hovered card under the glow. The contrast test measures labels
+  on the glow's brightest point over the card, the hovered card and the overlay
 - Docs live at https://entrepta.vercel.app/
 
 ---

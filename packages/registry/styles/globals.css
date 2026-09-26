@@ -91,8 +91,8 @@
   --bg-surface-brand: rgba(124, 107, 255, 0.15); /* overridden by theme */
 
   /* --bg-card fills cards: a hair above the canvas, defined by its border.
-     --bg-surface is for what sits above a card (dropdowns, tooltips, code
-     blocks). --bg-overlay fills dialogs and the command palette. */
+     --bg-overlay fills menus, tooltips, code, dialogs, the palette and
+     toasts. --bg-surface (zinc-900) is for small fills, never an area. */
   --bg-card: #0b0b0e;
   --bg-card-hover: #121216;
   --bg-overlay: #0e0e10;
@@ -284,10 +284,10 @@
   font-size: var(--text-mono-sm);
   line-height: var(--text-mono-sm--line-height);
   color: var(--fg-primary);
-  background: var(--bg-surface);
+  background: var(--bg-overlay);
   border: 1px solid var(--border-strong);
   border-radius: var(--radius-md);
-  box-shadow: var(--shadow-card-hover);
+  box-shadow: var(--shadow-overlay);
   transform: translateY(-160%);
   transition: transform 140ms var(--ease-out);
 }
@@ -303,8 +303,6 @@
   outline: none;
 }
 
-/* A visible ring for bare buttons with no focus style of their own. It is a
-   box-shadow, so it survives the outline reset below. */
 /* The toast's finish: a brand glow in the top-left corner. In a layer, so a
    component's own background-image utility still wins. */
 @layer components {
@@ -313,6 +311,8 @@
   }
 }
 
+/* A visible ring for bare buttons with no focus style of their own. It is a
+   box-shadow, so it survives the outline reset below. */
 .focus-ring:focus-visible {
   box-shadow: 0 0 0 2px var(--bg-canvas), 0 0 0 4px var(--fg-brand);
 }
@@ -687,7 +687,7 @@ select:autofill {
 
   --fg-primary: #09090b;
   --fg-secondary: #52525b;
-  --fg-muted: #71717a;
+  --fg-muted: #68686f; /* zinc-500 has no margin on a hovered card with the sheen */
 
   --border-subtle: #e4e4e7;
   --border-strong: #d4d4d8;
@@ -709,7 +709,7 @@ select:autofill {
   --edge-light: inset 0 1px 0 rgba(255, 255, 255, 0.9);
   --shadow-card: var(--edge-light), 0 1px 2px rgba(0, 0, 0, 0.04);
   --shadow-overlay: var(--edge-light), 0 24px 48px rgba(0, 0, 0, 0.12);
-  --bg-field: #ffffff;
+  --bg-field: var(--bg-overlay);
 
   color-scheme: light;
 }
@@ -745,7 +745,7 @@ select:autofill {
   --edge-light: inset 0 1px 0 rgba(255, 255, 255, 0.05);
   --shadow-card: var(--edge-light);
   --shadow-overlay: var(--edge-light), 0 24px 48px rgba(0, 0, 0, 0.6);
-  --bg-field: #0e0e10;
+  --bg-field: var(--bg-overlay);
 
   --status-success-fg: var(--emerald-400);
   --status-warning-fg: var(--amber-400);

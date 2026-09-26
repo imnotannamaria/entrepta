@@ -111,7 +111,8 @@ describe("theme contrast", () => {
         const pct = Number(/(\d+)%/.exec(set["--sheen-tint"] ?? "")?.[1]);
         expect(pct).toBeGreaterThan(0);
         const glow = { ...color(set, "--fg-brand"), a: pct / 100 };
-        return (["--bg-card", "--bg-overlay"] as const).flatMap((on) => {
+        // a hovered card and an active nav item carry the sheen too
+        return (["--bg-card", "--bg-card-hover", "--bg-overlay"] as const).flatMap((on) => {
           const bg = flatten([glow, color(set, on)]);
           return (["--fg-muted", "--fg-secondary", "--fg-brand-text"] as const)
             .map((ink) => ({ ink, on, ratio: contrastRatio(color(set, ink), bg) }))

@@ -170,10 +170,11 @@ describe("Card sub-components", () => {
     expect(prefix).toHaveClass("opacity-60");
   });
 
-  it("CardTerminalBar renders with darker background and border-bottom", () => {
+  it("CardTerminalBar has a bottom border and no band over the card's glow", () => {
     const { container } = render(<CardTerminalBar>~/project</CardTerminalBar>);
     expect(screen.getByText("~/project")).toBeInTheDocument();
-    expect(container.firstChild).toHaveClass("bg-[var(--bg-chrome)]");
+    expect(container.firstChild).toHaveClass("border-b");
+    expect((container.firstChild as HTMLElement).className).not.toMatch(/bg-\[/);
   });
 
   it("CardTerminalBody applies padding and mono font", () => {
