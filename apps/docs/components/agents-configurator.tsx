@@ -355,7 +355,7 @@ function Configurator() {
                       {on}/{items.length}
                     </span>
                   </div>
-                  <div className="grid grid-cols-[repeat(auto-fill,minmax(10.5rem,1fr))] gap-x-4 gap-y-2.5 pl-6.5">
+                  <div className="grid grid-cols-[repeat(auto-fill,minmax(min(10.5rem,100%),1fr))] gap-x-4 gap-y-2.5 pl-6.5">
                     {items.map((c) => {
                       const neededBy = required.get(c.slug);
                       return (
@@ -413,7 +413,9 @@ function Configurator() {
           filename={options.fileName}
           language="md"
           variant="terminal"
-          className="flex min-h-0 flex-1 flex-col [&_pre]:text-mono-sm [&>div:last-child]:overscroll-none [&>div:last-child]:min-h-0 [&>div:last-child]:flex-1 [&>div:last-child]:overflow-auto [&_pre]:whitespace-pre-wrap [&_pre]:break-words"
+          wrap
+          size="sm"
+          className="min-h-0 flex-1"
         />
       </div>
     </div>
@@ -453,10 +455,7 @@ export function AgentsDialog() {
         />
         <span className="max-sm:sr-only">AGENTS.md</span>
       </Button>
-      <DialogContent
-        aria-describedby={undefined}
-        className="h-[min(820px,calc(100dvh-32px))] max-w-[1120px] gap-0 overflow-clip overscroll-none p-0"
-      >
+      <DialogContent className="h-[min(820px,calc(100dvh-32px))] max-w-[1120px] gap-0 overflow-clip overscroll-none p-0">
         {open && <Configurator />}
       </DialogContent>
     </Dialog>

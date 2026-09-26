@@ -3,6 +3,7 @@
 import { CaretRightIcon, CheckIcon, CircleIcon } from "@phosphor-icons/react";
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
 import * as React from "react";
+import { MENU_LABEL, MENU_ROW, MENU_SEPARATOR, OVERLAY_SURFACE } from "../lib/overlay";
 import { cn } from "../lib/utils";
 import { Kbd } from "./kbd";
 
@@ -14,20 +15,16 @@ const DropdownMenuSub = DropdownMenuPrimitive.Sub;
 const DropdownMenuRadioGroup = DropdownMenuPrimitive.RadioGroup;
 
 const dropdownContentClass = cn(
-  "motion-pop sheen z-50 min-w-[200px] overflow-hidden",
-  "origin-[var(--radix-dropdown-menu-content-transform-origin)]",
-  "bg-[var(--bg-overlay)] border border-[var(--border-strong)]",
-  "rounded-[var(--radius-md)] p-1",
-  "shadow-[var(--shadow-overlay)]"
+  OVERLAY_SURFACE,
+  "motion-pop z-50 min-w-[200px] overflow-hidden rounded-[var(--radius-md)] p-1",
+  "origin-[var(--radix-dropdown-menu-content-transform-origin)]"
 );
 
 // The highlighted item takes the brand tint, like a selected palette row, and
 // its icon turns brand. No bar on the edge: the whole row is the signal.
 const dropdownItemClass = cn(
-  "group/item relative flex cursor-default select-none items-center gap-2.5",
-  "rounded-[var(--radius-sm)] px-2.5 py-1.5",
-  "font-mono text-mono-md text-[var(--fg-secondary)]",
-  "outline-none transition-colors duration-[var(--motion-fast)]",
+  MENU_ROW,
+  "cursor-default",
   "[&_svg]:shrink-0 [&_svg]:text-[var(--fg-muted)] [&_svg]:transition-colors",
   "data-[highlighted]:bg-[var(--bg-surface-brand)] data-[highlighted]:text-[var(--fg-primary)]",
   "data-[highlighted]:[&_svg]:text-[var(--fg-brand)]",
@@ -153,8 +150,7 @@ const DropdownMenuLabel = React.forwardRef<
   <DropdownMenuPrimitive.Label
     ref={ref}
     className={cn(
-      "flex items-center gap-1.5 px-2.5 pt-2.5 pb-1.5",
-      "font-mono text-mono-xs uppercase tracking-[0.08em] text-[var(--fg-muted)]",
+      MENU_LABEL,
       // the ◆ comes in through ::before, so the label needs no extra file
       "before:text-[var(--fg-brand)] before:content-['◆'] before:[font-size:9px]",
       inset && "pl-8",
@@ -169,11 +165,7 @@ const DropdownMenuSeparator = React.forwardRef<
   React.ComponentRef<typeof DropdownMenuPrimitive.Separator>,
   React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Separator>
 >(({ className, ...props }, ref) => (
-  <DropdownMenuPrimitive.Separator
-    ref={ref}
-    className={cn("-mx-1 my-1 h-px bg-[var(--border-subtle)]", className)}
-    {...props}
-  />
+  <DropdownMenuPrimitive.Separator ref={ref} className={cn(MENU_SEPARATOR, className)} {...props} />
 ));
 DropdownMenuSeparator.displayName = DropdownMenuPrimitive.Separator.displayName;
 

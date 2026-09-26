@@ -89,7 +89,7 @@ const Sidebar = React.forwardRef<HTMLElement, SidebarProps>(
                   aria-hidden
                   size={18}
                   weight={isActive ? "fill" : "regular"}
-                  className="transition-transform duration-200 ease-[var(--ease-out)] group-hover:scale-115"
+                  className="transition-transform duration-200 ease-[var(--ease-out)] group-hover:scale-115 group-focus-visible:scale-115"
                 />
               </LinkComp>
             );

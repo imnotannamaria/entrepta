@@ -2,6 +2,7 @@ import { OpenAgentsButton } from "@/components/agents-configurator";
 import { CommandPaletteTrigger } from "@/components/command-palette-trigger";
 import { CopyInit, HeroStats, HomeShowcase, ThemeRow } from "@/components/home-hero";
 import { HomeInstall } from "@/components/home-install";
+import { HomeSection, SectionHead, SpecList } from "@/components/home-section";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteNav } from "@/components/site-nav";
 import { SiteStatusBar } from "@/components/site-status-bar";
@@ -11,10 +12,10 @@ import { USED_BY } from "@/lib/links";
 import { tokenCount } from "@/lib/stats";
 import { THEMES } from "@/lib/theme";
 import { cn } from "@/lib/utils";
+import { CodeBlock } from "@entrepta/registry/content/code-block";
 import { Diamond } from "@entrepta/registry/content/diamond";
 import { Reveal } from "@entrepta/registry/motion/reveal";
 import { RollingNumber } from "@entrepta/registry/motion/rolling-number";
-import { TypeIn } from "@entrepta/registry/motion/type-in";
 import { Badge } from "@entrepta/registry/primitives/badge";
 import { buttonVariants } from "@entrepta/registry/primitives/button-variants";
 import {
@@ -30,6 +31,7 @@ import {
 } from "@entrepta/registry/primitives/card";
 import { Kbd } from "@entrepta/registry/primitives/kbd";
 import { Switch } from "@entrepta/registry/primitives/switch";
+import { Tabs, TabsList, TabsTrigger } from "@entrepta/registry/primitives/tabs";
 import type { Icon } from "@phosphor-icons/react";
 import {
   BellSimpleIcon,
@@ -46,6 +48,7 @@ import {
   TextboxIcon,
 } from "@phosphor-icons/react/dist/ssr";
 import Link from "next/link";
+import type { CSSProperties } from "react";
 
 const PRINCIPLES = [
   {
@@ -110,30 +113,24 @@ const SECTION_PREVIEWS: Record<(typeof SECTIONS)[number], React.ReactNode> = {
     </div>
   ),
   Layout: (
-    <div className="flex overflow-hidden rounded-[var(--radius-sm)] border border-[var(--border-subtle)] bg-[var(--bg-canvas)] font-mono text-mono-sm">
-      <span className="inline-flex items-center gap-1.5 border-r border-[var(--border-subtle)] bg-[var(--bg-card)] bg-[linear-gradient(to_top,color-mix(in_srgb,var(--fg-brand)_12%,transparent),transparent_80%)] px-3 py-1.5 text-[var(--fg-primary)]">
-        <Diamond /> home.tsx
-      </span>
-      <span className="border-r border-[var(--border-subtle)] px-3 py-1.5 text-[var(--fg-muted)]">
-        about.md
-      </span>
-      <span className="px-3 py-1.5 text-[var(--fg-muted)]">stack.ts</span>
+    <div className="overflow-hidden rounded-[var(--radius-sm)] border border-[var(--border-subtle)]">
+      <Tabs defaultValue="home">
+        <TabsList aria-label="Example files">
+          <TabsTrigger value="home">home.tsx</TabsTrigger>
+          <TabsTrigger value="about">about.md</TabsTrigger>
+          <TabsTrigger value="stack">stack.ts</TabsTrigger>
+        </TabsList>
+      </Tabs>
     </div>
   ),
   Content: (
-    <div className="sheen overflow-hidden rounded-[var(--radius-sm)] border border-[var(--border-subtle)] bg-[var(--bg-overlay)] font-mono text-mono-sm shadow-[var(--shadow-card)]">
-      <div className="flex items-center gap-2 border-b border-[var(--border-subtle)] px-3 py-1.5">
-        <span className="h-2 w-2 rounded-full bg-[var(--status-error)] opacity-60" />
-        <span className="h-2 w-2 rounded-full bg-[var(--status-warning)] opacity-60" />
-        <span className="h-2 w-2 rounded-full bg-[var(--status-success)] opacity-60" />
-        <span className="ml-auto text-mono-xs uppercase tracking-[0.08em] text-[var(--fg-brand-text)]">
-          bash
-        </span>
-      </div>
-      <div className="px-3 py-2 text-[var(--fg-secondary)]">
-        <span className="text-[var(--fg-brand)]">$</span> npx @entrepta/cli@latest add code-block
-      </div>
-    </div>
+    <CodeBlock
+      variant="terminal"
+      language="bash"
+      showCopy={false}
+      size="sm"
+      code="npx @entrepta/cli@latest add code-block"
+    />
   ),
   Feedback: (
     <div className="flex items-start gap-3 rounded-[var(--radius-md)] border border-[var(--border-strong)] bg-[var(--bg-overlay)] p-3 font-mono shadow-[var(--shadow-card-hover)] [background-image:radial-gradient(140%_120%_at_0%_0%,color-mix(in_srgb,var(--status-success)_12%,transparent),transparent_55%)]">
@@ -232,14 +229,20 @@ export default function Home() {
               </Link>
 
               <h1 className="m-0 mb-7 font-serif text-display-md font-normal text-[var(--fg-primary)] sm:text-display-lg lg:text-display-xl">
-                <TypeIn text="A design system," by="word" className="block" />
-                <TypeIn
-                  text="posed as an IDE."
-                  emphasis="posed as an IDE."
-                  by="word"
-                  delay={0.25}
-                  className="block"
-                />
+                {/* CSS, not TypeIn: the heading is the first thing on screen, so it fades in
+                    before hydration and is there with JavaScript off */}
+                <span
+                  className="type-fade block"
+                  style={{ "--type-delay": "0.05s" } as CSSProperties}
+                >
+                  A design system,
+                </span>
+                <em
+                  className="type-fade block italic text-[var(--fg-brand)]"
+                  style={{ "--type-delay": "0.22s" } as CSSProperties}
+                >
+                  posed as an IDE.
+                </em>
               </h1>
 
               <p className="m-0 mb-10 max-w-2xl text-balance font-sans text-body-lg text-[var(--fg-secondary)] sm:text-heading-md sm:font-normal">
@@ -289,24 +292,24 @@ export default function Home() {
         </section>
 
         {/* ── INSTALL ── */}
-        <section
-          id="install"
-          className="max-w-[1280px] mx-auto px-6 sm:px-12 py-20 border-t border-[var(--border-subtle)]"
-        >
-          <div className="mb-10">
-            <div className="font-mono text-mono-sm text-[var(--fg-brand-text)] uppercase tracking-[0.08em] mb-3">
-              · getting started
-            </div>
-            <h2 className="font-serif text-[clamp(32px,4vw,56px)] font-normal leading-tight tracking-tight text-[var(--fg-primary)]">
-              <em className="italic text-[var(--fg-brand)]">Three</em> commands.
-              <br />
-              <span className="text-[var(--fg-muted)]">You own the code.</span>
-            </h2>
-            <p className="mt-4 font-sans text-body-lg text-[var(--fg-secondary)] max-w-lg leading-relaxed">
-              entrepta ships as CSS tokens and copy-paste components. No runtime SDK and no
-              telemetry in what you copy. Drop it into a Next.js or Vite project and start shipping.
-            </p>
-          </div>
+        <HomeSection id="install">
+          <SectionHead
+            eyebrow="getting started"
+            title={
+              <>
+                <em>Three</em> commands.
+                <br />
+                <span className="text-[var(--fg-muted)]">You own the code.</span>
+              </>
+            }
+            description={
+              <>
+                entrepta ships as CSS tokens and copy-paste components. No runtime SDK and no
+                telemetry in what you copy. Drop it into a Next.js or Vite project and start
+                shipping.
+              </>
+            }
+          />
 
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-6">
             <HomeInstall steps={INSTALL_STEPS} />
@@ -348,23 +351,24 @@ export default function Home() {
               </CardFooter>
             </Card>
           </div>
-        </section>
+        </HomeSection>
 
         {/* ── PRINCIPLES ── */}
-        <section
-          id="principles"
-          className="max-w-[1280px] mx-auto px-6 sm:px-12 py-20 border-t border-[var(--border-subtle)]"
-        >
-          <div className="flex items-start justify-between mb-12 gap-6">
-            <h2 className="font-serif text-[clamp(32px,4vw,56px)] font-normal leading-tight tracking-tight text-[var(--fg-primary)]">
-              <em className="italic text-[var(--fg-brand)]">Six</em> principles.
-              <br />
-              One product personality.
-            </h2>
-            <span className="font-mono text-mono-sm text-[var(--fg-muted)] hidden sm:inline-block mt-2 uppercase tracking-[0.08em]">
-              section 1.2 · brief
-            </span>
-          </div>
+        <HomeSection id="principles">
+          <SectionHead
+            title={
+              <>
+                <em>Six</em> principles.
+                <br />
+                One product personality.
+              </>
+            }
+            aside={
+              <span className="font-mono text-mono-sm uppercase tracking-[0.08em] text-[var(--fg-muted)]">
+                section 1.2 · brief
+              </span>
+            }
+          />
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {PRINCIPLES.map((p, i) => (
@@ -382,31 +386,31 @@ export default function Home() {
               </Reveal>
             ))}
           </div>
-        </section>
+        </HomeSection>
 
         {/* ── ACCESSIBILITY ── */}
-        <section
-          id="accessibility"
-          className="max-w-[1280px] mx-auto px-6 sm:px-12 py-20 border-t border-[var(--border-subtle)]"
-        >
+        <HomeSection id="accessibility">
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-12 items-start">
-            <div>
-              <div className="font-mono text-mono-sm text-[var(--fg-brand-text)] uppercase tracking-[0.08em] mb-3">
-                · a11y
-              </div>
-              <h2 className="font-serif text-[clamp(32px,4vw,56px)] font-normal leading-tight tracking-tight text-[var(--fg-primary)]">
-                <em className="italic text-[var(--fg-brand)]">Accessible</em> by
-                <br />
-                <span className="text-[var(--fg-muted)]">default.</span>
-              </h2>
-              <p className="mt-4 font-sans text-body-lg text-[var(--fg-secondary)] max-w-md leading-relaxed">
-                Built on Radix and native elements, so keyboard, focus and ARIA come for free. Every
-                text color is measured against what it sits on, in every theme, and a test fails the
-                build if one drops below AA.
-              </p>
-            </div>
-            <ul className="flex flex-col gap-0 border-t border-[var(--border-subtle)]">
-              {[
+            <SectionHead
+              className="mb-0"
+              eyebrow="a11y"
+              title={
+                <>
+                  <em>Accessible</em> by
+                  <br />
+                  <span className="text-[var(--fg-muted)]">default.</span>
+                </>
+              }
+              description={
+                <>
+                  Built on Radix and native elements, so keyboard, focus and ARIA come for free.
+                  Every text color is measured against what it sits on, in every theme, and a test
+                  fails the build if one drops below AA.
+                </>
+              }
+            />
+            <SpecList
+              rows={[
                 {
                   k: "keyboard",
                   v: "every interactive element reachable & operable",
@@ -439,47 +443,34 @@ export default function Home() {
                   k: "dark + light",
                   v: "every theme ships in two modes; the user picks via data-mode",
                 },
-              ].map((row) => (
-                <li
-                  key={row.k}
-                  className="grid grid-cols-[140px_1fr] gap-4 items-baseline py-3 border-b border-[var(--border-subtle)] font-mono text-mono-sm"
-                >
-                  <span className="text-[var(--fg-brand-text)] inline-flex items-center gap-1.5">
-                    <span aria-hidden className="text-mono-xs leading-none text-[var(--fg-brand)]">
-                      ◆
-                    </span>
-                    {row.k}
-                  </span>
-                  <span className="text-[var(--fg-secondary)] leading-relaxed">{row.v}</span>
-                </li>
-              ))}
-            </ul>
+              ]}
+            />
           </div>
-        </section>
+        </HomeSection>
 
         {/* ── SECURITY ── */}
-        <section
-          id="security"
-          className="max-w-[1280px] mx-auto px-6 sm:px-12 py-20 border-t border-[var(--border-subtle)]"
-        >
+        <HomeSection id="security">
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-12 items-start">
-            <div>
-              <div className="font-mono text-mono-sm text-[var(--fg-brand-text)] uppercase tracking-[0.08em] mb-3">
-                · security
-              </div>
-              <h2 className="font-serif text-[clamp(32px,4vw,56px)] font-normal leading-tight tracking-tight text-[var(--fg-primary)]">
-                <em className="italic text-[var(--fg-brand)]">Careful</em> by
-                <br />
-                <span className="text-[var(--fg-muted)]">design.</span>
-              </h2>
-              <p className="mt-4 font-sans text-body-lg text-[var(--fg-secondary)] max-w-md leading-relaxed">
-                entrepta ships as copy-paste source: no runtime SDK, no telemetry, no remote code.
-                The CLI guards against path traversal via aliases, the docs site sets a strict CSP
-                and the usual hardening headers, and dependencies stay few and justified.
-              </p>
-            </div>
-            <ul className="flex flex-col gap-0 border-t border-[var(--border-subtle)]">
-              {[
+            <SectionHead
+              className="mb-0"
+              eyebrow="security"
+              title={
+                <>
+                  <em>Careful</em> by
+                  <br />
+                  <span className="text-[var(--fg-muted)]">design.</span>
+                </>
+              }
+              description={
+                <>
+                  entrepta ships as copy-paste source: no runtime SDK, no telemetry, no remote code.
+                  The CLI guards against path traversal via aliases, the docs site sets a strict CSP
+                  and the usual hardening headers, and dependencies stay few and justified.
+                </>
+              }
+            />
+            <SpecList
+              rows={[
                 {
                   k: "copy-paste",
                   v: "components land in your repo as plain source, with no runtime to compromise",
@@ -508,132 +499,130 @@ export default function Home() {
                   k: "deps minimal",
                   v: "few runtime deps, each one justified, so they stay easy to audit",
                 },
-              ].map((row) => (
-                <li
-                  key={row.k}
-                  className="grid grid-cols-[140px_1fr] gap-4 items-baseline py-3 border-b border-[var(--border-subtle)] font-mono text-mono-sm"
-                >
-                  <span className="text-[var(--fg-brand-text)] inline-flex items-center gap-1.5">
-                    <span aria-hidden className="text-mono-xs leading-none text-[var(--fg-brand)]">
-                      ◆
-                    </span>
-                    {row.k}
-                  </span>
-                  <span className="text-[var(--fg-secondary)] leading-relaxed">{row.v}</span>
-                </li>
-              ))}
-            </ul>
+              ]}
+            />
           </div>
-        </section>
+        </HomeSection>
 
         {/* ── COMPONENTS PREVIEW ── */}
-        <section className="max-w-[1280px] mx-auto px-6 sm:px-12 py-20 border-t border-[var(--border-subtle)]">
-          <div className="flex items-end justify-between mb-10 gap-6">
-            <h2 className="font-serif text-[clamp(32px,4vw,56px)] font-normal leading-tight tracking-tight text-[var(--fg-primary)]">
-              <em className="italic text-[var(--fg-brand)]">What's</em> inside.{" "}
-              <span className="text-[var(--fg-muted)]">
-                {COMPONENT_INDEX.length} components, {SECTIONS.length} sections.
-              </span>
-            </h2>
-            <Link
-              href="/docs/components"
-              className={cn(
-                buttonVariants({ variant: "ghost", size: "sm" }),
-                "hidden shrink-0 sm:inline-flex"
-              )}
-            >
-              browse all ↗
-            </Link>
-          </div>
+        <HomeSection>
+          <SectionHead
+            title={
+              <>
+                <em>What's</em> inside.{" "}
+                <span className="text-[var(--fg-muted)]">
+                  {COMPONENT_INDEX.length} components, {SECTIONS.length} sections.
+                </span>
+              </>
+            }
+            aside={
+              <Link
+                href="/docs/components"
+                className={cn(buttonVariants({ variant: "ghost", size: "sm" }), "shrink-0")}
+              >
+                browse all ↗
+              </Link>
+            }
+          />
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {SECTIONS.map((section, i) => {
               const items = COMPONENT_INDEX.filter((c) => c.section === section);
               return (
                 <Reveal key={section} index={i}>
-                  <Link
-                    href={`/docs/components/${SECTION_FIRST_PAGE[section]}`}
-                    className="group block h-full"
-                  >
-                    <Card className="h-full">
-                      <CardHeader>
-                        <CardLabel icon={SECTION_ICONS[section]}>{section.toLowerCase()}</CardLabel>
-                        <CardMeta>{`${items.length} ${items.length === 1 ? "component" : "components"}`}</CardMeta>
-                      </CardHeader>
-                      <CardTitle className="text-heading-md">{section}</CardTitle>
-                      <CardDescription>{items.map((c) => c.title).join(", ")}.</CardDescription>
-                      <CardContent>{SECTION_PREVIEWS[section]}</CardContent>
-                      <CardFooter>
-                        <CardComment>{`${section.toLowerCase()}/`}</CardComment>
-                        <span
-                          aria-hidden
-                          className="text-[var(--fg-brand)] transition-transform group-hover:translate-x-0.5"
-                        >
-                          →
-                        </span>
-                      </CardFooter>
-                    </Card>
-                  </Link>
+                  {/* the title's link stretches over the card; the preview sits above it, so
+                      its real controls stay usable instead of nesting inside a link */}
+                  <Card className="group relative h-full focus-within:border-[var(--border-strong)]">
+                    <CardHeader>
+                      <CardLabel icon={SECTION_ICONS[section]}>{section.toLowerCase()}</CardLabel>
+                      <CardMeta>{`${items.length} ${items.length === 1 ? "component" : "components"}`}</CardMeta>
+                    </CardHeader>
+                    <CardTitle className="text-heading-md">
+                      <Link
+                        href={`/docs/components/${SECTION_FIRST_PAGE[section]}`}
+                        className="focus-ring rounded-[var(--radius-sm)] after:absolute after:inset-0 after:content-['']"
+                      >
+                        {section}
+                      </Link>
+                    </CardTitle>
+                    <CardDescription>{items.map((c) => c.title).join(", ")}.</CardDescription>
+                    <CardContent className="relative z-10">{SECTION_PREVIEWS[section]}</CardContent>
+                    <CardFooter>
+                      <CardComment>{`${section.toLowerCase()}/`}</CardComment>
+                      <span
+                        aria-hidden
+                        className="text-[var(--fg-brand)] transition-transform group-hover:translate-x-0.5"
+                      >
+                        →
+                      </span>
+                    </CardFooter>
+                  </Card>
                 </Reveal>
               );
             })}
             <Reveal index={SECTIONS.length}>
-              <Link href="/docs/themes" className="group block h-full">
-                <Card className="h-full">
-                  <CardHeader>
-                    <CardLabel icon={PaletteIcon}>themes</CardLabel>
-                    <CardMeta>{`${THEMES.length} presets`}</CardMeta>
-                  </CardHeader>
-                  <CardTitle className="text-heading-md">Themes</CardTitle>
-                  <CardDescription>
-                    One brand per theme, two measured inks each. Fixed, or all six at runtime.
-                  </CardDescription>
-                  <CardContent>
-                    <div className="flex gap-2">
-                      {THEMES.map((t) => (
-                        <span
-                          key={t.id}
-                          title={t.label}
-                          className="h-6 w-6 rounded-full border border-[var(--border-subtle)]"
-                          style={{ background: t.color }}
-                        />
-                      ))}
-                    </div>
-                  </CardContent>
-                  <CardFooter>
-                    <CardComment>--themes=all</CardComment>
-                    <span
-                      aria-hidden
-                      className="text-[var(--fg-brand)] transition-transform group-hover:translate-x-0.5"
-                    >
-                      →
-                    </span>
-                  </CardFooter>
-                </Card>
-              </Link>
+              <Card className="group relative h-full focus-within:border-[var(--border-strong)]">
+                <CardHeader>
+                  <CardLabel icon={PaletteIcon}>themes</CardLabel>
+                  <CardMeta>{`${THEMES.length} presets`}</CardMeta>
+                </CardHeader>
+                <CardTitle className="text-heading-md">
+                  <Link
+                    href="/docs/themes"
+                    className="focus-ring rounded-[var(--radius-sm)] after:absolute after:inset-0 after:content-['']"
+                  >
+                    Themes
+                  </Link>
+                </CardTitle>
+                <CardDescription>
+                  One brand per theme, two measured inks each. Fixed, or all six at runtime.
+                </CardDescription>
+                <CardContent>
+                  <div className="flex gap-2">
+                    {THEMES.map((t) => (
+                      <span
+                        key={t.id}
+                        title={t.label}
+                        className="h-6 w-6 rounded-full border border-[var(--border-subtle)]"
+                        style={{ background: t.color }}
+                      >
+                        <span className="sr-only">{t.label}</span>
+                      </span>
+                    ))}
+                  </div>
+                </CardContent>
+                <CardFooter>
+                  <CardComment>--themes=all</CardComment>
+                  <span
+                    aria-hidden
+                    className="text-[var(--fg-brand)] transition-transform group-hover:translate-x-0.5"
+                  >
+                    →
+                  </span>
+                </CardFooter>
+              </Card>
             </Reveal>
           </div>
-        </section>
+        </HomeSection>
 
         {/* ── FOR AGENTS ── */}
-        <section
-          id="for-agents"
-          className="max-w-[1280px] mx-auto px-6 sm:px-12 py-20 border-t border-[var(--border-subtle)]"
-        >
-          <div className="mb-10">
-            <div className="font-mono text-mono-sm text-[var(--fg-brand-text)] uppercase tracking-[0.08em] mb-3">
-              · for your coding agent
-            </div>
-            <h2 className="font-serif text-[clamp(32px,4vw,56px)] font-normal leading-tight tracking-tight text-[var(--fg-primary)]">
-              <em className="italic text-[var(--fg-brand)]">Readable</em> by agents,
-              <br />
-              <span className="text-[var(--fg-muted)]">not only people.</span>
-            </h2>
-            <p className="mt-4 font-sans text-body-lg text-[var(--fg-secondary)] max-w-xl leading-relaxed">
-              Claude Code, Cursor and Codex read Markdown better than a web page. Every docs page
-              has a Markdown version, and the site keeps an index an agent can start from.
-            </p>
-          </div>
+        <HomeSection id="for-agents">
+          <SectionHead
+            eyebrow="for your coding agent"
+            title={
+              <>
+                <em>Readable</em> by agents,
+                <br />
+                <span className="text-[var(--fg-muted)]">not only people.</span>
+              </>
+            }
+            description={
+              <>
+                Claude Code, Cursor and Codex read Markdown better than a web page. Every docs page
+                has a Markdown version, and the site keeps an index an agent can start from.
+              </>
+            }
+          />
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <Card className="h-full">
               <CardHeader>
@@ -648,7 +637,7 @@ export default function Home() {
               <CardFooter>
                 <CardComment>header · AGENTS.md</CardComment>
                 <OpenAgentsButton className="cursor-pointer text-[var(--fg-brand-text)] hover:underline underline-offset-4">
-                  open →
+                  build yours →
                 </OpenAgentsButton>
               </CardFooter>
             </Card>
@@ -692,21 +681,21 @@ export default function Home() {
                   rel="noreferrer"
                   className="text-[var(--fg-brand-text)] hover:underline underline-offset-4"
                 >
-                  open ↗
+                  read llms.txt ↗
                 </a>
               </CardFooter>
             </Card>
           </div>
-        </section>
+        </HomeSection>
 
         {/* ── CTA STRIP ── */}
-        <section className="max-w-[1280px] mx-auto px-6 sm:px-12 py-20 border-t border-[var(--border-subtle)]">
+        <HomeSection>
           <SpotlightCard variant="featured" className="p-12 sm:p-16 text-center">
             <div className="flex flex-col items-center gap-6">
               <div className="font-mono text-mono-sm uppercase tracking-[0.08em] text-[var(--fg-brand-text)]">
                 · ready to ship
               </div>
-              <h2 className="font-serif text-[clamp(36px,5vw,72px)] font-normal leading-none tracking-tight text-[var(--fg-primary)]">
+              <h2 className="m-0 font-serif text-display-lg font-normal text-[var(--fg-primary)] lg:text-display-xl">
                 Start <em className="italic text-[var(--fg-brand)]">building.</em>
               </h2>
               <p className="font-sans text-body-lg text-[var(--fg-secondary)] max-w-md leading-relaxed">
@@ -723,7 +712,7 @@ export default function Home() {
               </div>
             </div>
           </SpotlightCard>
-        </section>
+        </HomeSection>
 
         <SiteFooter />
       </main>

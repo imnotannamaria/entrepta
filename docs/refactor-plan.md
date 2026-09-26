@@ -1183,6 +1183,34 @@ Smaller than the ones above, each with a recommendation.
 - Responsive sweep: every sitemap page at 375 and 1024px, and key pages at 320 to 1280px,
       checked for horizontal overflow, overlapping text and clipped text
 
+## Final code review
+
+Against the full diff, with the checklist now in CLAUDE.md §12.
+
+- [x] Security: `entrepta.json` validated before use (an alias is written into import lines),
+      `schema.json` published for the URL every config points at, and a source test that the
+      registry has no eval, network calls or raw HTML beyond the theme scripts
+- [x] Duplication: the overlay surface and menu row lived in three components; now
+      `lib/overlay.ts`. The home page's section heads, section bands and spec lists, the two nav
+      lists and the two clipboard buttons are one piece each
+- [x] Divergence: the component pages had a header and section rules of their own; they use
+      `DocPageHeader` and `DocSubhead` like every docs page
+- [x] Type scale: eight `text-[clamp(...)]` sizes off the scale, and the test now catches fluid
+      sizes too
+- [x] Overrides from callers: CodeBlock takes `wrap` and `size` and fills a height; the
+      ThemeSwitcher takes `position="inline"`
+- [x] Accessibility: cards that were one big link held a Switch (a control inside a link); they
+      use a stretched link on the title now. Two links named "open" went to different places.
+      Tab and sidebar icons grow on keyboard focus too
+- [x] A production build of a clean Next.js app with all 33 components, installed through the
+      local CLI, found `<Badge icon={...}>` breaking `next build` from a server page. Badge
+      needed no `"use client"`, and icon props take an element (`lib/icon.tsx`)
+- [x] FilterPill's usage imported a hook `add filter-pill` did not install; it brings
+      `use-url-filter` now
+- [x] The hero title fades in with CSS, so it is there before hydration and without JavaScript
+- [x] A 404 page and an error boundary on ChromeMessage; the 404's status bar no longer causes
+      a hydration mismatch
+
 ---
 
 ## Out of scope

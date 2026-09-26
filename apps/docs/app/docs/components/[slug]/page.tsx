@@ -1,7 +1,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-import { AgentActions } from "@/components/agent-actions";
 import { ComponentInstall } from "@/components/component-install";
+import { DocPageHeader, DocSubhead } from "@/components/doc-page-header";
 import { findEntry } from "@/lib/component-index";
 import { COMPONENT_DOCS } from "@/lib/components";
 import { depsFor, filesFor } from "@/lib/manifest";
@@ -127,33 +127,22 @@ export default async function ComponentPage({
 
   return (
     <article className="max-w-3xl">
-      <div className="font-mono text-mono-xs uppercase tracking-widest text-[var(--fg-brand-text)] mb-6">
-        {component.section}
-      </div>
-
-      <h1 className="font-serif text-display-md font-normal text-[var(--fg-primary)] leading-tight tracking-tight mb-3">
-        {component.title}
-      </h1>
-      <p className="font-sans text-body-lg text-[var(--fg-secondary)] leading-relaxed mb-5">
-        {component.description}
-      </p>
-      <div className="mb-10">
-        <AgentActions path={`/docs/components/${slug}`} />
-      </div>
+      <DocPageHeader
+        eyebrow={component.section}
+        title={component.title}
+        description={component.description}
+        markdown={`/docs/components/${slug}`}
+      />
 
       <section className="mb-10">
-        <h2 className="font-mono text-mono-xs uppercase tracking-widest text-[var(--fg-muted)] border-b border-[var(--border-subtle)] pb-2 mb-6">
-          Preview
-        </h2>
+        <DocSubhead>Preview</DocSubhead>
         <div className="border border-[var(--border-subtle)] rounded-[var(--radius-md)] bg-[var(--bg-canvas)] min-h-40 flex items-center justify-center p-8">
           <ComponentPreview slug={slug} />
         </div>
       </section>
 
       <section className="mb-10">
-        <h2 className="font-mono text-mono-xs uppercase tracking-widest text-[var(--fg-muted)] border-b border-[var(--border-subtle)] pb-2 mb-6">
-          Installation
-        </h2>
+        <DocSubhead>Installation</DocSubhead>
         <ComponentInstall
           cliCommand={`npx @entrepta/cli@latest add ${slug}`}
           dependencies={depsFor(slug)}
@@ -163,9 +152,7 @@ export default async function ComponentPage({
       </section>
 
       <section className="mb-10">
-        <h2 className="font-mono text-mono-xs uppercase tracking-widest text-[var(--fg-muted)] border-b border-[var(--border-subtle)] pb-2 mb-6">
-          Usage
-        </h2>
+        <DocSubhead>Usage</DocSubhead>
         <CodeBlock
           code={component.usage}
           variant="terminal"
@@ -175,9 +162,7 @@ export default async function ComponentPage({
       </section>
 
       <section>
-        <h2 className="font-mono text-mono-xs uppercase tracking-widest text-[var(--fg-muted)] border-b border-[var(--border-subtle)] pb-2 mb-6">
-          Props
-        </h2>
+        <DocSubhead>Props</DocSubhead>
         <div className="overflow-x-auto">
           <table className="w-full font-mono text-mono-sm border-collapse">
             <thead>

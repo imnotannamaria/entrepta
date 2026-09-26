@@ -33,7 +33,7 @@ export const COMPONENTS: RegistryComponent[] = [
     category: "primitives",
     files: ["primitives/badge.tsx"],
     deps: ["class-variance-authority", "@phosphor-icons/react"],
-    registryDeps: [],
+    registryDeps: ["icon-lib"],
     usage: `<Badge variant="soft" color="success" dot>shipped</Badge>`,
     exports: ["Badge", "badgeVariants"],
   },
@@ -53,7 +53,7 @@ export const COMPONENTS: RegistryComponent[] = [
     category: "primitives",
     files: ["primitives/card.tsx"],
     deps: ["class-variance-authority", "@phosphor-icons/react"],
-    registryDeps: ["diamond"],
+    registryDeps: ["diamond", "icon-lib"],
     usage:
       "<Card><CardHeader><CardLabel>post</CardLabel><CardMeta>2026</CardMeta></CardHeader><CardTitle>Title</CardTitle></Card>",
     exports: [
@@ -77,7 +77,7 @@ export const COMPONENTS: RegistryComponent[] = [
     category: "primitives",
     files: ["primitives/dialog.tsx"],
     deps: ["@radix-ui/react-dialog", "@phosphor-icons/react"],
-    registryDeps: ["diamond"],
+    registryDeps: ["diamond", "overlay-lib", "icon-lib"],
     usage:
       "<Dialog><DialogTrigger asChild><Button>open</Button></DialogTrigger><DialogContent><DialogTitle>Title</DialogTitle></DialogContent></Dialog>",
     exports: [
@@ -100,7 +100,7 @@ export const COMPONENTS: RegistryComponent[] = [
     category: "primitives",
     files: ["primitives/dropdown.tsx"],
     deps: ["@radix-ui/react-dropdown-menu", "@phosphor-icons/react"],
-    registryDeps: ["kbd"],
+    registryDeps: ["kbd", "overlay-lib"],
     usage:
       "<DropdownMenu><DropdownMenuTrigger asChild><Button>menu</Button></DropdownMenuTrigger><DropdownMenuContent><DropdownMenuItem>item</DropdownMenuItem></DropdownMenuContent></DropdownMenu>",
     exports: [
@@ -128,7 +128,7 @@ export const COMPONENTS: RegistryComponent[] = [
     category: "primitives",
     files: ["primitives/tooltip.tsx"],
     deps: ["@radix-ui/react-tooltip"],
-    registryDeps: ["kbd"],
+    registryDeps: ["kbd", "overlay-lib"],
     usage:
       "<Tooltip><TooltipTrigger asChild><Button>save</Button></TooltipTrigger><TooltipContent>save <TooltipShortcut>⌘S</TooltipShortcut></TooltipContent></Tooltip>",
     exports: ["Tooltip", "TooltipContent", "TooltipProvider", "TooltipShortcut", "TooltipTrigger"],
@@ -189,7 +189,7 @@ export const COMPONENTS: RegistryComponent[] = [
     category: "feedback",
     files: ["feedback/toast.tsx"],
     deps: ["sonner", "@phosphor-icons/react"],
-    registryDeps: [],
+    registryDeps: ["overlay-lib"],
     usage: `<Toaster /> then toast.success("saved")`,
     exports: ["Toaster", "toast"],
   },
@@ -223,7 +223,7 @@ export const COMPONENTS: RegistryComponent[] = [
     category: "layout",
     files: ["layout/theme-switcher.tsx"],
     deps: ["@phosphor-icons/react"],
-    registryDeps: ["use-theme"],
+    registryDeps: ["use-theme", "overlay-lib"],
     usage: "<ThemeSwitcher themes={THEMES} /> with <ThemeScript /> in <head>",
     exports: ["ThemeScript", "ThemeSwitcher"],
   },
@@ -243,7 +243,7 @@ export const COMPONENTS: RegistryComponent[] = [
     category: "feedback",
     files: ["feedback/command-palette.tsx"],
     deps: ["cmdk", "@radix-ui/react-dialog", "@phosphor-icons/react"],
-    registryDeps: ["use-command-palette", "kbd"],
+    registryDeps: ["use-command-palette", "kbd", "overlay-lib"],
     usage:
       "<CommandDialog open={open} onOpenChange={setOpen}><Command><CommandInput /><CommandList>…</CommandList></Command></CommandDialog>",
     exports: [
@@ -277,6 +277,22 @@ export const COMPONENTS: RegistryComponent[] = [
     registryDeps: [],
     usage: `<CodeBlock code="npm run dev" language="bash" variant="terminal" />`,
     exports: ["CodeBlock"],
+  },
+  {
+    name: "icon-lib",
+    description: "An icon prop that takes a Phosphor component or an element",
+    category: "lib",
+    files: ["lib/icon.tsx"],
+    deps: ["@phosphor-icons/react"],
+    registryDeps: [],
+  },
+  {
+    name: "overlay-lib",
+    description: "The shared overlay surface, menu row, label and separator classes",
+    category: "lib",
+    files: ["lib/overlay.ts"],
+    deps: [],
+    registryDeps: [],
   },
   {
     name: "motion-lib",
@@ -391,7 +407,7 @@ export const COMPONENTS: RegistryComponent[] = [
     category: "primitives",
     files: ["primitives/field.tsx"],
     deps: ["@phosphor-icons/react"],
-    registryDeps: ["diamond"],
+    registryDeps: ["diamond", "icon-lib"],
     usage: '<Field id="email" label="email" error={error}><input type="email" /></Field>',
     exports: ["Field", "FieldError", "FieldLabel"],
   },
@@ -401,7 +417,7 @@ export const COMPONENTS: RegistryComponent[] = [
     category: "primitives",
     files: ["primitives/filter-pill.tsx"],
     deps: ["@phosphor-icons/react"],
-    registryDeps: [],
+    registryDeps: ["use-url-filter"],
     usage: `<FilterPill label="film" count={12} active={type === "film"} onClick={…} />`,
     exports: ["FilterPill"],
   },

@@ -1,8 +1,6 @@
-"use client";
-
-import type { Icon } from "@phosphor-icons/react";
 import { type VariantProps, cva } from "class-variance-authority";
 import * as React from "react";
+import { type IconProp, IconSlot } from "../lib/icon";
 import { cn } from "../lib/utils";
 
 const badgeVariants = cva(
@@ -147,7 +145,7 @@ export interface BadgeProps
   /** Render a colored status dot before the label */
   dot?: boolean;
   /** A Phosphor icon component before the label, sized to the badge. Takes the place of the dot. */
-  icon?: Icon;
+  icon?: IconProp;
 }
 
 const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
@@ -156,12 +154,7 @@ const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
     return (
       <span ref={ref} className={cn(badgeVariants({ variant, color, size }), className)} {...props}>
         {BadgeIcon ? (
-          <BadgeIcon
-            aria-hidden
-            size={size === "sm" ? 10 : 12}
-            weight="bold"
-            className="shrink-0"
-          />
+          <IconSlot icon={BadgeIcon} size={size === "sm" ? 10 : 12} />
         ) : (
           dot && (
             <span

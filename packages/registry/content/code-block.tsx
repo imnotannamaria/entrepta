@@ -19,6 +19,10 @@ interface CodeBlockProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "tit
   showCopy?: boolean;
   /** Milliseconds the "copied" state stays visible after a successful copy. */
   copyTimeout?: number;
+  /** Wrap long lines instead of scrolling sideways, for prose such as Markdown. */
+  wrap?: boolean;
+  /** `sm` for a compact block inside a card or a narrow panel. */
+  size?: "sm" | "md";
 }
 
 const CodeBlock = React.forwardRef<HTMLDivElement, CodeBlockProps>(
@@ -31,6 +35,8 @@ const CodeBlock = React.forwardRef<HTMLDivElement, CodeBlockProps>(
       variant = "default",
       showCopy = true,
       copyTimeout = 1500,
+      wrap = false,
+      size = "md",
       className,
       children,
       ...props
@@ -69,7 +75,8 @@ const CodeBlock = React.forwardRef<HTMLDivElement, CodeBlockProps>(
       <div
         ref={ref}
         className={cn(
-          "relative rounded-[var(--radius-md)] border border-[var(--border-subtle)]",
+          // a column, so a block given a height scrolls its body and keeps its header
+          "relative flex flex-col rounded-[var(--radius-md)] border border-[var(--border-subtle)]",
           "sheen bg-[var(--bg-overlay)] shadow-[var(--shadow-card)] overflow-hidden",
           className
         )}
@@ -147,13 +154,25 @@ const CodeBlock = React.forwardRef<HTMLDivElement, CodeBlockProps>(
             </div>
           </div>
         )}
-        <div className="overflow-x-auto">
+        <div className="min-h-0 flex-1 overflow-auto overscroll-contain">
           {children ? (
-            <div className="p-4 font-mono text-mono-md leading-relaxed text-[var(--fg-secondary)] whitespace-pre">
+            <div
+              className={cn(
+                "p-4 font-mono leading-relaxed text-[var(--fg-secondary)]",
+                size === "sm" ? "text-mono-sm" : "text-mono-md",
+                wrap ? "whitespace-pre-wrap [overflow-wrap:anywhere]" : "whitespace-pre"
+              )}
+            >
               {children}
             </div>
           ) : (
-            <pre className="p-4 m-0 font-mono text-mono-md leading-relaxed text-[var(--fg-secondary)] whitespace-pre">
+            <pre
+              className={cn(
+                "m-0 p-4 font-mono leading-relaxed text-[var(--fg-secondary)]",
+                size === "sm" ? "text-mono-sm" : "text-mono-md",
+                wrap ? "whitespace-pre-wrap [overflow-wrap:anywhere]" : "whitespace-pre"
+              )}
+            >
               <code>{code}</code>
             </pre>
           )}

@@ -120,4 +120,18 @@ describe("CodeBlock", () => {
     const { container } = render(<CodeBlock code={SAMPLE} className="custom-extra" />);
     expect(container.firstChild).toHaveClass("custom-extra");
   });
+
+  it("scrolls long lines by default and wraps them with wrap", () => {
+    const { container, rerender } = render(<CodeBlock code="a very long line" />);
+    expect(container.querySelector("pre")).toHaveClass("whitespace-pre");
+    rerender(<CodeBlock code="a very long line" wrap />);
+    expect(container.querySelector("pre")).toHaveClass("whitespace-pre-wrap");
+  });
+
+  it("is a column whose body scrolls, so a caller only sets a height", () => {
+    const { container } = render(<CodeBlock code="x" className="h-40" />);
+    const root = container.firstChild as HTMLElement;
+    expect(root).toHaveClass("flex", "flex-col", "h-40");
+    expect(root.lastElementChild).toHaveClass("min-h-0", "flex-1", "overflow-auto");
+  });
 });

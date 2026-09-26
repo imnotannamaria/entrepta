@@ -4,9 +4,11 @@ import { CheckIcon, CircleHalfIcon, MoonIcon, PaletteIcon, SunIcon } from "@phos
 import * as React from "react";
 import type { ThemeMode } from "../hooks/use-mode";
 import { type ThemeOption, type UseThemeOptions, useTheme } from "../hooks/use-theme";
+import { MENU_LABEL, MENU_ROW, MENU_SEPARATOR, OVERLAY_SURFACE } from "../lib/overlay";
 import { cn } from "../lib/utils";
 
-type SwitcherPosition = "bottom-right" | "bottom-left" | "top-right" | "top-left";
+/** A corner of the viewport, or `inline` to sit in the flow, such as in a docs preview. */
+type SwitcherPosition = "bottom-right" | "bottom-left" | "top-right" | "top-left" | "inline";
 
 interface ThemeSwitcherProps
   extends Omit<React.HTMLAttributes<HTMLDivElement>, "children" | "onChange">,
@@ -45,11 +47,10 @@ function ModeIcon({ mode }: { mode: ThemeMode }) {
 }
 
 // The same label and row as a dropdown menu, so every overlay reads as one family.
-const LABEL =
-  "flex items-center gap-1.5 px-2.5 pt-2.5 pb-1.5 font-mono text-mono-xs uppercase tracking-[0.08em] text-[var(--fg-muted)]";
+const LABEL = MENU_LABEL;
 const ROW = cn(
-  "group/item flex items-center gap-2.5 rounded-[var(--radius-sm)] px-2.5 py-1.5 text-left",
-  "font-mono text-mono-md text-[var(--fg-secondary)] transition-colors duration-[var(--motion-fast)]",
+  MENU_ROW,
+  "text-left",
   "hover:bg-[var(--bg-surface-brand)] hover:text-[var(--fg-primary)]",
   "focus-visible:bg-[var(--bg-surface-brand)] focus-visible:text-[var(--fg-primary)] focus-visible:outline-none"
 );
@@ -59,6 +60,7 @@ const POSITION_CLASS: Record<SwitcherPosition, string> = {
   "bottom-left": "bottom-12 left-5",
   "top-right": "top-5 right-5",
   "top-left": "top-5 left-5",
+  inline: "",
 };
 
 const ThemeSwitcher = React.forwardRef<HTMLDivElement, ThemeSwitcherProps>(
@@ -116,7 +118,12 @@ const ThemeSwitcher = React.forwardRef<HTMLDivElement, ThemeSwitcherProps>(
     return (
       <div
         ref={containerRef}
-        className={cn("fixed z-50 font-mono text-mono-sm", POSITION_CLASS[position], className)}
+        className={cn(
+          position === "inline" ? "relative inline-block" : "fixed z-50",
+          "font-mono text-mono-sm",
+          POSITION_CLASS[position],
+          className
+        )}
         data-theme-switcher
         {...divProps}
       >
@@ -130,8 +137,8 @@ const ThemeSwitcher = React.forwardRef<HTMLDivElement, ThemeSwitcherProps>(
             aria-label="Theme settings"
             data-state="open"
             className={cn(
-              "motion-pop sheen absolute right-0 bottom-[calc(100%+8px)] flex min-w-[200px] origin-bottom-right flex-col p-1",
-              "rounded-[var(--radius-md)] border border-[var(--border-strong)] bg-[var(--bg-overlay)] shadow-[var(--shadow-overlay)]"
+              OVERLAY_SURFACE,
+              "motion-pop absolute right-0 bottom-[calc(100%+8px)] flex min-w-[200px] origin-bottom-right flex-col rounded-[var(--radius-md)] p-1"
             )}
           >
             {showModeToggle && (
@@ -160,7 +167,7 @@ const ThemeSwitcher = React.forwardRef<HTMLDivElement, ThemeSwitcherProps>(
                     {mode === "dark" ? "→ light" : "→ dark"}
                   </span>
                 </button>
-                <div aria-hidden className="-mx-1 my-1 h-px bg-[var(--border-subtle)]" />
+                <div aria-hidden className={MENU_SEPARATOR} />
                 <div className={LABEL}>
                   <PaletteIcon
                     aria-hidden

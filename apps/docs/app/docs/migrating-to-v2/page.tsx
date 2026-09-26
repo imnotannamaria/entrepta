@@ -102,7 +102,7 @@ export default function MigratingPage() {
               href={`/docs/components/${c.slug}`}
               className="group flex flex-col gap-1.5 rounded-[var(--radius-md)] border border-[var(--border-subtle)] bg-[var(--bg-card)] p-4 transition-colors hover:border-[var(--border-strong)] hover:bg-[var(--bg-card-hover)]"
             >
-              <span className="flex items-center justify-between gap-2">
+              <span className="flex flex-wrap items-center justify-between gap-x-2 gap-y-1">
                 <span className="font-mono text-mono-md text-[var(--fg-primary)]">{c.title}</span>
                 <Badge size="sm" variant="outline" color="neutral">
                   {c.section.toLowerCase()}

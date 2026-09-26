@@ -50,7 +50,7 @@ describe("docs coverage", () => {
       (c) => (c.category === "hooks" || c.category === "lib") && !reached.has(c.name)
     ).map((c) => c.name);
     // documented on their own foundation pages instead
-    expect(orphans.filter((n) => !["color-contrast", "use-url-filter"].includes(n))).toEqual([]);
+    expect(orphans.filter((n) => n !== "color-contrast")).toEqual([]);
   });
 
   it("links every component from the docs nav", () => {

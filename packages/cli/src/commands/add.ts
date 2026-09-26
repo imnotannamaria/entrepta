@@ -2,7 +2,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import prompts from "prompts";
 import { COMPONENTS } from "../registry/components.js";
-import { aliasToPath, readConfig } from "../utils/config.js";
+import { ConfigError, aliasToPath, readConfig } from "../utils/config.js";
 import { log } from "../utils/logger.js";
 import { detectPackageManager, installDeps } from "../utils/package-manager.js";
 import { getRegistryRoot } from "../utils/registry.js";
@@ -10,7 +10,14 @@ import { getRegistryRoot } from "../utils/registry.js";
 export async function add(components: string[], options: { overwrite: boolean }) {
   const cwd = process.cwd();
 
-  const config = await readConfig(cwd);
+  let config: Awaited<ReturnType<typeof readConfig>>;
+  try {
+    config = await readConfig(cwd);
+  } catch (error) {
+    if (!(error instanceof ConfigError)) throw error;
+    log.error(`${error.message} Fix it, or run \`npx @entrepta/cli@latest init --overwrite\`.`);
+    process.exit(1);
+  }
   if (!config) {
     log.error("entrepta.json not found. Run `npx @entrepta/cli@latest init` first.");
     process.exit(1);

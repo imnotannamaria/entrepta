@@ -2,6 +2,7 @@
 
 import { CheckIcon, CircleNotchIcon, InfoIcon, WarningIcon, XIcon } from "@phosphor-icons/react";
 import { Toaster as Sonner } from "sonner";
+import { OVERLAY_SURFACE } from "../lib/overlay";
 import { cn } from "../lib/utils";
 
 type ToasterProps = React.ComponentProps<typeof Sonner>;
@@ -12,9 +13,10 @@ type ToasterProps = React.ComponentProps<typeof Sonner>;
  * status, and its shape tells the four apart without color.
  */
 const toastClass = cn(
+  OVERLAY_SURFACE,
   "group/toast relative flex w-[var(--width)] items-start gap-3 overflow-hidden",
-  "rounded-[var(--radius-md)] border border-[var(--border-strong)] p-3.5 pr-10",
-  "bg-[var(--bg-overlay)] shadow-[var(--shadow-overlay)] font-mono",
+  "rounded-[var(--radius-md)] p-3.5 pr-10 font-mono",
+  // replaces the sheen's brand glow with the status tone
   "[background-image:radial-gradient(140%_120%_at_0%_0%,var(--toast-glow,var(--sheen-tint)),transparent_55%)]",
   "data-[type=success]:[--toast-glow:color-mix(in_srgb,var(--status-success)_12%,transparent)]",
   "data-[type=error]:[--toast-glow:color-mix(in_srgb,var(--status-error)_12%,transparent)]",

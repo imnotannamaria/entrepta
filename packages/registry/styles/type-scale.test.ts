@@ -52,6 +52,12 @@ describe("the type scale is the only way to set a size", () => {
   });
 
   // Tailwind's own steps are a second name for sizes the scale already has.
+  // clamp() and calc() read as "responsive", but they are sizes off the scale all
+  // the same. A responsive size is two steps with a breakpoint.
+  it("has no arbitrary size of any unit, fluid ones included", () => {
+    expect(matches(/text-\[(clamp|calc|min|max)\(|text-\[[0-9.]+(rem|em|vw|vh)\]/)).toEqual([]);
+  });
+
   it("does not use Tailwind's default steps", () => {
     expect(matches(/\btext-(xs|sm|base|lg|xl|[2-9]xl)\b/)).toEqual([]);
   });

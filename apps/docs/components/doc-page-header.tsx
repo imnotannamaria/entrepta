@@ -1,3 +1,4 @@
+import { Diamond } from "@entrepta/registry/content/diamond";
 import type { ReactNode } from "react";
 import { AgentActions } from "./agent-actions";
 
@@ -17,7 +18,7 @@ interface DocPageHeaderProps {
 export function DocPageHeader({ eyebrow, title, description, meta, markdown }: DocPageHeaderProps) {
   return (
     <header className="flex flex-col gap-3 pb-8 border-b border-[var(--border-subtle)] mb-10">
-      <div className="flex items-start justify-between gap-6">
+      <div className="flex flex-wrap items-start justify-between gap-x-6 gap-y-1">
         <div className="font-mono text-mono-sm uppercase tracking-[0.08em] text-[var(--fg-brand-text)]">
           {eyebrow}
         </div>
@@ -27,7 +28,7 @@ export function DocPageHeader({ eyebrow, title, description, meta, markdown }: D
           </span>
         )}
       </div>
-      <h1 className="font-serif text-[clamp(36px,5vw,56px)] leading-[1.05] font-normal tracking-[-0.02em] text-[var(--fg-primary)] [&_em]:italic [&_em]:text-[var(--fg-brand)]">
+      <h1 className="m-0 font-serif text-display-md font-normal text-[var(--fg-primary)] lg:text-display-lg [&_em]:italic [&_em]:text-[var(--fg-brand)]">
         {title}
       </h1>
       {description && (
@@ -54,9 +55,7 @@ export function DocSubhead({ children, count }: DocSubheadProps) {
   return (
     <div className="flex items-baseline justify-between gap-3 mb-4 pb-2 border-b border-[var(--border-subtle)]">
       <div className="font-mono text-mono-sm text-[var(--fg-secondary)] uppercase tracking-[0.06em] inline-flex items-center gap-1.5">
-        <span aria-hidden className="text-mono-xs text-[var(--fg-brand)] leading-none">
-          ◆
-        </span>
+        <Diamond />
         {children}
       </div>
       {count && (

@@ -150,7 +150,7 @@ function TabGlyph({ icon, active }: { icon?: TabIcon; active: boolean }) {
     return (
       <span
         className={cn(
-          "inline-flex shrink-0 transition-transform duration-200 ease-[var(--ease-out)] group-hover:scale-115",
+          "inline-flex shrink-0 transition-transform duration-200 ease-[var(--ease-out)] group-hover:scale-115 group-has-[:focus-visible]:scale-115",
           active ? "text-[var(--fg-brand)]" : "text-inherit"
         )}
       >
@@ -165,7 +165,7 @@ function TabGlyph({ icon, active }: { icon?: TabIcon; active: boolean }) {
       size={15}
       weight={active ? "fill" : "regular"}
       className={cn(
-        "shrink-0 transition-transform duration-200 ease-[var(--ease-out)] group-hover:scale-115",
+        "shrink-0 transition-transform duration-200 ease-[var(--ease-out)] group-hover:scale-115 group-has-[:focus-visible]:scale-115",
         active && "text-[var(--fg-brand)]"
       )}
     />

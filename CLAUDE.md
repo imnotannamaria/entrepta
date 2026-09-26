@@ -89,18 +89,27 @@ entrepta/
 │       ├── app/
 │       │   ├── page.tsx      # landing
 │       │   ├── docs/         # installation, cli, themes, foundations, components
+│       │   ├── md/           # the .md twin of each page (rewritten from /docs/*.md)
+│       │   ├── llms.txt/, llms-full.txt/  # the agent index and the whole site
+│       │   ├── opengraph-image.tsx, twitter-image.tsx
+│       │   ├── not-found.tsx, error.tsx   # on ChromeMessage
 │       │   ├── globals.css   # copy of the registry tokens
 │       │   ├── sitemap.ts
 │       │   └── robots.ts
-│       ├── components/       # site chrome (nav, footer, status bar, palette), agents configurator
-│       └── lib/              # component-index.ts (nav), components.ts (page text),
-│                             # manifest.ts, agents-md.ts, rules.ts, theme.ts
+│       ├── assets/fonts/     # TTFs for the share images (OFL)
+│       ├── components/       # site chrome (nav, nav groups, footer, status bar, palette),
+│       │                     # home sections, agents configurator, agent actions
+│       ├── lib/              # component-index.ts (nav), components.ts (page text),
+│       │                     # docs-data.ts (other pages' content), markdown.ts, og.tsx,
+│       │                     # manifest.ts, agents-md.ts, rules.ts, theme.ts, links.ts
+│       └── public/schema.json  # the entrepta.json schema the CLI points at
 ├── packages/
 │   ├── cli/                  # @entrepta/cli, bin `entrepta`
 │   │   └── src/
 │   │       ├── commands/     # init.ts, add.ts
 │   │       ├── registry/     # re-exports the manifest from @entrepta/registry
-│   │       ├── utils/        # config, detect-framework, package-manager, logger, registry
+│   │       ├── utils/        # config (validated on read), detect-framework,
+│   │       │                 # package-manager, logger, registry
 │   │       ├── __tests__/
 │   │       └── index.ts
 │   └── registry/             # @entrepta/registry, source of truth
@@ -114,7 +123,7 @@ entrepta/
 │       ├── feedback/         # toast, skeleton, command-palette, chrome-message, page-loading
 │       ├── motion/           # reveal, type-in, rolling-number, spotlight, arrow-link
 │       ├── hooks/            # use-theme, use-mode, use-command-palette, use-url-filter
-│       └── lib/              # utils.ts (cn), motion.ts, color-contrast.ts
+│       └── lib/              # utils.ts (cn), motion.ts, overlay.ts, color-contrast.ts
 ├── sandbox/
 │   └── wirst-test/           # local Next.js app to test the CLI output (gitignored)
 ├── scripts/release.sh
@@ -580,6 +589,19 @@ pnpm dlx file:"$(pwd)/../entrepta/packages/cli" init
   for each component) from `lib/og.tsx`. Its fonts are TTFs in
   `apps/docs/assets/fonts`, because satori reads no woff2 and the build must not
   need the network. The README hero is the site's image, in `.github/assets`
+- Overlay classes live once, in `lib/overlay.ts` (`OVERLAY_SURFACE`,
+  `MENU_ROW`, `MENU_LABEL`, `MENU_SEPARATOR`), copied by the CLI as `overlay-lib`
+  with the six components that use them. The row's highlighted state stays in
+  each component, because Radix, cmdk and plain buttons mark it differently
+- `entrepta.json` is validated when the CLI reads it (`configProblems`): its
+  aliases end up in import lines, and the file can come from a cloned repo.
+  `apps/docs/public/schema.json` states the same rules for editors, and a test
+  keeps it in line with the CLI's config type
+- Home and docs pages are built from shared pieces: `HomeSection`,
+  `SectionHead` and `SpecList` on the home page, `DocPageHeader` and
+  `DocSubhead` on every docs page, `NavGroups` for the sidebar and the mobile
+  menu. Cards that link somewhere use a stretched link on their title, so a
+  preview inside can hold real controls
 - Docs live at https://entrepta.vercel.app/
 
 ---
@@ -595,3 +617,141 @@ pnpm dlx file:"$(pwd)/../entrepta/packages/cli" init
 - A new registry component is only done when it is registered in the CLI
   manifest, has tests, and has a docs page.
 - When a new decision is made, add it to section 10 and commit.
+
+---
+
+## 12. Code review
+
+When asked to review a branch or PR, review the full diff against `main`. Keep
+these in mind while writing code too.
+
+The checks below are the ones this codebase has been bitten by. Read them as
+prompts to look, not as a list to tick. A diff that touches none of them still
+deserves a read, and a rule that does not apply to the diff in front of you is
+not a finding.
+
+### Security first
+
+entrepta ships a CLI that writes files and installs packages in someone else's
+project, and source that people run without reading. Read every diff for this
+before anything else.
+
+- **Every write stays in the project.** A path the CLI builds, from an alias,
+  `srcDir` or a file name, resolves inside `cwd` before `writeFile`, and a new
+  write path goes through that check. `--overwrite` is the only way to replace a
+  file.
+- **entrepta.json is input, not trust.** It can come from a cloned repo, and its
+  aliases are written into import lines. `configProblems` in
+  `packages/cli/src/utils/config.ts` rejects anything that is not a plain path
+  before it is used; a new field gets a rule there.
+- **Names come from the manifest.** A component name from the command line is
+  matched against the manifest before it becomes a path. npm package names come
+  only from the manifest's `deps`, never from user input, and installs spawn with
+  `shell: false`.
+- **Nothing runs on install.** No `postinstall`, no network call from the CLI
+  beyond the package manager it spawns, no code downloaded and executed. The
+  published CLI is `dist/` only (`files` in its `package.json`), and the registry
+  ships source without its tests (`.npmignore`).
+- **Deps install without versions**, so a new major of a dependency reaches
+  users before the registry is tested on it. A diff that adds a dependency says
+  why it cannot be done without one.
+- **The registry holds no surprises.** No `eval` or `new Function`, no network
+  calls, no telemetry, no `dangerouslySetInnerHTML` beyond the static theme
+  scripts, no `next/*` (a test enforces the last one).
+- **The docs keep their CSP.** A URL param is matched against a list of allowed
+  values before use; a new external host (script, style, font, image) needs a
+  reason in the diff; `upgrade-insecure-requests` and HSTS stay Vercel only.
+- **Releases publish from CI.** Trusted publishing with provenance, no npm token
+  in the repo. Renaming `release.yml` breaks it until npmjs.com is updated.
+
+### Everything else
+
+**Reuse before invention.** Read the diff twice for this one. A component that
+hand-rolls a surface, a menu row, a keyboard hint or a `◆` is re-implementing
+something the registry has: the overlay classes in `lib/overlay.ts`, `Kbd`,
+`Diamond`, `Card`. In the docs, a page that hand-rolls a header or a section
+rule is re-implementing `DocPageHeader` and `DocSubhead`.
+
+**Standardization.** Reuse asks "does this already exist?". This asks the
+harder question: does this page, or this component, look like it belongs to the
+same system? Two failures, and the second is the one that gets missed.
+
+- *Divergence:* a piece that solves a solved problem its own way. Overlays share
+  one surface and one row highlight. Every surface has the finish (near black,
+  `.sheen`, `--edge-light`). Mono is the default, Inter only for long text, serif
+  for titles and names. A section that invents its own header rhythm or its own
+  surface is drifting, even when every line of it is fine on its own.
+- *Duplication:* the same thing living in more than one place. The second copy
+  is a warning, the third is a bug. When a diff adds copy number two, say so in
+  the review even if extracting is out of scope; that note is what makes the
+  extraction cheap later.
+
+Two questions catch most of it: if this pattern had to change, how many files
+would you edit? And could a reader tell which component a screenshot came from
+for the right reasons, rather than because one of them is styled differently?
+
+**Motion.** Every rule in §7 came out of a bug that shipped. The expensive ones
+to miss: an entrance on `animate` instead of `whileInView` (or a `useInView`
+gate), a trigger on an element with no area, anything animated through JS that
+never asks `useReducedMotion`, and a heading whose visible text waits for
+JavaScript. Text that must be seen at first paint animates in CSS.
+
+**Server and client.** A component with `"use client"` only receives
+serializable props from a server file. A Phosphor component is a function and
+cannot cross; that broke `next build` for `<Badge icon={...}>` in a server page.
+Icon props take an element too (`IconProp` in `lib/icon.tsx`), and a component
+with no state or effect stays without `"use client"`. The way to see it is a
+production build of a real app, not a unit test: install through the local CLI
+into a clean Next.js app and run `next build`.
+
+**Accessibility.** Real semantics over roles on divs; `aria-pressed` or
+`aria-expanded` on toggles; screen-reader text for glyph-only information;
+hover-only affordances mirrored on `focus-visible`; no two links or buttons
+sharing a name and doing different things; and contrast wherever text sits on
+`--fg-brand` or the `.sheen` glow. The contrast test measures the tokens, not a
+new pairing the diff invents.
+
+**Theme reactivity.** Grep the diff for hex values. Every accent derives from
+`--fg-brand`. Fixed colors belong only in theme files, in the share image
+renderer, and in docs text that names a color.
+
+**SEO and the docs.** Metadata on new pages, the content in the server HTML
+(`useSyncExternalStore` for the URL, not `useSearchParams`, which makes
+prerender emit a fallback). A page with content has its Markdown twin in
+`lib/markdown.ts`, built from the same data the page renders.
+
+**Performance.** Per-frame work that repaints rather than composites (a
+gradient rebuilt on every frame, a filter animated); large blurs animated;
+client components where a server one would do; JavaScript shipped for what CSS
+can do.
+
+**Responsive.** Reason about 375px first. Wide tables scroll rather than
+reflow; grid tracks use `min(Npx, 100%)`; a long single word, such as a
+component name, needs a way to wrap. Playwright is fine for overflow and
+console errors at every width; the judgement of how it looks stays with a
+person.
+
+**Class merging.** Any class the diff invents outside Tailwind's vocabulary
+(`sheen`, `motion-pop`, `focus-ring`): check twMerge will not misfile it, and
+that a new size step is registered in `TYPE_SCALE` in `lib/utils.ts`. Read
+`cn()` calls as the merged string: `cn(base, className)` is where a component's
+own styling gets silently dropped, in either direction. `cva`'s own
+`className` option concatenates without merging; pass classes through `cn`.
+
+**Overflow contracts.** For every row the diff adds or touches with two
+children and `justify-between`: what happens when they stop fitting? "They fit"
+is not an answer. Especially inside a Card, which clips.
+
+**Overriding a component from its caller.** Classes in a consumer that undo
+what the component sets, or reach into it with `[&>div]` selectors. The fix is
+almost always in the component: entrepta is owned code, and a prop is cheaper
+than a caller fighting the styles.
+
+**Type scale.** Sizes come from the ten `@theme` steps: no `text-[Npx]`, no
+`text-[clamp(...)]`, no Tailwind default step, no inline `fontSize` above glyph
+size. `styles/type-scale.test.ts` enforces them, so a diff that needs an
+exception argues for it in the diff (the share image renderer is the one today).
+
+**Tests that hold the system.** The contrast test, the overlay family test, the
+scale test, the source rules and the docs coverage tests are the contract. A
+diff that edits one of them to pass needs a reason stronger than "it failed".

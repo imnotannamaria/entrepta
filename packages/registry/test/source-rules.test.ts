@@ -61,4 +61,21 @@ describe("source rules", () => {
     ).map(({ file }) => file);
     expect(offenders).toEqual([]);
   });
+
+  // The registry is source people run without reading it.
+  it("has no eval, no network calls and no raw HTML beyond the theme scripts", () => {
+    const rules: [string, RegExp][] = [
+      ["eval", /\beval\s*\(|new Function\s*\(/],
+      ["network", /\bfetch\s*\(|XMLHttpRequest|navigator\.sendBeacon|new WebSocket/],
+    ];
+    const registry = FILES.filter(({ file }) => file.startsWith("packages/registry"));
+    const offenders = registry.flatMap(({ file, source }) =>
+      rules.filter(([, pattern]) => pattern.test(source)).map(([name]) => `${file}: ${name}`)
+    );
+    const rawHtml = registry
+      .filter(({ source }) => source.includes("dangerouslySetInnerHTML"))
+      .map(({ file }) => file)
+      .filter((file) => !/(theme-switcher|mode-toggle)\.tsx$/.test(file));
+    expect([...offenders, ...rawHtml]).toEqual([]);
+  });
 });

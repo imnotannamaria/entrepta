@@ -250,6 +250,7 @@ describe("add", () => {
     });
   });
 
+  // kbd is one file with no dependencies, so each case is exactly one write or one prompt
   describe("overwrite behaviour", () => {
     beforeEach(() => {
       mockReadConfig.mockResolvedValue(MOCK_CONFIG);
@@ -258,19 +259,19 @@ describe("add", () => {
 
     it("asks for confirmation when file exists and --overwrite not set", async () => {
       mockPrompts.mockResolvedValueOnce({ confirm: false } as never);
-      await add(["badge"], { overwrite: false });
+      await add(["kbd"], { overwrite: false });
       expect(mockPrompts).toHaveBeenCalled();
       expect(mockWriteFile).not.toHaveBeenCalled();
     });
 
     it("copies file when user confirms overwrite prompt", async () => {
       mockPrompts.mockResolvedValueOnce({ confirm: true } as never);
-      await add(["badge"], { overwrite: false });
+      await add(["kbd"], { overwrite: false });
       expect(mockWriteFile).toHaveBeenCalled();
     });
 
     it("copies without prompting when --overwrite flag is set", async () => {
-      await add(["badge"], { overwrite: true });
+      await add(["kbd"], { overwrite: true });
       expect(mockPrompts).not.toHaveBeenCalled();
       expect(mockWriteFile).toHaveBeenCalled();
     });

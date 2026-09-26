@@ -1,4 +1,4 @@
-import { AgentActions } from "@/components/agent-actions";
+import { DocPageHeader, DocSubhead } from "@/components/doc-page-header";
 import { COMPONENT_INDEX, SECTIONS } from "@/lib/component-index";
 import { NEW_IN_V2 } from "@/lib/docs-data";
 import { findComponent } from "@/lib/manifest";
@@ -25,26 +25,17 @@ const GROUPS = SECTIONS.map((section) => ({
 export default function ComponentsIndex() {
   return (
     <article className="max-w-3xl">
-      <div className="font-mono text-mono-xs uppercase tracking-widest text-[var(--fg-brand-text)] mb-6">
-        reference
-      </div>
-      <h1 className="font-serif text-display-md font-normal text-[var(--fg-primary)] leading-tight tracking-tight mb-4">
-        Components
-      </h1>
-      <p className="font-sans text-body-lg text-[var(--fg-secondary)] leading-relaxed mb-4">
-        {COMPONENT_INDEX.length} components across {SECTIONS.length} sections, {NEW_IN_V2.length} of
-        them new in v2. Copy each one with the CLI or by hand.
-      </p>
-      <div className="mb-10">
-        <AgentActions path="/docs/components" />
-      </div>
+      <DocPageHeader
+        eyebrow="reference"
+        title="Components"
+        description={`${COMPONENT_INDEX.length} components across ${SECTIONS.length} sections, ${NEW_IN_V2.length} of them new in v2. Copy each one with the CLI or by hand.`}
+        markdown="/docs/components"
+      />
 
       <div className="flex flex-col gap-10">
         {GROUPS.map((section) => (
           <div key={section.category}>
-            <h2 className="font-mono text-mono-xs uppercase tracking-widest text-[var(--fg-muted)] border-b border-[var(--border-subtle)] pb-2 mb-4">
-              {section.category}
-            </h2>
+            <DocSubhead count={`${section.items.length} components`}>{section.category}</DocSubhead>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
               {section.items.map((item) => (
                 <Link

@@ -36,28 +36,43 @@ function registryFiles(dir = root): string[] {
 }
 
 describe("overlay family", () => {
-  it.each(OVERLAYS)("%s sits on the overlay surface with the overlay shadow", (file) => {
+  it("defines the surface and the row once, in lib/overlay.ts", () => {
+    const lib = read("lib/overlay.ts");
+    for (const piece of [
+      "sheen",
+      "bg-[var(--bg-overlay)]",
+      "shadow-[var(--shadow-overlay)]",
+      "border-[var(--border-strong)]",
+      "px-2.5 py-1.5",
+      "group/item",
+    ]) {
+      expect(lib).toContain(piece);
+    }
+  });
+
+  it.each(OVERLAYS)("%s stands on OVERLAY_SURFACE", (file) => {
     const source = read(file);
-    expect(source).toContain("bg-[var(--bg-overlay)]");
-    expect(source).toContain("shadow-[var(--shadow-overlay)]");
+    expect(source).toMatch(/import \{[^}]*OVERLAY_SURFACE[^}]*\} from "\.\.\/lib\/overlay"/);
+    expect(source).toContain("OVERLAY_SURFACE,");
   });
 
   it.each(OVERLAYS.filter((f) => !f.includes("toast")))("%s animates with motion-pop", (file) => {
     expect(read(file)).toContain("motion-pop");
   });
 
-  it.each(MENUS)("%s rows share size and the brand tint highlight", (file) => {
+  it.each(MENUS)("%s builds its rows on MENU_ROW and highlights them in the brand tint", (file) => {
     const source = read(file);
-    expect(source).toContain("px-2.5 py-1.5");
+    expect(source).toContain("MENU_ROW");
     expect(source).toContain("bg-[var(--bg-surface-brand)]");
-    expect(source).toContain("group/item");
   });
 
-  it.each(OVERLAYS)("%s carries the toast's finish: the corner glow", (file) => {
-    const source = read(file);
-    expect(
-      source.includes('"sheen') || source.includes(" sheen ") || source.includes("--sheen-tint")
-    ).toBe(true);
+  it("gives the toast the glow through its own tone, over the shared surface", () => {
+    expect(read("feedback/toast.tsx")).toContain("var(--toast-glow,var(--sheen-tint))");
+  });
+
+  it("keeps the surface classes out of the components, so there is one place to change", () => {
+    const copies = OVERLAYS.filter((file) => /shadow-\[var\(--shadow-overlay\)\]/.test(read(file)));
+    expect(copies).toEqual([]);
   });
 
   it("paints no area in zinc-900: surfaces are near black with the sheen", () => {

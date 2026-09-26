@@ -2,6 +2,7 @@
 
 import * as TooltipPrimitive from "@radix-ui/react-tooltip";
 import * as React from "react";
+import { OVERLAY_SURFACE } from "../lib/overlay";
 import { cn } from "../lib/utils";
 import { Kbd } from "./kbd";
 
@@ -26,11 +27,10 @@ const TooltipContent = React.forwardRef<
       sideOffset={sideOffset}
       data-surface="dark"
       className={cn(
-        "sheen z-50 inline-flex items-center gap-2 whitespace-nowrap",
-        "bg-[var(--bg-overlay)] border border-[var(--border-strong)]",
+        OVERLAY_SURFACE,
+        "z-50 inline-flex items-center gap-2 whitespace-nowrap",
         "rounded-[var(--radius-sm)] px-2.5 py-1.5",
         "font-mono text-mono-sm text-[var(--fg-primary)]",
-        "shadow-[var(--shadow-overlay)]",
         "motion-pop origin-[var(--radix-tooltip-content-transform-origin)]",
         className
       )}

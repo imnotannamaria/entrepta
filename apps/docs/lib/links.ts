@@ -3,6 +3,7 @@ export const LINKS = {
   github: "https://github.com/imnotannamaria/entrepta",
   author: "https://annamaria.app",
   wristkit: "https://wristkit-web.vercel.app",
+  x: "https://x.com/annamariadevbr",
   npmCli: "https://www.npmjs.com/package/@entrepta/cli",
   npmRegistry: "https://www.npmjs.com/package/@entrepta/registry",
   changelog: "https://github.com/imnotannamaria/entrepta/blob/main/packages/cli/CHANGELOG.md",

@@ -1,9 +1,11 @@
 "use client";
 
-import { type Icon, XIcon } from "@phosphor-icons/react";
+import { XIcon } from "@phosphor-icons/react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import * as React from "react";
 import { Diamond } from "../content/diamond";
+import { type IconProp, IconSlot } from "../lib/icon";
+import { OVERLAY_SURFACE } from "../lib/overlay";
 import { cn } from "../lib/utils";
 
 const Dialog = DialogPrimitive.Root;
@@ -35,9 +37,8 @@ const DialogContent = React.forwardRef<
         "fixed left-1/2 top-1/2 z-50 -translate-x-1/2 -translate-y-1/2",
         "flex flex-col gap-4",
         "w-[calc(100vw-32px)] max-w-md",
-        "sheen bg-[var(--bg-overlay)] border border-[var(--border-strong)]",
+        OVERLAY_SURFACE,
         "rounded-[var(--radius-lg)] p-6",
-        "shadow-[var(--shadow-overlay)]",
         "motion-pop",
         className
       )}
@@ -113,7 +114,7 @@ DialogDescription.displayName = DialogPrimitive.Description.displayName;
 
 interface DialogLabelProps extends React.HTMLAttributes<HTMLDivElement> {
   /** A Phosphor icon in place of the ◆. */
-  icon?: Icon;
+  icon?: IconProp;
 }
 
 /** Optional meta strip (file path / version / status) shown above the title. */
@@ -129,12 +130,7 @@ const DialogLabel = React.forwardRef<HTMLDivElement, DialogLabelProps>(
       {...props}
     >
       {LabelIcon ? (
-        <LabelIcon
-          aria-hidden
-          size={12}
-          weight="bold"
-          className="shrink-0 text-[var(--fg-brand)]"
-        />
+        <IconSlot icon={LabelIcon} size={12} className="text-[var(--fg-brand)]" />
       ) : (
         <Diamond size={10} />
       )}

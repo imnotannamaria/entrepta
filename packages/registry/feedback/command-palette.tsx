@@ -4,6 +4,7 @@ import { MagnifyingGlassIcon } from "@phosphor-icons/react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { Command as CommandPrimitive } from "cmdk";
 import * as React from "react";
+import { MENU_ROW, MENU_SEPARATOR, OVERLAY_SURFACE } from "../lib/overlay";
 import { cn } from "../lib/utils";
 import { Kbd } from "../primitives/kbd";
 
@@ -41,9 +42,8 @@ const Command = React.forwardRef<
   <CommandPrimitive
     ref={ref}
     className={cn(
-      "flex flex-col overflow-hidden max-h-[70vh]",
-      "sheen bg-[var(--bg-overlay)] border border-[var(--border-strong)]",
-      "rounded-[var(--radius-lg)] shadow-[var(--shadow-overlay)]",
+      OVERLAY_SURFACE,
+      "flex flex-col overflow-hidden max-h-[70vh] rounded-[var(--radius-lg)]",
       className
     )}
     {...props}
@@ -138,11 +138,7 @@ const CommandSeparator = React.forwardRef<
   React.ComponentRef<typeof CommandPrimitive.Separator>,
   React.ComponentPropsWithoutRef<typeof CommandPrimitive.Separator>
 >(({ className, ...props }, ref) => (
-  <CommandPrimitive.Separator
-    ref={ref}
-    className={cn("my-1 -mx-1 h-px bg-[var(--border-subtle)]", className)}
-    {...props}
-  />
+  <CommandPrimitive.Separator ref={ref} className={cn(MENU_SEPARATOR, className)} {...props} />
 ));
 CommandSeparator.displayName = CommandPrimitive.Separator.displayName;
 
@@ -158,9 +154,8 @@ const CommandItem = React.forwardRef<
   <CommandPrimitive.Item
     ref={ref}
     className={cn(
-      "group/item flex items-center gap-2.5 rounded-[var(--radius-sm)] px-2.5 py-1.5",
-      "font-mono text-mono-md text-[var(--fg-secondary)]",
-      "cursor-default select-none transition-colors duration-[var(--motion-fast)]",
+      MENU_ROW,
+      "cursor-default",
       // the same highlight as a dropdown row: the brand tint, and the icon turns brand
       "data-[selected=true]:bg-[var(--bg-surface-brand)] data-[selected=true]:text-[var(--fg-primary)]",
       "data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-40",

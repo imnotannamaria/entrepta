@@ -1,7 +1,7 @@
-import type { Icon } from "@phosphor-icons/react";
 import { type VariantProps, cva } from "class-variance-authority";
 import * as React from "react";
 import { Diamond } from "../content/diamond";
+import { type IconProp, IconSlot } from "../lib/icon";
 import { cn } from "../lib/utils";
 
 const cardVariants = cva(
@@ -92,7 +92,7 @@ interface CardLabelProps extends React.HTMLAttributes<HTMLElement> {
   /** Render the label as a heading when it names the card. */
   as?: "span" | "h2" | "h3";
   /** A Phosphor icon in place of the ◆, when the label names a kind of thing. */
-  icon?: Icon;
+  icon?: IconProp;
 }
 
 /** Editor-style label with the ◆ prefix, or an icon. Use inside CardHeader. */
@@ -108,12 +108,7 @@ const CardLabel = React.forwardRef<HTMLElement, CardLabelProps>(
       {...props}
     >
       {LabelIcon ? (
-        <LabelIcon
-          aria-hidden
-          size={12}
-          weight="bold"
-          className="shrink-0 text-[var(--fg-brand)]"
-        />
+        <IconSlot icon={LabelIcon} size={12} className="text-[var(--fg-brand)]" />
       ) : (
         <Diamond size={10} />
       )}

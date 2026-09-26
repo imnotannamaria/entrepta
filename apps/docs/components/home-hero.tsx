@@ -2,6 +2,7 @@
 
 import { buildAgentsMd } from "@/lib/agents-md";
 import { DEFAULT_MODE, DEFAULT_THEME, STORAGE_KEY_PREFIX, THEMES } from "@/lib/theme";
+import { useCopy } from "@/lib/use-copy";
 import { cn } from "@/lib/utils";
 import { useTheme } from "@entrepta/registry/hooks/use-theme";
 import { StatusBar, StatusBarItem, StatusBarSeparator } from "@entrepta/registry/layout/status-bar";
@@ -42,27 +43,21 @@ const INIT = "npx @entrepta/cli@latest init";
 
 /** The install command as a button that copies itself. */
 export function CopyInit() {
-  const [copied, setCopied] = useState(false);
-  const copy = async () => {
-    try {
-      await navigator.clipboard.writeText(INIT);
-      setCopied(true);
-      toast.success("Copied", { description: INIT });
-      setTimeout(() => setCopied(false), 1600);
-    } catch {
-      toast.error("Copy failed", { description: "Select the command and copy it by hand." });
-    }
+  const { state, copy } = useCopy();
+  const onCopy = async () => {
+    if (await copy(INIT)) toast.success("Copied", { description: INIT });
+    else toast.error("Copy failed", { description: "Select the command and copy it by hand." });
   };
   return (
     <Button
       variant="command"
       size="lg"
-      onClick={copy}
+      onClick={onCopy}
       aria-label={`Copy ${INIT}`}
       className="max-sm:h-11 max-sm:px-4 max-sm:text-mono-md"
     >
       {INIT.replace("@latest", "")}
-      {copied ? (
+      {state === "copied" ? (
         <CheckIcon aria-hidden size={14} weight="bold" className="text-[var(--status-success)]" />
       ) : (
         <CopyIcon aria-hidden size={14} className="text-[var(--fg-muted)]" />

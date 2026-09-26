@@ -4,10 +4,14 @@ import { LINKS } from "@/lib/links";
 import { StatusBar, StatusBarItem, StatusBarSeparator } from "@entrepta/registry/layout/status-bar";
 import { usePathname } from "next/navigation";
 
-/** The site's status bar: where you are, the palette hint, and who made it. */
-export function SiteStatusBar() {
+/**
+ * The site's status bar: where you are, the palette hint, and who made it.
+ * `where` overrides the path, for a page rendered once and served at many URLs,
+ * such as the 404, whose server path is never the one in the address bar.
+ */
+export function SiteStatusBar({ where: fixed }: { where?: string }) {
   const pathname = usePathname() ?? "/";
-  const where = pathname === "/" ? "home" : pathname.slice(1);
+  const where = fixed ?? (pathname === "/" ? "home" : pathname.slice(1));
 
   return (
     <StatusBar

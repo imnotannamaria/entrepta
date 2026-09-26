@@ -2,6 +2,7 @@ import { DocPageHeader, DocSubhead } from "@/components/doc-page-header";
 import { NpmPackages } from "@/components/npm-packages";
 import { INIT_FILES, REQUIREMENTS } from "@/lib/docs-data";
 import { CodeBlock } from "@entrepta/registry/content/code-block";
+import { Diamond } from "@entrepta/registry/content/diamond";
 import { Button } from "@entrepta/registry/primitives/button";
 import {
   Card,
@@ -52,9 +53,7 @@ export default function InstallationPage() {
                 }`}
               >
                 <span className="text-[var(--fg-primary)] inline-flex items-center gap-1.5">
-                  <span aria-hidden className="text-mono-xs text-[var(--fg-brand)] leading-none">
-                    ◆
-                  </span>
+                  <Diamond />
                   {r.label}
                 </span>
                 <span className="text-[var(--fg-muted)]">{r.value}</span>

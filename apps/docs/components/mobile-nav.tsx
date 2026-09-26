@@ -9,6 +9,7 @@ import * as DialogPrimitive from "@radix-ui/react-dialog";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import { NavGroups } from "./nav-groups";
 
 const TOP_LINKS = [
   { label: "docs", href: "/docs" },
@@ -61,60 +62,17 @@ export function MobileNav() {
             </Link>
             <DialogPrimitive.Close
               aria-label="Close navigation menu"
-              className="inline-flex items-center justify-center size-8 rounded-[var(--radius-sm)] text-[var(--fg-muted)] hover:text-[var(--fg-primary)] hover:bg-[var(--bg-hover-soft)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)]"
+              className="focus-ring inline-flex items-center justify-center size-8 rounded-[var(--radius-sm)] text-[var(--fg-muted)] hover:text-[var(--fg-primary)] hover:bg-[var(--bg-hover-soft)] transition-colors"
             >
               <XIcon aria-hidden size={16} />
             </DialogPrimitive.Close>
           </div>
 
-          <nav className="flex-1 overflow-y-auto px-4 pt-5 pb-16">
-            <div className="mb-2 px-2 font-mono text-mono-xs uppercase tracking-widest text-[var(--fg-muted)]">
-              Site
-            </div>
-            <ul className="mb-8 flex flex-col gap-0.5">
-              {TOP_LINKS.map((l) => (
-                <li key={l.href}>
-                  <Link
-                    href={l.href}
-                    {...(l.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-                    className="flex items-center h-9 px-2 rounded-[var(--radius-sm)] font-mono text-mono-md text-[var(--fg-secondary)] hover:bg-[var(--bg-hover-soft)] hover:text-[var(--fg-primary)] transition-colors"
-                  >
-                    {l.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-
-            {isDocs &&
-              DOCS_NAV.map((section) => (
-                <div key={section.heading} className="mb-6">
-                  <div className="font-mono text-mono-xs uppercase tracking-widest text-[var(--fg-muted)] px-2 mb-2">
-                    {section.heading}
-                  </div>
-                  <ul className="flex flex-col gap-0.5">
-                    {section.items.map((item) => {
-                      const active = pathname === item.href;
-                      return (
-                        <li key={item.href}>
-                          <Link
-                            href={item.href}
-                            className={`flex items-center h-8 px-2 rounded-[var(--radius-sm)] font-mono text-mono-sm transition-colors ${
-                              active
-                                ? "sheen bg-[var(--bg-card-hover)] text-[var(--fg-primary)] shadow-[var(--shadow-card)]"
-                                : "text-[var(--fg-muted)] hover:bg-[var(--bg-hover-soft)] hover:text-[var(--fg-secondary)]"
-                            }`}
-                          >
-                            {active && (
-                              <span className="w-1 h-1 rounded-full bg-[var(--fg-brand)] mr-2 shrink-0" />
-                            )}
-                            {item.label}
-                          </Link>
-                        </li>
-                      );
-                    })}
-                  </ul>
-                </div>
-              ))}
+          <nav aria-label="Site and docs" className="flex-1 overflow-y-auto px-4 pt-5 pb-16">
+            <NavGroups
+              groups={[{ heading: "Site", items: TOP_LINKS }, ...(isDocs ? DOCS_NAV : [])]}
+              pathname={pathname}
+            />
           </nav>
 
           <div className="border-t border-[var(--border-subtle)] px-4 py-3 font-mono text-mono-xs uppercase tracking-widest text-[var(--fg-muted)]">

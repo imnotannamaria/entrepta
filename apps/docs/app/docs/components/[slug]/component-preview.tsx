@@ -776,7 +776,7 @@ function ThemeSwitcherPreview() {
           defaultTheme={DEFAULT_THEME}
           defaultMode={DEFAULT_MODE}
           storageKey={STORAGE_KEY_PREFIX}
-          className="relative right-auto bottom-auto"
+          position="inline"
         />
       </div>
       <p className="m-0 font-mono text-mono-sm text-[var(--fg-muted)]">

@@ -50,7 +50,10 @@ export function findEntry(slug: string): ComponentEntry | undefined {
   return COMPONENT_INDEX.find((c) => c.slug === slug);
 }
 
-export type NavGroup = { heading: string; items: { label: string; href: string }[] };
+export type NavGroup = {
+  heading: string;
+  items: { label: string; href: string; external?: boolean }[];
+};
 
 /** The docs navigation, shared by the sidebar, the mobile menu and the palette. */
 export const DOCS_NAV: NavGroup[] = [

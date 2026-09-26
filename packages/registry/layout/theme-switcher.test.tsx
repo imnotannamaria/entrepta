@@ -129,4 +129,13 @@ describe("ThemeScript", () => {
     const script = container.querySelector("script");
     expect(script?.innerHTML).toContain("myapp:theme");
   });
+
+  it("sits in the flow with position inline, and floats by default", () => {
+    const { container, rerender } = render(<ThemeSwitcher themes={THEMES} />);
+    expect(container.querySelector("[data-theme-switcher]")).toHaveClass("fixed");
+    rerender(<ThemeSwitcher themes={THEMES} position="inline" />);
+    const inline = container.querySelector("[data-theme-switcher]");
+    expect(inline).toHaveClass("relative");
+    expect(inline).not.toHaveClass("fixed");
+  });
 });

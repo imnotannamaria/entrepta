@@ -1,13 +1,13 @@
-import type { Icon } from "@phosphor-icons/react";
 import * as React from "react";
 import { Diamond } from "../content/diamond";
+import { type IconProp, IconSlot } from "../lib/icon";
 import { cn } from "../lib/utils";
 
 interface FieldLabelProps extends React.LabelHTMLAttributes<HTMLLabelElement> {
   /** Adds a brand `*`. Put `required` on the control too; the star is only visual. */
   required?: boolean;
   /** A Phosphor icon in place of the ◆. */
-  icon?: Icon;
+  icon?: IconProp;
 }
 
 const FieldLabel = React.forwardRef<HTMLLabelElement, FieldLabelProps>(
@@ -23,12 +23,7 @@ const FieldLabel = React.forwardRef<HTMLLabelElement, FieldLabelProps>(
       {...props}
     >
       {LabelIcon ? (
-        <LabelIcon
-          aria-hidden
-          size={11}
-          weight="bold"
-          className="shrink-0 text-[var(--fg-brand)]"
-        />
+        <IconSlot icon={LabelIcon} size={11} className="text-[var(--fg-brand)]" />
       ) : (
         <Diamond />
       )}
@@ -78,7 +73,7 @@ interface FieldProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "childre
   label: React.ReactNode;
   required?: boolean;
   /** A Phosphor icon in place of the label's ◆. */
-  icon?: Icon;
+  icon?: IconProp;
   error?: React.ReactNode;
   hint?: React.ReactNode;
   /** One control: Input, Textarea, Switch or a native element. */

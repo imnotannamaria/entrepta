@@ -100,9 +100,9 @@ import { CheckIcon, GitBranchIcon } from "@phosphor-icons/react"
       },
       {
         name: "icon",
-        type: "Icon",
+        type: "Icon | ReactElement",
         description:
-          "A Phosphor icon component before the label, sized to the badge. Wins over dot",
+          "A Phosphor icon, or an icon element, before the label, sized to the badge. Wins over dot",
       },
     ],
   },
@@ -188,8 +188,8 @@ import { CheckIcon, GitBranchIcon } from "@phosphor-icons/react"
       },
       {
         name: "icon",
-        type: "Icon",
-        description: "A Phosphor icon in place of the ◆ (CardLabel only)",
+        type: "Icon | ReactElement",
+        description: "A Phosphor icon, or an icon element, in place of the ◆ (CardLabel only)",
       },
     ],
   },
@@ -224,8 +224,9 @@ import { Button } from "@/components/entrepta/button"
     props: [
       {
         name: "icon",
-        type: "Icon",
-        description: "A Phosphor icon in place of the ◆ (DialogLabel)",
+        type: "Icon | ReactElement",
+        description:
+          "In place of the ◆ (DialogLabel). From a server file, pass an element: icon={<RobotIcon />}",
       },
       {
         name: "open",
@@ -937,7 +938,11 @@ import { Textarea } from "@/components/entrepta/textarea"
         description: "The control's id. Error and hint ids derive from it",
       },
       { name: "label", type: "ReactNode", description: "Mono label with a ◆" },
-      { name: "icon", type: "Icon", description: "A Phosphor icon in place of the label's ◆" },
+      {
+        name: "icon",
+        type: "Icon | ReactElement",
+        description: "A Phosphor icon, or an icon element, in place of the label's ◆",
+      },
       {
         name: "required",
         type: "boolean",
