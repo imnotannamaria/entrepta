@@ -1,3 +1,4 @@
+import { HouseIcon } from "@phosphor-icons/react";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
@@ -163,6 +164,27 @@ describe("TabNav", () => {
     );
     await userEvent.click(screen.getByRole("button", { name: "Close post.mdx" }));
     expect(onClose).toHaveBeenCalled();
+  });
+});
+
+describe("tab names on phones", () => {
+  it("keeps an inactive icon tab's name for screen readers when it is hidden on screen", () => {
+    render(
+      <TabNav aria-label="Pages">
+        <TabNavLink href="/" icon={HouseIcon} active>
+          home.tsx
+        </TabNavLink>
+        <TabNavLink href="/about" icon={HouseIcon}>
+          about.md
+        </TabNavLink>
+      </TabNav>
+    );
+    // display:none would drop the name from the accessibility tree too, leaving an icon-only
+    // link with no name. sr-only hides it visually and keeps it announced.
+    const name = screen.getByText("about.md");
+    expect(name).toHaveClass("sr-only", "sm:not-sr-only");
+    expect(name).not.toHaveClass("hidden");
+    expect(screen.getByRole("link", { name: "about.md" })).toBeInTheDocument();
   });
 });
 
