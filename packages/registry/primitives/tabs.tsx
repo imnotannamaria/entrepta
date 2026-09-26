@@ -194,7 +194,10 @@ function TabShell({
       className={cn(
         "group relative inline-flex h-full shrink-0 items-center border-r border-[var(--border-subtle)]",
         "transition-colors duration-150",
-        active ? "bg-[var(--bg-surface)]" : "hover:bg-[var(--bg-hover-soft)]"
+        // the active tab glows up from its underline, the brand rising into the surface
+        active
+          ? "bg-[var(--bg-card)] bg-[linear-gradient(to_top,color-mix(in_srgb,var(--fg-brand)_12%,transparent),transparent_80%)]"
+          : "hover:bg-[var(--bg-hover-soft)]"
       )}
     >
       {active && (

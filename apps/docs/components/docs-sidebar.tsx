@@ -26,7 +26,7 @@ export function DocsSidebar() {
                     className={cn(
                       "flex h-8 items-center rounded-[var(--radius-sm)] px-3 font-mono text-mono-sm transition-colors",
                       active
-                        ? "bg-[var(--bg-surface)] text-[var(--fg-primary)]"
+                        ? "sheen bg-[var(--bg-card-hover)] text-[var(--fg-primary)] shadow-[var(--shadow-card)]"
                         : "text-[var(--fg-muted)] hover:bg-[var(--bg-hover-soft)] hover:text-[var(--fg-secondary)]"
                     )}
                   >

@@ -53,6 +53,27 @@ describe("overlay family", () => {
     expect(source).toContain("group/item");
   });
 
+  it.each(OVERLAYS)("%s carries the toast's finish: the corner glow", (file) => {
+    const source = read(file);
+    expect(
+      source.includes('"sheen') || source.includes(" sheen ") || source.includes("--sheen-tint")
+    ).toBe(true);
+  });
+
+  it("paints no area in zinc-900: surfaces are near black with the sheen", () => {
+    const gray = registryFiles().filter((file) =>
+      /bg-\[var\(--bg-surface\)\]/.test(fs.readFileSync(file, "utf8"))
+    );
+    expect(gray.map((f) => path.relative(root, f))).toEqual([]);
+  });
+
+  it.each(["primitives/card.tsx", "content/code-block.tsx", "primitives/button-variants.ts"])(
+    "%s uses the sheen",
+    (file) => {
+      expect(read(file)).toMatch(/["\s]sheen /);
+    }
+  );
+
   it("puts no colored bar on the edge of anything", () => {
     const offenders = registryFiles().filter((file) =>
       /inset_[23]px_0_0|border-l-2|border-left-width|border-l-\[/.test(

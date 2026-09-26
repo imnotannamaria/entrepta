@@ -16,7 +16,7 @@ const POSITION_CLASS: Record<TogglePosition, string> = {
 };
 
 const modeToggle = cva(
-  "inline-flex items-center justify-center shrink-0 font-mono uppercase tracking-[0.08em] rounded-[var(--radius-md)] border border-[var(--border-subtle)] bg-[var(--bg-surface)] text-[var(--fg-secondary)] hover:border-[var(--border-strong)] hover:text-[var(--fg-primary)] focus-visible:outline-none focus-visible:border-[var(--fg-brand)] focus-visible:shadow-[0_0_0_3px_var(--bg-surface-brand)] transition-colors",
+  "inline-flex items-center justify-center shrink-0 font-mono uppercase tracking-[0.08em] rounded-[var(--radius-md)] border border-[var(--border-strong)] bg-[var(--bg-overlay)] shadow-[var(--shadow-card)] text-[var(--fg-secondary)] hover:border-[var(--fg-muted)] hover:text-[var(--fg-primary)] focus-visible:outline-none focus-visible:border-[var(--fg-brand)] focus-visible:shadow-[0_0_0_3px_var(--bg-surface-brand)] transition-colors",
   {
     variants: {
       variant: {

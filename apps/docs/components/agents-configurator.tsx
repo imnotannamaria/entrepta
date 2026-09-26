@@ -41,6 +41,8 @@ const OPEN = ["open"] as const;
 const DEFAULT_COMPONENTS = ["button", "card", "code-block"];
 const ALL_SLUGS = COMPONENT_INDEX.map((c) => c.slug);
 const SLUGS = new Set(ALL_SLUGS);
+// options replace the history entry; only opening the dialog adds one
+const REPLACE = { replace: true };
 
 /** The dialog's open state, in `?agents=open`: shareable, and the back button closes it. */
 export function useAgentsDialog() {
@@ -52,7 +54,7 @@ export function useAgentsDialog() {
 
 /**
  * The picked components, kept in `?c=button,card`, the same way use-url-filter
- * keeps a single value: prerender safe, pushState, other params kept.
+ * keeps a single value: prerender safe, replaceState, other params kept.
  */
 function useUrlList(param: string): [string[] | null, (next: string[]) => void] {
   const event = `urlfilter:${param}`;
@@ -80,7 +82,7 @@ function useUrlList(param: string): [string[] | null, (next: string[]) => void] 
     (next: string[]) => {
       const params = new URLSearchParams(window.location.search);
       params.set(param, next.join(","));
-      window.history.pushState(null, "", `${window.location.pathname}?${params}`);
+      window.history.replaceState(null, "", `${window.location.pathname}?${params}`);
       window.dispatchEvent(new Event(event));
     },
     [param, event]
@@ -162,12 +164,12 @@ function Segmented<T extends string>({
 type DownloadState = "idle" | "done" | "error";
 
 function Configurator() {
-  const [framework, setFramework] = useUrlFilter("fw", FRAMEWORKS);
-  const [theme, setTheme] = useUrlFilter("theme", THEME_IDS);
-  const [mode, setMode] = useUrlFilter("mode", MODES);
-  const [themes, setThemes] = useUrlFilter("themes", THEMES_MODES);
-  const [pm, setPm] = useUrlFilter("pm", PACKAGE_MANAGERS);
-  const [fileName, setFileName] = useUrlFilter("file", FILE_NAMES);
+  const [framework, setFramework] = useUrlFilter("fw", FRAMEWORKS, undefined, REPLACE);
+  const [theme, setTheme] = useUrlFilter("theme", THEME_IDS, undefined, REPLACE);
+  const [mode, setMode] = useUrlFilter("mode", MODES, undefined, REPLACE);
+  const [themes, setThemes] = useUrlFilter("themes", THEMES_MODES, undefined, REPLACE);
+  const [pm, setPm] = useUrlFilter("pm", PACKAGE_MANAGERS, undefined, REPLACE);
+  const [fileName, setFileName] = useUrlFilter("file", FILE_NAMES, undefined, REPLACE);
   const [picked, setPicked] = useUrlList("c");
   const [download, setDownload] = useState<DownloadState>("idle");
 
@@ -223,9 +225,9 @@ function Configurator() {
   };
 
   return (
-    <div className="grid min-h-0 flex-1 grid-cols-1 overflow-y-auto lg:grid-cols-[minmax(0,440px)_minmax(0,1fr)] lg:overflow-clip">
+    <div className="grid min-h-0 flex-1 grid-cols-1 overflow-x-hidden overflow-y-auto overscroll-none lg:grid-cols-[minmax(0,440px)_minmax(0,1fr)] lg:overflow-clip">
       <form
-        className="flex min-w-0 flex-col lg:overflow-y-auto lg:border-r lg:border-[var(--border-subtle)]"
+        className="flex min-w-0 flex-col overscroll-none lg:overflow-x-hidden lg:overflow-y-auto lg:border-r lg:border-[var(--border-subtle)]"
         onSubmit={(e) => e.preventDefault()}
       >
         <DialogHeader className="border-b border-[var(--border-subtle)] px-6 pt-6 pb-5">
@@ -410,7 +412,7 @@ function Configurator() {
           filename={options.fileName}
           language="md"
           variant="terminal"
-          className="flex min-h-0 flex-1 flex-col [&_pre]:text-mono-sm [&>div:last-child]:min-h-0 [&>div:last-child]:flex-1 [&>div:last-child]:overflow-auto [&_pre]:whitespace-pre-wrap [&_pre]:break-words"
+          className="flex min-h-0 flex-1 flex-col [&_pre]:text-mono-sm [&>div:last-child]:overscroll-none [&>div:last-child]:min-h-0 [&>div:last-child]:flex-1 [&>div:last-child]:overflow-auto [&_pre]:whitespace-pre-wrap [&_pre]:break-words"
         />
       </div>
     </div>
@@ -452,7 +454,7 @@ export function AgentsDialog() {
       </Button>
       <DialogContent
         aria-describedby={undefined}
-        className="h-[min(820px,calc(100dvh-32px))] max-w-[1120px] gap-0 overflow-clip p-0"
+        className="h-[min(820px,calc(100dvh-32px))] max-w-[1120px] gap-0 overflow-clip overscroll-none p-0"
       >
         {open && <Configurator />}
       </DialogContent>

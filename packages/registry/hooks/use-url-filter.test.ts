@@ -43,4 +43,13 @@ describe("useUrlFilter", () => {
     act(() => a.result.current[1]("film"));
     expect(b.result.current[0]).toBeNull();
   });
+
+  it("replaces the history entry instead of adding one when asked", () => {
+    window.history.replaceState(null, "", "/log");
+    const before = window.history.length;
+    const { result } = renderHook(() => useUrlFilter("type", TYPES, undefined, { replace: true }));
+    act(() => result.current[1]("film"));
+    expect(window.location.search).toBe("?type=film");
+    expect(window.history.length).toBe(before);
+  });
 });

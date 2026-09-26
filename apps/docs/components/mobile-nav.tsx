@@ -2,6 +2,7 @@
 
 import { Logo } from "@/components/logo";
 import { DOCS_NAV } from "@/lib/component-index";
+import { LINKS } from "@/lib/links";
 import { Kbd } from "@entrepta/registry/primitives/kbd";
 import { ListIcon, XIcon } from "@phosphor-icons/react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
@@ -14,7 +15,8 @@ const TOP_LINKS = [
   { label: "principles", href: "/#principles" },
   { label: "components", href: "/docs/components" },
   { label: "themes", href: "/docs/themes" },
-  { label: "github ↗", href: "https://github.com/imnotannamaria/entrepta", external: true },
+  { label: "npm ↗", href: LINKS.npmCli, external: true },
+  { label: "github ↗", href: LINKS.github, external: true },
 ];
 
 export function MobileNav() {
@@ -58,7 +60,7 @@ export function MobileNav() {
             </Link>
             <DialogPrimitive.Close
               aria-label="Close navigation menu"
-              className="inline-flex items-center justify-center size-8 rounded-[var(--radius-sm)] text-[var(--fg-muted)] hover:text-[var(--fg-primary)] hover:bg-[var(--bg-surface)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)]"
+              className="inline-flex items-center justify-center size-8 rounded-[var(--radius-sm)] text-[var(--fg-muted)] hover:text-[var(--fg-primary)] hover:bg-[var(--bg-hover-soft)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)]"
             >
               <XIcon aria-hidden size={16} />
             </DialogPrimitive.Close>
@@ -74,7 +76,7 @@ export function MobileNav() {
                   <Link
                     href={l.href}
                     {...(l.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-                    className="flex items-center h-9 px-2 rounded-[var(--radius-sm)] font-mono text-mono-md text-[var(--fg-secondary)] hover:bg-[var(--bg-surface)] hover:text-[var(--fg-primary)] transition-colors"
+                    className="flex items-center h-9 px-2 rounded-[var(--radius-sm)] font-mono text-mono-md text-[var(--fg-secondary)] hover:bg-[var(--bg-hover-soft)] hover:text-[var(--fg-primary)] transition-colors"
                   >
                     {l.label}
                   </Link>
@@ -97,7 +99,7 @@ export function MobileNav() {
                             href={item.href}
                             className={`flex items-center h-8 px-2 rounded-[var(--radius-sm)] font-mono text-mono-sm transition-colors ${
                               active
-                                ? "bg-[var(--bg-surface)] text-[var(--fg-primary)]"
+                                ? "sheen bg-[var(--bg-card-hover)] text-[var(--fg-primary)] shadow-[var(--shadow-card)]"
                                 : "text-[var(--fg-muted)] hover:bg-[var(--bg-hover-soft)] hover:text-[var(--fg-secondary)]"
                             }`}
                           >

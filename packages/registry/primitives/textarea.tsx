@@ -7,7 +7,7 @@ import { cn } from "../lib/utils";
 const textareaVariants = cva(
   [
     "block w-full",
-    "bg-[var(--bg-surface)]",
+    "bg-[var(--bg-field)]",
     "border rounded-[var(--radius-md)]",
     "px-3 py-2.5",
     "font-sans text-body-md leading-relaxed text-[var(--fg-primary)]",

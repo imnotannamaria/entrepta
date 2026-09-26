@@ -1129,6 +1129,21 @@ Smaller than the ones above, each with a recommendation.
 - [x] ThemeSwitcher and ModeToggle previews show the real components, not copies
 - [x] One focus style: `.focus-ring` on the CodeBlock copy button, an inset brand ring on tabs
 
+## Review round 3
+
+- [x] Hero counters full width, rolling in when they reach the screen. RollingNumber used
+      `animate` on mount, so the roll was spent offscreen; it waits for the viewport now
+- [x] Label icons: CardLabel, DialogLabel and Field take an `icon` in place of the ◆
+- [x] AGENTS.md: select all, options replace the history entry instead of stacking one per
+      click (a trackpad swipe back walked through every choice), `overscroll-behavior: none`
+- [x] npm in the header, the mobile menu and the footer (the footer npm and changelog links
+      were `#`), and both packages on the CLI and installation pages
+- [x] The toast's finish on every surface: `.sheen`, `--edge-light`, `--bg-field`, no zinc-900
+      areas, the active tab glowing up from its underline
+- Checked on the way: WebKit shows no horizontal overflow once the production CSP is set
+  aside. That CSP carried `upgrade-insecure-requests`, which Safari applies to localhost, so
+  `next start` rendered unstyled in Safari locally. It and HSTS are now sent only on Vercel
+
 ---
 
 ## Out of scope

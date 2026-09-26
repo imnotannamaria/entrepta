@@ -1,4 +1,5 @@
 import { DocPageHeader, DocSubhead } from "@/components/doc-page-header";
+import { NpmPackages } from "@/components/npm-packages";
 import { CodeBlock } from "@entrepta/registry/content/code-block";
 import { Button } from "@entrepta/registry/primitives/button";
 import {
@@ -165,6 +166,10 @@ npx @entrepta/cli@latest init --theme=ivy`}
           </Button>
         </Link>
       </div>
+      <section className="mt-12">
+        <DocSubhead count="2 packages">On npm</DocSubhead>
+        <NpmPackages />
+      </section>
     </article>
   );
 }

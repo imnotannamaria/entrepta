@@ -35,7 +35,7 @@ const Switch = React.forwardRef<HTMLInputElement, SwitchProps>(
             data-switch-track
             className={cn(
               "block h-5 w-9 rounded-full border",
-              "border-[var(--border-strong)] bg-[var(--bg-surface)]",
+              "border-[var(--border-strong)] bg-[var(--bg-field)]",
               "transition-colors duration-150 ease-out",
               "peer-checked:border-[var(--fg-brand)] peer-checked:bg-[var(--fg-brand)]",
               "peer-focus-visible:shadow-[0_0_0_3px_var(--bg-surface-brand)]"

@@ -35,7 +35,7 @@ const DialogContent = React.forwardRef<
         "fixed left-1/2 top-1/2 z-50 -translate-x-1/2 -translate-y-1/2",
         "flex flex-col gap-4",
         "w-[calc(100vw-32px)] max-w-md",
-        "bg-[var(--bg-overlay)] border border-[var(--border-strong)]",
+        "sheen bg-[var(--bg-overlay)] border border-[var(--border-strong)]",
         "rounded-[var(--radius-lg)] p-6",
         "shadow-[var(--shadow-overlay)]",
         "motion-pop",

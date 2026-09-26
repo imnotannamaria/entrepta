@@ -1,4 +1,5 @@
 import { DocPageHeader, DocSubhead } from "@/components/doc-page-header";
+import { NpmPackages } from "@/components/npm-packages";
 import { CodeBlock } from "@entrepta/registry/content/code-block";
 import {
   Card,
@@ -67,6 +68,11 @@ export default function CliPage() {
         }
         meta="4 commands"
       />
+
+      <section className="mb-12">
+        <DocSubhead count="2 packages">On npm</DocSubhead>
+        <NpmPackages />
+      </section>
 
       <section className="mb-12">
         <DocSubhead count="quick try">First run</DocSubhead>

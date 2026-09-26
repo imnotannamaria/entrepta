@@ -558,6 +558,13 @@ pnpm dlx file:"$(pwd)/../entrepta/packages/cli" init
   every list of rows has the same size and brand tint highlight. Every keyboard
   hint is a `Kbd`. `test/overlay-family.test.ts` holds them together, so
   improving one means improving the rest
+- Every surface has the toast's finish: near black underneath, the `.sheen`
+  class for a brand glow in the top-left corner, and `--edge-light`, a line of
+  light on the top edge (inside `--shadow-card` and `--shadow-overlay`). Fields
+  sit on `--bg-field`. No component paints an area in `--bg-surface`
+  (zinc-900); the family test fails if one does. The glow is 9% of the brand in
+  dark and 4% in light, the most light mode allows before `--fg-muted` drops
+  under AA, and the contrast test measures labels on its brightest point
 - Docs live at https://entrepta.vercel.app/
 
 ---

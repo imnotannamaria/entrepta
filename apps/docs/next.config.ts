@@ -14,6 +14,11 @@ import type { NextConfig } from "next";
 // eval-source-map (the JS chunks are wrapped in eval(), which CSP would
 // block — every page becomes blank/inert because React never hydrates).
 // Vercel deploys are always production, so the policy still ships there.
+// Only on Vercel, which serves https. Safari applies upgrade-insecure-requests
+// to localhost too, so a local `next start` would fetch its CSS over https and
+// render unstyled; HSTS on localhost would stick in the browser the same way.
+const onVercel = Boolean(process.env.VERCEL);
+
 const productionCsp = [
   "default-src 'self'",
   "base-uri 'self'",
@@ -25,7 +30,7 @@ const productionCsp = [
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
   "script-src 'self' 'unsafe-inline' https://va.vercel-scripts.com",
   "connect-src 'self'",
-  "upgrade-insecure-requests",
+  ...(onVercel ? ["upgrade-insecure-requests"] : []),
 ].join("; ");
 
 const productionSecurityHeaders = [
@@ -37,10 +42,9 @@ const productionSecurityHeaders = [
     key: "Permissions-Policy",
     value: "camera=(), microphone=(), geolocation=(), interest-cohort=()",
   },
-  {
-    key: "Strict-Transport-Security",
-    value: "max-age=63072000; includeSubDomains; preload",
-  },
+  ...(onVercel
+    ? [{ key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains; preload" }]
+    : []),
 ];
 
 const isProd = process.env.NODE_ENV === "production";

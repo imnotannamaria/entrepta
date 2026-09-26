@@ -106,7 +106,7 @@ const SECTION_PREVIEWS: Record<(typeof SECTIONS)[number], React.ReactNode> = {
   ),
   Layout: (
     <div className="flex overflow-hidden rounded-[var(--radius-sm)] border border-[var(--border-subtle)] bg-[var(--bg-canvas)] font-mono text-mono-sm">
-      <span className="inline-flex items-center gap-1.5 border-r border-[var(--border-subtle)] bg-[var(--bg-surface)] px-3 py-1.5 text-[var(--fg-primary)]">
+      <span className="inline-flex items-center gap-1.5 border-r border-[var(--border-subtle)] bg-[var(--bg-card)] bg-[linear-gradient(to_top,color-mix(in_srgb,var(--fg-brand)_12%,transparent),transparent_80%)] px-3 py-1.5 text-[var(--fg-primary)]">
         <Diamond /> home.tsx
       </span>
       <span className="border-r border-[var(--border-subtle)] px-3 py-1.5 text-[var(--fg-muted)]">
@@ -116,8 +116,8 @@ const SECTION_PREVIEWS: Record<(typeof SECTIONS)[number], React.ReactNode> = {
     </div>
   ),
   Content: (
-    <div className="overflow-hidden rounded-[var(--radius-sm)] border border-[var(--border-subtle)] bg-[var(--bg-surface)] font-mono text-mono-sm">
-      <div className="flex items-center gap-2 border-b border-[var(--border-subtle)] bg-[var(--bg-chrome)] px-3 py-1.5">
+    <div className="sheen overflow-hidden rounded-[var(--radius-sm)] border border-[var(--border-subtle)] bg-[var(--bg-overlay)] font-mono text-mono-sm shadow-[var(--shadow-card)]">
+      <div className="flex items-center gap-2 border-b border-[var(--border-subtle)] px-3 py-1.5">
         <span className="h-2 w-2 rounded-full bg-[var(--status-error)] opacity-60" />
         <span className="h-2 w-2 rounded-full bg-[var(--status-warning)] opacity-60" />
         <span className="h-2 w-2 rounded-full bg-[var(--status-success)] opacity-60" />

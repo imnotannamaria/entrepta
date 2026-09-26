@@ -542,7 +542,7 @@ function TabsPreview() {
               </TabNavLink>
             ))}
           </TabNav>
-          <div className="h-16 bg-[var(--bg-surface)]" />
+          <div className="sheen h-16 bg-[var(--bg-card)]" />
         </div>
       </Demo>
 
@@ -564,7 +564,7 @@ function TabsPreview() {
 function StatusBarPreview() {
   return (
     <div className="w-full max-w-2xl border border-[var(--border-subtle)] rounded-[var(--radius-md)] overflow-hidden">
-      <div className="bg-[var(--bg-surface)] h-20 flex items-center justify-center">
+      <div className="sheen flex h-20 items-center justify-center bg-[var(--bg-card)]">
         <p className="font-mono text-mono-sm text-[var(--fg-muted)]">page content</p>
       </div>
       {/* flex overrides the bar's own hidden-below-640px, so the preview shows at every width */}
@@ -627,7 +627,7 @@ function TopNavPreview() {
           </TopNavMenu>
         }
       />
-      <div className="bg-[var(--bg-surface)] h-20 flex items-center justify-center">
+      <div className="sheen flex h-20 items-center justify-center bg-[var(--bg-card)]">
         <p className="font-mono text-mono-sm text-[var(--fg-muted)]">page content</p>
       </div>
     </div>
@@ -925,7 +925,7 @@ function SidebarPreview() {
       }}
     >
       <Sidebar items={items} active={active} label="Preview" />
-      <div className="w-56 bg-[var(--bg-surface)]" />
+      <div className="sheen w-56 bg-[var(--bg-card)]" />
     </div>
   );
 }

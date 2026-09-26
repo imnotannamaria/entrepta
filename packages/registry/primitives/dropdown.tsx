@@ -14,7 +14,7 @@ const DropdownMenuSub = DropdownMenuPrimitive.Sub;
 const DropdownMenuRadioGroup = DropdownMenuPrimitive.RadioGroup;
 
 const dropdownContentClass = cn(
-  "motion-pop z-50 min-w-[200px] overflow-hidden",
+  "motion-pop sheen z-50 min-w-[200px] overflow-hidden",
   "origin-[var(--radix-dropdown-menu-content-transform-origin)]",
   "bg-[var(--bg-overlay)] border border-[var(--border-strong)]",
   "rounded-[var(--radius-md)] p-1",

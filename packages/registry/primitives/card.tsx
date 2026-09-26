@@ -14,7 +14,7 @@ const cardVariants = cva(
       variant: {
         // a hair above the canvas, defined by its border
         default: [
-          "bg-[var(--bg-card)] border-[var(--border-subtle)]",
+          "sheen bg-[var(--bg-card)] border-[var(--border-subtle)] shadow-[var(--shadow-card)]",
           "hover:border-[var(--border-strong)] hover:bg-[var(--bg-card-hover)]",
         ],
         featured: [
@@ -25,11 +25,12 @@ const cardVariants = cva(
         // Stays dark in both modes. It sets its own text color too: color
         // inherits as a computed value, so a light page's ink would leak in.
         terminal: [
-          "bg-[var(--bg-surface)] border-[var(--border-subtle)]",
+          "sheen bg-[var(--bg-overlay)] border-[var(--border-subtle)] shadow-[var(--shadow-card)]",
           "text-[var(--fg-primary)] font-mono",
         ],
         data: [
-          "bg-[var(--bg-surface-elevated)] border-[var(--border-subtle)] backdrop-blur-sm",
+          // glass: the card color at 80%, blurred, with the corner glow
+          "sheen bg-[color-mix(in_srgb,var(--bg-card)_80%,transparent)] border-[var(--border-subtle)] backdrop-blur-sm shadow-[var(--shadow-card)]",
           "hover:border-[var(--border-strong)]",
         ],
       },

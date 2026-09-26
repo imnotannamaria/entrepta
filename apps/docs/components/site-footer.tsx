@@ -1,3 +1,4 @@
+import { LINKS } from "@/lib/links";
 import Link from "next/link";
 import { Logo } from "./logo";
 
@@ -61,12 +62,11 @@ export function SiteFooter() {
           </h4>
           <ul className="flex flex-col gap-2">
             {[
-              {
-                label: "GitHub ↗",
-                href: "https://github.com/imnotannamaria/entrepta",
-              },
-              { label: "npm ↗", href: "#" },
-              { label: "Changelog", href: "#" },
+              { label: "GitHub ↗", href: LINKS.github },
+              { label: "npm: cli ↗", href: LINKS.npmCli },
+              { label: "npm: registry ↗", href: LINKS.npmRegistry },
+              { label: "Changelog ↗", href: LINKS.changelog },
+              { label: "Releases ↗", href: LINKS.releases },
             ].map((l) => (
               <li key={l.label}>
                 <a

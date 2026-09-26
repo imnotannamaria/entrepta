@@ -19,17 +19,23 @@ function serverSnapshot(): null {
  * when a filtered URL is opened directly.
  *
  * Writing uses `pushState`, so the back button undoes a filter, and it keeps
- * every other param already in the URL.
+ * every other param already in the URL. Pass `{ replace: true }` for a value
+ * that changes often, such as a form of options: every change replacing the
+ * entry keeps the back button, and a trackpad's swipe back, from walking
+ * through each click.
  *
  * @param param   the query param, such as `"type"`
  * @param allowed the values it may take; anything else reads as no filter
  * @param path    the path to write to. Defaults to the current path
+ * @param options `replace` writes with replaceState instead of pushState
  */
 function useUrlFilter<T extends string>(
   param: string,
   allowed: readonly T[],
-  path?: string
+  path?: string,
+  options: { replace?: boolean } = {}
 ): [T | null, (next: T | null) => void] {
+  const replace = options.replace ?? false;
   const event = eventName(param);
 
   const subscribe = React.useCallback(
@@ -58,10 +64,12 @@ function useUrlFilter<T extends string>(
       else params.delete(param);
       const query = params.toString();
       const base = path ?? window.location.pathname;
-      window.history.pushState(null, "", query ? `${base}?${query}` : base);
+      const url = query ? `${base}?${query}` : base;
+      if (replace) window.history.replaceState(null, "", url);
+      else window.history.pushState(null, "", url);
       window.dispatchEvent(new Event(event));
     },
-    [path, param, event]
+    [path, param, event, replace]
   );
 
   return [active, write];

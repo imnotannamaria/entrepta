@@ -88,7 +88,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className="bg-[var(--bg-canvas)] text-[var(--fg-primary)] antialiased">
+      <body className="overflow-x-clip bg-[var(--bg-canvas)] text-[var(--fg-primary)] antialiased">
         <ThemeInitScript />
         <a href="#main-content" className="skip-link">
           skip to content
@@ -96,7 +96,8 @@ export default function RootLayout({
         <SiteCommandPaletteProvider>
           {children}
           <ThemeSwitcher />
-          <Toaster position="bottom-right" />
+          {/* above the status bar and the floating theme switcher */}
+          <Toaster position="bottom-right" offset={{ bottom: 96, right: 20 }} />
         </SiteCommandPaletteProvider>
         <Analytics />
       </body>

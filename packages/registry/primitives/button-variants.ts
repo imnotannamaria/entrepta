@@ -28,9 +28,9 @@ export const buttonVariants = cva(
           "hover:text-[var(--fg-primary)] hover:bg-[var(--bg-hover-soft)]",
         ],
         command: [
-          "bg-[var(--bg-surface)] text-[var(--fg-primary)] border-[var(--border-subtle)] font-normal",
+          "sheen bg-[var(--bg-overlay)] text-[var(--fg-primary)] border-[var(--border-strong)] font-normal shadow-[var(--shadow-card)]",
           "before:content-['$'] before:text-[var(--fg-brand)] before:mr-0.5",
-          "hover:border-[var(--border-strong)] hover:bg-[var(--bg-surface-elevated)]",
+          "hover:border-[var(--fg-muted)] hover:bg-[var(--bg-card-hover)]",
         ],
       },
       size: {

@@ -9,7 +9,7 @@ import { Kbd } from "./kbd";
 const inputWrapperVariants = cva(
   [
     "flex items-center gap-2 w-full",
-    "bg-[var(--bg-surface)]",
+    "bg-[var(--bg-field)]",
     "border rounded-[var(--radius-md)]",
     "transition-all duration-150 ease-out",
     "hover:border-[var(--fg-muted)]",

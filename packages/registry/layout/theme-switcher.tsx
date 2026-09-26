@@ -130,7 +130,7 @@ const ThemeSwitcher = React.forwardRef<HTMLDivElement, ThemeSwitcherProps>(
             aria-label="Theme settings"
             data-state="open"
             className={cn(
-              "motion-pop absolute right-0 bottom-[calc(100%+8px)] flex min-w-[200px] origin-bottom-right flex-col p-1",
+              "motion-pop sheen absolute right-0 bottom-[calc(100%+8px)] flex min-w-[200px] origin-bottom-right flex-col p-1",
               "rounded-[var(--radius-md)] border border-[var(--border-strong)] bg-[var(--bg-overlay)] shadow-[var(--shadow-overlay)]"
             )}
           >

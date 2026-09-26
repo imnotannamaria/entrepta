@@ -15,7 +15,7 @@ const toastClass = cn(
   "group/toast relative flex w-[var(--width)] items-start gap-3 overflow-hidden",
   "rounded-[var(--radius-md)] border border-[var(--border-strong)] p-3.5 pr-10",
   "bg-[var(--bg-overlay)] shadow-[var(--shadow-overlay)] font-mono",
-  "[background-image:radial-gradient(140%_120%_at_0%_0%,var(--toast-glow,transparent),transparent_55%)]",
+  "[background-image:radial-gradient(140%_120%_at_0%_0%,var(--toast-glow,var(--sheen-tint)),transparent_55%)]",
   "data-[type=success]:[--toast-glow:color-mix(in_srgb,var(--status-success)_12%,transparent)]",
   "data-[type=error]:[--toast-glow:color-mix(in_srgb,var(--status-error)_12%,transparent)]",
   "data-[type=warning]:[--toast-glow:color-mix(in_srgb,var(--status-warning)_12%,transparent)]",

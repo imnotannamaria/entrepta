@@ -70,7 +70,7 @@ const CodeBlock = React.forwardRef<HTMLDivElement, CodeBlockProps>(
         ref={ref}
         className={cn(
           "relative rounded-[var(--radius-md)] border border-[var(--border-subtle)]",
-          "bg-[var(--bg-surface)] overflow-hidden",
+          "sheen bg-[var(--bg-overlay)] shadow-[var(--shadow-card)] overflow-hidden",
           className
         )}
         {...props}
@@ -79,7 +79,7 @@ const CodeBlock = React.forwardRef<HTMLDivElement, CodeBlockProps>(
           <div
             className={cn(
               "flex items-center gap-3 px-4 py-2",
-              "border-b border-[var(--border-subtle)] bg-[var(--bg-chrome)]",
+              "border-b border-[var(--border-subtle)]",
               "font-mono text-mono-sm text-[var(--fg-secondary)]"
             )}
           >

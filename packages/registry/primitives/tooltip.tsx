@@ -26,7 +26,7 @@ const TooltipContent = React.forwardRef<
       sideOffset={sideOffset}
       data-surface="dark"
       className={cn(
-        "z-50 inline-flex items-center gap-2 whitespace-nowrap",
+        "sheen z-50 inline-flex items-center gap-2 whitespace-nowrap",
         "bg-[var(--bg-overlay)] border border-[var(--border-strong)]",
         "rounded-[var(--radius-sm)] px-2.5 py-1.5",
         "font-mono text-mono-sm text-[var(--fg-primary)]",

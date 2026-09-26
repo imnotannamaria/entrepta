@@ -42,7 +42,7 @@ const Command = React.forwardRef<
     ref={ref}
     className={cn(
       "flex flex-col overflow-hidden max-h-[70vh]",
-      "bg-[var(--bg-overlay)] border border-[var(--border-strong)]",
+      "sheen bg-[var(--bg-overlay)] border border-[var(--border-strong)]",
       "rounded-[var(--radius-lg)] shadow-[var(--shadow-overlay)]",
       className
     )}

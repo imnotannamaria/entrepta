@@ -454,7 +454,7 @@ export function HomeShowcase() {
               </span>
             </nav>
 
-            <div className="min-w-0 flex-1">
+            <div className="min-w-0 flex-1 overflow-hidden">
               <TabsContent value="page" className="m-0 h-full">
                 <div className="grid h-full grid-cols-1 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)]">
                   <div className="hidden overflow-x-auto border-r border-[var(--border-subtle)] lg:block">
@@ -466,7 +466,7 @@ export function HomeShowcase() {
               <TabsContent value="tokens" className="m-0 overflow-x-auto">
                 <TokensCode theme={current as (typeof THEMES)[number]} />
               </TabsContent>
-              <TabsContent value="agents" className="m-0">
+              <TabsContent value="agents" className="m-0 overflow-x-auto">
                 <AgentsPeek theme={current.id} />
               </TabsContent>
             </div>

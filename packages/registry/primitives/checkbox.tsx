@@ -46,7 +46,7 @@ const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
             data-checkbox-box
             className={cn(
               "block size-4 rounded-[4px] border",
-              "border-[var(--border-strong)] bg-[var(--bg-surface)]",
+              "border-[var(--border-strong)] bg-[var(--bg-field)]",
               "transition-[background-color,border-color,box-shadow] duration-[var(--motion-fast)] ease-out",
               "peer-hover:border-[var(--fg-muted)]",
               "peer-checked:border-[var(--fg-brand)] peer-checked:bg-[var(--fg-brand)]",

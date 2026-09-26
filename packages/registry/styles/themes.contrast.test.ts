@@ -102,6 +102,29 @@ describe("theme contrast", () => {
     }
   }
 
+  // The .sheen glow brightens the top-left corner of cards and overlays, right
+  // where a label sits. Measure the inks at its strongest point.
+  it("keeps labels readable on the sheen's brightest corner", () => {
+    const failures = THEMES.flatMap((theme) =>
+      MODES.flatMap((mode) => {
+        const set = tokens(theme, mode);
+        const pct = Number(/(\d+)%/.exec(set["--sheen-tint"] ?? "")?.[1]);
+        expect(pct).toBeGreaterThan(0);
+        const glow = { ...color(set, "--fg-brand"), a: pct / 100 };
+        return (["--bg-card", "--bg-overlay"] as const).flatMap((on) => {
+          const bg = flatten([glow, color(set, on)]);
+          return (["--fg-muted", "--fg-secondary", "--fg-brand-text"] as const)
+            .map((ink) => ({ ink, on, ratio: contrastRatio(color(set, ink), bg) }))
+            .filter(({ ratio }) => ratio < 4.5)
+            .map(
+              ({ ink, ratio }) => `${theme} ${mode}: ${ink} on sheen over ${on} ${ratio.toFixed(2)}`
+            );
+        });
+      })
+    );
+    expect(failures).toEqual([]);
+  });
+
   it('keeps [data-surface="dark"] readable inside a light page', () => {
     const set = {
       ...tokens("entrepta", "light"),

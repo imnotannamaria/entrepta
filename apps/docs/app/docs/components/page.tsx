@@ -43,7 +43,7 @@ export default function ComponentsIndex() {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className="group flex items-start justify-between p-4 border border-[var(--border-subtle)] rounded-[var(--radius-sm)] bg-[var(--bg-canvas)] hover:bg-[var(--bg-surface)] hover:border-[var(--border-strong)] transition-colors"
+                  className="group flex items-start justify-between p-4 border border-[var(--border-subtle)] rounded-[var(--radius-sm)] bg-[var(--bg-canvas)] hover:bg-[var(--bg-card-hover)] hover:border-[var(--border-strong)] transition-colors"
                 >
                   <div>
                     <div className="font-mono text-mono-md text-[var(--fg-primary)] mb-1">
