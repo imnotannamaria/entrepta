@@ -1,19 +1,23 @@
 "use client";
 
+import { MagnifyingGlassIcon } from "@phosphor-icons/react";
 import { type VariantProps, cva } from "class-variance-authority";
-import { Search } from "lucide-react";
 import * as React from "react";
 import { cn } from "../lib/utils";
+import { Kbd } from "./kbd";
 
 const inputWrapperVariants = cva(
   [
     "flex items-center gap-2 w-full",
-    "bg-[var(--bg-surface)]",
+    "bg-[var(--bg-field)]",
     "border rounded-[var(--radius-md)]",
     "transition-all duration-150 ease-out",
     "hover:border-[var(--fg-muted)]",
     "focus-within:border-[var(--fg-brand)] focus-within:shadow-[0_0_0_3px_var(--bg-surface-brand)]",
     "has-[:disabled]:opacity-40 has-[:disabled]:pointer-events-none",
+    // an invalid input, such as one a Field marks, looks like the error state
+    "has-[[aria-invalid=true]]:border-[var(--status-error)]",
+    "has-[[aria-invalid=true]]:focus-within:shadow-[0_0_0_3px_var(--status-error-soft)]",
   ],
   {
     variants: {
@@ -41,7 +45,7 @@ const inputWrapperVariants = cva(
 const inputBaseClass = [
   "flex-1 min-w-0 h-full",
   "bg-transparent border-0 appearance-none outline-none",
-  "font-mono text-[13px] text-[var(--fg-primary)]",
+  "font-mono text-mono-md text-[var(--fg-primary)]",
   "placeholder:text-[var(--fg-muted)]",
   "disabled:cursor-not-allowed",
 ].join(" ");
@@ -57,11 +61,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
     return (
       <div className={cn(inputWrapperVariants({ size, state }), className)}>
         {variant === "search" && (
-          <Search
-            aria-hidden
-            className="shrink-0 text-[var(--fg-muted)]"
-            style={{ width: 14, height: 14, strokeWidth: 1.5 }}
-          />
+          <MagnifyingGlassIcon aria-hidden className="shrink-0 text-[var(--fg-muted)]" size={14} />
         )}
         {variant === "command" && (
           <span
@@ -71,16 +71,13 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
             $
           </span>
         )}
-        <input ref={ref} className={inputBaseClass} {...props} />
-        {variant === "command" && (
-          <kbd
-            aria-hidden
-            className="shrink-0 inline-flex items-center gap-0.5 font-mono text-[11px] text-[var(--fg-muted)] tracking-wide select-none"
-          >
-            <span>⌘</span>
-            <span>K</span>
-          </kbd>
-        )}
+        <input
+          ref={ref}
+          aria-invalid={state === "error" || undefined}
+          className={inputBaseClass}
+          {...props}
+        />
+        {variant === "command" && <Kbd aria-hidden>⌘K</Kbd>}
       </div>
     );
   }

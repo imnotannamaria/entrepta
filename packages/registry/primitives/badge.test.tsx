@@ -27,6 +27,42 @@ describe("Badge", () => {
     expect(container.firstChild).toHaveClass("bg-[var(--bg-hover-strong)]");
   });
 
+  it("puts the theme's ink on a solid brand fill", () => {
+    const { container } = render(
+      <Badge variant="solid" color="brand">
+        new
+      </Badge>
+    );
+    expect(container.firstChild).toHaveClass("text-[var(--fg-on-brand)]");
+  });
+
+  it("uses the brand text ink for soft and outline brand", () => {
+    const { container, rerender } = render(
+      <Badge variant="soft" color="brand">
+        beta
+      </Badge>
+    );
+    expect(container.firstChild).toHaveClass("text-[var(--fg-brand-text)]");
+    rerender(
+      <Badge variant="outline" color="brand">
+        beta
+      </Badge>
+    );
+    expect(container.firstChild).toHaveClass("text-[var(--fg-brand-text)]");
+  });
+
+  it("uses a dark ink on every solid status fill", () => {
+    for (const color of ["success", "warning", "error", "info"] as const) {
+      const { container, unmount } = render(
+        <Badge variant="solid" color={color}>
+          {color}
+        </Badge>
+      );
+      expect(container.firstChild).toHaveClass("text-[var(--zinc-950)]");
+      unmount();
+    }
+  });
+
   it("applies soft success with token bg/fg", () => {
     const { container } = render(
       <Badge variant="soft" color="success">
@@ -90,5 +126,26 @@ describe("Badge", () => {
   it("merges custom className", () => {
     const { container } = render(<Badge className="my-class">cls</Badge>);
     expect(container.firstChild).toHaveClass("my-class");
+  });
+
+  it("renders a Phosphor icon in place of the dot, sized to the badge", () => {
+    function FakeIcon(props: { size?: number; "aria-hidden"?: boolean }) {
+      return <svg data-size={props.size} aria-hidden={props["aria-hidden"]} />;
+    }
+    const { container, rerender } = render(
+      <Badge icon={FakeIcon as never} dot>
+        shipped
+      </Badge>
+    );
+    expect(container.querySelectorAll("svg")).toHaveLength(1);
+    expect(container.querySelector("svg")).toHaveAttribute("data-size", "12");
+    expect(container.querySelector("svg")).toHaveAttribute("aria-hidden", "true");
+    expect(container.querySelector(".rounded-full")).toBeNull();
+    rerender(
+      <Badge icon={FakeIcon as never} size="sm">
+        shipped
+      </Badge>
+    );
+    expect(container.querySelector("svg")).toHaveAttribute("data-size", "10");
   });
 });

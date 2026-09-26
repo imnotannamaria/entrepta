@@ -22,3 +22,6 @@ out
 sandbox/
 # typescript
 *.tsbuildinfo
+
+# visual baselines for the v2 refactor, local only
+docs/baseline-v1/

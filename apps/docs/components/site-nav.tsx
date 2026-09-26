@@ -1,7 +1,9 @@
 "use client";
 
+import { LINKS } from "@/lib/links";
 import { TopNav, TopNavLink, TopNavMenu } from "@entrepta/registry/layout/top-nav";
 import Link from "next/link";
+import { AgentsDialog } from "./agents-configurator";
 import { Logo } from "./logo";
 import { MobileNav } from "./mobile-nav";
 
@@ -17,15 +19,20 @@ export function SiteNav() {
         }
         right={
           <>
-            <TopNavMenu>
+            <TopNavMenu className="md:hidden lg:flex">
+              <TopNavLink href="/docs">docs</TopNavLink>
               <TopNavLink href="/#install">install</TopNavLink>
               <TopNavLink href="/#principles">principles</TopNavLink>
               <TopNavLink href="/docs/components">components</TopNavLink>
               <TopNavLink href="/docs/themes">themes</TopNavLink>
-              <TopNavLink href="https://github.com/imnotannamaria/entrepta" external>
+              <TopNavLink href={LINKS.npmCli} external>
+                npm
+              </TopNavLink>
+              <TopNavLink href={LINKS.github} external>
                 github
               </TopNavLink>
             </TopNavMenu>
+            <AgentsDialog />
             <MobileNav />
           </>
         }

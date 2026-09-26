@@ -2,7 +2,9 @@
 
 import * as TooltipPrimitive from "@radix-ui/react-tooltip";
 import * as React from "react";
+import { OVERLAY_SURFACE } from "../lib/overlay";
 import { cn } from "../lib/utils";
+import { Kbd } from "./kbd";
 
 const TooltipProvider = ({
   delayDuration = 200,
@@ -25,15 +27,11 @@ const TooltipContent = React.forwardRef<
       sideOffset={sideOffset}
       data-surface="dark"
       className={cn(
+        OVERLAY_SURFACE,
         "z-50 inline-flex items-center gap-2 whitespace-nowrap",
-        "bg-[var(--bg-surface)] border border-[var(--border-strong)]",
-        "rounded-[var(--radius-sm)] px-2 py-1",
-        "font-mono text-[11px] text-[var(--fg-primary)]",
-        "shadow-[0_4px_12px_rgba(0,0,0,0.4)]",
-        "animate-in fade-in-0 zoom-in-95 duration-150",
-        "data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95",
-        "data-[side=bottom]:slide-in-from-top-1 data-[side=top]:slide-in-from-bottom-1",
-        "data-[side=left]:slide-in-from-right-1 data-[side=right]:slide-in-from-left-1",
+        "rounded-[var(--radius-sm)] px-2.5 py-1.5",
+        "font-mono text-mono-sm text-[var(--fg-primary)]",
+        "motion-pop origin-[var(--radix-tooltip-content-transform-origin)]",
         className
       )}
       {...props}
@@ -42,12 +40,7 @@ const TooltipContent = React.forwardRef<
 ));
 TooltipContent.displayName = TooltipPrimitive.Content.displayName;
 
-const TooltipShortcut = ({ className, ...props }: React.HTMLAttributes<HTMLSpanElement>) => (
-  <span
-    className={cn("font-mono text-[11px] text-[var(--fg-muted)] tracking-[0.04em]", className)}
-    {...props}
-  />
-);
+const TooltipShortcut = (props: React.HTMLAttributes<HTMLElement>) => <Kbd {...props} />;
 TooltipShortcut.displayName = "TooltipShortcut";
 
 export { Tooltip, TooltipContent, TooltipProvider, TooltipShortcut, TooltipTrigger };

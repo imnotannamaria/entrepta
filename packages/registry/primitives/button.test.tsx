@@ -40,6 +40,14 @@ describe("Button", () => {
   it("applies primary variant class", () => {
     const { container } = render(<Button>Primary</Button>);
     expect(container.firstChild).toHaveClass("bg-[var(--fg-brand)]");
+    expect(container.firstChild).toHaveClass("text-[var(--fg-on-brand)]");
+  });
+
+  it("exports the variants from a module without a client boundary", async () => {
+    const fs = await import("node:fs");
+    const path = await import("node:path");
+    const source = fs.readFileSync(path.join(__dirname, "button-variants.ts"), "utf8");
+    expect(source).not.toMatch(/^["']use client["']/m);
   });
 
   it("applies secondary variant class", () => {
@@ -56,8 +64,8 @@ describe("Button", () => {
 
   it("applies command variant class", () => {
     const { container } = render(<Button variant="command">npx @entrepta/cli@latest init</Button>);
-    expect(container.firstChild).toHaveClass("bg-[var(--bg-surface)]");
-    expect(container.firstChild).toHaveClass("border-[var(--border-subtle)]");
+    expect(container.firstChild).toHaveClass("sheen", "bg-[var(--bg-overlay)]");
+    expect(container.firstChild).toHaveClass("border-[var(--border-strong)]");
   });
 
   it("applies sm size class", () => {
@@ -84,5 +92,25 @@ describe("Button", () => {
   it("merges custom className", () => {
     const { container } = render(<Button className="custom-class">Custom</Button>);
     expect(container.firstChild).toHaveClass("custom-class");
+  });
+
+  it("has square icon sizes, named by aria-label", () => {
+    render(
+      <Button size="icon-md" variant="ghost" aria-label="Settings">
+        <svg aria-hidden />
+      </Button>
+    );
+    const button = screen.getByRole("button", { name: "Settings" });
+    expect(button).toHaveClass("size-10");
+    expect(button).not.toHaveClass("px-4");
+  });
+
+  it("keeps an icon beside the label from shrinking", () => {
+    const { container } = render(
+      <Button>
+        <svg aria-hidden /> deploy
+      </Button>
+    );
+    expect(container.firstChild).toHaveClass("[&_svg]:shrink-0");
   });
 });

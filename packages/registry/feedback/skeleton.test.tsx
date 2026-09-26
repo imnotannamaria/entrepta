@@ -14,8 +14,8 @@ describe("Skeleton", () => {
     const { container } = render(<Skeleton />);
     const el = container.firstChild as HTMLElement;
     expect(el.style.backgroundImage).toContain("linear-gradient(90deg");
-    expect(el.style.backgroundImage).toContain("var(--bg-surface)");
-    expect(el.style.backgroundImage).toContain("var(--bg-surface-elevated)");
+    expect(el.style.backgroundImage).toContain("var(--bg-hover-strong)");
+    expect(el.style.backgroundImage).not.toContain("var(--bg-surface)");
   });
 
   it("applies rect variant by default", () => {
@@ -48,6 +48,16 @@ describe("Skeleton", () => {
     const el = container.firstChild as HTMLElement;
     expect(el.style.width).toBe("50px");
     expect(el.style.animation).toContain("shimmer");
+  });
+
+  it("offsets the shimmer with a negative delay", () => {
+    const { container } = render(<Skeleton delay={0.12} />);
+    expect((container.firstChild as HTMLElement).style.animationDelay).toBe("-0.12s");
+  });
+
+  it("leaves the delay unset by default", () => {
+    const { container } = render(<Skeleton />);
+    expect((container.firstChild as HTMLElement).style.animationDelay).toBe("");
   });
 
   it("forwards ref", () => {

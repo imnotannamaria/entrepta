@@ -1,17 +1,27 @@
 /* ============================================================
-   julia theme — warm pink, soft and expressive
+   julia theme, warm pink, soft and expressive
    ============================================================ */
+
+/* --fg-on-brand is the ink for text on a --fg-brand fill (a primary button,
+   a solid badge, the status bar). --fg-brand-text is the ink for brand-colored
+   text on the canvas, a card or the --bg-surface-brand tint. Neither can be
+   derived from the brand, so each theme sets both. All of them clear WCAG AA
+   in both modes. Measure again after changing any value here. */
 
 :root {
   --fg-brand: #e85a8a;
   --fg-brand-hover: #f178a0;
+  --fg-on-brand: #09090b;
+  --fg-brand-text: #f178a0;
   --bg-surface-brand: rgba(232, 90, 138, 0.14);
   --ring: rgba(232, 90, 138, 0.45);
 }
 
 :root[data-mode="light"] {
-  --fg-brand: #d33a72;
-  --fg-brand-hover: #e15489;
-  --bg-surface-brand: rgba(211, 58, 114, 0.08);
-  --ring: rgba(211, 58, 114, 0.4);
+  --fg-brand: #cc3a6a;
+  --fg-brand-hover: #e85a8a;
+  --fg-on-brand: #fafafa;
+  --fg-brand-text: #af325b;
+  --bg-surface-brand: rgba(204, 58, 106, 0.08);
+  --ring: rgba(204, 58, 106, 0.4);
 }

@@ -1,10 +1,12 @@
 "use client";
 
+import { MagnifyingGlassIcon } from "@phosphor-icons/react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { Command as CommandPrimitive } from "cmdk";
-import { Search } from "lucide-react";
 import * as React from "react";
+import { MENU_ROW, MENU_SEPARATOR, OVERLAY_SURFACE } from "../lib/overlay";
 import { cn } from "../lib/utils";
+import { Kbd } from "../primitives/kbd";
 
 const CommandDialog = ({
   children,
@@ -13,22 +15,13 @@ const CommandDialog = ({
   <DialogPrimitive.Root {...props}>
     <DialogPrimitive.Portal>
       <DialogPrimitive.Overlay
-        className={cn(
-          "fixed inset-0 z-50 bg-black/60 backdrop-blur-[4px]",
-          "data-[state=open]:animate-in data-[state=closed]:animate-out",
-          "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
-          "duration-200"
-        )}
+        className={cn("fixed inset-0 z-50 bg-black/60 backdrop-blur-[4px]", "motion-fade")}
       />
       <DialogPrimitive.Content
         className={cn(
           "fixed left-1/2 top-1/2 z-50 -translate-x-1/2 -translate-y-1/2",
           "w-[calc(100vw-32px)] max-w-[640px] max-h-[70vh]",
-          "data-[state=open]:animate-in data-[state=closed]:animate-out",
-          "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
-          "data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-100",
-          "data-[state=open]:slide-in-from-bottom-2",
-          "duration-200 ease-out"
+          "motion-pop"
         )}
       >
         <DialogPrimitive.Title className="sr-only">Command Palette</DialogPrimitive.Title>
@@ -49,9 +42,8 @@ const Command = React.forwardRef<
   <CommandPrimitive
     ref={ref}
     className={cn(
-      "flex flex-col overflow-hidden max-h-[70vh]",
-      "bg-[var(--bg-surface)] border border-[var(--border-strong)]",
-      "rounded-[var(--radius-lg)] shadow-[0_24px_48px_rgba(0,0,0,0.6)]",
+      OVERLAY_SURFACE,
+      "flex flex-col overflow-hidden max-h-[70vh] rounded-[var(--radius-lg)]",
       className
     )}
     {...props}
@@ -60,7 +52,7 @@ const Command = React.forwardRef<
 Command.displayName = CommandPrimitive.displayName;
 
 interface CommandInputProps extends React.ComponentPropsWithoutRef<typeof CommandPrimitive.Input> {
-  /** Render the `esc` kbd chip on the right side of the input. Default: true. */
+  /** Render the `esc` chip that closes the dialog. Default: true. Pass false for a Command outside CommandDialog. */
   showEsc?: boolean;
 }
 
@@ -69,18 +61,14 @@ const CommandInput = React.forwardRef<
   CommandInputProps
 >(({ className, showEsc = true, ...props }, ref) => (
   <div className="flex items-center gap-3 px-4 py-4 border-b border-[var(--border-subtle)]">
-    <Search
-      aria-hidden
-      className="shrink-0 text-[var(--fg-muted)]"
-      style={{ width: 14, height: 14, strokeWidth: 1.5 }}
-    />
+    <MagnifyingGlassIcon aria-hidden className="shrink-0 text-[var(--fg-muted)]" size={14} />
     <CommandPrimitive.Input
       ref={ref}
       aria-label="Search commands"
       {...props}
       className={cn(
         "flex-1 bg-transparent border-0 outline-none appearance-none",
-        "font-mono text-[14px] text-[var(--fg-primary)]",
+        "font-mono text-mono-md text-[var(--fg-primary)]",
         "placeholder:text-[var(--fg-muted)]",
         className
       )}
@@ -89,17 +77,10 @@ const CommandInput = React.forwardRef<
       <DialogPrimitive.Close asChild>
         <button
           type="button"
-          className={cn(
-            "shrink-0 inline-flex items-center justify-center",
-            "px-1.5 h-5 rounded-[4px]",
-            "font-mono text-[11px] text-[var(--fg-muted)]",
-            "border border-[var(--border-subtle)]",
-            "hover:text-[var(--fg-primary)] hover:border-[var(--border-strong)]",
-            "transition-colors duration-150"
-          )}
+          className="focus-ring shrink-0 cursor-pointer rounded-[4px] [&_kbd]:hover:border-[var(--border-strong)] [&_kbd]:hover:text-[var(--fg-primary)]"
           aria-label="Close command palette"
         >
-          esc
+          <Kbd>esc</Kbd>
         </button>
       </DialogPrimitive.Close>
     )}
@@ -113,7 +94,7 @@ const CommandList = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <CommandPrimitive.List
     ref={ref}
-    className={cn("flex-1 overflow-y-auto overflow-x-hidden p-2", className)}
+    className={cn("flex-1 overflow-y-auto overflow-x-hidden p-1", className)}
     {...props}
   />
 ));
@@ -125,7 +106,7 @@ const CommandEmpty = React.forwardRef<
 >((props, ref) => (
   <CommandPrimitive.Empty
     ref={ref}
-    className="py-8 text-center font-mono text-[13px] text-[var(--fg-muted)]"
+    className="py-8 text-center font-mono text-mono-md text-[var(--fg-muted)]"
     {...props}
   />
 ));
@@ -138,10 +119,14 @@ const CommandGroup = React.forwardRef<
   <CommandPrimitive.Group
     ref={ref}
     className={cn(
-      "[&_[cmdk-group-heading]]:px-3 [&_[cmdk-group-heading]]:pt-3 [&_[cmdk-group-heading]]:pb-2",
-      "[&_[cmdk-group-heading]]:font-mono [&_[cmdk-group-heading]]:text-[10px]",
+      "[&_[cmdk-group-heading]]:flex [&_[cmdk-group-heading]]:items-center [&_[cmdk-group-heading]]:gap-1.5",
+      "[&_[cmdk-group-heading]]:px-2.5 [&_[cmdk-group-heading]]:pt-2.5 [&_[cmdk-group-heading]]:pb-1.5",
+      "[&_[cmdk-group-heading]]:font-mono [&_[cmdk-group-heading]]:text-mono-xs",
       "[&_[cmdk-group-heading]]:uppercase [&_[cmdk-group-heading]]:tracking-[0.08em]",
       "[&_[cmdk-group-heading]]:text-[var(--fg-muted)]",
+      // cmdk renders the heading, so the ◆ comes in through ::before
+      "[&_[cmdk-group-heading]]:before:content-['◆'] [&_[cmdk-group-heading]]:before:[font-size:9px]",
+      "[&_[cmdk-group-heading]]:before:text-[var(--fg-brand)]",
       className
     )}
     {...props}
@@ -153,11 +138,7 @@ const CommandSeparator = React.forwardRef<
   React.ComponentRef<typeof CommandPrimitive.Separator>,
   React.ComponentPropsWithoutRef<typeof CommandPrimitive.Separator>
 >(({ className, ...props }, ref) => (
-  <CommandPrimitive.Separator
-    ref={ref}
-    className={cn("my-1 -mx-2 h-px bg-[var(--border-subtle)]", className)}
-    {...props}
-  />
+  <CommandPrimitive.Separator ref={ref} className={cn(MENU_SEPARATOR, className)} {...props} />
 ));
 CommandSeparator.displayName = CommandPrimitive.Separator.displayName;
 
@@ -173,23 +154,22 @@ const CommandItem = React.forwardRef<
   <CommandPrimitive.Item
     ref={ref}
     className={cn(
-      "flex items-center gap-3 px-3 py-2 rounded-[var(--radius-sm)]",
-      "font-mono text-[13px] text-[var(--fg-secondary)]",
-      "cursor-default select-none",
-      "transition-colors duration-150",
+      MENU_ROW,
+      "cursor-default",
+      // the same highlight as a dropdown row: the brand tint, and the icon turns brand
       "data-[selected=true]:bg-[var(--bg-surface-brand)] data-[selected=true]:text-[var(--fg-primary)]",
-      "data-[disabled=true]:opacity-40 data-[disabled=true]:pointer-events-none",
+      "data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-40",
       className
     )}
     {...props}
   >
-    {icon && <span className="shrink-0 text-[var(--fg-muted)]">{icon}</span>}
-    <span className="flex-1">{children}</span>
-    {shortcut && (
-      <span className="font-mono text-[11px] text-[var(--fg-muted)] tracking-[0.04em]">
-        {shortcut}
+    {icon && (
+      <span className="flex shrink-0 text-[var(--fg-muted)] transition-colors group-data-[selected=true]/item:text-[var(--fg-brand)]">
+        {icon}
       </span>
     )}
+    <span className="flex-1 truncate">{children}</span>
+    {shortcut && <Kbd variant="plain">{shortcut}</Kbd>}
   </CommandPrimitive.Item>
 ));
 CommandItem.displayName = CommandPrimitive.Item.displayName;
@@ -199,17 +179,33 @@ const CommandFoot = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDi
     <div
       ref={ref}
       className={cn(
-        "flex items-center justify-between gap-3",
+        // the row wraps and each half does not, so a phone gets the hints on a line of their own
+        "flex flex-wrap items-center justify-between gap-x-3 gap-y-1",
         "px-4 py-2 border-t border-[var(--border-subtle)]",
-        "font-mono text-[11px] text-[var(--fg-muted)]",
+        "font-mono text-mono-sm text-[var(--fg-muted)]",
         className
       )}
       {...props}
     >
       {children ?? (
         <>
-          <span />
-          <span>⌘K to close · ↑↓ to navigate · ↵ to go</span>
+          <span className="whitespace-nowrap">
+            <span aria-hidden className="opacity-60">
+              {"// "}
+            </span>
+            palette
+          </span>
+          <span className="flex items-center gap-3 whitespace-nowrap">
+            <span className="flex items-center gap-1.5">
+              <Kbd>↑↓</Kbd> navigate
+            </span>
+            <span className="flex items-center gap-1.5">
+              <Kbd>↵</Kbd> open
+            </span>
+            <span className="hidden items-center gap-1.5 sm:flex">
+              <Kbd>esc</Kbd> close
+            </span>
+          </span>
         </>
       )}
     </div>

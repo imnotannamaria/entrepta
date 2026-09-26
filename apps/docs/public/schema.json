@@ -1,0 +1,52 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://entrepta.vercel.app/schema.json",
+  "title": "entrepta.json",
+  "description": "Config the entrepta CLI writes with init and reads with add.",
+  "type": "object",
+  "required": ["theme", "tsx", "rsc", "tailwind", "aliases"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "theme": {
+      "description": "The preset init wrote. The default when all six are installed.",
+      "enum": ["entrepta", "blossom", "marmalade", "julia", "ivy", "bosco"]
+    },
+    "themes": {
+      "description": "single writes one fixed theme; all writes the six, switchable with data-theme.",
+      "enum": ["single", "all"]
+    },
+    "srcDir": {
+      "description": "Where @/ points, such as src in Vite. Aliases resolve relative to it.",
+      "type": "string",
+      "pattern": "^([\\w@.-]+(/[\\w@.-]+)*)?$",
+      "not": { "pattern": "(^|/)\\.\\.(/|$)" }
+    },
+    "tsx": { "type": "boolean" },
+    "rsc": {
+      "description": "Whether the project uses React Server Components.",
+      "type": "boolean"
+    },
+    "tailwind": {
+      "type": "object",
+      "required": ["css", "baseColor"],
+      "properties": {
+        "css": {
+          "description": "The global CSS file init writes the tokens into.",
+          "type": "string"
+        },
+        "baseColor": { "type": "string" }
+      }
+    },
+    "aliases": {
+      "description": "Import paths. Plain paths only: they are written into import lines.",
+      "type": "object",
+      "required": ["components", "lib", "utils", "hooks"],
+      "properties": {
+        "components": { "type": "string", "pattern": "^[\\w@./-]+$" },
+        "lib": { "type": "string", "pattern": "^[\\w@./-]+$" },
+        "utils": { "type": "string", "pattern": "^[\\w@./-]+$" },
+        "hooks": { "type": "string", "pattern": "^[\\w@./-]+$" }
+      }
+    }
+  }
+}

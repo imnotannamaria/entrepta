@@ -116,4 +116,16 @@ describe("useTheme", () => {
     expect(result.current.mode).toBe("dark");
     expect(document.documentElement.getAttribute("data-mode")).toBeNull();
   });
+
+  it("keeps two instances with the same storageKey in step", () => {
+    const a = renderHook(() => useTheme({ themes: THEMES }));
+    const b = renderHook(() => useTheme({ themes: THEMES }));
+    act(() => a.result.current.setTheme("blossom"));
+    expect(b.result.current.theme).toBe("blossom");
+    const other = renderHook(() => useTheme({ themes: THEMES, storageKey: "myapp" }));
+    const before = other.result.current.theme;
+    act(() => a.result.current.setTheme("ivy"));
+    expect(b.result.current.theme).toBe("ivy");
+    expect(other.result.current.theme).toBe(before);
+  });
 });

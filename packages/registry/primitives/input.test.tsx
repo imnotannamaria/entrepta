@@ -36,8 +36,7 @@ describe("Input", () => {
   it("renders $ prefix and ⌘K kbd hint when variant=command", () => {
     render(<Input variant="command" placeholder="cmd" />);
     expect(screen.getByText("$")).toBeInTheDocument();
-    expect(screen.getByText("⌘")).toBeInTheDocument();
-    expect(screen.getByText("K")).toBeInTheDocument();
+    expect(screen.getByText("⌘K").tagName).toBe("KBD");
   });
 
   it("applies default border class", () => {

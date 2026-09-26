@@ -6,6 +6,12 @@ export interface Framework {
   cssPath: string;
   componentsPath: string;
   utilsPath: string;
+  /**
+   * Where `@/` points in this setup: "" for Next.js, where it is the project
+   * root, and "src" for Vite and the rest, where it is src/. Paths above are
+   * relative to the project root; aliases are relative to this.
+   */
+  srcDir: string;
 }
 
 export async function detectFramework(cwd: string): Promise<Framework> {
@@ -24,6 +30,7 @@ export async function detectFramework(cwd: string): Promise<Framework> {
         cssPath: "app/globals.css",
         componentsPath: "app/components/entrepta",
         utilsPath: "lib/utils.ts",
+        srcDir: "",
       };
     }
     return {
@@ -31,6 +38,7 @@ export async function detectFramework(cwd: string): Promise<Framework> {
       cssPath: "styles/globals.css",
       componentsPath: "components/entrepta",
       utilsPath: "lib/utils.ts",
+      srcDir: "",
     };
   }
 
@@ -46,6 +54,7 @@ export async function detectFramework(cwd: string): Promise<Framework> {
       cssPath: "src/index.css",
       componentsPath: "src/components/entrepta",
       utilsPath: "src/lib/utils.ts",
+      srcDir: "src",
     };
   }
 
@@ -54,6 +63,7 @@ export async function detectFramework(cwd: string): Promise<Framework> {
     cssPath: "src/globals.css",
     componentsPath: "src/components/entrepta",
     utilsPath: "src/lib/utils.ts",
+    srcDir: "src",
   };
 }
 

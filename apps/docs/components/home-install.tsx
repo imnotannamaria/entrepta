@@ -22,7 +22,7 @@ const PACKAGE_MANAGERS = [
 
 const PEER_DEPS = ["clsx", "tailwind-merge", "class-variance-authority"];
 
-const GLOBALS_CSS_SNIPPET = `/* app/globals.css — paste the tokens block from
+const GLOBALS_CSS_SNIPPET = `/* app/globals.css: paste the tokens block from
    packages/registry/styles/globals.css, then append one
    theme file from packages/registry/styles/themes/. */
 
@@ -63,7 +63,7 @@ export function HomeInstall({ steps }: Props) {
             {steps.map((step) => (
               <div key={step.num} className="flex flex-col gap-1">
                 <div className="flex items-center gap-3">
-                  <span className="text-[var(--fg-muted)] text-[11px] w-5 shrink-0">
+                  <span className="text-[var(--fg-muted)] text-mono-sm w-5 shrink-0">
                     {step.num}
                   </span>
                   <span className="text-[var(--fg-secondary)]">
@@ -71,11 +71,11 @@ export function HomeInstall({ steps }: Props) {
                   </span>
                 </div>
                 {step.out && (
-                  <div className="pl-8 text-[11px] text-[var(--fg-muted)]">→ {step.out}</div>
+                  <div className="pl-8 text-mono-sm text-[var(--fg-muted)]">→ {step.out}</div>
                 )}
               </div>
             ))}
-            <div className="pl-8 flex items-center gap-2 text-[11px]">
+            <div className="pl-8 flex items-center gap-2 text-mono-sm">
               <span className="size-1.5 rounded-full bg-[var(--status-success)] inline-block" />
               <span className="text-[var(--status-success-fg)]">ready</span>
               <span className="text-[var(--fg-muted)]">{"// run npm run dev"}</span>
@@ -89,12 +89,12 @@ export function HomeInstall({ steps }: Props) {
           <li className="grid grid-cols-[28px_1fr] gap-3">
             <span
               aria-hidden
-              className="inline-grid place-items-center size-6 mt-0.5 rounded-full border border-[var(--border-subtle)] font-mono text-[10px] text-[var(--fg-muted)]"
+              className="inline-grid place-items-center size-6 mt-0.5 rounded-full border border-[var(--border-subtle)] font-mono text-mono-xs text-[var(--fg-muted)]"
             >
               1
             </span>
             <div className="flex flex-col gap-3 min-w-0">
-              <p className="font-sans text-sm text-[var(--fg-primary)] m-0">
+              <p className="font-sans text-body-md text-[var(--fg-primary)] m-0">
                 Install the peer dependencies.
               </p>
               <Tabs defaultValue="pnpm">
@@ -117,12 +117,12 @@ export function HomeInstall({ steps }: Props) {
           <li className="grid grid-cols-[28px_1fr] gap-3">
             <span
               aria-hidden
-              className="inline-grid place-items-center size-6 mt-0.5 rounded-full border border-[var(--border-subtle)] font-mono text-[10px] text-[var(--fg-muted)]"
+              className="inline-grid place-items-center size-6 mt-0.5 rounded-full border border-[var(--border-subtle)] font-mono text-mono-xs text-[var(--fg-muted)]"
             >
               2
             </span>
             <div className="flex flex-col gap-3 min-w-0">
-              <p className="font-sans text-sm text-[var(--fg-primary)] m-0">
+              <p className="font-sans text-body-md text-[var(--fg-primary)] m-0">
                 Drop the design tokens into your global stylesheet.
               </p>
               <CodeBlock
@@ -131,7 +131,7 @@ export function HomeInstall({ steps }: Props) {
                 language="css"
                 code={GLOBALS_CSS_SNIPPET}
               />
-              <p className="font-mono text-[11px] text-[var(--fg-muted)] leading-relaxed m-0">
+              <p className="font-mono text-mono-sm text-[var(--fg-muted)] leading-relaxed m-0">
                 <span className="text-[var(--fg-brand)]">{"// "}</span>
                 Copy the full file from{" "}
                 <code className="text-[var(--fg-secondary)]">
@@ -147,12 +147,12 @@ export function HomeInstall({ steps }: Props) {
           <li className="grid grid-cols-[28px_1fr] gap-3">
             <span
               aria-hidden
-              className="inline-grid place-items-center size-6 mt-0.5 rounded-full border border-[var(--border-subtle)] font-mono text-[10px] text-[var(--fg-muted)]"
+              className="inline-grid place-items-center size-6 mt-0.5 rounded-full border border-[var(--border-subtle)] font-mono text-mono-xs text-[var(--fg-muted)]"
             >
               3
             </span>
             <div className="flex flex-col gap-3 min-w-0">
-              <p className="font-sans text-sm text-[var(--fg-primary)] m-0">
+              <p className="font-sans text-body-md text-[var(--fg-primary)] m-0">
                 Add the <code>cn</code> helper.
               </p>
               <CodeBlock
@@ -167,15 +167,15 @@ export function HomeInstall({ steps }: Props) {
           <li className="grid grid-cols-[28px_1fr] gap-3">
             <span
               aria-hidden
-              className="inline-grid place-items-center size-6 mt-0.5 rounded-full border border-[var(--border-subtle)] font-mono text-[10px] text-[var(--fg-muted)]"
+              className="inline-grid place-items-center size-6 mt-0.5 rounded-full border border-[var(--border-subtle)] font-mono text-mono-xs text-[var(--fg-muted)]"
             >
               4
             </span>
             <div className="flex flex-col gap-2 min-w-0">
-              <p className="font-sans text-sm text-[var(--fg-primary)] m-0">
+              <p className="font-sans text-body-md text-[var(--fg-primary)] m-0">
                 Copy components individually from the docs.
               </p>
-              <p className="font-mono text-[11px] text-[var(--fg-muted)] leading-relaxed m-0">
+              <p className="font-mono text-mono-sm text-[var(--fg-muted)] leading-relaxed m-0">
                 <span className="text-[var(--fg-brand)]">{"// "}</span>
                 Each component page has a{" "}
                 <strong className="text-[var(--fg-secondary)]">Manual</strong> tab with its own

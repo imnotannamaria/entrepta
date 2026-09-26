@@ -1,10 +1,18 @@
 /* ============================================================
-   bosco theme — deep blue, technical and steady
+   bosco theme, deep blue, technical and steady
    ============================================================ */
+
+/* --fg-on-brand is the ink for text on a --fg-brand fill (a primary button,
+   a solid badge, the status bar). --fg-brand-text is the ink for brand-colored
+   text on the canvas, a card or the --bg-surface-brand tint. Neither can be
+   derived from the brand, so each theme sets both. All of them clear WCAG AA
+   in both modes. Measure again after changing any value here. */
 
 :root {
   --fg-brand: #2563eb;
   --fg-brand-hover: #4f86f3;
+  --fg-on-brand: #fafafa;
+  --fg-brand-text: #6b9bf5;
   --bg-surface-brand: rgba(37, 99, 235, 0.14);
   --ring: rgba(37, 99, 235, 0.45);
 }
@@ -12,6 +20,8 @@
 :root[data-mode="light"] {
   --fg-brand: #1d4ed8;
   --fg-brand-hover: #2563eb;
+  --fg-on-brand: #fafafa;
+  --fg-brand-text: #1d4ed8;
   --bg-surface-brand: rgba(29, 78, 216, 0.08);
   --ring: rgba(29, 78, 216, 0.4);
 }

@@ -58,8 +58,8 @@ describe("ModeToggle", () => {
   it("fades the moon out and the sun in when the mode flips", async () => {
     const user = userEvent.setup();
     const { container } = render(<ModeToggle />);
-    const moon = () => container.querySelector(".lucide-moon")?.getAttribute("class") ?? "";
-    const sun = () => container.querySelector(".lucide-sun")?.getAttribute("class") ?? "";
+    const moon = () => container.querySelector('[data-icon="moon"]')?.getAttribute("class") ?? "";
+    const sun = () => container.querySelector('[data-icon="sun"]')?.getAttribute("class") ?? "";
 
     // Both icons stay mounted so the swap can animate; opacity says which one shows.
     expect(moon()).toContain("opacity-100");

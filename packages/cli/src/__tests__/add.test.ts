@@ -18,7 +18,8 @@ vi.mock("node:module", () => ({
 
 vi.mock("prompts", () => ({ default: vi.fn() }));
 
-vi.mock("../utils/config.js", () => ({
+vi.mock("../utils/config.js", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("../utils/config.js")>()),
   readConfig: vi.fn(),
 }));
 
@@ -33,7 +34,7 @@ vi.mock("../utils/package-manager.js", () => ({
 
 import fs from "node:fs/promises";
 import prompts from "prompts";
-import { add } from "../commands/add.js";
+import { add, rewriteImports } from "../commands/add.js";
 import { readConfig } from "../utils/config.js";
 import { log } from "../utils/logger.js";
 import { installDeps } from "../utils/package-manager.js";
@@ -113,7 +114,7 @@ describe("add", () => {
       expect(mockInstallDeps).toHaveBeenCalledWith(
         expect.arrayContaining([
           "class-variance-authority",
-          "lucide-react",
+          "@phosphor-icons/react",
           "@radix-ui/react-slot",
         ]),
         expect.any(String),
@@ -156,6 +157,65 @@ describe("add", () => {
       expect(hookDest).toContain("hooks/");
     });
 
+    it("copies diamond next to card and points card's import at it", async () => {
+      mockReadFile.mockImplementation(async (p) =>
+        String(p).endsWith("card.tsx")
+          ? (`import { Diamond } from "../content/diamond";\n` as never)
+          : (BUTTON_SOURCE as never)
+      );
+      await add(["card"], { overwrite: false });
+      const written = mockWriteFile.mock.calls.map(([p, content]) => [String(p), String(content)]);
+      expect(written.map(([p]) => p)).toEqual(
+        expect.arrayContaining([
+          expect.stringContaining("components/entrepta/diamond.tsx"),
+          expect.stringContaining("components/entrepta/card.tsx"),
+        ])
+      );
+      const card = written.find(([p]) => p.endsWith("card.tsx"))?.[1];
+      expect(card).toContain('from "./diamond"');
+    });
+
+    it("puts lib/motion.ts in the lib alias and points reveal's import at it", async () => {
+      mockReadFile.mockImplementation(async (p) =>
+        String(p).endsWith("reveal.tsx")
+          ? (`import { EASE_OUT } from "../lib/motion";\nimport { cn } from "../lib/utils";\n` as never)
+          : (BUTTON_SOURCE as never)
+      );
+      await add(["reveal"], { overwrite: false });
+      const written = mockWriteFile.mock.calls.map(([p, content]) => [String(p), String(content)]);
+      expect(written.map(([p]) => p)).toEqual(
+        expect.arrayContaining([
+          expect.stringMatching(/\/fake\/project\/lib\/motion\.ts$/),
+          expect.stringContaining("components/entrepta/reveal.tsx"),
+        ])
+      );
+      const reveal = written.find(([p]) => p.endsWith("reveal.tsx"))?.[1];
+      expect(reveal).toContain('from "@/lib/motion"');
+      expect(reveal).toContain('from "@/lib/utils"');
+      expect(mockInstallDeps).toHaveBeenCalledWith(
+        expect.arrayContaining(["motion"]),
+        expect.any(String),
+        expect.any(String)
+      );
+    });
+
+    it("writes hooks and lib files under srcDir, where @/ points in a Vite project", async () => {
+      mockReadConfig.mockResolvedValue({
+        ...MOCK_CONFIG,
+        srcDir: "src",
+        aliases: { ...MOCK_CONFIG.aliases, components: "@/components/entrepta" },
+      });
+      await add(["reveal", "mode-toggle"], { overwrite: false });
+      const paths = mockWriteFile.mock.calls.map(([p]) => String(p));
+      expect(paths).toEqual(
+        expect.arrayContaining([
+          "/fake/project/src/lib/motion.ts",
+          "/fake/project/src/hooks/use-mode.ts",
+          "/fake/project/src/components/entrepta/reveal.tsx",
+        ])
+      );
+    });
+
     it("installs use-mode when adding mode-toggle", async () => {
       await add(["mode-toggle"], { overwrite: false });
 
@@ -190,6 +250,7 @@ describe("add", () => {
     });
   });
 
+  // kbd is one file with no dependencies, so each case is exactly one write or one prompt
   describe("overwrite behaviour", () => {
     beforeEach(() => {
       mockReadConfig.mockResolvedValue(MOCK_CONFIG);
@@ -198,19 +259,19 @@ describe("add", () => {
 
     it("asks for confirmation when file exists and --overwrite not set", async () => {
       mockPrompts.mockResolvedValueOnce({ confirm: false } as never);
-      await add(["button"], { overwrite: false });
+      await add(["kbd"], { overwrite: false });
       expect(mockPrompts).toHaveBeenCalled();
       expect(mockWriteFile).not.toHaveBeenCalled();
     });
 
     it("copies file when user confirms overwrite prompt", async () => {
       mockPrompts.mockResolvedValueOnce({ confirm: true } as never);
-      await add(["button"], { overwrite: false });
+      await add(["kbd"], { overwrite: false });
       expect(mockWriteFile).toHaveBeenCalled();
     });
 
     it("copies without prompting when --overwrite flag is set", async () => {
-      await add(["button"], { overwrite: true });
+      await add(["kbd"], { overwrite: true });
       expect(mockPrompts).not.toHaveBeenCalled();
       expect(mockWriteFile).toHaveBeenCalled();
     });
@@ -227,11 +288,55 @@ describe("add", () => {
       expect(mockPrompts).toHaveBeenCalledWith(expect.objectContaining({ type: "multiselect" }));
     });
 
+    it("offers components only, not hooks or lib files, with no em-dash in the labels", async () => {
+      mockPrompts.mockResolvedValueOnce({ picks: [] } as never);
+      await add([], { overwrite: false });
+      const { choices } = mockPrompts.mock.calls[0][0] as {
+        choices: { title: string; value: string }[];
+      };
+      const values = choices.map((c) => c.value);
+      expect(values).toContain("reveal");
+      expect(values).not.toContain("use-mode");
+      expect(values).not.toContain("motion-lib");
+      expect(choices.every((c) => !c.title.includes("—"))).toBe(true);
+    });
+
     it("returns early with warning when user selects nothing", async () => {
       mockPrompts.mockResolvedValueOnce({ picks: [] } as never);
       await add([], { overwrite: false });
       expect(log.warn).toHaveBeenCalledWith(expect.stringContaining("No components selected"));
       expect(mockWriteFile).not.toHaveBeenCalled();
     });
+  });
+});
+
+describe("rewriteImports", () => {
+  const rewrite = (source: string) => rewriteImports(source, "@/lib/utils", "@/hooks");
+
+  it("points utils and hooks at the configured aliases", () => {
+    expect(rewrite(`import { cn } from "../lib/utils";`)).toBe(`import { cn } from "@/lib/utils";`);
+    expect(rewrite(`import { useMode } from "../hooks/use-mode";`)).toBe(
+      `import { useMode } from "@/hooks/use-mode";`
+    );
+  });
+
+  it("turns an import from another component category into a sibling", () => {
+    expect(rewrite(`import { Diamond } from "../content/diamond";`)).toBe(
+      `import { Diamond } from "./diamond";`
+    );
+    expect(rewrite(`import { Card } from '../primitives/card';`)).toBe(
+      `import { Card } from "./card";`
+    );
+  });
+
+  it("points other lib files at the lib alias", () => {
+    expect(
+      rewriteImports(`import { EASE_OUT } from "../lib/motion";`, "@/lib/utils", "@/hooks", "~/lib")
+    ).toBe(`import { EASE_OUT } from "~/lib/motion";`);
+  });
+
+  it("leaves same-folder imports alone", () => {
+    const source = `import { buttonVariants } from "./button-variants";`;
+    expect(rewrite(source)).toBe(source);
   });
 });

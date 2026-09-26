@@ -82,13 +82,25 @@ describe("CodeBlock", () => {
     await waitFor(() => expect(button).toHaveAttribute("data-state", "idle"), { timeout: 500 });
   });
 
-  it("does not throw when navigator.clipboard is unavailable", async () => {
+  it("shows a failed state when navigator.clipboard is unavailable", async () => {
     Object.defineProperty(navigator, "clipboard", { configurable: true, value: undefined });
     render(<CodeBlock code={SAMPLE} />);
     const button = screen.getByRole("button", { name: /copy code/i });
     expect(() => fireEvent.click(button)).not.toThrow();
-    // Still flips to copied state since we don't gate on a working clipboard
-    await waitFor(() => expect(button).toHaveAttribute("data-state", "copied"));
+    await waitFor(() => expect(button).toHaveAttribute("data-state", "error"));
+    expect(button).toHaveAccessibleName("Copy failed");
+    expect(button).toHaveTextContent("copy failed");
+  });
+
+  it("shows a failed state when the clipboard rejects the write", async () => {
+    Object.defineProperty(navigator, "clipboard", {
+      configurable: true,
+      value: { writeText: vi.fn(async () => Promise.reject(new Error("denied"))) },
+    });
+    render(<CodeBlock code={SAMPLE} />);
+    const button = screen.getByRole("button", { name: /copy code/i });
+    fireEvent.click(button);
+    await waitFor(() => expect(button).toHaveAttribute("data-state", "error"));
   });
 
   it("renders the copy button by default but hides it when showCopy is false", () => {
@@ -107,5 +119,19 @@ describe("CodeBlock", () => {
   it("merges the className on the root element", () => {
     const { container } = render(<CodeBlock code={SAMPLE} className="custom-extra" />);
     expect(container.firstChild).toHaveClass("custom-extra");
+  });
+
+  it("scrolls long lines by default and wraps them with wrap", () => {
+    const { container, rerender } = render(<CodeBlock code="a very long line" />);
+    expect(container.querySelector("pre")).toHaveClass("whitespace-pre");
+    rerender(<CodeBlock code="a very long line" wrap />);
+    expect(container.querySelector("pre")).toHaveClass("whitespace-pre-wrap");
+  });
+
+  it("is a column whose body scrolls, so a caller only sets a height", () => {
+    const { container } = render(<CodeBlock code="x" className="h-40" />);
+    const root = container.firstChild as HTMLElement;
+    expect(root).toHaveClass("flex", "flex-col", "h-40");
+    expect(root.lastElementChild).toHaveClass("min-h-0", "flex-1", "overflow-auto");
   });
 });

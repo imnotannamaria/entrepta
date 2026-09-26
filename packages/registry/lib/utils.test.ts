@@ -10,9 +10,9 @@ describe("cn", () => {
     expect(cn("foo", undefined, false, null, "bar")).toBe("foo bar");
   });
 
-  it("resolves tailwind conflicts — last class wins", () => {
+  it("resolves tailwind conflicts, last class wins", () => {
     expect(cn("p-2", "p-4")).toBe("p-4");
-    expect(cn("text-sm", "text-lg")).toBe("text-lg");
+    expect(cn("text-mono-sm", "text-mono-md")).toBe("text-mono-md");
   });
 
   it("handles conditional object syntax from clsx", () => {
@@ -29,5 +29,22 @@ describe("cn", () => {
 
   it("handles complex merge: overrides earlier responsive variant", () => {
     expect(cn("px-2 py-1", "px-4")).toBe("py-1 px-4");
+  });
+
+  it("keeps a scale size alongside a text color", () => {
+    expect(cn("text-mono-md", "text-[var(--fg-secondary)]")).toBe(
+      "text-mono-md text-[var(--fg-secondary)]"
+    );
+    expect(cn("text-[var(--fg-secondary)]", "text-mono-md")).toBe(
+      "text-[var(--fg-secondary)] text-mono-md"
+    );
+  });
+
+  it("lets a scale size override a Tailwind default step", () => {
+    expect(cn("text-xs", "text-mono-xs")).toBe("text-mono-xs");
+  });
+
+  it("keeps a leading that comes before a font size", () => {
+    expect(cn("leading-none", "text-mono-sm")).toBe("leading-none text-mono-sm");
   });
 });

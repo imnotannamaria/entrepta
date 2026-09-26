@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   },
   description: SITE_DESCRIPTION,
   applicationName: SITE_NAME,
-  authors: [{ name: "Anna Maria", url: "https://anna-maria-dev.vercel.app" }],
+  authors: [{ name: "Anna Maria", url: "https://annamaria.app" }],
   creator: "Anna Maria",
   publisher: "Anna Maria",
   keywords: [
@@ -53,7 +53,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: `${SITE_NAME} · ${SITE_TAGLINE}`,
     description: SITE_DESCRIPTION,
-    creator: "@annamaria_dev",
+    creator: "@annamariadevbr",
   },
   robots: {
     index: true,
@@ -88,18 +88,20 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className="bg-[var(--bg-canvas)] text-[var(--fg-primary)] antialiased">
+      <body className="overflow-x-clip bg-[var(--bg-canvas)] text-[var(--fg-primary)] antialiased">
         <ThemeInitScript />
-        <a
-          href="#main-content"
-          className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100] focus:px-3 focus:py-2 focus:rounded-[var(--radius-sm)] focus:bg-[var(--bg-surface)] focus:text-[var(--fg-primary)] focus:border focus:border-[var(--fg-brand)] focus:outline-none focus:shadow-[0_0_0_3px_var(--bg-surface-brand)] focus:font-mono focus:text-xs"
-        >
-          Skip to main content
+        <a href="#main-content" className="skip-link">
+          skip to content
         </a>
         <SiteCommandPaletteProvider>
           {children}
           <ThemeSwitcher />
-          <Toaster position="bottom-right" />
+          {/* above the status bar and the floating theme switcher */}
+          <Toaster
+            position="bottom-right"
+            offset={{ bottom: 96, right: 20 }}
+            mobileOffset={{ bottom: 88, left: 16, right: 16 }}
+          />
         </SiteCommandPaletteProvider>
         <Analytics />
       </body>

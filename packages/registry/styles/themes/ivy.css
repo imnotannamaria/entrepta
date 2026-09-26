@@ -1,17 +1,27 @@
 /* ============================================================
-   ivy theme — forest green, calm and grounded
+   ivy theme, forest green, calm and grounded
    ============================================================ */
+
+/* --fg-on-brand is the ink for text on a --fg-brand fill (a primary button,
+   a solid badge, the status bar). --fg-brand-text is the ink for brand-colored
+   text on the canvas, a card or the --bg-surface-brand tint. Neither can be
+   derived from the brand, so each theme sets both. All of them clear WCAG AA
+   in both modes. Measure again after changing any value here. */
 
 :root {
   --fg-brand: #35a365;
   --fg-brand-hover: #4cba7c;
+  --fg-on-brand: #09090b;
+  --fg-brand-text: #4cba7c;
   --bg-surface-brand: rgba(53, 163, 101, 0.14);
   --ring: rgba(53, 163, 101, 0.45);
 }
 
 :root[data-mode="light"] {
-  --fg-brand: #1e8350;
-  --fg-brand-hover: #2a9760;
-  --bg-surface-brand: rgba(30, 131, 80, 0.08);
-  --ring: rgba(30, 131, 80, 0.4);
+  --fg-brand: #258a50;
+  --fg-brand-hover: #35a365;
+  --fg-on-brand: #09090b;
+  --fg-brand-text: #1e7142;
+  --bg-surface-brand: rgba(37, 138, 80, 0.08);
+  --ring: rgba(37, 138, 80, 0.4);
 }

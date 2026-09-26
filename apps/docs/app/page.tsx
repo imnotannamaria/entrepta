@@ -1,11 +1,23 @@
+import { OpenAgentsButton } from "@/components/agents-configurator";
 import { CommandPaletteTrigger } from "@/components/command-palette-trigger";
-import { HomeIdePreview } from "@/components/home-ide-preview";
+import { CopyInit, HeroStats, HomeShowcase, ThemeRow } from "@/components/home-hero";
 import { HomeInstall } from "@/components/home-install";
+import { HomeSection, SectionHead, SpecList } from "@/components/home-section";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteNav } from "@/components/site-nav";
 import { SiteStatusBar } from "@/components/site-status-bar";
+import { SpotlightCard } from "@/components/spotlight-card";
+import { COMPONENT_INDEX, SECTIONS } from "@/lib/component-index";
+import { USED_BY } from "@/lib/links";
+import { tokenCount } from "@/lib/stats";
+import { THEMES } from "@/lib/theme";
+import { cn } from "@/lib/utils";
+import { CodeBlock } from "@entrepta/registry/content/code-block";
+import { Diamond } from "@entrepta/registry/content/diamond";
+import { Reveal } from "@entrepta/registry/motion/reveal";
+import { RollingNumber } from "@entrepta/registry/motion/rolling-number";
 import { Badge } from "@entrepta/registry/primitives/badge";
-import { Button } from "@entrepta/registry/primitives/button";
+import { buttonVariants } from "@entrepta/registry/primitives/button-variants";
 import {
   Card,
   CardComment,
@@ -17,7 +29,26 @@ import {
   CardMeta,
   CardTitle,
 } from "@entrepta/registry/primitives/card";
+import { Kbd } from "@entrepta/registry/primitives/kbd";
+import { Switch } from "@entrepta/registry/primitives/switch";
+import { Tabs, TabsList, TabsTrigger } from "@entrepta/registry/primitives/tabs";
+import type { Icon } from "@phosphor-icons/react";
+import {
+  BellSimpleIcon,
+  CheckIcon,
+  CubeIcon,
+  FileMdIcon,
+  FileTextIcon,
+  LayoutIcon,
+  ListBulletsIcon,
+  PaletteIcon,
+  RobotIcon,
+  SparkleIcon,
+  TerminalWindowIcon,
+  TextboxIcon,
+} from "@phosphor-icons/react/dist/ssr";
 import Link from "next/link";
+import type { CSSProperties } from "react";
 
 const PRINCIPLES = [
   {
@@ -41,8 +72,8 @@ const PRINCIPLES = [
   {
     num: "04",
     title: "Color with restraint.",
-    desc: "Brand accent shows up in CTAs, focus rings and featured cards. Emerald is exclusive to positive status. The rest is black, white, cold gray.",
-    tag: "violet-500 · emerald-400 · zinc-*",
+    desc: "The brand shows up in CTAs, focus and featured cards, with an ink measured for every theme. Cards sit a hair above a darker zinc. The rest is black, white and cold gray.",
+    tag: "--fg-brand · --fg-brand-text · zinc",
   },
   {
     num: "05",
@@ -52,153 +83,93 @@ const PRINCIPLES = [
   },
   {
     num: "06",
-    title: "Subtle motion, or none.",
-    desc: "Fast transitions (120–200ms), no springy theatrics. Loading uses shimmer or pulse. The product is not a demo reel.",
-    tag: "120ms · 200ms · 320ms",
+    title: "Motion with a job.",
+    desc: "Entrances, counters and light that follows the cursor, each one earning its place. Every animation has a reduced-motion path, the JavaScript ones included.",
+    tag: "whileInView · once · reduced motion",
   },
 ];
 
-const COMPONENT_CATEGORIES = [
-  {
-    label: "foundations",
-    num: "01–04",
-    name: "Foundations",
-    desc: "Color primitives and semantic tokens, type scale, spacing, radius, motion.",
-    count: "69 tokens",
-    href: "/docs/foundations/color",
-    preview: (
-      <div className="flex gap-1.5">
-        {["#09090B", "#7C6BFF", "#10B981", "#F59E0B", "#F43F5E"].map((c) => (
-          <span
-            key={c}
-            className="w-9 h-9 rounded-[var(--radius-sm)] border border-[var(--border-subtle)]"
-            style={{ background: c }}
-          />
-        ))}
-      </div>
-    ),
-  },
-  {
-    label: "primitives",
-    num: "08",
-    name: "Primitives",
-    desc: "Button, Badge, Input, Card, Dialog, Dropdown, Tooltip, Tabs.",
-    count: "8 components",
-    href: "/docs/components/button",
-    preview: (
-      <div className="flex gap-1.5 flex-wrap items-center">
-        <Badge variant="solid" color="brand">
-          FEATURED
-        </Badge>
-        <Badge variant="soft" color="success" dot>
-          shipped
-        </Badge>
-        <Badge variant="outline" color="neutral">
-          v0.1.0
-        </Badge>
-      </div>
-    ),
-  },
-  {
-    label: "layout",
-    num: "04",
-    name: "Layout",
-    desc: "StatusBar, TopNav, ThemeSwitcher, ModeToggle. The IDE chrome that frames the canvas.",
-    count: "4 components",
-    href: "/docs/components/status-bar",
-    preview: (
-      <div className="flex bg-[var(--bg-canvas)] border border-[var(--border-subtle)] rounded-[var(--radius-sm)] overflow-hidden font-mono text-[11px]">
-        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 text-[var(--fg-primary)] bg-[var(--bg-surface)] border-r border-[var(--border-subtle)]">
-          <span className="text-[var(--fg-brand)] text-[9px] leading-none">◆</span> home.tsx
-        </span>
-        <span className="px-3 py-1.5 text-[var(--fg-muted)] border-r border-[var(--border-subtle)]">
-          about.md
-        </span>
-        <span className="px-3 py-1.5 text-[var(--fg-muted)]">stack.ts</span>
-      </div>
-    ),
-  },
-  {
-    label: "feedback",
-    num: "03",
-    name: "Feedback",
-    desc: "Toast, Skeleton, CommandPalette. Interaction signals + loading states.",
-    count: "3 components",
-    href: "/docs/components/toast",
-    preview: (
-      <div className="px-3 py-2 bg-[var(--bg-surface)] border border-[var(--border-subtle)] border-l-2 border-l-[var(--status-success)] rounded-[var(--radius-md)] font-mono text-[11px] shadow-[0_4px_12px_rgba(0,0,0,0.3)]">
-        <div className="text-[var(--fg-primary)] text-[12px] mb-0.5">Build passed</div>
-        <div className="font-sans text-[11px] text-[var(--fg-secondary)]">
-          12 components compiled in 1.4s
+/** A preview per docs section. Names and counts come from the component index. */
+const SECTION_PREVIEWS: Record<(typeof SECTIONS)[number], React.ReactNode> = {
+  Primitives: (
+    <div className="flex flex-wrap items-center gap-1.5">
+      <Badge variant="solid" color="brand">
+        FEATURED
+      </Badge>
+      <Badge variant="soft" color="success" dot>
+        shipped
+      </Badge>
+      <Badge variant="outline" color="neutral">
+        v2.0.0
+      </Badge>
+    </div>
+  ),
+  Forms: (
+    <div className="flex flex-col gap-2">
+      <span className="inline-flex items-center gap-1.5 font-mono text-mono-xs uppercase tracking-[0.08em] text-[var(--fg-muted)]">
+        <Diamond /> email <span className="text-[var(--fg-brand)]">*</span>
+      </span>
+      <Switch label="send me a copy" defaultChecked />
+    </div>
+  ),
+  Layout: (
+    <div className="overflow-hidden rounded-[var(--radius-sm)] border border-[var(--border-subtle)]">
+      <Tabs defaultValue="home">
+        <TabsList aria-label="Example files">
+          <TabsTrigger value="home">home.tsx</TabsTrigger>
+          <TabsTrigger value="about">about.md</TabsTrigger>
+          <TabsTrigger value="stack">stack.ts</TabsTrigger>
+        </TabsList>
+      </Tabs>
+    </div>
+  ),
+  Content: (
+    <CodeBlock
+      variant="terminal"
+      language="bash"
+      showCopy={false}
+      size="sm"
+      code="npx @entrepta/cli@latest add code-block"
+    />
+  ),
+  Feedback: (
+    <div className="flex items-start gap-3 rounded-[var(--radius-md)] border border-[var(--border-strong)] bg-[var(--bg-overlay)] p-3 font-mono shadow-[var(--shadow-card-hover)] [background-image:radial-gradient(140%_120%_at_0%_0%,color-mix(in_srgb,var(--status-success)_12%,transparent),transparent_55%)]">
+      <span className="grid size-6 shrink-0 place-items-center rounded-[var(--radius-sm)] bg-[var(--status-success-soft)] text-[var(--status-success-fg)]">
+        <CheckIcon aria-hidden size={13} weight="bold" />
+      </span>
+      <div className="flex flex-col gap-0.5 pt-0.5">
+        <div className="text-mono-md text-[var(--fg-primary)]">Build passed</div>
+        <div className="font-sans text-mono-sm text-[var(--fg-secondary)]">
+          {COMPONENT_INDEX.length} components compiled in 1.4s
         </div>
       </div>
-    ),
-  },
-  {
-    label: "content",
-    num: "01",
-    name: "Content",
-    desc: "CodeBlock. Snippets with macOS chrome, language label and a one-click copy.",
-    count: "1 component",
-    href: "/docs/components/code-block",
-    preview: (
-      <div className="rounded-[var(--radius-sm)] border border-[var(--border-subtle)] bg-[var(--bg-surface)] overflow-hidden font-mono text-[11px]">
-        <div className="flex items-center gap-2 px-3 py-1.5 bg-black/30 border-b border-[var(--border-subtle)]">
-          <span className="w-2 h-2 rounded-full bg-[var(--status-error)] opacity-60" />
-          <span className="w-2 h-2 rounded-full bg-[var(--status-warning)] opacity-60" />
-          <span className="w-2 h-2 rounded-full bg-[var(--status-success)] opacity-60" />
-          <span className="ml-auto text-[10px] uppercase tracking-[0.08em] text-[var(--fg-brand)]">
-            bash
-          </span>
-        </div>
-        <div className="px-3 py-2 text-[var(--fg-secondary)]">
-          <span className="text-[var(--fg-brand)]">$</span> npx @entrepta/cli@latest add code-block
-        </div>
-      </div>
-    ),
-  },
-  {
-    label: "themes",
-    num: "06",
-    name: "Themes",
-    desc: "Six presets. One CLI flag to switch. Same tokens, different personality.",
-    count: "6 presets",
-    href: "/docs/themes",
-    preview: (
-      <div className="flex gap-2">
-        {[
-          { c: "#7C6BFF", n: "entrepta" },
-          { c: "#CC2E36", n: "blossom" },
-          { c: "#FF8213", n: "marmalade" },
-          { c: "#E85A8A", n: "julia" },
-          { c: "#35A365", n: "ivy" },
-          { c: "#2563EB", n: "bosco" },
-        ].map((t) => (
-          <span
-            key={t.n}
-            title={t.n}
-            className="w-6 h-6 rounded-full border border-[var(--border-subtle)]"
-            style={{ background: t.c }}
-          />
-        ))}
-      </div>
-    ),
-  },
-  {
-    label: "cli",
-    num: "02",
-    name: "CLI",
-    desc: "npx @entrepta/cli@latest init · add. Copy-paste without the clipboard.",
-    count: "2 commands",
-    href: "/docs/cli",
-    preview: (
-      <div className="px-3 py-2 bg-[var(--bg-canvas)] border border-[var(--border-subtle)] rounded-[var(--radius-sm)] font-mono text-[11px] text-[var(--fg-secondary)]">
-        <span className="text-[var(--fg-muted)]">$</span> npx{" "}
-        <span className="text-[var(--fg-brand)]">@entrepta/cli@latest</span> add button
-      </div>
-    ),
-  },
-];
+    </div>
+  ),
+  Motion: (
+    <div className="flex items-baseline gap-3 font-mono text-mono-sm text-[var(--fg-muted)]">
+      <RollingNumber
+        value={128}
+        height={40}
+        className="font-serif text-display-md text-[var(--fg-primary)]"
+      />
+      repos shipped
+    </div>
+  ),
+};
+
+/** What each section's card label shows in place of the ◆. */
+const SECTION_ICONS: Record<(typeof SECTIONS)[number], Icon> = {
+  Primitives: CubeIcon,
+  Forms: TextboxIcon,
+  Layout: LayoutIcon,
+  Content: FileTextIcon,
+  Feedback: BellSimpleIcon,
+  Motion: SparkleIcon,
+};
+
+const SECTION_FIRST_PAGE = Object.fromEntries(
+  SECTIONS.map((section) => [section, COMPONENT_INDEX.find((c) => c.section === section)?.slug])
+);
 
 const INSTALL_STEPS = [
   {
@@ -219,9 +190,11 @@ const INSTALL_STEPS = [
 ];
 
 const HERO_STATS = [
-  { dt: "tokens", dd: "69" },
-  { dt: "components", dd: "14" },
-  { dt: "themes", dd: "6" },
+  { dt: "components", dd: String(COMPONENT_INDEX.length) },
+  { dt: "themes", dd: String(THEMES.length) },
+  { dt: "tokens", dd: String(tokenCount()) },
+  // every theme in dark and light, each ink measured by a test
+  { dt: "AA pairs", dd: String(THEMES.length * 2) },
 ];
 
 export default function Home() {
@@ -231,88 +204,121 @@ export default function Home() {
 
       <main id="main-content" tabIndex={-1} className="pt-14 pb-10 sm:pb-16">
         {/* ── HERO ── */}
-        <section className="max-w-[1280px] mx-auto px-6 sm:px-12 pt-20 sm:pt-28 pb-16 grid grid-cols-1 lg:grid-cols-[1fr_440px] gap-16 items-start">
-          <div>
-            <div className="font-mono text-[11px] text-[var(--fg-muted)] mb-6 inline-flex items-center gap-3 uppercase tracking-[0.06em]">
-              <span>design system</span>
-              <span className="border border-[var(--border-subtle)] rounded-[3px] px-1.5 py-0.5 text-[var(--fg-brand)] normal-case tracking-normal">
-                v1.0
-              </span>
-              <span>by anna maria</span>
-            </div>
-
-            <h1 className="font-serif text-[clamp(40px,6vw,80px)] leading-[1.02] font-normal tracking-[-0.02em] text-[var(--fg-primary)] mb-8">
-              A personal <em className="italic text-[var(--fg-brand)]">design system</em>,<br />
-              posed as an <span className="text-[var(--fg-muted)]">IDE.</span>
-            </h1>
-
-            <p className="font-sans text-base sm:text-lg text-[var(--fg-secondary)] leading-relaxed max-w-xl mb-10">
-              <strong className="text-[var(--fg-primary)] font-medium">entrepta</strong> is a
-              dark-first component library you copy into your repo. Foundations, primitives, layout
-              and feedback components. Built around editor metaphors: tabs, command palette, status
-              bar, file paths, inline comments, shell prompts.
-            </p>
-
-            <div className="flex flex-wrap gap-3 mb-12">
-              <Link href="/docs/components">
-                <Button size="lg">
-                  browse components <span aria-hidden>→</span>
-                </Button>
-              </Link>
-              <Link href="#install">
-                <Button variant="command" size="lg">
-                  npx @entrepta/cli@latest init
-                </Button>
-              </Link>
-              <CommandPaletteTrigger />
-            </div>
-
-            <dl className="grid grid-cols-3 gap-3">
-              {HERO_STATS.map((s) => (
-                <div
-                  key={s.dt}
-                  className="border border-[var(--border-subtle)] rounded-[var(--radius-sm)] p-3"
+        <section className="relative overflow-hidden">
+          {/* a dot grid that fades out from the top */}
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0 [background-image:radial-gradient(var(--border-strong)_1px,transparent_1px)] [background-size:24px_24px] [mask-image:radial-gradient(ellipse_70%_60%_at_50%_0%,#000_30%,transparent_100%)]"
+          />
+          <div className="relative mx-auto max-w-[1280px] px-4 pt-16 pb-16 sm:px-12 sm:pt-24">
+            <div className="mx-auto flex max-w-4xl flex-col items-center text-center">
+              <Link
+                href="/docs/migrating-to-v2"
+                className="group mb-8 inline-flex items-center gap-2 rounded-full border border-[var(--border-subtle)] bg-[var(--bg-card)] py-1 pr-3 pl-1.5 font-mono text-mono-sm text-[var(--fg-secondary)] transition-colors hover:border-[var(--border-brand)] hover:text-[var(--fg-primary)]"
+              >
+                <Badge variant="solid" color="brand" size="sm" className="rounded-full">
+                  v2.0
+                </Badge>
+                {`${COMPONENT_INDEX.length} components · ${THEMES.length} themes · motion`}
+                <span
+                  aria-hidden
+                  className="text-[var(--fg-brand-text)] transition-transform group-hover:translate-x-0.5"
                 >
-                  <dt className="font-mono text-[10px] text-[var(--fg-muted)] uppercase tracking-[0.08em] mb-1">
-                    {s.dt}
-                  </dt>
-                  <dd className="font-mono text-sm text-[var(--fg-primary)]">{s.dd}</dd>
-                </div>
-              ))}
-            </dl>
-          </div>
+                  →
+                </span>
+              </Link>
 
-          <HomeIdePreview />
+              <h1 className="m-0 mb-7 font-serif text-display-md font-normal text-[var(--fg-primary)] sm:text-display-lg lg:text-display-xl">
+                {/* CSS, not TypeIn: the heading is the first thing on screen, so it fades in
+                    before hydration and is there with JavaScript off */}
+                <span
+                  className="type-fade block"
+                  style={{ "--type-delay": "0.05s" } as CSSProperties}
+                >
+                  A design system,
+                </span>
+                <em
+                  className="type-fade block italic text-[var(--fg-brand)]"
+                  style={{ "--type-delay": "0.22s" } as CSSProperties}
+                >
+                  posed as an IDE.
+                </em>
+              </h1>
+
+              <p className="m-0 mb-10 max-w-2xl text-balance font-sans text-body-lg text-[var(--fg-secondary)] sm:text-heading-md sm:font-normal">
+                <strong className="font-medium text-[var(--fg-primary)]">entrepta</strong> is a
+                dark-first React library you copy into your repo: tabs, a command palette, a status
+                bar, serif italic next to mono. Every ink is measured in six themes.
+              </p>
+
+              <div className="mb-10 flex flex-wrap items-center justify-center gap-3">
+                <Link href="/docs/components" className={buttonVariants({ size: "lg" })}>
+                  browse components <span aria-hidden>→</span>
+                </Link>
+                <CopyInit />
+                <CommandPaletteTrigger />
+              </div>
+
+              <ThemeRow />
+            </div>
+
+            <div className="mt-16 sm:mt-20">
+              <Reveal>
+                <HomeShowcase />
+              </Reveal>
+            </div>
+
+            <div className="mt-6">
+              <HeroStats stats={HERO_STATS} />
+            </div>
+
+            <p className="mt-6 text-center font-mono text-mono-sm text-[var(--fg-muted)]">
+              in use at{" "}
+              {USED_BY.map((u, i) => (
+                <span key={u.name}>
+                  {i > 0 && " · "}
+                  <a
+                    href={u.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-[var(--fg-secondary)] underline-offset-4 hover:text-[var(--fg-primary)] hover:underline"
+                  >
+                    {u.name} ↗
+                  </a>
+                </span>
+              ))}
+            </p>
+          </div>
         </section>
 
         {/* ── INSTALL ── */}
-        <section
-          id="install"
-          className="max-w-[1280px] mx-auto px-6 sm:px-12 py-20 border-t border-[var(--border-subtle)]"
-        >
-          <div className="mb-10">
-            <div className="font-mono text-[11px] text-[var(--fg-brand)] uppercase tracking-[0.08em] mb-3">
-              · getting started
-            </div>
-            <h2 className="font-serif text-[clamp(32px,4vw,56px)] font-normal leading-tight tracking-tight text-[var(--fg-primary)]">
-              <em className="italic text-[var(--fg-brand)]">Three</em> commands.
-              <br />
-              <span className="text-[var(--fg-muted)]">You own the code.</span>
-            </h2>
-            <p className="mt-4 font-sans text-base text-[var(--fg-secondary)] max-w-lg leading-relaxed">
-              entrepta ships as CSS tokens + copy-paste components. No runtime SDK, no telemetry in
-              the components you copy. Drop it into any Next.js project and start shipping.
-            </p>
-          </div>
+        <HomeSection id="install">
+          <SectionHead
+            eyebrow="getting started"
+            title={
+              <>
+                <em>Three</em> commands.
+                <br />
+                <span className="text-[var(--fg-muted)]">You own the code.</span>
+              </>
+            }
+            description={
+              <>
+                entrepta ships as CSS tokens and copy-paste components. No runtime SDK and no
+                telemetry in what you copy. Drop it into a Next.js or Vite project and start
+                shipping.
+              </>
+            }
+          />
 
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-6">
             <HomeInstall steps={INSTALL_STEPS} />
 
             <Card>
               <CardHeader>
-                <CardLabel>@entrepta/cli</CardLabel>
+                <CardLabel icon={TerminalWindowIcon}>@entrepta/cli</CardLabel>
                 <Badge variant="soft" color="brand">
-                  v1.0.1
+                  v2.0.0
                 </Badge>
               </CardHeader>
               <CardContent className="flex flex-col gap-3">
@@ -321,11 +327,11 @@ export default function Home() {
                   { k: "deps", v: "react 19+" },
                   { k: "ships", v: "css vars · components" },
                   { k: "license", v: "MIT" },
-                  { k: "themes", v: "6 presets" },
+                  { k: "themes", v: `${THEMES.length} presets, fixed or at runtime` },
                 ].map((r, i) => (
                   <div
                     key={r.k}
-                    className={`flex items-center justify-between font-mono text-[12px] ${
+                    className={`flex items-center justify-between font-mono text-mono-sm ${
                       i > 0 ? "border-t border-[var(--border-subtle)] pt-3" : ""
                     }`}
                   >
@@ -338,77 +344,80 @@ export default function Home() {
                 <CardComment>mit · open source</CardComment>
                 <Link
                   href="/docs"
-                  className="text-[var(--fg-brand)] hover:opacity-80 transition-opacity"
+                  className="text-[var(--fg-brand-text)] hover:opacity-80 transition-opacity"
                 >
                   read the docs ↗
                 </Link>
               </CardFooter>
             </Card>
           </div>
-        </section>
+        </HomeSection>
 
         {/* ── PRINCIPLES ── */}
-        <section
-          id="principles"
-          className="max-w-[1280px] mx-auto px-6 sm:px-12 py-20 border-t border-[var(--border-subtle)]"
-        >
-          <div className="flex items-start justify-between mb-12 gap-6">
-            <h2 className="font-serif text-[clamp(32px,4vw,56px)] font-normal leading-tight tracking-tight text-[var(--fg-primary)]">
-              <em className="italic text-[var(--fg-brand)]">Six</em> principles.
-              <br />
-              One product personality.
-            </h2>
-            <span className="font-mono text-[11px] text-[var(--fg-muted)] hidden sm:inline-block mt-2 uppercase tracking-[0.08em]">
-              section 1.2 · brief
-            </span>
-          </div>
+        <HomeSection id="principles">
+          <SectionHead
+            title={
+              <>
+                <em>Six</em> principles.
+                <br />
+                One product personality.
+              </>
+            }
+            aside={
+              <span className="font-mono text-mono-sm uppercase tracking-[0.08em] text-[var(--fg-muted)]">
+                section 1.2 · brief
+              </span>
+            }
+          />
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {PRINCIPLES.map((p) => (
-              <Card key={p.num}>
-                <CardHeader>
-                  <CardLabel>principle {p.num}</CardLabel>
-                </CardHeader>
-                <CardTitle className="text-[20px]">{p.title}</CardTitle>
-                <CardDescription>{p.desc}</CardDescription>
-                <CardFooter>
-                  <CardComment>{p.tag}</CardComment>
-                </CardFooter>
-              </Card>
+            {PRINCIPLES.map((p, i) => (
+              <Reveal key={p.num} index={i}>
+                <Card className="h-full">
+                  <CardHeader>
+                    <CardLabel>principle {p.num}</CardLabel>
+                  </CardHeader>
+                  <CardTitle className="text-heading-md">{p.title}</CardTitle>
+                  <CardDescription>{p.desc}</CardDescription>
+                  <CardFooter>
+                    <CardComment>{p.tag}</CardComment>
+                  </CardFooter>
+                </Card>
+              </Reveal>
             ))}
           </div>
-        </section>
+        </HomeSection>
 
         {/* ── ACCESSIBILITY ── */}
-        <section
-          id="accessibility"
-          className="max-w-[1280px] mx-auto px-6 sm:px-12 py-20 border-t border-[var(--border-subtle)]"
-        >
+        <HomeSection id="accessibility">
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-12 items-start">
-            <div>
-              <div className="font-mono text-[11px] text-[var(--fg-brand)] uppercase tracking-[0.08em] mb-3">
-                · a11y
-              </div>
-              <h2 className="font-serif text-[clamp(32px,4vw,56px)] font-normal leading-tight tracking-tight text-[var(--fg-primary)]">
-                <em className="italic text-[var(--fg-brand)]">Accessible</em> by
-                <br />
-                <span className="text-[var(--fg-muted)]">default.</span>
-              </h2>
-              <p className="mt-4 font-sans text-base text-[var(--fg-secondary)] max-w-md leading-relaxed">
-                Built on Radix primitives so keyboard navigation, focus management, and ARIA
-                semantics come for free. The docs site adds the rest: skip links, live regions, and
-                motion that respects user preferences.
-              </p>
-            </div>
-            <ul className="flex flex-col gap-0 border-t border-[var(--border-subtle)]">
-              {[
+            <SectionHead
+              className="mb-0"
+              eyebrow="a11y"
+              title={
+                <>
+                  <em>Accessible</em> by
+                  <br />
+                  <span className="text-[var(--fg-muted)]">default.</span>
+                </>
+              }
+              description={
+                <>
+                  Built on Radix and native elements, so keyboard, focus and ARIA come for free.
+                  Every text color is measured against what it sits on, in every theme, and a test
+                  fails the build if one drops below AA.
+                </>
+              }
+            />
+            <SpecList
+              rows={[
                 {
                   k: "keyboard",
                   v: "every interactive element reachable & operable",
                 },
                 {
                   k: "focus",
-                  v: "visible 3px brand ring on every focusable surface",
+                  v: "a visible brand ring on links, buttons, fields and menu items",
                 },
                 {
                   k: "screen readers",
@@ -416,11 +425,11 @@ export default function Home() {
                 },
                 {
                   k: "skip link",
-                  v: "press Tab on any page → jump to main content",
+                  v: "press Tab on any page to jump to the main content",
                 },
                 {
                   k: "motion",
-                  v: "prefers-reduced-motion disables animations globally",
+                  v: "reduced motion stops CSS animations and every JS-driven one",
                 },
                 {
                   k: "live regions",
@@ -428,56 +437,43 @@ export default function Home() {
                 },
                 {
                   k: "contrast",
-                  v: "AA targets for body copy; brand reserved for emphasis",
+                  v: "every ink measured against AA in all 12 theme and mode pairs, by a test",
                 },
                 {
                   k: "dark + light",
                   v: "every theme ships in two modes; the user picks via data-mode",
                 },
-              ].map((row) => (
-                <li
-                  key={row.k}
-                  className="grid grid-cols-[140px_1fr] gap-4 items-baseline py-3 border-b border-[var(--border-subtle)] font-mono text-[12px]"
-                >
-                  <span className="text-[var(--fg-brand)] inline-flex items-center gap-1.5">
-                    <span aria-hidden className="text-[10px] leading-none">
-                      ◆
-                    </span>
-                    {row.k}
-                  </span>
-                  <span className="text-[var(--fg-secondary)] leading-relaxed">{row.v}</span>
-                </li>
-              ))}
-            </ul>
+              ]}
+            />
           </div>
-        </section>
+        </HomeSection>
 
         {/* ── SECURITY ── */}
-        <section
-          id="security"
-          className="max-w-[1280px] mx-auto px-6 sm:px-12 py-20 border-t border-[var(--border-subtle)]"
-        >
+        <HomeSection id="security">
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-12 items-start">
-            <div>
-              <div className="font-mono text-[11px] text-[var(--fg-brand)] uppercase tracking-[0.08em] mb-3">
-                · security
-              </div>
-              <h2 className="font-serif text-[clamp(32px,4vw,56px)] font-normal leading-tight tracking-tight text-[var(--fg-primary)]">
-                <em className="italic text-[var(--fg-brand)]">Audited</em> by
-                <br />
-                <span className="text-[var(--fg-muted)]">design.</span>
-              </h2>
-              <p className="mt-4 font-sans text-base text-[var(--fg-secondary)] max-w-md leading-relaxed">
-                entrepta ships as copy-paste source — no runtime SDK, no telemetry, no remote code.
-                The CLI guards against path traversal via aliases, the docs site sets a strict CSP
-                and the usual hardening headers, and dependencies stay tight and audited.
-              </p>
-            </div>
-            <ul className="flex flex-col gap-0 border-t border-[var(--border-subtle)]">
-              {[
+            <SectionHead
+              className="mb-0"
+              eyebrow="security"
+              title={
+                <>
+                  <em>Careful</em> by
+                  <br />
+                  <span className="text-[var(--fg-muted)]">design.</span>
+                </>
+              }
+              description={
+                <>
+                  entrepta ships as copy-paste source: no runtime SDK, no telemetry, no remote code.
+                  The CLI guards against path traversal via aliases, the docs site sets a strict CSP
+                  and the usual hardening headers, and dependencies stay few and justified.
+                </>
+              }
+            />
+            <SpecList
+              rows={[
                 {
                   k: "copy-paste",
-                  v: "components land in your repo as plain source — no runtime to compromise",
+                  v: "components land in your repo as plain source, with no runtime to compromise",
                 },
                 {
                   k: "no runtime telemetry",
@@ -501,98 +497,222 @@ export default function Home() {
                 },
                 {
                   k: "deps minimal",
-                  v: "registry has 4 runtime deps, CLI has 3 — easy to keep audited",
+                  v: "few runtime deps, each one justified, so they stay easy to audit",
                 },
-              ].map((row) => (
-                <li
-                  key={row.k}
-                  className="grid grid-cols-[140px_1fr] gap-4 items-baseline py-3 border-b border-[var(--border-subtle)] font-mono text-[12px]"
-                >
-                  <span className="text-[var(--fg-brand)] inline-flex items-center gap-1.5">
-                    <span aria-hidden className="text-[10px] leading-none">
-                      ◆
-                    </span>
-                    {row.k}
-                  </span>
-                  <span className="text-[var(--fg-secondary)] leading-relaxed">{row.v}</span>
-                </li>
-              ))}
-            </ul>
+              ]}
+            />
           </div>
-        </section>
+        </HomeSection>
 
         {/* ── COMPONENTS PREVIEW ── */}
-        <section className="max-w-[1280px] mx-auto px-6 sm:px-12 py-20 border-t border-[var(--border-subtle)]">
-          <div className="flex items-end justify-between mb-10 gap-6">
-            <h2 className="font-serif text-[clamp(32px,4vw,56px)] font-normal leading-tight tracking-tight text-[var(--fg-primary)]">
-              <em className="italic text-[var(--fg-brand)]">What's</em> inside.{" "}
-              <span className="text-[var(--fg-muted)]">Seven categories.</span>
-            </h2>
-            <Link href="/docs/components" className="hidden sm:inline-block shrink-0">
-              <Button variant="ghost" size="sm">
+        <HomeSection>
+          <SectionHead
+            title={
+              <>
+                <em>What's</em> inside.{" "}
+                <span className="text-[var(--fg-muted)]">
+                  {COMPONENT_INDEX.length} components, {SECTIONS.length} sections.
+                </span>
+              </>
+            }
+            aside={
+              <Link
+                href="/docs/components"
+                className={cn(buttonVariants({ variant: "ghost", size: "sm" }), "shrink-0")}
+              >
                 browse all ↗
-              </Button>
-            </Link>
-          </div>
+              </Link>
+            }
+          />
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {COMPONENT_CATEGORIES.map((cat) => (
-              <Link key={cat.label} href={cat.href} className="group block">
-                <Card className="h-full hover:border-[var(--fg-brand)]/40 transition-colors">
-                  <CardHeader>
-                    <CardLabel>{cat.label}</CardLabel>
-                    <CardMeta>{cat.num}</CardMeta>
-                  </CardHeader>
-                  <CardTitle className="text-[20px]">{cat.name}</CardTitle>
-                  <CardDescription>{cat.desc}</CardDescription>
-                  <CardContent>{cat.preview}</CardContent>
-                  <CardFooter>
-                    <CardComment>{cat.count}</CardComment>
-                    <span className="text-[var(--fg-brand)] transition-transform group-hover:translate-x-0.5">
-                      →
-                    </span>
-                  </CardFooter>
-                </Card>
-              </Link>
-            ))}
+            {SECTIONS.map((section, i) => {
+              const items = COMPONENT_INDEX.filter((c) => c.section === section);
+              return (
+                <Reveal key={section} index={i}>
+                  {/* the title's link stretches over the card; the preview sits above it, so
+                      its real controls stay usable instead of nesting inside a link */}
+                  <Card className="group relative h-full focus-within:border-[var(--border-strong)]">
+                    <CardHeader>
+                      <CardLabel icon={SECTION_ICONS[section]}>{section.toLowerCase()}</CardLabel>
+                      <CardMeta>{`${items.length} ${items.length === 1 ? "component" : "components"}`}</CardMeta>
+                    </CardHeader>
+                    <CardTitle className="text-heading-md">
+                      <Link
+                        href={`/docs/components/${SECTION_FIRST_PAGE[section]}`}
+                        className="focus-ring rounded-[var(--radius-sm)] after:absolute after:inset-0 after:content-['']"
+                      >
+                        {section}
+                      </Link>
+                    </CardTitle>
+                    <CardDescription>{items.map((c) => c.title).join(", ")}.</CardDescription>
+                    <CardContent className="relative z-10">{SECTION_PREVIEWS[section]}</CardContent>
+                    <CardFooter>
+                      <CardComment>{`${section.toLowerCase()}/`}</CardComment>
+                      <span
+                        aria-hidden
+                        className="text-[var(--fg-brand)] transition-transform group-hover:translate-x-0.5"
+                      >
+                        →
+                      </span>
+                    </CardFooter>
+                  </Card>
+                </Reveal>
+              );
+            })}
+            <Reveal index={SECTIONS.length}>
+              <Card className="group relative h-full focus-within:border-[var(--border-strong)]">
+                <CardHeader>
+                  <CardLabel icon={PaletteIcon}>themes</CardLabel>
+                  <CardMeta>{`${THEMES.length} presets`}</CardMeta>
+                </CardHeader>
+                <CardTitle className="text-heading-md">
+                  <Link
+                    href="/docs/themes"
+                    className="focus-ring rounded-[var(--radius-sm)] after:absolute after:inset-0 after:content-['']"
+                  >
+                    Themes
+                  </Link>
+                </CardTitle>
+                <CardDescription>
+                  One brand per theme, two measured inks each. Fixed, or all six at runtime.
+                </CardDescription>
+                <CardContent>
+                  <div className="flex gap-2">
+                    {THEMES.map((t) => (
+                      <span
+                        key={t.id}
+                        title={t.label}
+                        className="h-6 w-6 rounded-full border border-[var(--border-subtle)]"
+                        style={{ background: t.color }}
+                      >
+                        <span className="sr-only">{t.label}</span>
+                      </span>
+                    ))}
+                  </div>
+                </CardContent>
+                <CardFooter>
+                  <CardComment>--themes=all</CardComment>
+                  <span
+                    aria-hidden
+                    className="text-[var(--fg-brand)] transition-transform group-hover:translate-x-0.5"
+                  >
+                    →
+                  </span>
+                </CardFooter>
+              </Card>
+            </Reveal>
           </div>
-        </section>
+        </HomeSection>
+
+        {/* ── FOR AGENTS ── */}
+        <HomeSection id="for-agents">
+          <SectionHead
+            eyebrow="for your coding agent"
+            title={
+              <>
+                <em>Readable</em> by agents,
+                <br />
+                <span className="text-[var(--fg-muted)]">not only people.</span>
+              </>
+            }
+            description={
+              <>
+                Claude Code, Cursor and Codex read Markdown better than a web page. Every docs page
+                has a Markdown version, and the site keeps an index an agent can start from.
+              </>
+            }
+          />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <Card className="h-full">
+              <CardHeader>
+                <CardLabel icon={RobotIcon}>AGENTS.md</CardLabel>
+                <CardMeta>for your project</CardMeta>
+              </CardHeader>
+              <CardTitle className="text-heading-md">Build the file for your repo.</CardTitle>
+              <CardDescription>
+                Pick the framework, theme and components. The file says how to install, where things
+                live and which token goes where.
+              </CardDescription>
+              <CardFooter>
+                <CardComment>header · AGENTS.md</CardComment>
+                <OpenAgentsButton className="cursor-pointer text-[var(--fg-brand-text)] hover:underline underline-offset-4">
+                  build yours →
+                </OpenAgentsButton>
+              </CardFooter>
+            </Card>
+            <Card className="h-full">
+              <CardHeader>
+                <CardLabel icon={FileMdIcon}>.md</CardLabel>
+                <CardMeta>every page</CardMeta>
+              </CardHeader>
+              <CardTitle className="text-heading-md">Add .md to any docs URL.</CardTitle>
+              <CardDescription>
+                The same page as Markdown. Each page also has a copy for agent button, and the
+                migration guide copies whole.
+              </CardDescription>
+              <CardFooter>
+                <CardComment>/docs/components/button.md</CardComment>
+                <a
+                  href="/docs/components/button.md"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-[var(--fg-brand-text)] hover:underline underline-offset-4"
+                >
+                  try it ↗
+                </a>
+              </CardFooter>
+            </Card>
+            <Card className="h-full">
+              <CardHeader>
+                <CardLabel icon={ListBulletsIcon}>llms.txt</CardLabel>
+                <CardMeta>the index</CardMeta>
+              </CardHeader>
+              <CardTitle className="text-heading-md">Start an agent at llms.txt.</CardTitle>
+              <CardDescription>
+                Every page, linked, in the llmstxt.org format. llms-full.txt is the whole site in
+                one file, ready to paste.
+              </CardDescription>
+              <CardFooter>
+                <CardComment>/llms-full.txt</CardComment>
+                <a
+                  href="/llms.txt"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-[var(--fg-brand-text)] hover:underline underline-offset-4"
+                >
+                  read llms.txt ↗
+                </a>
+              </CardFooter>
+            </Card>
+          </div>
+        </HomeSection>
 
         {/* ── CTA STRIP ── */}
-        <section className="max-w-[1280px] mx-auto px-6 sm:px-12 py-20 border-t border-[var(--border-subtle)]">
-          <Card
-            variant="featured"
-            className="p-12 sm:p-16 text-center bg-[radial-gradient(ellipse_at_top,var(--bg-surface-brand),transparent_60%)]"
-          >
+        <HomeSection>
+          <SpotlightCard variant="featured" className="p-12 sm:p-16 text-center">
             <div className="flex flex-col items-center gap-6">
-              <div className="font-mono text-[11px] uppercase tracking-[0.08em] text-[var(--fg-brand)]">
+              <div className="font-mono text-mono-sm uppercase tracking-[0.08em] text-[var(--fg-brand-text)]">
                 · ready to ship
               </div>
-              <h2 className="font-serif text-[clamp(36px,5vw,72px)] font-normal leading-none tracking-tight text-[var(--fg-primary)]">
+              <h2 className="m-0 font-serif text-display-lg font-normal text-[var(--fg-primary)] lg:text-display-xl">
                 Start <em className="italic text-[var(--fg-brand)]">building.</em>
               </h2>
-              <p className="font-sans text-base text-[var(--fg-secondary)] max-w-md leading-relaxed">
-                Every token, every component, every state. Laid out in the docs. Press{" "}
-                <kbd className="font-mono text-xs border border-[var(--border-strong)] rounded-[3px] px-1.5 py-0.5 text-[var(--fg-muted)]">
-                  ⌘K
-                </kbd>{" "}
+              <p className="font-sans text-body-lg text-[var(--fg-secondary)] max-w-md leading-relaxed">
+                Every token, every component, every state. Laid out in the docs. Press <Kbd>⌘K</Kbd>{" "}
                 to jump anywhere.
               </p>
               <div className="flex gap-3 justify-center flex-wrap mt-2">
-                <Link href="/docs/components">
-                  <Button size="lg">
-                    browse components <span aria-hidden>→</span>
-                  </Button>
+                <Link href="/docs/components" className={buttonVariants({ size: "lg" })}>
+                  browse components <span aria-hidden>→</span>
                 </Link>
-                <Link href="/docs/themes">
-                  <Button variant="secondary" size="lg">
-                    see themes
-                  </Button>
-                </Link>
+                <OpenAgentsButton className={buttonVariants({ variant: "secondary", size: "lg" })}>
+                  get your AGENTS.md
+                </OpenAgentsButton>
               </div>
             </div>
-          </Card>
-        </section>
+          </SpotlightCard>
+        </HomeSection>
 
         <SiteFooter />
       </main>

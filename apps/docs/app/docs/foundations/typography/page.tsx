@@ -1,4 +1,5 @@
 import { DocPageHeader, DocSubhead } from "@/components/doc-page-header";
+import { CodeBlock } from "@entrepta/registry/content/code-block";
 import {
   Card,
   CardComment,
@@ -10,92 +11,88 @@ import {
 
 const SCALE = [
   {
-    token: "display.xl",
+    token: "text-display-xl",
     spec: "80 / 76 · serif",
     sample: (
-      <span className="font-serif text-[80px] leading-[1] font-normal tracking-[-0.02em]">
+      <span className="font-serif text-display-xl font-normal">
         Anna <em className="italic">Maria</em>
       </span>
     ),
   },
   {
-    token: "display.lg",
+    token: "text-display-lg",
     spec: "64 / 64 · serif",
     sample: (
-      <span className="font-serif text-[64px] leading-[1] font-normal tracking-[-0.02em]">
+      <span className="font-serif text-display-lg font-normal">
         Build with <em className="italic text-[var(--fg-brand)]">entrepta.</em>
       </span>
     ),
   },
   {
-    token: "display.md",
+    token: "text-display-md",
     spec: "40 / 44 · serif",
     sample: (
-      <span className="font-serif text-[40px] leading-[44px] font-normal tracking-[-0.01em]">
+      <span className="font-serif text-display-md font-normal">
         One card. <span className="text-[var(--fg-muted)]">Four variants.</span>
       </span>
     ),
   },
   {
-    token: "heading.lg",
+    token: "text-heading-lg",
     spec: "24 / 31 · serif",
     sample: (
-      <span className="font-serif text-[24px] leading-[31px] text-[var(--fg-primary)]">
-        Project name
-      </span>
+      <span className="font-serif text-heading-lg text-[var(--fg-primary)]">Project name</span>
     ),
   },
   {
-    token: "heading.md",
-    spec: "20 / 28 · serif",
+    token: "text-heading-md",
+    spec: "18 / 25 · serif",
     sample: (
-      <span className="font-serif text-[20px] leading-[28px] text-[var(--fg-primary)]">
-        Latest post
-      </span>
+      <span className="font-serif text-heading-md text-[var(--fg-primary)]">Latest post</span>
     ),
   },
   {
-    token: "body.lg",
+    token: "text-body-lg",
     spec: "16 / 26 · sans",
     sample: (
-      <span className="font-sans text-[16px] leading-[26px] text-[var(--fg-secondary)]">
+      <span className="font-sans text-body-lg text-[var(--fg-secondary)]">
         A dark-first design system with editor metaphors. Copy-paste components into your repo, own
         the source.
       </span>
     ),
   },
   {
-    token: "body.md",
+    token: "text-body-md",
     spec: "14 / 21 · sans",
     sample: (
-      <span className="font-sans text-[14px] leading-[21px] text-[var(--fg-secondary)]">
+      <span className="font-sans text-body-md text-[var(--fg-secondary)]">
         A small headless CLI that copies typed components into your repo.
       </span>
     ),
   },
   {
-    token: "mono.md",
+    token: "text-mono-md",
     spec: "14 / 21 · mono",
     sample: (
-      <span className="font-mono text-[14px] leading-[21px] text-[var(--fg-primary)]">
+      <span className="font-mono text-mono-md text-[var(--fg-primary)]">
         $ npx @entrepta/cli@latest init
       </span>
     ),
   },
   {
-    token: "mono.sm",
+    token: "text-mono-sm",
     spec: "12 / 17 · mono",
     sample: (
-      <span className="font-mono text-[12px] leading-[17px] text-[var(--fg-secondary)]">
+      <span className="font-mono text-mono-sm text-[var(--fg-secondary)]">
         {"// strength day · low cardio"}
       </span>
     ),
   },
   {
-    token: "mono.xs",
-    spec: "11 / 14 · mono",
+    token: "text-mono-xs",
+    spec: "10 / 13 · mono",
     sample: (
-      <span className="font-mono text-[11px] leading-[14px] text-[var(--fg-muted)] uppercase tracking-[0.08em]">
+      <span className="font-mono text-mono-xs text-[var(--fg-muted)] uppercase tracking-[0.08em]">
         TypeScript · UTF-8 · Ln 1, Col 1
       </span>
     ),
@@ -107,7 +104,7 @@ const FAMILIES = [
     label: "serif · display",
     name: "Newsreader",
     sample: (
-      <span className="font-serif text-[48px] leading-none">
+      <span className="font-serif text-display-md leading-none">
         Aa<em className="italic">Bb</em>
       </span>
     ),
@@ -117,7 +114,7 @@ const FAMILIES = [
     label: "mono",
     name: "JetBrains Mono",
     sample: (
-      <span className="font-mono text-[48px] leading-none">
+      <span className="font-mono text-display-md leading-none">
         Aa<span className="text-[var(--fg-brand)]">{"{ }"}</span>
       </span>
     ),
@@ -126,7 +123,7 @@ const FAMILIES = [
   {
     label: "sans · body",
     name: "Inter",
-    sample: <span className="font-sans text-[48px] leading-none font-medium">Aa Bb</span>,
+    sample: <span className="font-sans text-display-md leading-none font-medium">Aa Bb</span>,
     comment: "long-form prose only",
   },
 ];
@@ -175,7 +172,7 @@ export default function TypographyPage() {
                 i > 0 ? "border-t border-[var(--border-subtle)]" : ""
               }`}
             >
-              <div className="flex flex-col gap-1 font-mono text-[11px]">
+              <div className="flex flex-col gap-1 font-mono text-mono-sm">
                 <span className="text-[var(--fg-primary)]">{s.token}</span>
                 <span className="text-[var(--fg-muted)]">{s.spec}</span>
               </div>
@@ -183,6 +180,38 @@ export default function TypographyPage() {
             </div>
           ))}
         </div>
+      </section>
+
+      <section className="mt-14">
+        <DocSubhead count="3 rules">Using the scale</DocSubhead>
+        <ul className="m-0 flex max-w-2xl list-none flex-col gap-3 p-0 font-mono text-mono-sm text-[var(--fg-secondary)]">
+          <li>
+            <span className="text-[var(--fg-primary)]">A step is a size, not a font.</span> Each one
+            sets size and leading, and the display steps their tracking. Pair it with font-serif,
+            font-sans or font-mono where you use it.
+          </li>
+          <li>
+            <span className="text-[var(--fg-primary)]">Only these ten.</span> No arbitrary pixel
+            sizes and no Tailwind default steps. A test in the registry fails on both. Inline
+            fontSize is kept for glyphs such as ◆, at 18px or less.
+          </li>
+          <li>
+            <span className="text-[var(--fg-primary)]">Registered in cn.</span> Without it,
+            tailwind-merge reads text-mono-sm as a color and drops it next to
+            text-[var(--fg-muted)]. lib/utils.ts, which init writes, already has it.
+          </li>
+        </ul>
+        <CodeBlock
+          className="mt-6"
+          variant="terminal"
+          language="tsx"
+          filename="usage.tsx"
+          code={`<h2 className="font-serif text-display-md">Work</h2>
+<span className="font-mono text-mono-sm uppercase">latest post</span>
+
+/* or as a variable, in plain CSS */
+.label { font-size: var(--text-mono-sm); line-height: var(--text-mono-sm--line-height); }`}
+        />
       </section>
     </article>
   );

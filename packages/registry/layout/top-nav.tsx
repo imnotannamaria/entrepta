@@ -40,7 +40,7 @@ const TopNavLogo = React.forwardRef<HTMLDivElement, TopNavLogoProps>(
     <div
       ref={ref}
       className={cn(
-        "inline-flex items-center gap-2 font-mono text-[13px] text-[var(--fg-primary)]",
+        "inline-flex items-center gap-2 font-mono text-mono-md text-[var(--fg-primary)]",
         className
       )}
       {...props}
@@ -61,8 +61,8 @@ const TopNavLogoMark = React.forwardRef<HTMLSpanElement, TopNavLogoMarkProps>(
       className={cn(
         "inline-grid place-items-center shrink-0",
         "size-6 rounded-[var(--radius-sm)]",
-        "bg-[var(--fg-brand)] text-[var(--bg-canvas)]",
-        "font-serif italic text-sm leading-none",
+        "bg-[var(--fg-brand)] text-[var(--fg-on-brand)]",
+        "font-serif italic text-body-md leading-none",
         className
       )}
       {...props}
@@ -81,7 +81,7 @@ const TopNavBreadcrumb = React.forwardRef<HTMLDivElement, TopNavBreadcrumbProps>
       ref={ref}
       className={cn(
         "hidden sm:flex items-center gap-1.5",
-        "font-mono text-[13px] text-[var(--fg-muted)]",
+        "font-mono text-mono-md text-[var(--fg-muted)]",
         "[&_.here]:text-[var(--fg-primary)]",
         className
       )}
@@ -108,7 +108,7 @@ const TopNavMenu = React.forwardRef<HTMLElement, TopNavMenuProps>(
       ref={ref}
       className={cn(
         "hidden md:flex items-center gap-6",
-        "font-mono text-[12px] uppercase tracking-[0.06em]",
+        "font-mono text-mono-sm uppercase tracking-[0.06em]",
         className
       )}
       {...props}

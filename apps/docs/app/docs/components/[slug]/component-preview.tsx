@@ -1,6 +1,17 @@
 "use client";
 
+import { DEFAULT_MODE, DEFAULT_THEME, STORAGE_KEY_PREFIX, THEMES } from "@/lib/theme";
 import { CodeBlock } from "@entrepta/registry/content/code-block";
+import {
+  DisplayH2,
+  DocLabel,
+  Em,
+  Prose,
+  Section,
+  Strong,
+} from "@entrepta/registry/content/doc-parts";
+import { SectHead } from "@entrepta/registry/content/sect-head";
+import { ChromeMessage } from "@entrepta/registry/feedback/chrome-message";
 import {
   Command,
   CommandDialog,
@@ -12,8 +23,13 @@ import {
   CommandList,
   CommandSeparator,
 } from "@entrepta/registry/feedback/command-palette";
+import { PageLoading } from "@entrepta/registry/feedback/page-loading";
 import { Skeleton, SkeletonText } from "@entrepta/registry/feedback/skeleton";
-import { StatusBarItem, StatusBarSeparator } from "@entrepta/registry/layout/status-bar";
+import { ModeToggle } from "@entrepta/registry/layout/mode-toggle";
+import { PageOutline } from "@entrepta/registry/layout/page-outline";
+import { Sidebar } from "@entrepta/registry/layout/sidebar";
+import { StatusBar, StatusBarItem, StatusBarSeparator } from "@entrepta/registry/layout/status-bar";
+import { ThemeSwitcher } from "@entrepta/registry/layout/theme-switcher";
 import {
   TopNav,
   TopNavBreadcrumb,
@@ -23,6 +39,11 @@ import {
   TopNavMenu,
   TopNavSeparator,
 } from "@entrepta/registry/layout/top-nav";
+import { ArrowLink } from "@entrepta/registry/motion/arrow-link";
+import { Reveal } from "@entrepta/registry/motion/reveal";
+import { RollingNumber, useRollOnHover } from "@entrepta/registry/motion/rolling-number";
+import { Spotlight, useSpotlight } from "@entrepta/registry/motion/spotlight";
+import { TypeIn } from "@entrepta/registry/motion/type-in";
 import { Badge } from "@entrepta/registry/primitives/badge";
 import { Button } from "@entrepta/registry/primitives/button";
 import {
@@ -38,6 +59,7 @@ import {
   CardTerminalBody,
   CardTitle,
 } from "@entrepta/registry/primitives/card";
+import { Checkbox } from "@entrepta/registry/primitives/checkbox";
 import {
   Dialog,
   DialogContent,
@@ -50,16 +72,25 @@ import {
 } from "@entrepta/registry/primitives/dialog";
 import {
   DropdownMenu,
+  DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuDestructiveItem,
   DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
   DropdownMenuSeparator,
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@entrepta/registry/primitives/dropdown";
+import { Field } from "@entrepta/registry/primitives/field";
+import { FilterPill } from "@entrepta/registry/primitives/filter-pill";
 import { Input } from "@entrepta/registry/primitives/input";
+import { Kbd } from "@entrepta/registry/primitives/kbd";
+import { Switch } from "@entrepta/registry/primitives/switch";
+import { TabNav, TabNavLink } from "@entrepta/registry/primitives/tabs";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@entrepta/registry/primitives/tabs";
+import { Textarea } from "@entrepta/registry/primitives/textarea";
 import {
   Tooltip,
   TooltipContent,
@@ -67,26 +98,87 @@ import {
   TooltipShortcut,
   TooltipTrigger,
 } from "@entrepta/registry/primitives/tooltip";
-import { FileCode, GitBranch, Home, Moon, Settings, Sun, Zap } from "lucide-react";
+import {
+  ArrowRightIcon,
+  BracketsCurlyIcon,
+  CaretDownIcon,
+  CheckIcon,
+  FileCodeIcon,
+  FileMdIcon,
+  FileTsxIcon,
+  GearIcon,
+  GitBranchIcon,
+  HouseIcon,
+  HouseLineIcon,
+  InfoIcon,
+  MagnifyingGlassIcon,
+  PlusIcon,
+  RocketLaunchIcon,
+  SignOutIcon,
+  SparkleIcon,
+  TagIcon,
+  TerminalWindowIcon,
+  UserIcon,
+  UserSquareIcon,
+  WarningIcon,
+  XIcon,
+} from "@phosphor-icons/react";
 import { useState } from "react";
 import { toast } from "sonner";
+
+/** One labelled row of a preview. */
+function Demo({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <div className="flex flex-col gap-2.5">
+      <span className="font-mono text-mono-xs uppercase tracking-[0.08em] text-[var(--fg-muted)]">
+        {label}
+      </span>
+      <div className="flex flex-wrap items-center gap-3">{children}</div>
+    </div>
+  );
+}
 
 function ButtonPreview() {
   const [loading, setLoading] = useState(false);
   return (
-    <div className="flex flex-col gap-6 w-full max-w-md">
-      <div className="flex flex-wrap items-center gap-3">
+    <div className="flex w-full max-w-xl flex-col gap-7">
+      <Demo label="variants">
         <Button>./projects.sh →</Button>
         <Button variant="secondary">$ npx @entrepta/cli@latest init</Button>
         <Button variant="ghost">cat contact.txt</Button>
-        <Button variant="command">npx @entrepta/cli@latest add button</Button>
-      </div>
-      <div className="flex flex-wrap items-center gap-3">
+        <Button variant="command">npx @entrepta/cli add button</Button>
+      </Demo>
+      <Demo label="with an icon">
+        <Button>
+          <RocketLaunchIcon aria-hidden size={14} weight="fill" /> deploy
+        </Button>
+        <Button variant="secondary">
+          <GitBranchIcon aria-hidden size={14} /> new branch
+        </Button>
+        <Button
+          variant="ghost"
+          className="[&_svg]:transition-transform hover:[&_svg]:translate-x-0.5"
+        >
+          read the docs <ArrowRightIcon aria-hidden size={14} />
+        </Button>
+      </Demo>
+      <Demo label="icon only">
+        <Button size="icon-sm" variant="ghost" aria-label="Search">
+          <MagnifyingGlassIcon aria-hidden size={14} />
+        </Button>
+        <Button size="icon-md" variant="secondary" aria-label="Settings">
+          <GearIcon aria-hidden size={16} />
+        </Button>
+        <Button size="icon-lg" aria-label="Add a component">
+          <PlusIcon aria-hidden size={18} weight="bold" />
+        </Button>
+      </Demo>
+      <Demo label="sizes">
         <Button size="sm">small 32h</Button>
         <Button size="md">medium 40h</Button>
         <Button size="lg">large 48h</Button>
-      </div>
-      <div className="flex flex-wrap items-center gap-3">
+      </Demo>
+      <Demo label="states">
         <Button
           loading={loading}
           onClick={() => {
@@ -94,48 +186,60 @@ function ButtonPreview() {
             setTimeout(() => setLoading(false), 2000);
           }}
         >
-          Click to load
+          click to load
         </Button>
-        <Button disabled>Disabled</Button>
-      </div>
+        <Button disabled>disabled</Button>
+      </Demo>
     </div>
   );
 }
 
 function BadgePreview() {
   const colors = ["neutral", "brand", "success", "warning", "error", "info"] as const;
+  const icons = {
+    neutral: TagIcon,
+    brand: SparkleIcon,
+    success: CheckIcon,
+    warning: WarningIcon,
+    error: XIcon,
+    info: InfoIcon,
+  } as const;
   return (
-    <div className="flex flex-col gap-4 w-full max-w-md">
-      <div className="flex flex-wrap items-center gap-2">
+    <div className="flex w-full max-w-xl flex-col gap-6">
+      {(["solid", "soft", "outline"] as const).map((variant) => (
+        <Demo key={variant} label={variant}>
+          {colors.map((color) => (
+            <Badge key={color} variant={variant} color={color}>
+              {color}
+            </Badge>
+          ))}
+        </Demo>
+      ))}
+      <Demo label="with an icon">
+        <Badge variant="soft" color="success" icon={CheckIcon}>
+          passing
+        </Badge>
+        <Badge variant="soft" color="error" icon={XIcon}>
+          failed
+        </Badge>
+        <Badge variant="outline" color="brand" icon={GitBranchIcon}>
+          main
+        </Badge>
+        <Badge variant="solid" color="brand" icon={SparkleIcon}>
+          NEW
+        </Badge>
         {colors.map((color) => (
-          <Badge key={color} variant="solid" color={color}>
+          <Badge key={color} size="sm" variant="soft" color={color} icon={icons[color]}>
             {color}
           </Badge>
         ))}
-      </div>
-      <div className="flex flex-wrap items-center gap-2">
-        {colors.map((color) => (
-          <Badge key={color} variant="soft" color={color}>
-            {color}
-          </Badge>
-        ))}
-      </div>
-      <div className="flex flex-wrap items-center gap-2">
-        {colors.map((color) => (
-          <Badge key={color} variant="outline" color={color}>
-            {color}
-          </Badge>
-        ))}
-      </div>
-      <div className="flex flex-wrap items-center gap-2">
+      </Demo>
+      <Demo label="with a dot">
         <Badge variant="soft" color="success" dot>
           open to work
         </Badge>
         <Badge variant="soft" color="warning" dot>
           partial
-        </Badge>
-        <Badge variant="soft" color="error" dot>
-          error
         </Badge>
         <Badge variant="soft" color="info" dot>
           syncing
@@ -143,7 +247,7 @@ function BadgePreview() {
         <Badge variant="soft" color="neutral" dot>
           idle
         </Badge>
-      </div>
+      </Demo>
     </div>
   );
 }
@@ -177,7 +281,7 @@ function CardPreview() {
           Plain markdown beats <em>Notion</em>.
         </CardTitle>
         <CardDescription>
-          Two years of database PTSD, condensed into an opinionated rant about plain text and git.
+          Two years of notes moved out of a database and into plain text and git. What held up.
         </CardDescription>
         <CardFooter>
           <span>read →</span>
@@ -207,12 +311,12 @@ function CardPreview() {
       <Card variant="terminal">
         <CardTerminalBar>
           <CardLabel>install</CardLabel>
-          <CardMeta>v0.1.0</CardMeta>
+          <CardMeta>v2.0.0</CardMeta>
         </CardTerminalBar>
         <CardTerminalBody>
           <div>
             <span className="text-[var(--fg-muted)]">$</span> npx{" "}
-            <span className="text-[var(--fg-brand)]">@entrepta/cli@latest</span> init
+            <span className="text-[var(--fg-brand-text)]">@entrepta/cli@latest</span> init
           </div>
           <div>
             <span className="text-[var(--fg-muted)]">$</span> npx @entrepta/cli@latest add{" "}
@@ -230,10 +334,10 @@ function CardPreview() {
           </Badge>
         </CardHeader>
         <CardContent>
-          <div className="font-serif text-5xl text-[var(--fg-primary)] leading-none">
+          <div className="font-serif text-display-md text-[var(--fg-primary)] leading-none">
             <em className="italic text-[var(--fg-brand)]">11</em>
           </div>
-          <div className="font-mono text-xs text-[var(--fg-muted)] mt-1">repos shipped</div>
+          <div className="font-mono text-mono-sm text-[var(--fg-muted)] mt-1">repos shipped</div>
         </CardContent>
         <CardFooter>
           <CardComment>consistent</CardComment>
@@ -271,32 +375,37 @@ function DialogPreview() {
 }
 
 function DropdownPreview() {
+  const [wrap, setWrap] = useState(true);
+  const [panel, setPanel] = useState("terminal");
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="secondary">~/options ↓</Button>
+        <Button variant="secondary">
+          ~/options <CaretDownIcon aria-hidden size={12} />
+        </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent>
+      <DropdownMenuContent className="w-60">
         <DropdownMenuLabel>account</DropdownMenuLabel>
         <DropdownMenuItem>
-          profile.tsx
+          <UserIcon aria-hidden size={14} /> profile.tsx
           <DropdownMenuShortcut>⌘P</DropdownMenuShortcut>
         </DropdownMenuItem>
         <DropdownMenuItem>
-          settings.json
+          <GearIcon aria-hidden size={14} /> settings.json
           <DropdownMenuShortcut>⌘,</DropdownMenuShortcut>
         </DropdownMenuItem>
-        <DropdownMenuItem>billing</DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuLabel>workspace</DropdownMenuLabel>
-        <DropdownMenuItem>
-          new project
-          <DropdownMenuShortcut>⌘N</DropdownMenuShortcut>
-        </DropdownMenuItem>
-        <DropdownMenuItem>switch theme</DropdownMenuItem>
+        <DropdownMenuLabel>view</DropdownMenuLabel>
+        <DropdownMenuCheckboxItem checked={wrap} onCheckedChange={setWrap}>
+          word wrap
+        </DropdownMenuCheckboxItem>
+        <DropdownMenuRadioGroup value={panel} onValueChange={setPanel}>
+          <DropdownMenuRadioItem value="terminal">terminal</DropdownMenuRadioItem>
+          <DropdownMenuRadioItem value="problems">problems</DropdownMenuRadioItem>
+        </DropdownMenuRadioGroup>
         <DropdownMenuSeparator />
         <DropdownMenuDestructiveItem>
-          rm -rf session
+          <SignOutIcon aria-hidden size={14} /> rm -rf session
           <DropdownMenuShortcut>⌘⇧Q</DropdownMenuShortcut>
         </DropdownMenuDestructiveItem>
       </DropdownMenuContent>
@@ -350,54 +459,104 @@ function TooltipPreview() {
 }
 
 function TabsPreview() {
+  const [route, setRoute] = useState("home");
+  const routes = [
+    { id: "home", name: "home.tsx", icon: HouseLineIcon },
+    { id: "about", name: "about.md", icon: UserSquareIcon },
+    { id: "blog", name: "blog/", icon: FileMdIcon },
+    { id: "projects", name: "projects/", icon: TerminalWindowIcon },
+  ];
   return (
-    <div className="w-full max-w-2xl border border-[var(--border-subtle)] rounded-[var(--radius-md)] overflow-hidden">
-      <Tabs defaultValue="home">
-        <TabsList>
-          <TabsTrigger value="home" onClose={() => {}}>
-            home.tsx
-          </TabsTrigger>
-          <TabsTrigger value="about" onClose={() => {}}>
-            about.md
-          </TabsTrigger>
-          <TabsTrigger value="stack" onClose={() => {}}>
-            stack.json
-          </TabsTrigger>
-          <TabsTrigger value="contact" onClose={() => {}}>
-            contact.txt
-          </TabsTrigger>
-        </TabsList>
-        <TabsContent value="home" className="p-5 font-mono text-[13px] text-[var(--fg-secondary)]">
-          <div>
-            <span className="text-[var(--fg-muted)]">{"// "}</span>landing page
-          </div>
-          <div className="mt-1">
-            <span className="text-[var(--fg-brand)]">export default</span> function Home()
-          </div>
-        </TabsContent>
-        <TabsContent
-          value="about"
-          className="p-5 font-sans text-[13px] text-[var(--fg-secondary)] leading-relaxed"
-        >
-          Engineer building a personal design system. Dark-first, IDE-style, opinionated.
-        </TabsContent>
-        <TabsContent value="stack" className="p-5 font-mono text-[13px] text-[var(--fg-secondary)]">
-          <div>
-            <span className="text-[var(--fg-muted)]">"framework":</span>{" "}
-            <span className="text-[var(--status-success-fg)]">"next-15"</span>
-          </div>
-          <div>
-            <span className="text-[var(--fg-muted)]">"react":</span>{" "}
-            <span className="text-[var(--status-success-fg)]">"19"</span>
-          </div>
-        </TabsContent>
-        <TabsContent
-          value="contact"
-          className="p-5 font-mono text-[13px] text-[var(--fg-secondary)]"
-        >
-          a2002aninha22@gmail.com
-        </TabsContent>
-      </Tabs>
+    <div className="flex w-full max-w-2xl flex-col gap-7">
+      <Demo label="with icons · hover one">
+        <div className="w-full overflow-hidden rounded-[var(--radius-md)] border border-[var(--border-subtle)]">
+          <Tabs defaultValue="home">
+            <TabsList>
+              <TabsTrigger value="home" icon={FileTsxIcon} onClose={() => {}}>
+                home.tsx
+              </TabsTrigger>
+              <TabsTrigger value="about" icon={FileMdIcon} onClose={() => {}}>
+                about.md
+              </TabsTrigger>
+              <TabsTrigger value="stack" icon={BracketsCurlyIcon} onClose={() => {}}>
+                stack.json
+              </TabsTrigger>
+            </TabsList>
+            <TabsContent
+              value="home"
+              className="p-5 font-mono text-mono-md text-[var(--fg-secondary)]"
+            >
+              <span className="text-[var(--fg-brand-text)]">export default</span> function Home()
+            </TabsContent>
+            <TabsContent
+              value="about"
+              className="p-5 font-sans text-body-md leading-relaxed text-[var(--fg-secondary)]"
+            >
+              Engineer building a personal design system. Dark-first, IDE-style, opinionated.
+            </TabsContent>
+            <TabsContent
+              value="stack"
+              className="p-5 font-mono text-mono-md text-[var(--fg-secondary)]"
+            >
+              <span className="text-[var(--fg-muted)]">"framework":</span>{" "}
+              <span className="text-[var(--status-success-fg)]">"next-15"</span>
+            </TabsContent>
+          </Tabs>
+        </div>
+      </Demo>
+
+      <Demo label="variant window · the title bar">
+        <div className="w-full overflow-hidden rounded-[var(--radius-md)] border border-[var(--border-subtle)]">
+          <TabNav
+            aria-label="Preview pages"
+            variant="window"
+            after={
+              <button
+                type="button"
+                aria-label="Open command palette"
+                className="focus-ring flex shrink-0 cursor-pointer items-center px-3 font-mono text-mono-md text-[var(--fg-muted)] transition-colors hover:text-[var(--fg-primary)]"
+              >
+                +
+              </button>
+            }
+            end={
+              <span className="flex items-center gap-1.5">
+                <span className="size-1.5 rounded-full bg-[var(--fg-brand)]" />
+                main
+              </span>
+            }
+          >
+            {routes.map((r) => (
+              <TabNavLink
+                key={r.id}
+                href={`#${r.id}`}
+                active={route === r.id}
+                icon={r.icon}
+                onClick={(e) => {
+                  e.preventDefault();
+                  setRoute(r.id);
+                }}
+                onClose={r.id !== "home" ? () => setRoute("home") : undefined}
+              >
+                {r.name}
+              </TabNavLink>
+            ))}
+          </TabNav>
+          <div className="sheen h-16 bg-[var(--bg-card)]" />
+        </div>
+      </Demo>
+
+      <Demo label="without icons · the ◆ marks the active tab">
+        <div className="w-full overflow-hidden rounded-[var(--radius-md)] border border-[var(--border-subtle)]">
+          <Tabs defaultValue="home">
+            <TabsList>
+              <TabsTrigger value="home">home.tsx</TabsTrigger>
+              <TabsTrigger value="about">about.md</TabsTrigger>
+              <TabsTrigger value="contact">contact.txt</TabsTrigger>
+            </TabsList>
+          </Tabs>
+        </div>
+      </Demo>
     </div>
   );
 }
@@ -405,27 +564,32 @@ function TabsPreview() {
 function StatusBarPreview() {
   return (
     <div className="w-full max-w-2xl border border-[var(--border-subtle)] rounded-[var(--radius-md)] overflow-hidden">
-      <div className="bg-[var(--bg-surface)] h-20 flex items-center justify-center">
-        <p className="font-mono text-xs text-[var(--fg-muted)]">page content</p>
+      <div className="sheen flex h-20 items-center justify-center bg-[var(--bg-card)]">
+        <p className="font-mono text-mono-sm text-[var(--fg-muted)]">page content</p>
       </div>
-      <div className="flex items-center justify-between gap-4 py-1.5 px-4 bg-[var(--fg-brand)] font-mono text-[11px] text-[var(--zinc-50)]">
-        <div className="flex items-center gap-4">
-          <StatusBarItem icon={<GitBranch style={{ width: 10, height: 10, strokeWidth: 1.5 }} />}>
-            main
-          </StatusBarItem>
-          <StatusBarSeparator />
-          <StatusBarItem>0 errors</StatusBarItem>
-          <StatusBarSeparator />
-          <StatusBarItem>2 warnings</StatusBarItem>
-        </div>
-        <div className="flex items-center gap-4">
-          <StatusBarItem>TypeScript</StatusBarItem>
-          <StatusBarSeparator />
-          <StatusBarItem>UTF-8</StatusBarItem>
-          <StatusBarSeparator />
-          <StatusBarItem>Ln 1, Col 1</StatusBarItem>
-        </div>
-      </div>
+      {/* flex overrides the bar's own hidden-below-640px, so the preview shows at every width */}
+      <StatusBar
+        position="static"
+        className="flex"
+        left={
+          <>
+            <StatusBarItem icon={<GitBranchIcon size={10} />}>main</StatusBarItem>
+            <StatusBarSeparator />
+            <StatusBarItem>0 errors</StatusBarItem>
+            <StatusBarSeparator />
+            <StatusBarItem>2 warnings</StatusBarItem>
+          </>
+        }
+        right={
+          <>
+            <StatusBarItem>TypeScript</StatusBarItem>
+            <StatusBarSeparator />
+            <StatusBarItem>UTF-8</StatusBarItem>
+            <StatusBarSeparator />
+            <StatusBarItem>Ln 1, Col 1</StatusBarItem>
+          </>
+        }
+      />
     </div>
   );
 }
@@ -463,69 +627,53 @@ function TopNavPreview() {
           </TopNavMenu>
         }
       />
-      <div className="bg-[var(--bg-surface)] h-20 flex items-center justify-center">
-        <p className="font-mono text-xs text-[var(--fg-muted)]">page content</p>
+      <div className="sheen flex h-20 items-center justify-center bg-[var(--bg-card)]">
+        <p className="font-mono text-mono-sm text-[var(--fg-muted)]">page content</p>
       </div>
     </div>
   );
 }
 
 function ToastPreview() {
+  const fire: [string, () => void][] = [
+    [
+      "success",
+      () => toast.success("Build passed", { description: "33 components compiled in 1.4s" }),
+    ],
+    [
+      "error",
+      () =>
+        toast.error("Type error in button.tsx", {
+          description: "Property 'variant' does not exist on type 'ButtonProps'",
+        }),
+    ],
+    [
+      "warning",
+      () =>
+        toast.warning("Deprecated token", {
+          description: "--fg-brand-on-tint is now --fg-brand-text",
+        }),
+    ],
+    [
+      "info",
+      () => toast.info("Update available", { description: "entrepta 2.0 is ready to install" }),
+    ],
+    [
+      "with action",
+      () =>
+        toast("Snapshot saved", {
+          description: "~/projects/entrepta/snapshot.json",
+          action: { label: "undo", onClick: () => toast("Snapshot restored") },
+        }),
+    ],
+  ];
   return (
     <div className="flex flex-wrap gap-3">
-      <Button
-        variant="secondary"
-        size="sm"
-        onClick={() =>
-          toast.success("Build passed", {
-            description: "12 components compiled in 1.4s",
-          })
-        }
-      >
-        success
-      </Button>
-      <Button
-        variant="secondary"
-        size="sm"
-        onClick={() =>
-          toast.error("Type error in button.tsx", {
-            description: "Property 'variant' does not exist on type 'ButtonProps'",
-          })
-        }
-      >
-        error
-      </Button>
-      <Button
-        variant="secondary"
-        size="sm"
-        onClick={() =>
-          toast.warning("Deprecated API", {
-            description: "useTheme() will be removed in v1.0. Use ThemeProvider instead.",
-          })
-        }
-      >
-        warning
-      </Button>
-      <Button
-        variant="secondary"
-        size="sm"
-        onClick={() =>
-          toast.info("Update available", {
-            description: "entrepta@0.2.0 is ready to install",
-          })
-        }
-      >
-        info
-      </Button>
-      <Button
-        variant="secondary"
-        size="sm"
-        onClick={() =>
-          toast("Snapshot saved", { description: "~/projects/entrepta/snapshot.json" })
-        }
-      >
-        default
-      </Button>
+      {fire.map(([label, run]) => (
+        <Button key={label} variant="secondary" size="sm" onClick={run}>
+          {label}
+        </Button>
+      ))}
     </div>
   );
 }
@@ -543,75 +691,55 @@ function SkeletonPreview() {
   );
 }
 
+function PaletteBody({ onSelect, inline = false }: { onSelect?: () => void; inline?: boolean }) {
+  return (
+    <>
+      {/* the esc chip closes a dialog, so an inline list has none */}
+      <CommandInput placeholder="type to filter…" showEsc={!inline} />
+      <CommandList>
+        <CommandEmpty>No results.</CommandEmpty>
+        <CommandGroup heading="pages">
+          <CommandItem icon={<HouseIcon size={14} />} shortcut="⌘1" onSelect={onSelect}>
+            home.tsx
+          </CommandItem>
+          <CommandItem icon={<FileCodeIcon size={14} />} shortcut="⌘2" onSelect={onSelect}>
+            docs/installation
+          </CommandItem>
+        </CommandGroup>
+        <CommandSeparator />
+        <CommandGroup heading="actions">
+          <CommandItem icon={<RocketLaunchIcon size={14} />} shortcut="⌘⇧D" onSelect={onSelect}>
+            deploy to production
+          </CommandItem>
+          <CommandItem icon={<GearIcon size={14} />} shortcut="⌘," onSelect={onSelect}>
+            settings
+          </CommandItem>
+        </CommandGroup>
+      </CommandList>
+      <CommandFoot />
+    </>
+  );
+}
+
 function CommandPalettePreview() {
   const [open, setOpen] = useState(false);
   return (
-    <div className="flex flex-col items-center gap-4">
-      <Button variant="secondary" onClick={() => setOpen(true)}>
-        open palette{" "}
-        <kbd className="ml-2 px-1 font-mono text-[11px] border border-[var(--border-strong)] rounded-[3px] text-[var(--fg-muted)]">
-          ⌘K
-        </kbd>
-      </Button>
-      <CommandDialog open={open} onOpenChange={setOpen}>
-        <Command>
-          <CommandInput placeholder="type to filter…" />
-          <CommandList>
-            <CommandEmpty>No results.</CommandEmpty>
-            <CommandGroup heading="pages">
-              <CommandItem
-                icon={<Home style={{ width: 13, height: 13, strokeWidth: 1.5 }} />}
-                shortcut="⌘1"
-                onSelect={() => setOpen(false)}
-              >
-                home.tsx
-              </CommandItem>
-              <CommandItem
-                icon={<FileCode style={{ width: 13, height: 13, strokeWidth: 1.5 }} />}
-                shortcut="⌘2"
-                onSelect={() => setOpen(false)}
-              >
-                docs/installation
-              </CommandItem>
-            </CommandGroup>
-            <CommandSeparator />
-            <CommandGroup heading="components">
-              <CommandItem
-                icon={<Zap style={{ width: 13, height: 13, strokeWidth: 1.5 }} />}
-                shortcut="B"
-                onSelect={() => setOpen(false)}
-              >
-                Button
-              </CommandItem>
-              <CommandItem
-                icon={<Zap style={{ width: 13, height: 13, strokeWidth: 1.5 }} />}
-                shortcut="Bd"
-                onSelect={() => setOpen(false)}
-              >
-                Badge
-              </CommandItem>
-            </CommandGroup>
-            <CommandSeparator />
-            <CommandGroup heading="actions">
-              <CommandItem
-                icon={<GitBranch style={{ width: 13, height: 13, strokeWidth: 1.5 }} />}
-                shortcut="⌘⇧D"
-                onSelect={() => setOpen(false)}
-              >
-                Deploy to production
-              </CommandItem>
-              <CommandItem
-                icon={<Settings style={{ width: 13, height: 13, strokeWidth: 1.5 }} />}
-                shortcut="⌘,"
-                onSelect={() => setOpen(false)}
-              >
-                Settings
-              </CommandItem>
-            </CommandGroup>
-          </CommandList>
-          <CommandFoot />
+    <div className="flex w-full max-w-xl flex-col gap-7">
+      <Demo label="inline · hover or use the arrows">
+        <Command className="w-full" loop>
+          <PaletteBody inline />
         </Command>
-      </CommandDialog>
+      </Demo>
+      <Demo label="as a dialog">
+        <Button variant="secondary" onClick={() => setOpen(true)}>
+          open palette <Kbd>⌘K</Kbd>
+        </Button>
+        <CommandDialog open={open} onOpenChange={setOpen}>
+          <Command loop>
+            <PaletteBody onSelect={() => setOpen(false)} />
+          </Command>
+        </CommandDialog>
+      </Demo>
     </div>
   );
 }
@@ -639,110 +767,326 @@ npx @entrepta/cli@latest add button card command-palette`}
 }
 
 function ThemeSwitcherPreview() {
-  const themes = [
-    { id: "entrepta", label: "entrepta", color: "#7C6BFF", active: true },
-    { id: "blossom", label: "blossom", color: "#CC2E36", active: false },
-    { id: "marmalade", label: "marmalade", color: "#FF8213", active: false },
-    { id: "julia", label: "julia", color: "#E85A8A", active: false },
-    { id: "ivy", label: "ivy", color: "#35A365", active: false },
-    { id: "bosco", label: "bosco", color: "#2563EB", active: false },
-  ];
   return (
-    <div className="w-full max-w-md flex flex-col items-end gap-3 font-mono text-[11px]">
-      <div
-        aria-hidden
-        className="flex flex-col gap-1 p-2 rounded-[var(--radius-md)] border border-[var(--border-subtle)] bg-[var(--bg-surface)] shadow-[0_8px_24px_rgba(0,0,0,0.4)] min-w-[200px]"
-      >
-        <div className="px-2 py-1 text-[10px] uppercase tracking-[0.08em] text-[var(--fg-muted)] border-b border-[var(--border-subtle)] mb-1">
-          mode
-        </div>
-        <div className="flex items-center justify-between gap-2 px-2 py-1.5 rounded-[var(--radius-sm)]">
-          <span className="flex items-center gap-2.5">
-            <span className="inline-grid place-items-center w-4 h-4 shrink-0 text-[var(--fg-primary)]">
-              <Moon style={{ width: 14, height: 14, strokeWidth: 1.5 }} />
-            </span>
-            <span className="text-[var(--fg-primary)]">dark</span>
-          </span>
-          <span className="text-[var(--fg-muted)] text-[10px] uppercase tracking-[0.08em]">
-            → light
-          </span>
-        </div>
-        <div className="px-2 py-1 text-[10px] uppercase tracking-[0.08em] text-[var(--fg-muted)] border-b border-[var(--border-subtle)] mt-2 mb-1">
-          theme
-        </div>
-        {themes.map((t) => (
-          <div
-            key={t.id}
-            className="flex items-center gap-2.5 px-2 py-1.5 rounded-[var(--radius-sm)]"
-          >
-            <span
-              className="inline-block w-4 h-4 rounded-full border border-[var(--border-subtle)] shrink-0"
-              style={{ background: t.color }}
-            />
-            <span
-              className={
-                t.active ? "text-[var(--fg-primary)] flex-1" : "text-[var(--fg-secondary)] flex-1"
-              }
-            >
-              {t.label}
-            </span>
-            {t.active && <span className="text-[var(--fg-brand)] text-[10px] leading-none">◆</span>}
-          </div>
-        ))}
-      </div>
-      <div className="flex items-center gap-2 px-2.5 py-2 rounded-[var(--radius-md)] border border-[var(--border-subtle)] bg-[var(--bg-surface)] shadow-[0_4px_12px_rgba(0,0,0,0.3)]">
-        <span
-          className="inline-block w-3.5 h-3.5 rounded-full border border-[var(--border-subtle)]"
-          style={{ background: "#7C6BFF" }}
+    <div className="flex w-full max-w-md flex-col items-center gap-4">
+      {/* the real switcher, placed in the flow instead of the corner: it drives this page */}
+      <div className="flex h-[380px] items-end">
+        <ThemeSwitcher
+          themes={THEMES}
+          defaultTheme={DEFAULT_THEME}
+          defaultMode={DEFAULT_MODE}
+          storageKey={STORAGE_KEY_PREFIX}
+          position="inline"
         />
-        <span className="text-[var(--fg-muted)] uppercase tracking-[0.08em] text-[10px]">dark</span>
       </div>
-      <p className="self-start text-[10px] text-[var(--fg-muted)] uppercase tracking-[0.08em]">
-        {"// live switcher sits in the corner of every docs page"}
+      <p className="m-0 font-mono text-mono-sm text-[var(--fg-muted)]">
+        Click it. It is the same switcher as the one in the corner, and they stay in step.
       </p>
     </div>
   );
 }
 
-function ModeGlyph({ mode, size }: { mode: "dark" | "light"; size: "sm" | "md" }) {
-  const Icon = mode === "dark" ? Moon : Sun;
-  const px = size === "sm" ? 12 : 14;
-  return <Icon style={{ width: px, height: px, strokeWidth: 1.5 }} />;
+function ModeTogglePreview() {
+  return (
+    <div className="flex w-full max-w-md flex-col gap-7">
+      <Demo label="icon">
+        <ModeToggle storageKey={STORAGE_KEY_PREFIX} />
+        <ModeToggle storageKey={STORAGE_KEY_PREFIX} size="sm" />
+      </Demo>
+      <Demo label="labeled">
+        <ModeToggle storageKey={STORAGE_KEY_PREFIX} variant="labeled" />
+        <ModeToggle storageKey={STORAGE_KEY_PREFIX} variant="labeled" size="sm" />
+      </Demo>
+    </div>
+  );
 }
 
-function ModeTogglePreview() {
-  const shell =
-    "inline-flex items-center justify-center font-mono uppercase tracking-[0.08em] rounded-[var(--radius-md)] border border-[var(--border-subtle)] bg-[var(--bg-surface)] text-[var(--fg-secondary)]";
+function KbdPreview() {
   return (
-    <div aria-hidden className="w-full max-w-md flex flex-col gap-6">
-      <div className="flex flex-col gap-3">
-        <span className="font-mono text-[10px] uppercase tracking-[0.08em] text-[var(--fg-muted)]">
-          {"// icon"}
+    <div className="flex w-full max-w-md flex-col gap-7">
+      <Demo label="chip">
+        <Kbd>⌘K</Kbd>
+        <Kbd>esc</Kbd>
+        <Kbd>↵</Kbd>
+        <Kbd>↑↓</Kbd>
+        <span className="flex items-center gap-1 font-mono text-mono-sm text-[var(--fg-muted)]">
+          <Kbd>⌘</Kbd>+<Kbd>⇧</Kbd>+<Kbd>P</Kbd>
         </span>
-        <div className="flex items-center gap-3">
-          <span className={`${shell} h-9 w-9`}>
-            <ModeGlyph mode="dark" size="md" />
-          </span>
-          <span className={`${shell} h-7 w-7`}>
-            <ModeGlyph mode="light" size="sm" />
-          </span>
-        </div>
+      </Demo>
+      <Demo label="in a button and an input">
+        <Button variant="secondary" size="sm">
+          search <Kbd>/</Kbd>
+        </Button>
+        <Input variant="command" placeholder="run command…" className="w-56" />
+      </Demo>
+    </div>
+  );
+}
+
+function CheckboxPreview() {
+  const items = ["button", "badge", "card"];
+  const [picked, setPicked] = useState<string[]>(["button"]);
+  const all = picked.length === items.length;
+  return (
+    <div className="flex flex-col gap-4">
+      <Checkbox
+        label="primitives"
+        checked={all}
+        indeterminate={picked.length > 0 && !all}
+        onChange={() => setPicked(all ? [] : items)}
+      />
+      <div className="flex flex-col gap-3 pl-6">
+        {items.map((item) => (
+          <Checkbox
+            key={item}
+            label={item}
+            checked={picked.includes(item)}
+            onChange={() =>
+              setPicked(
+                picked.includes(item) ? picked.filter((p) => p !== item) : [...picked, item]
+              )
+            }
+          />
+        ))}
+        <Checkbox label="diamond" description="needed by card" checked disabled />
       </div>
-      <div className="flex flex-col gap-3">
-        <span className="font-mono text-[10px] uppercase tracking-[0.08em] text-[var(--fg-muted)]">
-          {"// labeled"}
-        </span>
-        <div className="flex items-center gap-3">
-          <span className={`${shell} h-9 px-3 gap-2 text-[11px]`}>
-            <ModeGlyph mode="dark" size="md" />
-            dark
-          </span>
-          <span className={`${shell} h-7 px-2.5 gap-2 text-[10px]`}>
-            <ModeGlyph mode="light" size="sm" />
-            light
-          </span>
-        </div>
+    </div>
+  );
+}
+
+function SwitchPreview() {
+  const [on, setOn] = useState(true);
+  return (
+    <div className="flex flex-col gap-4">
+      <Switch label="send me a copy" checked={on} onChange={(e) => setOn(e.target.checked)} />
+      <Switch label="notifications" />
+      <Switch label="disabled" disabled />
+    </div>
+  );
+}
+
+function TextareaPreview() {
+  return (
+    <div className="flex w-full max-w-md flex-col gap-4">
+      <Textarea placeholder="// what are you building?" />
+      <Textarea state="error" defaultValue="too short" rows={2} />
+    </div>
+  );
+}
+
+function FieldPreview() {
+  return (
+    <form className="flex w-full max-w-md flex-col gap-4" onSubmit={(e) => e.preventDefault()}>
+      <Field id="preview-email" label="email" required hint="we never share it">
+        <Input type="email" placeholder="you@domain.dev" required />
+      </Field>
+      <Field id="preview-message" label="message" required error="Tell me a bit more.">
+        <Textarea rows={3} />
+      </Field>
+    </form>
+  );
+}
+
+function FilterPillPreview() {
+  const [type, setType] = useState<string | null>("film");
+  const counts: Record<string, number> = { film: 12, book: 3, album: 7 };
+  return (
+    <div className="flex flex-wrap gap-2">
+      {Object.keys(counts).map((t) => (
+        <FilterPill
+          key={t}
+          label={t}
+          count={counts[t]}
+          icon={TagIcon}
+          active={type === t}
+          onClick={() => setType(type === t ? null : t)}
+        />
+      ))}
+    </div>
+  );
+}
+
+function SidebarPreview() {
+  const [active, setActive] = useState("home");
+  const items = [
+    { id: "home", label: "Home", href: "#home", icon: HouseIcon },
+    { id: "files", label: "Files", href: "#files", icon: FileCodeIcon },
+    { id: "branch", label: "Branch", href: "#branch", icon: GitBranchIcon },
+    { id: "settings", label: "Settings", href: "#settings", icon: GearIcon },
+  ];
+  return (
+    <div
+      className="flex h-60 overflow-hidden rounded-[var(--radius-md)] border border-[var(--border-subtle)]"
+      onClickCapture={(e) => {
+        const link = (e.target as HTMLElement).closest("a");
+        if (!link) return;
+        e.preventDefault();
+        setActive(link.getAttribute("href")?.slice(1) ?? "home");
+      }}
+    >
+      <Sidebar items={items} active={active} label="Preview" />
+      <div className="sheen w-56 bg-[var(--bg-card)]" />
+    </div>
+  );
+}
+
+function PageOutlinePreview() {
+  return (
+    <div className="flex w-full max-w-md justify-center overflow-hidden rounded-[var(--radius-md)] border border-[var(--border-subtle)]">
+      <PageOutline
+        className="!block !static w-64"
+        file="about.md"
+        items={[
+          { id: "outline-intro", label: "intro", level: 1 },
+          { id: "outline-career", label: "career", level: 2, count: 4 },
+          { id: "outline-education", label: "education", level: 3 },
+        ]}
+        footer={<span>3 sections</span>}
+      />
+    </div>
+  );
+}
+
+function SectHeadPreview() {
+  return (
+    <div className="w-full max-w-xl">
+      <SectHead cmd="ls ./work --featured" meta="4 projects" as="span" />
+      <SectHead cmd="cat ./off-the-clock" meta="updated today" as="span" />
+    </div>
+  );
+}
+
+function DocPartsPreview() {
+  return (
+    <div className="w-full max-w-xl">
+      <Section variant="first" className="pb-0">
+        <DocLabel>about</DocLabel>
+        <DisplayH2>
+          Engineer, <em>mostly</em>.
+        </DisplayH2>
+        <Prose className="mt-4 mb-0">
+          I build <Strong>design systems</Strong> and ship them as <Em>copy-paste</Em> code.
+        </Prose>
+      </Section>
+    </div>
+  );
+}
+
+function ChromeMessagePreview() {
+  return (
+    <div className="w-full overflow-hidden rounded-[var(--radius-md)] border border-[var(--border-subtle)]">
+      <ChromeMessage
+        className="min-h-0 py-8"
+        command="cat ./this-page"
+        output="cat: ./this-page: No such file or directory"
+        title="Page not found."
+        note="it moved, or it never existed"
+        action={<ArrowLink href="#">go home</ArrowLink>}
+      />
+    </div>
+  );
+}
+
+function PageLoadingPreview() {
+  const [run, setRun] = useState(0);
+  return (
+    <div className="flex w-full flex-col items-center gap-4">
+      <div className="w-full overflow-hidden rounded-[var(--radius-md)] border border-[var(--border-subtle)]">
+        <PageLoading
+          key={run}
+          className="min-h-0 py-10"
+          command="ls ./log"
+          crumb="log"
+          label="the log"
+          steps={["reading entries", "reading covers"]}
+        />
       </div>
+      <Button size="sm" variant="secondary" onClick={() => setRun((r) => r + 1)}>
+        replay
+      </Button>
+    </div>
+  );
+}
+
+function RevealPreview() {
+  const [run, setRun] = useState(0);
+  return (
+    <div className="flex w-full max-w-xl flex-col items-center gap-4">
+      <div key={run} className="grid w-full grid-cols-3 gap-3">
+        {["one", "two", "three"].map((label, i) => (
+          <Reveal key={label} index={i}>
+            <Card size="sm">
+              <CardHeader>
+                <CardLabel>{label}</CardLabel>
+              </CardHeader>
+            </Card>
+          </Reveal>
+        ))}
+      </div>
+      <Button size="sm" variant="secondary" onClick={() => setRun((r) => r + 1)}>
+        replay
+      </Button>
+    </div>
+  );
+}
+
+function TypeInPreview() {
+  const [run, setRun] = useState(0);
+  return (
+    <div className="flex flex-col items-center gap-4">
+      <TypeIn
+        key={run}
+        as="p"
+        text="Build with entrepta."
+        emphasis="entrepta"
+        className="m-0 font-serif text-display-md text-[var(--fg-primary)]"
+      />
+      <Button size="sm" variant="secondary" onClick={() => setRun((r) => r + 1)}>
+        replay
+      </Button>
+    </div>
+  );
+}
+
+function RollingNumberPreview() {
+  const roll = useRollOnHover(0.2);
+  return (
+    <div className="flex flex-col items-center gap-2" {...roll.handlers}>
+      <RollingNumber
+        value={128}
+        cycle={roll.cycle}
+        delay={roll.delay}
+        height={44}
+        className="font-serif text-display-md text-[var(--fg-primary)]"
+      />
+      <span className="font-mono text-mono-sm text-[var(--fg-muted)]">hover to roll</span>
+    </div>
+  );
+}
+
+function SpotlightPreview() {
+  const { onMouseMove, spotlight } = useSpotlight(420);
+  return (
+    <Card className="w-full max-w-md" onMouseMove={onMouseMove}>
+      <Spotlight {...spotlight} />
+      <CardHeader>
+        <CardLabel>spotlight</CardLabel>
+        <CardMeta>move the cursor</CardMeta>
+      </CardHeader>
+      <CardTitle>
+        Light that <em>follows</em>.
+      </CardTitle>
+    </Card>
+  );
+}
+
+function ArrowLinkPreview() {
+  return (
+    <div className="flex flex-col items-start gap-3">
+      <ArrowLink href="#">read the docs</ArrowLink>
+      <ArrowLink href="https://github.com" external>
+        github
+      </ArrowLink>
     </div>
   );
 }
@@ -764,13 +1108,30 @@ const PREVIEWS: Record<string, React.ReactNode> = {
   skeleton: <SkeletonPreview />,
   "command-palette": <CommandPalettePreview />,
   "code-block": <CodeBlockPreview />,
+  kbd: <KbdPreview />,
+  checkbox: <CheckboxPreview />,
+  switch: <SwitchPreview />,
+  textarea: <TextareaPreview />,
+  field: <FieldPreview />,
+  "filter-pill": <FilterPillPreview />,
+  sidebar: <SidebarPreview />,
+  "page-outline": <PageOutlinePreview />,
+  "sect-head": <SectHeadPreview />,
+  "doc-parts": <DocPartsPreview />,
+  "chrome-message": <ChromeMessagePreview />,
+  "page-loading": <PageLoadingPreview />,
+  reveal: <RevealPreview />,
+  "type-in": <TypeInPreview />,
+  "rolling-number": <RollingNumberPreview />,
+  spotlight: <SpotlightPreview />,
+  "arrow-link": <ArrowLinkPreview />,
 };
 
 export function ComponentPreview({ slug }: { slug: string }) {
   return (
     <div className="w-full flex items-center justify-center">
       {PREVIEWS[slug] ?? (
-        <p className="font-mono text-xs text-[var(--fg-muted)]">No preview available</p>
+        <p className="font-mono text-mono-sm text-[var(--fg-muted)]">No preview available</p>
       )}
     </div>
   );

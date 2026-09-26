@@ -37,14 +37,14 @@ export default function SpacingPage() {
                 <div
                   // biome-ignore lint/suspicious/noArrayIndexKey: static column indices
                   key={i}
-                  className="h-24 rounded-[3px] bg-[var(--bg-surface-brand)] flex items-end justify-center pb-2 font-mono text-[10px] text-[var(--fg-brand)]"
+                  className="h-24 rounded-[3px] bg-[var(--bg-surface-brand)] flex items-end justify-center pb-2 font-mono text-mono-xs text-[var(--fg-brand-text)]"
                 >
                   {i + 1}
                 </div>
               ))}
             </div>
           </div>
-          <div className="mt-4 grid grid-cols-2 gap-2 font-mono text-[11px] text-[var(--fg-muted)]">
+          <div className="mt-4 grid grid-cols-2 gap-2 font-mono text-mono-sm text-[var(--fg-muted)]">
             <div className="border border-[var(--border-subtle)] rounded-[var(--radius-sm)] px-3 py-2">
               <span className="text-[var(--fg-primary)]">1280px</span> max container
             </div>
@@ -62,7 +62,7 @@ export default function SpacingPage() {
               {SCALE.map((s, i) => (
                 <div
                   key={s.token}
-                  className={`grid grid-cols-[100px_60px_1fr_100px] gap-3 items-center py-2.5 font-mono text-[12px] ${
+                  className={`grid grid-cols-[100px_60px_1fr_100px] gap-3 items-center py-2.5 font-mono text-mono-sm ${
                     i > 0 ? "border-t border-[var(--border-subtle)]" : ""
                   }`}
                 >

@@ -1,5 +1,8 @@
 import { DocPageHeader, DocSubhead } from "@/components/doc-page-header";
+import { NpmPackages } from "@/components/npm-packages";
+import { INIT_FILES, REQUIREMENTS } from "@/lib/docs-data";
 import { CodeBlock } from "@entrepta/registry/content/code-block";
+import { Diamond } from "@entrepta/registry/content/diamond";
 import { Button } from "@entrepta/registry/primitives/button";
 import {
   Card,
@@ -17,33 +20,24 @@ export const metadata: Metadata = {
   title: "Installation",
   description:
     "Install entrepta in a Next.js or Vite project. Run npx @entrepta/cli init, pick a theme, copy components into components/entrepta.",
-  alternates: { canonical: "/docs/installation" },
+  alternates: {
+    canonical: "/docs/installation",
+    types: { "text/markdown": "/docs/installation.md" },
+  },
 };
-
-const REQUIREMENTS = [
-  { label: "React", value: "19 or newer" },
-  { label: "Next.js", value: "15 (App Router)" },
-  { label: "Tailwind", value: "v4" },
-  { label: "TypeScript", value: "5.x" },
-];
-
-const FILES = [
-  { path: "app/globals.css", desc: "CSS tokens, reset, and fonts" },
-  { path: "lib/utils.ts", desc: "cn() helper (clsx + tailwind-merge)" },
-  { path: "entrepta.json", desc: "Config. Theme, paths, aliases." },
-];
 
 export default function InstallationPage() {
   return (
     <article>
       <DocPageHeader
+        markdown="/docs/installation"
         eyebrow="getting started"
         title={
           <>
             Install <em>entrepta.</em>
           </>
         }
-        description="Works with any React project. Tailwind v4 is recommended but not required. The CLI detects your framework and adjusts paths."
+        description="Works in Next.js and Vite projects with Tailwind v4. The CLI detects your framework and adjusts paths."
         meta="2 steps"
       />
 
@@ -54,14 +48,12 @@ export default function InstallationPage() {
             {REQUIREMENTS.map((r, i) => (
               <div
                 key={r.label}
-                className={`grid grid-cols-[140px_1fr] gap-3 items-center py-3 font-mono text-[12px] ${
+                className={`grid grid-cols-[140px_1fr] gap-3 items-center py-3 font-mono text-mono-sm ${
                   i > 0 ? "border-t border-[var(--border-subtle)]" : ""
                 }`}
               >
                 <span className="text-[var(--fg-primary)] inline-flex items-center gap-1.5">
-                  <span aria-hidden className="text-[10px] text-[var(--fg-brand)] leading-none">
-                    ◆
-                  </span>
+                  <Diamond />
                   {r.label}
                 </span>
                 <span className="text-[var(--fg-muted)]">{r.value}</span>
@@ -83,20 +75,20 @@ npx @entrepta/cli@latest init --theme=ivy`}
         >
           <div className="flex flex-col gap-3">
             <div>
-              <span className="text-[var(--fg-muted)] text-[11px] mr-3">01</span>
+              <span className="text-[var(--fg-muted)] text-mono-sm mr-3">01</span>
               <span className="text-[var(--fg-brand)]">$</span>{" "}
               <span className="text-[var(--fg-primary)]">npx @entrepta/cli@latest init</span>
-              <span className="text-[var(--fg-muted)] text-[11px] ml-3">
+              <span className="text-[var(--fg-muted)] text-mono-sm ml-3">
                 {"// prompts for a theme"}
               </span>
             </div>
             <div>
-              <span className="text-[var(--fg-muted)] text-[11px] mr-3">02</span>
+              <span className="text-[var(--fg-muted)] text-mono-sm mr-3">02</span>
               <span className="text-[var(--fg-brand)]">$</span>{" "}
               <span className="text-[var(--fg-primary)]">
                 npx @entrepta/cli@latest init --theme=ivy
               </span>
-              <span className="text-[var(--fg-muted)] text-[11px] ml-3">
+              <span className="text-[var(--fg-muted)] text-mono-sm ml-3">
                 {"// skip the prompt"}
               </span>
             </div>
@@ -105,13 +97,13 @@ npx @entrepta/cli@latest init --theme=ivy`}
       </section>
 
       <section className="mb-12">
-        <DocSubhead count={`${FILES.length} files`}>What init writes</DocSubhead>
+        <DocSubhead count={`${INIT_FILES.length} files`}>What init writes</DocSubhead>
         <Card>
           <div className="flex flex-col">
-            {FILES.map((f, i) => (
+            {INIT_FILES.map((f, i) => (
               <div
                 key={f.path}
-                className={`grid grid-cols-[20px_220px_1fr] gap-3 items-center py-3 font-mono text-[12px] ${
+                className={`grid grid-cols-[20px_220px_1fr] gap-3 items-center py-3 font-mono text-mono-sm ${
                   i > 0 ? "border-t border-[var(--border-subtle)]" : ""
                 }`}
               >
@@ -131,12 +123,12 @@ npx @entrepta/cli@latest init --theme=ivy`}
             <CardLabel>npx @entrepta/cli@latest add</CardLabel>
             <CardMeta>copy paste</CardMeta>
           </CardHeader>
-          <CardTitle className="text-[20px]">
+          <CardTitle className="text-heading-md">
             One command. <em>Three components.</em>
           </CardTitle>
-          <p className="font-sans text-[13px] leading-relaxed text-[var(--fg-secondary)] m-0">
+          <p className="font-sans text-body-md leading-relaxed text-[var(--fg-secondary)] m-0">
             Run{" "}
-            <code className="font-mono text-[var(--fg-brand)]">
+            <code className="font-mono text-[var(--fg-brand-text)]">
               npx @entrepta/cli@latest add button badge input
             </code>{" "}
             and the components land in <code className="font-mono">components/entrepta/</code>. Edit
@@ -165,6 +157,10 @@ npx @entrepta/cli@latest init --theme=ivy`}
           </Button>
         </Link>
       </div>
+      <section className="mt-12">
+        <DocSubhead count="2 packages">On npm</DocSubhead>
+        <NpmPackages />
+      </section>
     </article>
   );
 }

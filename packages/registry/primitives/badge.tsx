@@ -1,7 +1,6 @@
-"use client";
-
 import { type VariantProps, cva } from "class-variance-authority";
 import * as React from "react";
+import { type IconProp, IconSlot } from "../lib/icon";
 import { cn } from "../lib/utils";
 
 const badgeVariants = cva(
@@ -25,8 +24,8 @@ const badgeVariants = cva(
         info: "",
       },
       size: {
-        sm: "h-5 px-1.5 text-[10px] rounded-[var(--radius-sm)]",
-        md: "h-6 px-2 text-[11px] rounded-[var(--radius-sm)]",
+        sm: "h-5 px-1.5 text-mono-xs rounded-[var(--radius-sm)]",
+        md: "h-6 px-2 text-mono-sm rounded-[var(--radius-sm)]",
       },
     },
     compoundVariants: [
@@ -38,27 +37,29 @@ const badgeVariants = cva(
       {
         variant: "solid",
         color: "brand",
-        className: "bg-[var(--fg-brand)] text-[var(--bg-canvas)]",
+        className: "bg-[var(--fg-brand)] text-[var(--fg-on-brand)]",
       },
+      // Status colors are the same in both modes and all bright enough that only
+      // a dark ink clears AA on them, so the solid variants use zinc-950 in both.
       {
         variant: "solid",
         color: "success",
-        className: "bg-[var(--status-success)] text-[var(--bg-canvas)]",
+        className: "bg-[var(--status-success)] text-[var(--zinc-950)]",
       },
       {
         variant: "solid",
         color: "warning",
-        className: "bg-[var(--status-warning)] text-[var(--bg-canvas)]",
+        className: "bg-[var(--status-warning)] text-[var(--zinc-950)]",
       },
       {
         variant: "solid",
         color: "error",
-        className: "bg-[var(--status-error)] text-[var(--fg-primary)]",
+        className: "bg-[var(--status-error)] text-[var(--zinc-950)]",
       },
       {
         variant: "solid",
         color: "info",
-        className: "bg-[var(--status-info)] text-[var(--bg-canvas)]",
+        className: "bg-[var(--status-info)] text-[var(--zinc-950)]",
       },
       {
         variant: "soft",
@@ -68,7 +69,7 @@ const badgeVariants = cva(
       {
         variant: "soft",
         color: "brand",
-        className: "bg-[var(--bg-surface-brand)] text-[var(--fg-brand-hover)]",
+        className: "bg-[var(--bg-surface-brand)] text-[var(--fg-brand-text)]",
       },
       {
         variant: "soft",
@@ -98,7 +99,7 @@ const badgeVariants = cva(
       {
         variant: "outline",
         color: "brand",
-        className: "border-[var(--fg-brand)] text-[var(--fg-brand)]",
+        className: "border-[var(--fg-brand)] text-[var(--fg-brand-text)]",
       },
       {
         variant: "outline",
@@ -143,22 +144,28 @@ export interface BadgeProps
     VariantProps<typeof badgeVariants> {
   /** Render a colored status dot before the label */
   dot?: boolean;
+  /** A Phosphor icon component before the label, sized to the badge. Takes the place of the dot. */
+  icon?: IconProp;
 }
 
 const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
-  ({ className, variant, color, size, dot, children, ...props }, ref) => {
+  ({ className, variant, color, size, dot, icon: BadgeIcon, children, ...props }, ref) => {
     const resolvedColor = color ?? "neutral";
     return (
       <span ref={ref} className={cn(badgeVariants({ variant, color, size }), className)} {...props}>
-        {dot && (
-          <span
-            aria-hidden
-            className={cn(
-              "inline-block rounded-full shrink-0",
-              size === "sm" ? "size-1.5" : "size-2",
-              dotColorClass[resolvedColor]
-            )}
-          />
+        {BadgeIcon ? (
+          <IconSlot icon={BadgeIcon} size={size === "sm" ? 10 : 12} />
+        ) : (
+          dot && (
+            <span
+              aria-hidden
+              className={cn(
+                "inline-block rounded-full shrink-0",
+                size === "sm" ? "size-1.5" : "size-2",
+                dotColorClass[resolvedColor]
+              )}
+            />
+          )
         )}
         {children}
       </span>

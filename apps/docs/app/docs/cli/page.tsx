@@ -1,4 +1,6 @@
 import { DocPageHeader, DocSubhead } from "@/components/doc-page-header";
+import { NpmPackages } from "@/components/npm-packages";
+import { CLI_COMMANDS } from "@/lib/docs-data";
 import { CodeBlock } from "@entrepta/registry/content/code-block";
 import {
   Card,
@@ -14,44 +16,15 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "CLI",
   description:
-    "The entrepta CLI reference: init, add, diff, theme. Resolve dependencies, copy components, swap themes from the command line.",
-  alternates: { canonical: "/docs/cli" },
+    "The entrepta CLI reference: init and add, their flags, and entrepta.json. Copy components with everything they import.",
+  alternates: { canonical: "/docs/cli", types: { "text/markdown": "/docs/cli.md" } },
 };
-
-const COMMANDS = [
-  {
-    cmd: "npx @entrepta/cli@latest init",
-    title: "init",
-    desc: "Bootstraps a project. Writes globals.css, lib/utils.ts, and entrepta.json. Prompts for a theme.",
-    flags: [
-      { flag: "--theme=<preset>", desc: "Skip the theme prompt" },
-      { flag: "--overwrite", desc: "Overwrite existing files without asking" },
-    ],
-  },
-  {
-    cmd: "npx @entrepta/cli@latest add <component>",
-    title: "add",
-    desc: "Copies one or more components into your project. Resolves dependencies automatically.",
-    flags: [{ flag: "--overwrite", desc: "Overwrite without confirming" }],
-  },
-  {
-    cmd: "npx @entrepta/cli@latest add",
-    title: "add (interactive)",
-    desc: "Same as above, no args. Opens a picker with every available component.",
-    flags: [],
-  },
-  {
-    cmd: "npx @entrepta/cli@latest diff <component>",
-    title: "diff",
-    desc: "Shows the diff between your local copy of a component and the current registry version.",
-    flags: [],
-  },
-];
 
 export default function CliPage() {
   return (
     <article>
       <DocPageHeader
+        markdown="/docs/cli"
         eyebrow="reference"
         title={
           <>
@@ -64,8 +37,13 @@ export default function CliPage() {
             No SDK, no runtime wrapper. You own the source.
           </>
         }
-        meta="4 commands"
+        meta={`${CLI_COMMANDS.length} commands`}
       />
+
+      <section className="mb-12">
+        <DocSubhead count="2 packages">On npm</DocSubhead>
+        <NpmPackages />
+      </section>
 
       <section className="mb-12">
         <DocSubhead count="quick try">First run</DocSubhead>
@@ -82,12 +60,12 @@ npx @entrepta/cli@latest add button`}
               <span className="text-[var(--fg-brand)]">$</span> npx @entrepta/cli@latest init
               <span className="text-[var(--fg-muted)]"> --theme=entrepta</span>
             </div>
-            <div className="text-[var(--fg-muted)] text-[11px] pl-3">→ wrote app/globals.css</div>
-            <div className="text-[var(--fg-muted)] text-[11px] pl-3">→ created entrepta.json</div>
+            <div className="text-[var(--fg-muted)] text-mono-sm pl-3">→ wrote app/globals.css</div>
+            <div className="text-[var(--fg-muted)] text-mono-sm pl-3">→ created entrepta.json</div>
             <div className="text-[var(--fg-secondary)] mt-2">
               <span className="text-[var(--fg-brand)]">$</span> npx @entrepta/cli@latest add button
             </div>
-            <div className="text-[var(--fg-muted)] text-[11px] pl-3">
+            <div className="text-[var(--fg-muted)] text-mono-sm pl-3">
               → copied components/entrepta/button.tsx
             </div>
           </div>
@@ -95,9 +73,9 @@ npx @entrepta/cli@latest add button`}
       </section>
 
       <section>
-        <DocSubhead count={`${COMMANDS.length} commands`}>Commands</DocSubhead>
+        <DocSubhead count={`${CLI_COMMANDS.length} commands`}>Commands</DocSubhead>
         <div className="flex flex-col gap-4">
-          {COMMANDS.map((c) => (
+          {CLI_COMMANDS.map((c) => (
             <Card key={c.cmd}>
               <CardHeader>
                 <CardLabel>{c.title}</CardLabel>
@@ -107,10 +85,10 @@ npx @entrepta/cli@latest add button`}
                     : `${c.flags.length} flag${c.flags.length > 1 ? "s" : ""}`}
                 </CardMeta>
               </CardHeader>
-              <CardTitle className="font-mono text-[15px] text-[var(--fg-primary)]">
+              <CardTitle className="font-mono text-mono-md text-[var(--fg-primary)]">
                 <span className="text-[var(--fg-brand)]">$</span> {c.cmd}
               </CardTitle>
-              <p className="font-sans text-[13px] leading-relaxed text-[var(--fg-secondary)] m-0">
+              <p className="font-sans text-body-md leading-relaxed text-[var(--fg-secondary)] m-0">
                 {c.desc}
               </p>
               {c.flags.length > 0 && (
@@ -118,9 +96,9 @@ npx @entrepta/cli@latest add button`}
                   {c.flags.map((f) => (
                     <div
                       key={f.flag}
-                      className="grid grid-cols-[220px_1fr] gap-3 items-center font-mono text-[12px]"
+                      className="grid grid-cols-[220px_1fr] gap-3 items-center font-mono text-mono-sm"
                     >
-                      <code className="text-[var(--fg-brand)]">{f.flag}</code>
+                      <code className="text-[var(--fg-brand-text)]">{f.flag}</code>
                       <span className="text-[var(--fg-muted)]">{f.desc}</span>
                     </div>
                   ))}

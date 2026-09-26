@@ -1,9 +1,9 @@
 export const THEMES = [
-  { id: "entrepta", color: "#7C6BFF", lightColor: "#6B5BFF", label: "entrepta" },
-  { id: "blossom", color: "#CC2E36", lightColor: "#B8262E", label: "blossom" },
-  { id: "marmalade", color: "#FF8213", lightColor: "#D96B00", label: "marmalade" },
-  { id: "julia", color: "#E85A8A", lightColor: "#D33A72", label: "julia" },
-  { id: "ivy", color: "#35A365", lightColor: "#1E8350", label: "ivy" },
+  { id: "entrepta", color: "#7C6BFF", lightColor: "#6656FF", label: "entrepta" },
+  { id: "blossom", color: "#CC2E36", lightColor: "#B02028", label: "blossom" },
+  { id: "marmalade", color: "#FF8213", lightColor: "#E06800", label: "marmalade" },
+  { id: "julia", color: "#E85A8A", lightColor: "#CC3A6A", label: "julia" },
+  { id: "ivy", color: "#35A365", lightColor: "#258A50", label: "ivy" },
   { id: "bosco", color: "#2563EB", lightColor: "#1D4ED8", label: "bosco" },
 ] as const;
 
