@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   },
   description: SITE_DESCRIPTION,
   applicationName: SITE_NAME,
-  authors: [{ name: "Anna Maria", url: "https://anna-maria-dev.vercel.app" }],
+  authors: [{ name: "Anna Maria", url: "https://annamaria.app" }],
   creator: "Anna Maria",
   publisher: "Anna Maria",
   keywords: [

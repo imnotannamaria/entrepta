@@ -153,7 +153,7 @@ import { CheckIcon, GitBranchIcon } from "@phosphor-icons/react"
   <CardTitle>
     Plain markdown beats <em>Notion</em>.
   </CardTitle>
-  <CardDescription>Two years of database PTSD, condensed.</CardDescription>
+  <CardDescription>Two years of notes, back in plain text.</CardDescription>
   <CardFooter>
     <span>read →</span>
     <CardComment>draft</CardComment>

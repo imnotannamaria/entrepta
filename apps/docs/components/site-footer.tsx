@@ -1,4 +1,4 @@
-import { LINKS } from "@/lib/links";
+import { LINKS, USED_BY } from "@/lib/links";
 import Link from "next/link";
 import { Logo } from "./logo";
 
@@ -67,6 +67,7 @@ export function SiteFooter() {
               { label: "npm: registry ↗", href: LINKS.npmRegistry },
               { label: "Changelog ↗", href: LINKS.changelog },
               { label: "Releases ↗", href: LINKS.releases },
+              ...USED_BY.map((u) => ({ label: `Used by ${u.name} ↗`, href: u.href })),
             ].map((l) => (
               <li key={l.label}>
                 <a

@@ -11,6 +11,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const TOP_LINKS = [
+  { label: "docs", href: "/docs" },
   { label: "install", href: "/#install" },
   { label: "principles", href: "/#principles" },
   { label: "components", href: "/docs/components" },
@@ -32,7 +33,7 @@ export function MobileNav() {
   return (
     <DialogPrimitive.Root open={open} onOpenChange={setOpen}>
       <DialogPrimitive.Trigger
-        className="md:hidden inline-flex items-center justify-center size-9 rounded-[var(--radius-sm)] border border-[var(--border-subtle)] text-[var(--fg-secondary)] hover:text-[var(--fg-primary)] hover:border-[var(--border-strong)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)]"
+        className="focus-ring lg:hidden inline-flex items-center justify-center size-9 rounded-[var(--radius-sm)] border border-[var(--border-subtle)] text-[var(--fg-secondary)] hover:text-[var(--fg-primary)] hover:border-[var(--border-strong)] transition-colors"
         aria-label="Open navigation menu"
       >
         <ListIcon aria-hidden size={16} />
@@ -67,7 +68,7 @@ export function MobileNav() {
           </div>
 
           <nav className="flex-1 overflow-y-auto px-4 pt-5 pb-16">
-            <div className="font-mono text-mono-xs uppercase tracking-widest text-[var(--fg-muted)] mb-3">
+            <div className="mb-2 px-2 font-mono text-mono-xs uppercase tracking-widest text-[var(--fg-muted)]">
               Site
             </div>
             <ul className="mb-8 flex flex-col gap-0.5">

@@ -13,23 +13,28 @@ npx @entrepta/cli@latest init
 npx @entrepta/cli@latest add button card
 ```
 
-Or open the [docs](https://github.com/imnotannamaria/entrepta) and copy any component by hand via its **Manual** tab.
+Or open the [docs](https://entrepta.vercel.app/docs/components) and copy any component by hand from its **Manual** tab.
 
 ## What's inside
 
 ```
 @entrepta/registry/
-├── styles/                  globals.css + 6 theme presets
-├── lib/                     cn helper
-├── primitives/              button, badge, input, card, dialog, dropdown, tooltip, tabs
-├── layout/                  status-bar, top-nav
-├── feedback/                toast, skeleton, command-palette
-├── content/                 code-block
-└── hooks/                   use-command-palette
+├── manifest.ts      every component: files, npm deps, registry deps, usage
+├── styles/          globals.css and the 6 theme presets
+├── lib/             cn, motion constants, color contrast
+├── primitives/      button, badge, card, dialog, dropdown, tooltip, kbd, tabs,
+│                    input, textarea, checkbox, switch, field, filter-pill
+├── layout/          status-bar, top-nav, theme-switcher, mode-toggle, sidebar, page-outline
+├── content/         code-block, diamond, sect-head, doc-parts
+├── feedback/        toast, skeleton, command-palette, chrome-message, page-loading
+├── motion/          reveal, type-in, rolling-number, spotlight, arrow-link
+└── hooks/           use-theme, use-mode, use-command-palette, use-url-filter
 ```
 
-All files ship as raw `.tsx` / `.ts`. Consumers compile via their own TypeScript config.
+All files ship as raw `.tsx` and `.ts`. Your project compiles them with its own TypeScript config.
+
+Docs for people at [entrepta.vercel.app](https://entrepta.vercel.app), and for agents at [entrepta.vercel.app/llms.txt](https://entrepta.vercel.app/llms.txt).
 
 ## License
 
-MIT. Built by Anna Maria.
+MIT. Built by [Anna Maria](https://annamaria.app).

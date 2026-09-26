@@ -60,4 +60,15 @@ describe("Checkbox", () => {
     render(<Checkbox ref={ref} />);
     expect(ref.current).toBeInstanceOf(HTMLInputElement);
   });
+
+  it("settles into the checked state with a pop, and draws the check after the fill", () => {
+    const { container } = render(<Checkbox />);
+    expect(container.querySelector("[data-checkbox-box]")).toHaveClass(
+      "peer-checked:animate-[check-pop_var(--motion-slow)_var(--ease-out)]",
+      "peer-active:scale-90"
+    );
+    expect(container.querySelector("[data-checkbox-check]")).toHaveClass(
+      "peer-checked:delay-[60ms]"
+    );
+  });
 });

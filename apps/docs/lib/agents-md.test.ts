@@ -69,4 +69,12 @@ describe("buildAgentsMd", () => {
     expect(md).toContain("add button\n");
     expect(md).not.toContain("nope");
   });
+
+  it("points the agent at the Markdown docs and llms.txt", () => {
+    const md = buildAgentsMd(BASE);
+    expect(md).toContain("## Reading the docs");
+    expect(md).toContain("https://entrepta.vercel.app/llms.txt");
+    expect(md).toContain("https://entrepta.vercel.app/docs/components/button.md");
+    expect(md).toContain("https://entrepta.vercel.app/docs/components.md");
+  });
 });

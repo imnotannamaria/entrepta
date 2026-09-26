@@ -7,8 +7,10 @@ import { SiteNav } from "@/components/site-nav";
 import { SiteStatusBar } from "@/components/site-status-bar";
 import { SpotlightCard } from "@/components/spotlight-card";
 import { COMPONENT_INDEX, SECTIONS } from "@/lib/component-index";
+import { USED_BY } from "@/lib/links";
 import { tokenCount } from "@/lib/stats";
 import { THEMES } from "@/lib/theme";
+import { cn } from "@/lib/utils";
 import { Diamond } from "@entrepta/registry/content/diamond";
 import { Reveal } from "@entrepta/registry/motion/reveal";
 import { RollingNumber } from "@entrepta/registry/motion/rolling-number";
@@ -33,9 +35,12 @@ import {
   BellSimpleIcon,
   CheckIcon,
   CubeIcon,
+  FileMdIcon,
   FileTextIcon,
   LayoutIcon,
+  ListBulletsIcon,
   PaletteIcon,
+  RobotIcon,
   SparkleIcon,
   TerminalWindowIcon,
   TextboxIcon,
@@ -263,6 +268,23 @@ export default function Home() {
             <div className="mt-6">
               <HeroStats stats={HERO_STATS} />
             </div>
+
+            <p className="mt-6 text-center font-mono text-mono-sm text-[var(--fg-muted)]">
+              in use at{" "}
+              {USED_BY.map((u, i) => (
+                <span key={u.name}>
+                  {i > 0 && " · "}
+                  <a
+                    href={u.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-[var(--fg-secondary)] underline-offset-4 hover:text-[var(--fg-primary)] hover:underline"
+                  >
+                    {u.name} ↗
+                  </a>
+                </span>
+              ))}
+            </p>
           </div>
         </section>
 
@@ -446,14 +468,14 @@ export default function Home() {
                 · security
               </div>
               <h2 className="font-serif text-[clamp(32px,4vw,56px)] font-normal leading-tight tracking-tight text-[var(--fg-primary)]">
-                <em className="italic text-[var(--fg-brand)]">Audited</em> by
+                <em className="italic text-[var(--fg-brand)]">Careful</em> by
                 <br />
                 <span className="text-[var(--fg-muted)]">design.</span>
               </h2>
               <p className="mt-4 font-sans text-body-lg text-[var(--fg-secondary)] max-w-md leading-relaxed">
                 entrepta ships as copy-paste source: no runtime SDK, no telemetry, no remote code.
                 The CLI guards against path traversal via aliases, the docs site sets a strict CSP
-                and the usual hardening headers, and dependencies stay tight and audited.
+                and the usual hardening headers, and dependencies stay few and justified.
               </p>
             </div>
             <ul className="flex flex-col gap-0 border-t border-[var(--border-subtle)]">
@@ -515,11 +537,10 @@ export default function Home() {
             </h2>
             <Link
               href="/docs/components"
-              className={buttonVariants({
-                variant: "ghost",
-                size: "sm",
-                className: "hidden shrink-0 sm:inline-flex",
-              })}
+              className={cn(
+                buttonVariants({ variant: "ghost", size: "sm" }),
+                "hidden shrink-0 sm:inline-flex"
+              )}
             >
               browse all ↗
             </Link>
@@ -591,6 +612,90 @@ export default function Home() {
                 </Card>
               </Link>
             </Reveal>
+          </div>
+        </section>
+
+        {/* ── FOR AGENTS ── */}
+        <section
+          id="for-agents"
+          className="max-w-[1280px] mx-auto px-6 sm:px-12 py-20 border-t border-[var(--border-subtle)]"
+        >
+          <div className="mb-10">
+            <div className="font-mono text-mono-sm text-[var(--fg-brand-text)] uppercase tracking-[0.08em] mb-3">
+              · for your coding agent
+            </div>
+            <h2 className="font-serif text-[clamp(32px,4vw,56px)] font-normal leading-tight tracking-tight text-[var(--fg-primary)]">
+              <em className="italic text-[var(--fg-brand)]">Readable</em> by agents,
+              <br />
+              <span className="text-[var(--fg-muted)]">not only people.</span>
+            </h2>
+            <p className="mt-4 font-sans text-body-lg text-[var(--fg-secondary)] max-w-xl leading-relaxed">
+              Claude Code, Cursor and Codex read Markdown better than a web page. Every docs page
+              has a Markdown version, and the site keeps an index an agent can start from.
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <Card className="h-full">
+              <CardHeader>
+                <CardLabel icon={RobotIcon}>AGENTS.md</CardLabel>
+                <CardMeta>for your project</CardMeta>
+              </CardHeader>
+              <CardTitle className="text-heading-md">Build the file for your repo.</CardTitle>
+              <CardDescription>
+                Pick the framework, theme and components. The file says how to install, where things
+                live and which token goes where.
+              </CardDescription>
+              <CardFooter>
+                <CardComment>header · AGENTS.md</CardComment>
+                <OpenAgentsButton className="cursor-pointer text-[var(--fg-brand-text)] hover:underline underline-offset-4">
+                  open →
+                </OpenAgentsButton>
+              </CardFooter>
+            </Card>
+            <Card className="h-full">
+              <CardHeader>
+                <CardLabel icon={FileMdIcon}>.md</CardLabel>
+                <CardMeta>every page</CardMeta>
+              </CardHeader>
+              <CardTitle className="text-heading-md">Add .md to any docs URL.</CardTitle>
+              <CardDescription>
+                The same page as Markdown. Each page also has a copy for agent button, and the
+                migration guide copies whole.
+              </CardDescription>
+              <CardFooter>
+                <CardComment>/docs/components/button.md</CardComment>
+                <a
+                  href="/docs/components/button.md"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-[var(--fg-brand-text)] hover:underline underline-offset-4"
+                >
+                  try it ↗
+                </a>
+              </CardFooter>
+            </Card>
+            <Card className="h-full">
+              <CardHeader>
+                <CardLabel icon={ListBulletsIcon}>llms.txt</CardLabel>
+                <CardMeta>the index</CardMeta>
+              </CardHeader>
+              <CardTitle className="text-heading-md">Start an agent at llms.txt.</CardTitle>
+              <CardDescription>
+                Every page, linked, in the llmstxt.org format. llms-full.txt is the whole site in
+                one file, ready to paste.
+              </CardDescription>
+              <CardFooter>
+                <CardComment>/llms-full.txt</CardComment>
+                <a
+                  href="/llms.txt"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-[var(--fg-brand-text)] hover:underline underline-offset-4"
+                >
+                  open ↗
+                </a>
+              </CardFooter>
+            </Card>
           </div>
         </section>
 

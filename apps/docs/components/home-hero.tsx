@@ -54,7 +54,13 @@ export function CopyInit() {
     }
   };
   return (
-    <Button variant="command" size="lg" onClick={copy} aria-label={`Copy ${INIT}`}>
+    <Button
+      variant="command"
+      size="lg"
+      onClick={copy}
+      aria-label={`Copy ${INIT}`}
+      className="max-sm:h-11 max-sm:px-4 max-sm:text-mono-md"
+    >
       {INIT.replace("@latest", "")}
       {copied ? (
         <CheckIcon aria-hidden size={14} weight="bold" className="text-[var(--status-success)]" />

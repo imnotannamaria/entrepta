@@ -10,7 +10,7 @@ import {
   REQUIREMENTS,
   THEME_NOTES,
 } from "./docs-data";
-import { LINKS } from "./links";
+import { LINKS, USED_BY } from "./links";
 import { depsFor, filesFor, findComponent, installClosure } from "./manifest";
 import { RULES } from "./rules";
 import { THEMES } from "./theme";
@@ -278,6 +278,7 @@ export function llmsTxt(): string {
       `- [Everything in one file](${SITE_URL}/llms-full.txt)`,
       `- [npm: @entrepta/cli](${LINKS.npmCli})`,
       `- [Source on GitHub](${LINKS.github})`,
+      ...USED_BY.map((u) => `- [Built with entrepta: ${u.name}](${u.href}): ${u.what}`),
     ].join("\n"),
   ].join("\n\n")}\n`;
 }

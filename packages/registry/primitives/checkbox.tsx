@@ -47,9 +47,11 @@ const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
             className={cn(
               "block size-4 rounded-[4px] border",
               "border-[var(--border-strong)] bg-[var(--bg-field)]",
-              "transition-[background-color,border-color,box-shadow] duration-[var(--motion-fast)] ease-out",
-              "peer-hover:border-[var(--fg-muted)]",
+              "transition-[background-color,border-color,box-shadow,scale] duration-[var(--motion-base)] ease-[var(--ease-out)]",
+              "peer-hover:border-[var(--fg-muted)] peer-active:scale-90",
+              // fills, then settles with a small overshoot
               "peer-checked:border-[var(--fg-brand)] peer-checked:bg-[var(--fg-brand)]",
+              "peer-checked:animate-[check-pop_var(--motion-slow)_var(--ease-out)]",
               "peer-indeterminate:border-[var(--fg-brand)] peer-indeterminate:bg-[var(--fg-brand)]",
               "peer-focus-visible:shadow-[0_0_0_3px_var(--bg-surface-brand)]"
             )}
@@ -62,8 +64,11 @@ const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
             className={cn(
               "pointer-events-none absolute inset-0 size-4 text-[var(--fg-on-brand)]",
               "[stroke-dasharray:14] [stroke-dashoffset:14] opacity-0",
-              "transition-[stroke-dashoffset,opacity] duration-[var(--motion-base)] ease-out",
+              // unchecking erases at once; checking waits for the fill, then draws
+              "transition-[stroke-dashoffset,opacity] duration-[var(--motion-fast)] ease-out",
               "peer-checked:[stroke-dashoffset:0] peer-checked:opacity-100",
+              "peer-checked:delay-[60ms] peer-checked:duration-[var(--motion-slow)]",
+              "peer-checked:animate-[check-pop_var(--motion-slow)_var(--ease-out)]",
               "peer-indeterminate:opacity-0"
             )}
           >
@@ -80,8 +85,9 @@ const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
             data-checkbox-dash
             className={cn(
               "pointer-events-none absolute top-1/2 left-1/2 h-0.5 w-2 -translate-x-1/2 -translate-y-1/2",
-              "rounded-full bg-[var(--fg-on-brand)] opacity-0 transition-opacity",
-              "peer-indeterminate:opacity-100"
+              "scale-x-0 rounded-full bg-[var(--fg-on-brand)] opacity-0",
+              "transition-[opacity,scale] duration-[var(--motion-base)] ease-[var(--ease-out)]",
+              "peer-indeterminate:scale-x-100 peer-indeterminate:opacity-100"
             )}
           />
         </span>
@@ -92,7 +98,8 @@ const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
               <label
                 htmlFor={inputId}
                 className={cn(
-                  "cursor-pointer select-none font-mono text-mono-md text-[var(--fg-secondary)]",
+                  // a long single word, such as a component name, wraps instead of spilling over
+                  "cursor-pointer select-none font-mono text-mono-md text-[var(--fg-secondary)] [overflow-wrap:anywhere]",
                   disabled && "cursor-not-allowed"
                 )}
               >

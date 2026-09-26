@@ -2,6 +2,11 @@
 
 A working plan, published with the repo. It is not product copy.
 
+**Status:** carried out. Phases 0 to 8 and four review rounds are done, and `v2` is in review
+as [PR #5](https://github.com/imnotannamaria/entrepta/pull/5). The plan stays as the record
+of what changed and why. Where the work moved away from the plan, the notes under each phase
+and the review rounds at the end say so.
+
 - **Source:** entrepta's first consumer, the
   [anna.maria.dev](https://github.com/imnotannamaria/anna.maria.dev) portfolio, grew the design
   system from the inside between July and September 2026. This plan brings that work back.
@@ -51,7 +56,7 @@ The work has five fronts:
 | Themes in `init`     | `init` asks: one fixed theme, or all six at runtime             | The CLI gains a runtime mode, and the ThemeSwitcher works in user projects                                                                                     |
 | AGENTS.md            | A configurator on the home page                                 | A pure generator in the docs app, fed by the CLI manifest                                                                                                      |
 | Icons                | Everything moves to Phosphor                                    | `lucide-react` leaves the registry, the CLI and the docs                                                                                                       |
-| Motion               | `motion` ^12 becomes a dependency                               | Only for the items that use it. Nobody installs it by accident                                                                                                 |
+| Motion               | `motion` becomes a dependency (13, see Phase 4)                 | Only for the items that use it. Nobody installs it by accident                                                                                                 |
 
 ---
 
@@ -132,7 +137,7 @@ Paths are relative to the portfolio repo, at `50c055f`.
 | `TabStrip`                                                  | [`components/chrome/tab-strip.tsx`](https://github.com/imnotannamaria/anna.maria.dev/blob/50c055f/components/chrome/tab-strip.tsx)               | merged into `primitives/tabs.tsx`       | 5     |
 | `Sidebar` (icon rail with a `◆`)                            | [`components/chrome/sidebar.tsx`](https://github.com/imnotannamaria/anna.maria.dev/blob/50c055f/components/chrome/sidebar.tsx)                   | `layout/sidebar.tsx`                    | 5     |
 | `PageOutline` (scrollspy)                                   | [`components/chrome/page-outline.tsx`](https://github.com/imnotannamaria/anna.maria.dev/blob/50c055f/components/chrome/page-outline.tsx)         | `layout/page-outline.tsx`               | 5     |
-| `Titlebar`                                                  | [`components/chrome/titlebar.tsx`](https://github.com/imnotannamaria/anna.maria.dev/blob/50c055f/components/chrome/titlebar.tsx)                 | `layout/titlebar.tsx`                   | 5     |
+| `Titlebar`                                                  | [`components/chrome/titlebar.tsx`](https://github.com/imnotannamaria/anna.maria.dev/blob/50c055f/components/chrome/titlebar.tsx)                 | `primitives/tabs.tsx`, as `variant="window"` (review round 1) | 5 |
 
 ### Side findings
 
@@ -216,7 +221,7 @@ point is what makes it possible to tell later what changed because of it.
 - Typecheck: passing.
 - Tests: CLI 54 in 6 files, registry 214 in 20 files. All passing.
 - Build: the CLI, the registry and the docs app, with 16 docs routes.
-- Screenshots: `docs/baseline-v1/`, 48 PNGs. 12 pages (home, docs, the foundations index,
+- Screenshots: `docs/baseline-v1/` (kept locally, not committed), 48 PNGs. 12 pages (home, docs, the foundations index,
   color, typography, motion, and button, badge, card, code-block, command-palette,
   status-bar), each in dark and light, at 1440px and 375px. Taken from the production build at
   2x with reduced motion, full page. Named `<page>.<mode>.<viewport>.png`.
@@ -340,8 +345,8 @@ surfaces in Phase 3.
 - 375px: the command Button in the Button preview pushed the page into horizontal scroll once
   mono went to 14px. The demo label drops `@latest`. No docs page overflows at 375px now
   (all 27 checked with Playwright).
-- `sandbox/wirst-test` is gitignored and was not touched. It carries chart experiments;
-  regenerate it with `init --overwrite` when it is next used.
+- `sandbox/wirst-test` is gitignored and was not touched here. It was regenerated with
+  `init --overwrite` in review round 4.
 
 **Visual pass**
 
@@ -727,7 +732,7 @@ only ships its status bar and top nav.
 
 **What changes for users.** Twelve new items, including a full form kit (Switch, Textarea,
 Field), ready-made 404, error and loading screens, and the editor frame (Titlebar, Sidebar,
-PageOutline). Tabs get the brand underline that travels between tabs.
+PageOutline; Titlebar later became a Tabs variant). Tabs get the brand underline that travels between tabs.
 
 **Technical**
 
@@ -803,7 +808,8 @@ Reveal and a form with Field, all installed through the local CLI.
 - PageOutline takes `scrollContainer` and falls back to the window, and a jump updates the hash.
   Found in the end-to-end run and fixed: a short last section never reached the scrollspy's
   band, so clicking "contact" scrolled there and then lit "work". Once the scroll bottoms out,
-  the last section in view is current. The portfolio has the same bug.
+  the last section in view is current. The portfolio picks up the fix when it adopts v2
+  (Phase 8).
 - Titlebar's window dots are plain spans, hidden from screen readers. The portfolio's were
   `aria-hidden` buttons with an easter egg.
 - End to end, in a copy of the sandbox app: every Phase 5 item came in through `add`, with
@@ -918,15 +924,15 @@ the test measures.
     error prompt all failed. Light mode now uses emerald-700, amber-800, rose-700 and
     indigo-700, `[data-surface="dark"]` restores the 400s, and the contrast test checks each
     status ink on the canvas, a card and its own soft tint in all 12 combinations. The
-    portfolio has the same gap.
+    portfolio picks these inks up when it adopts v2 (Phase 8).
 - The scale test reads the docs source too, so size examples cannot be written literally.
   `lib/rules.ts` escapes them inside a plain string; the migration guide builds them by
   interpolation, because Biome's formatter undoes escapes in template literals.
 - Theme scripts need `suppressHydrationWarning` on `<html>`: now said on the Accessibility,
   ThemeSwitcher and ModeToggle pages and in the migration guide.
 - Visual pass, automated part: every sitemap page (47) at 375px in both modes, with no overflow
-  and no errors beyond the Vercel Analytics script, which only exists on Vercel. The
-  person-looking part is still open.
+  and no errors beyond the Vercel Analytics script, which only exists on Vercel. The pass by eye
+  came after, in review rounds 1 to 4.
 - Left for Phase 7: the home page still has em-dashes in three strings and in the install
   snippet.
 **Visual pass**
@@ -1052,7 +1058,7 @@ project it came from.
       motion as a dependency, Phosphor, a framework-agnostic registry, imports across
       categories, runtime themes in `init`, `--fg-brand-text`). Kept up to date phase by phase,
       and AGENTS.md mirrors it under a sync test
-- [ ] `v2` into `main` through a reviewed PR
+- [ ] `v2` into `main` through a reviewed PR ([#5](https://github.com/imnotannamaria/entrepta/pull/5), in review)
 - [ ] After the merge: check the "Version Packages" PR and the npm publish
 
 **Checklist: adoption in the portfolio**
@@ -1071,26 +1077,29 @@ Smaller than the ones above, each with a recommendation.
 1. **Fonts.** The registry uses a Google Fonts `@import`, which works in any framework. The
    portfolio uses `next/font`, which avoids a render-blocking request. _Recommendation:_ keep
    the `@import` in the registry and document `next/font` for Next.js projects, with a ready
-   snippet.
+   snippet. _Status:_ the `@import` stays; the `next/font` snippet is still to write.
 2. **The Card `data` variant.** It has 2 uses in the docs and no counterpart in the portfolio.
-   _Recommendation:_ keep it in v2, restyled on the new tokens.
+   _Recommendation:_ keep it in v2, restyled on the new tokens. _Decided:_ kept, as a glass
+   card (review round 3).
 3. **The animated border as a Card variant.** The portfolio's roadmap cards run a light around
    their border on hover (`@property` plus a `conic-gradient`). That is a card animation, not
    something specific to a roadmap. _Recommendation:_ a `live` Card variant in a minor release
-   after v2, outside this plan.
+   after v2, outside this plan. _Status:_ after v2.
 4. **Display tracking in the token.** Tailwind v4 accepts `--text-display-xl--letter-spacing`;
    the portfolio sets the tracking at the call site. _Recommendation:_ put it in the token. The
    old `.t-display-*` classes carried it, and it gets lost if it lives at the call site.
+   _Decided:_ in the token (Phase 1).
 5. **Hover direction in light mode.** In entrepta light the brand darkens on hover; in the other
    five it lightens. _Recommendation:_ make them consistent, and let the contrast test decide
-   which direction passes.
-6. **StatusBar below `sm`.** The portfolio hides it on phones. _Recommendation:_ entrepta shows
-   it at every width, and a project that wants it hidden passes a class.
+   which direction passes. _Status:_ after v2; hover colors carry no text today.
+6. **StatusBar below `sm`.** The portfolio hides it on phones. _Decided:_ hidden below 640px,
+   as the registry already did; a project that wants it on phones passes `className="flex"`
+   (Phase 3).
 7. **Framework-agnostic chrome.** If Titlebar and Sidebar get too complex without `next/*`, the
-   fallback is to ship both as Next.js only, with a note. _Recommendation:_ try agnostic first and
-   decide in the Phase 5 PR.
+   fallback is to ship both as Next.js only, with a note. _Decided:_ agnostic worked, with
+   `asChild`, `linkComponent` and `active` (Phase 5).
 8. **Next.js 16 in the docs app.** The docs run on 15 and the portfolio on 16.
-   _Recommendation:_ a separate PR after v2.
+   _Recommendation:_ a separate PR after v2. _Status:_ after v2.
 9. **`motion` 13.** Decided: migrate now. See the Phase 4 notes.
 10. **Version ranges for deps.** Decided: no versions. The CLI installs the latest release of
     each dep, as shadcn does. The trade-off is that a future major can reach users before the
@@ -1098,7 +1107,7 @@ Smaller than the ones above, each with a recommendation.
 
 ---
 
-## Review round 1 (after Phase 8, from Anna's visual pass)
+## Review round 1 (after Phase 8, from the visual pass)
 
 - [x] Checkbox component, native input, drawn check, description, indeterminate
 - [x] AGENTS.md configurator moved out of the home page into a dialog opened from the header,
@@ -1157,6 +1166,22 @@ Smaller than the ones above, each with a recommendation.
 - [x] Page content moved into lib/docs-data.ts so the page and its Markdown share it. On the
       way: the CLI page documented a `diff` command that does not exist, installation called
       Tailwind optional, and the themes page said a preset sets three variables (it sets six)
+
+## Review round 5
+
+- [x] Checkbox motion: the box dips on press and settles with a small overshoot when checked,
+      and the check draws after the fill. `check-pop` lives in `globals.css`
+- [x] A docs link in the header and the mobile menu; the full menu now starts at 1024px,
+      where it fits next to the logo
+- [x] Share images for the site and every component page, and the README hero
+- [x] AGENTS.md says every page has a Markdown version and where llms.txt is, and its
+      component links point at the `.md` pages. The home page has a section for agents
+- [x] Public copy reviewed: example text, a security claim that read as a formal audit, the
+      status bar showing "home" on every page, and this plan's contradictions
+- [x] READMEs for the repo and both packages, with the agent docs and the projects built on
+      entrepta
+- Responsive sweep: every sitemap page at 375 and 1024px, and key pages at 320 to 1280px,
+      checked for horizontal overflow, overlapping text and clipped text
 
 ---
 

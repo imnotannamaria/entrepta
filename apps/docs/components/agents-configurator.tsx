@@ -237,7 +237,8 @@ function Configurator() {
           </DialogTitle>
           <DialogDescription>
             It tells a coding agent how to install entrepta, where things live, which token goes
-            where, and how each component is used. The link keeps your choices.
+            where, and how each component is used. It also points the agent at the docs in Markdown:
+            every page has a .md version, such as /docs/components.md. The link keeps your choices.
           </DialogDescription>
         </DialogHeader>
 
@@ -354,7 +355,7 @@ function Configurator() {
                       {on}/{items.length}
                     </span>
                   </div>
-                  <div className="grid grid-cols-2 gap-x-4 gap-y-2.5 pl-6.5">
+                  <div className="grid grid-cols-[repeat(auto-fill,minmax(10.5rem,1fr))] gap-x-4 gap-y-2.5 pl-6.5">
                     {items.map((c) => {
                       const neededBy = required.get(c.slug);
                       return (

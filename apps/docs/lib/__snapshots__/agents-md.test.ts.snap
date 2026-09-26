@@ -82,7 +82,7 @@ import { Button, buttonVariants } from "@/app/components/entrepta/button"
 <Button variant="primary" size="md">ship it</Button>
 \`\`\`
 
-Docs: https://entrepta.vercel.app/docs/components/button
+Docs: https://entrepta.vercel.app/docs/components/button.md
 
 ### Card
 
@@ -92,7 +92,7 @@ import { Card, cardVariants, CardHeader, CardLabel, CardMeta, CardTitle, CardDes
 <Card><CardHeader><CardLabel>post</CardLabel><CardMeta>2026</CardMeta></CardHeader><CardTitle>Title</CardTitle></Card>
 \`\`\`
 
-Docs: https://entrepta.vercel.app/docs/components/card
+Docs: https://entrepta.vercel.app/docs/components/card.md
 
 ### Field
 
@@ -102,9 +102,15 @@ import { Field, FieldError, FieldLabel } from "@/app/components/entrepta/field"
 <Field id="email" label="email" error={error}><input type="email" /></Field>
 \`\`\`
 
-Docs: https://entrepta.vercel.app/docs/components/field
+Docs: https://entrepta.vercel.app/docs/components/field.md
 
 Also installed as dependencies: \`diamond\`.
+
+## Reading the docs
+
+- Every docs page has a Markdown version at the same URL plus \`.md\`. Read that instead of the HTML. The component index is https://entrepta.vercel.app/docs/components.md, and each component has its own, such as https://entrepta.vercel.app/docs/components/button.md.
+- https://entrepta.vercel.app/llms.txt lists every page. https://entrepta.vercel.app/llms-full.txt is all of them in one file.
+- Upgrading from 1.x: https://entrepta.vercel.app/docs/migrating-to-v2.md, step by step, with every new component.
 
 ## Before calling a UI change done
 
@@ -195,7 +201,7 @@ import { Button, buttonVariants } from "@/components/entrepta/button"
 <Button variant="primary" size="md">ship it</Button>
 \`\`\`
 
-Docs: https://entrepta.vercel.app/docs/components/button
+Docs: https://entrepta.vercel.app/docs/components/button.md
 
 ### Card
 
@@ -205,7 +211,7 @@ import { Card, cardVariants, CardHeader, CardLabel, CardMeta, CardTitle, CardDes
 <Card><CardHeader><CardLabel>post</CardLabel><CardMeta>2026</CardMeta></CardHeader><CardTitle>Title</CardTitle></Card>
 \`\`\`
 
-Docs: https://entrepta.vercel.app/docs/components/card
+Docs: https://entrepta.vercel.app/docs/components/card.md
 
 ### Field
 
@@ -215,9 +221,15 @@ import { Field, FieldError, FieldLabel } from "@/components/entrepta/field"
 <Field id="email" label="email" error={error}><input type="email" /></Field>
 \`\`\`
 
-Docs: https://entrepta.vercel.app/docs/components/field
+Docs: https://entrepta.vercel.app/docs/components/field.md
 
 Also installed as dependencies: \`diamond\`.
+
+## Reading the docs
+
+- Every docs page has a Markdown version at the same URL plus \`.md\`. Read that instead of the HTML. The component index is https://entrepta.vercel.app/docs/components.md, and each component has its own, such as https://entrepta.vercel.app/docs/components/button.md.
+- https://entrepta.vercel.app/llms.txt lists every page. https://entrepta.vercel.app/llms-full.txt is all of them in one file.
+- Upgrading from 1.x: https://entrepta.vercel.app/docs/migrating-to-v2.md, step by step, with every new component.
 
 ## Before calling a UI change done
 
@@ -308,7 +320,7 @@ import { Button, buttonVariants } from "@/components/entrepta/button"
 <Button variant="primary" size="md">ship it</Button>
 \`\`\`
 
-Docs: https://entrepta.vercel.app/docs/components/button
+Docs: https://entrepta.vercel.app/docs/components/button.md
 
 ### Card
 
@@ -318,7 +330,7 @@ import { Card, cardVariants, CardHeader, CardLabel, CardMeta, CardTitle, CardDes
 <Card><CardHeader><CardLabel>post</CardLabel><CardMeta>2026</CardMeta></CardHeader><CardTitle>Title</CardTitle></Card>
 \`\`\`
 
-Docs: https://entrepta.vercel.app/docs/components/card
+Docs: https://entrepta.vercel.app/docs/components/card.md
 
 ### Field
 
@@ -328,9 +340,15 @@ import { Field, FieldError, FieldLabel } from "@/components/entrepta/field"
 <Field id="email" label="email" error={error}><input type="email" /></Field>
 \`\`\`
 
-Docs: https://entrepta.vercel.app/docs/components/field
+Docs: https://entrepta.vercel.app/docs/components/field.md
 
 Also installed as dependencies: \`diamond\`.
+
+## Reading the docs
+
+- Every docs page has a Markdown version at the same URL plus \`.md\`. Read that instead of the HTML. The component index is https://entrepta.vercel.app/docs/components.md, and each component has its own, such as https://entrepta.vercel.app/docs/components/button.md.
+- https://entrepta.vercel.app/llms.txt lists every page. https://entrepta.vercel.app/llms-full.txt is all of them in one file.
+- Upgrading from 1.x: https://entrepta.vercel.app/docs/migrating-to-v2.md, step by step, with every new component.
 
 ## Before calling a UI change done
 

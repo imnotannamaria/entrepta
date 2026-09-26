@@ -78,7 +78,8 @@ const CodeBlock = React.forwardRef<HTMLDivElement, CodeBlockProps>(
         {hasChrome && (
           <div
             className={cn(
-              "flex items-center gap-3 px-4 py-2",
+              // the halves shrink before the copy button does, so it never leaves the block
+              "flex min-w-0 items-center gap-3 px-4 py-2",
               "border-b border-[var(--border-subtle)]",
               "font-mono text-mono-sm text-[var(--fg-secondary)]"
             )}
@@ -90,9 +91,15 @@ const CodeBlock = React.forwardRef<HTMLDivElement, CodeBlockProps>(
                 <span className="w-2.5 h-2.5 rounded-full bg-[var(--status-success)] opacity-60" />
               </div>
             )}
-            {filename && <span className="text-[var(--fg-muted)] truncate">{filename}</span>}
-            <div className="ml-auto flex items-center gap-3">
-              {meta && <span className="text-[var(--fg-muted)] truncate">{meta}</span>}
+            {filename && (
+              <span className="min-w-0 truncate text-[var(--fg-muted)]">{filename}</span>
+            )}
+            <div className="ml-auto flex min-w-0 items-center gap-3">
+              {meta && (
+                <span className="hidden min-w-0 truncate text-[var(--fg-muted)] sm:inline">
+                  {meta}
+                </span>
+              )}
               {language && (
                 <span className="uppercase tracking-[0.08em] text-[var(--fg-brand-text)] text-mono-xs">
                   {language}

@@ -281,7 +281,7 @@ function CardPreview() {
           Plain markdown beats <em>Notion</em>.
         </CardTitle>
         <CardDescription>
-          Two years of database PTSD, condensed into an opinionated rant about plain text and git.
+          Two years of notes moved out of a database and into plain text and git. What held up.
         </CardDescription>
         <CardFooter>
           <span>read →</span>

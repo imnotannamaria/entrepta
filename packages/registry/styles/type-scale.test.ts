@@ -9,12 +9,14 @@ import { describe, expect, it } from "vitest";
  * stray size would write it.
  *
  * Test files are skipped: they name default steps on purpose, to check that
- * `cn` merges them correctly.
+ * `cn` merges them correctly. So is the share image renderer, which draws a
+ * 1200 by 630 picture in pixels, not interface text.
  */
 
 const REPO = path.resolve(__dirname, "../../..");
 const ROOTS = ["packages/registry", "apps/docs/app", "apps/docs/components", "apps/docs/lib"];
 const SKIP_DIRS = new Set(["node_modules", ".next", "dist"]);
+const SKIP_FILES = new Set(["apps/docs/lib/og.tsx"]);
 
 function sourceFiles(dir: string): string[] {
   return fs.readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
@@ -25,7 +27,9 @@ function sourceFiles(dir: string): string[] {
   });
 }
 
-const FILES = ROOTS.flatMap((root) => sourceFiles(path.join(REPO, root)));
+const FILES = ROOTS.flatMap((root) => sourceFiles(path.join(REPO, root))).filter(
+  (file) => !SKIP_FILES.has(path.relative(REPO, file))
+);
 
 function matches(pattern: RegExp): string[] {
   return FILES.flatMap((file) =>

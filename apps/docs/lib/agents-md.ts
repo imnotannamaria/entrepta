@@ -256,7 +256,7 @@ import { ${exportsList.join(", ")} } from "${paths.alias}/${c.slug}"
 ${c.manifest?.usage ?? ""}
 \`\`\`
 
-Docs: https://entrepta.vercel.app/docs/components/${c.slug}`;
+Docs: https://entrepta.vercel.app/docs/components/${c.slug}.md`;
     });
     const also = extras.length
       ? `\n\nAlso installed as dependencies: ${extras.map((c) => `\`${c.name}\``).join(", ")}.`
@@ -265,6 +265,14 @@ Docs: https://entrepta.vercel.app/docs/components/${c.slug}`;
 
 ${sheet.join("\n\n")}${also}`);
   }
+
+  sections.push(`## Reading the docs
+
+${bullets([
+  "Every docs page has a Markdown version at the same URL plus `.md`. Read that instead of the HTML. The component index is https://entrepta.vercel.app/docs/components.md, and each component has its own, such as https://entrepta.vercel.app/docs/components/button.md.",
+  "https://entrepta.vercel.app/llms.txt lists every page. https://entrepta.vercel.app/llms-full.txt is all of them in one file.",
+  "Upgrading from 1.x: https://entrepta.vercel.app/docs/migrating-to-v2.md, step by step, with every new component.",
+])}`);
 
   sections.push(`## Before calling a UI change done
 

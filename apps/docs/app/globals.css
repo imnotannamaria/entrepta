@@ -462,6 +462,20 @@ select:autofill {
   }
 }
 
+/* A checkbox or switch settling into its new state: a dip, a small
+   overshoot, then rest. It runs each time the checked style starts to apply. */
+@keyframes check-pop {
+  0% {
+    transform: scale(0.82);
+  }
+  55% {
+    transform: scale(1.08);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
 .motion-fade[data-state="open"] {
   animation: overlay-in var(--motion-base) var(--ease-out);
 }

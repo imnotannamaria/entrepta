@@ -1,6 +1,8 @@
 /** Every link that leaves the site, in one place, so none of them rots as a `#`. */
 export const LINKS = {
   github: "https://github.com/imnotannamaria/entrepta",
+  author: "https://annamaria.app",
+  wristkit: "https://wristkit-web.vercel.app",
   npmCli: "https://www.npmjs.com/package/@entrepta/cli",
   npmRegistry: "https://www.npmjs.com/package/@entrepta/registry",
   changelog: "https://github.com/imnotannamaria/entrepta/blob/main/packages/cli/CHANGELOG.md",
@@ -23,4 +25,10 @@ export const PACKAGES = [
     what: "The source the CLI copies from, and the manifest that lists every component, its files and its deps.",
     run: "npm view @entrepta/registry",
   },
+] as const;
+
+/** Projects built on entrepta, the first ones and its real test cases. */
+export const USED_BY = [
+  { name: "annamaria.app", href: LINKS.author, what: "a personal site posed as an IDE" },
+  { name: "wristkit", href: LINKS.wristkit, what: "Apple Health components for Next.js" },
 ] as const;

@@ -36,8 +36,9 @@ contrast.
 
 ### Who consumes it
 
-- **portfolio** (anna-maria-dev.vercel.app), personal site posed as an IDE.
-- **wristkit**, a CLI that injects Apple Health React components into Next.js.
+- **portfolio** ([annamaria.app](https://annamaria.app)), personal site posed as an IDE.
+- **wristkit** ([wristkit-web.vercel.app](https://wristkit-web.vercel.app)), a CLI that
+  injects Apple Health React components into Next.js.
 
 These are the first consumers and act as real test cases, but the design system
 is generic. Anyone can use it.
@@ -575,6 +576,10 @@ pnpm dlx file:"$(pwd)/../entrepta/packages/cli" init
   the manifest, `lib/components.ts`), never written twice. A page's content
   goes in data first; `lib/markdown.test.ts` fails if a component has no twin
   or llms.txt misses a page
+- Share images are generated per page (`opengraph-image.tsx` for the site and
+  for each component) from `lib/og.tsx`. Its fonts are TTFs in
+  `apps/docs/assets/fonts`, because satori reads no woff2 and the build must not
+  need the network. The README hero is the site's image, in `.github/assets`
 - Docs live at https://entrepta.vercel.app/
 
 ---

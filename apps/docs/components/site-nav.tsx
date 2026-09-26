@@ -19,7 +19,8 @@ export function SiteNav() {
         }
         right={
           <>
-            <TopNavMenu>
+            <TopNavMenu className="md:hidden lg:flex">
+              <TopNavLink href="/docs">docs</TopNavLink>
               <TopNavLink href="/#install">install</TopNavLink>
               <TopNavLink href="/#principles">principles</TopNavLink>
               <TopNavLink href="/docs/components">components</TopNavLink>
