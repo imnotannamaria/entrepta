@@ -38,8 +38,10 @@ describe("source rules", () => {
    * that names no file. Server files import from `@phosphor-icons/react/dist/ssr`.
    */
   it("imports the Phosphor root only from client files", () => {
+    // `import type` is erased at compile time, so it never reaches the server build
+    const valueImport = /^import\s+(?!type\b)[^;]*from\s+["']@phosphor-icons\/react["']/m;
     const offenders = FILES.filter(
-      ({ source }) => /from\s+["']@phosphor-icons\/react["']/.test(source) && !isClient(source)
+      ({ source }) => valueImport.test(source) && !isClient(source)
     ).map(({ file }) => file);
     expect(offenders).toEqual([]);
   });

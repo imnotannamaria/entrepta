@@ -380,7 +380,7 @@ Vite. Aliases are relative to it, and `add` writes each file under it.
 | SectHead  | the `$ command` rule that opens a section                |
 | doc-parts | DocLabel, Section, DisplayH2, Prose, Em, Strong          |
 
-Card, Dialog, Field, Tabs and ThemeSwitcher import Diamond from `content/`. The CLI rewrites
+Card, Dialog, Field, Tabs and PageOutline import Diamond from `content/`. CardLabel, DialogLabel and Field take an `icon` that replaces the ◆ when the label names a kind of thing. The CLI rewrites
 an import between categories (`../content/diamond`) to a sibling (`./diamond`),
 and `registryDeps` makes sure the file is copied. A manifest test checks that
 every such import is covered.

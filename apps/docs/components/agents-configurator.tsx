@@ -39,7 +39,8 @@ const MODES = ["dark", "light"] as const;
 const THEMES_MODES = ["single", "all"] as const;
 const OPEN = ["open"] as const;
 const DEFAULT_COMPONENTS = ["button", "card", "code-block"];
-const SLUGS = new Set(COMPONENT_INDEX.map((c) => c.slug));
+const ALL_SLUGS = COMPONENT_INDEX.map((c) => c.slug);
+const SLUGS = new Set(ALL_SLUGS);
 
 /** The dialog's open state, in `?agents=open`: shareable, and the back button closes it. */
 export function useAgentsDialog() {
@@ -191,6 +192,7 @@ function Configurator() {
     }
   }
   const count = new Set([...options.components, ...required.keys()]).size;
+  const everything = ALL_SLUGS.every((s) => options.components.includes(s));
 
   const toggle = (slug: string) => {
     setPicked(
@@ -227,7 +229,7 @@ function Configurator() {
         onSubmit={(e) => e.preventDefault()}
       >
         <DialogHeader className="border-b border-[var(--border-subtle)] px-6 pt-6 pb-5">
-          <DialogLabel>agents.md</DialogLabel>
+          <DialogLabel icon={RobotIcon}>agents.md</DialogLabel>
           <DialogTitle>
             Your <em>AGENTS.md</em>, ready to paste.
           </DialogTitle>
@@ -318,6 +320,17 @@ function Configurator() {
         </Step>
 
         <Step num="03" title={`components · ${count} picked`}>
+          <div className="flex items-center justify-between gap-3 rounded-[var(--radius-md)] border border-[var(--border-subtle)] bg-[var(--bg-canvas)] px-3 py-2.5">
+            <Checkbox
+              label="All components"
+              checked={everything}
+              indeterminate={options.components.length > 0 && !everything}
+              onChange={() => setPicked(everything ? [] : ALL_SLUGS)}
+            />
+            <span className="font-mono text-mono-xs text-[var(--fg-muted)] tabular-nums">
+              {count}/{ALL_SLUGS.length}
+            </span>
+          </div>
           <div className="flex flex-col gap-5">
             {SECTIONS.map((section) => {
               const items = COMPONENT_INDEX.filter((c) => c.section === section);

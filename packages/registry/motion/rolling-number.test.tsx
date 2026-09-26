@@ -24,6 +24,15 @@ describe("RollingNumber", () => {
   });
 });
 
+describe("RollingNumber entrance", () => {
+  it("waits until it is on screen before it rolls", async () => {
+    const { container } = render(<RollingNumber value={7} />);
+    const root = container.firstChild as HTMLElement;
+    await act(async () => {});
+    expect(root).toHaveAttribute("data-in-view", "true");
+  });
+});
+
 describe("useRollOnHover", () => {
   it("spends the entrance delay once, then rolls without waiting", () => {
     const { result } = renderHook(() => useRollOnHover(0.7));

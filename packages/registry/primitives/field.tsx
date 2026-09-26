@@ -1,3 +1,4 @@
+import type { Icon } from "@phosphor-icons/react";
 import * as React from "react";
 import { Diamond } from "../content/diamond";
 import { cn } from "../lib/utils";
@@ -5,10 +6,12 @@ import { cn } from "../lib/utils";
 interface FieldLabelProps extends React.LabelHTMLAttributes<HTMLLabelElement> {
   /** Adds a brand `*`. Put `required` on the control too; the star is only visual. */
   required?: boolean;
+  /** A Phosphor icon in place of the ◆. */
+  icon?: Icon;
 }
 
 const FieldLabel = React.forwardRef<HTMLLabelElement, FieldLabelProps>(
-  ({ className, required, children, ...props }, ref) => (
+  ({ className, required, icon: LabelIcon, children, ...props }, ref) => (
     // biome-ignore lint/a11y/noLabelWithoutControl: htmlFor arrives through props
     <label
       ref={ref}
@@ -19,7 +22,16 @@ const FieldLabel = React.forwardRef<HTMLLabelElement, FieldLabelProps>(
       )}
       {...props}
     >
-      <Diamond />
+      {LabelIcon ? (
+        <LabelIcon
+          aria-hidden
+          size={11}
+          weight="bold"
+          className="shrink-0 text-[var(--fg-brand)]"
+        />
+      ) : (
+        <Diamond />
+      )}
       {children}
       {required && (
         <span aria-hidden className="text-[var(--fg-brand)]">
@@ -65,6 +77,8 @@ interface FieldProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "childre
   id: string;
   label: React.ReactNode;
   required?: boolean;
+  /** A Phosphor icon in place of the label's ◆. */
+  icon?: Icon;
   error?: React.ReactNode;
   hint?: React.ReactNode;
   /** One control: Input, Textarea, Switch or a native element. */
@@ -77,7 +91,7 @@ interface FieldProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "childre
  * `aria-invalid` while there is an error. Props already set on the control win.
  */
 const Field = React.forwardRef<HTMLDivElement, FieldProps>(
-  ({ className, id, label, required, error, hint, children, ...props }, ref) => {
+  ({ className, id, label, required, icon, error, hint, children, ...props }, ref) => {
     const errorId = `${id}-error`;
     const hintId = `${id}-hint`;
     const describedBy = error ? errorId : hint ? hintId : undefined;
@@ -92,7 +106,7 @@ const Field = React.forwardRef<HTMLDivElement, FieldProps>(
 
     return (
       <div ref={ref} className={cn("flex flex-col gap-1.5", className)} {...props}>
-        <FieldLabel htmlFor={id} required={required}>
+        <FieldLabel htmlFor={id} required={required} icon={icon}>
           {label}
         </FieldLabel>
         {control}

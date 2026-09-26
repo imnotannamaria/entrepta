@@ -186,6 +186,11 @@ import { CheckIcon, GitBranchIcon } from "@phosphor-icons/react"
         default: '"span"',
         description: "Render CardLabel as a heading (CardLabel only)",
       },
+      {
+        name: "icon",
+        type: "Icon",
+        description: "A Phosphor icon in place of the ◆ (CardLabel only)",
+      },
     ],
   },
   dialog: {
@@ -217,6 +222,11 @@ import { Button } from "@/components/entrepta/button"
   </DialogContent>
 </Dialog>`,
     props: [
+      {
+        name: "icon",
+        type: "Icon",
+        description: "A Phosphor icon in place of the ◆ (DialogLabel)",
+      },
       {
         name: "open",
         type: "boolean",
@@ -927,6 +937,7 @@ import { Textarea } from "@/components/entrepta/textarea"
         description: "The control's id. Error and hint ids derive from it",
       },
       { name: "label", type: "ReactNode", description: "Mono label with a ◆" },
+      { name: "icon", type: "Icon", description: "A Phosphor icon in place of the label's ◆" },
       {
         name: "required",
         type: "boolean",

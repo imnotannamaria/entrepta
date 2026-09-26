@@ -1,8 +1,7 @@
 "use client";
 
-import { CheckIcon, MoonIcon, SunIcon } from "@phosphor-icons/react";
+import { CheckIcon, CircleHalfIcon, MoonIcon, PaletteIcon, SunIcon } from "@phosphor-icons/react";
 import * as React from "react";
-import { Diamond } from "../content/diamond";
 import type { ThemeMode } from "../hooks/use-mode";
 import { type ThemeOption, type UseThemeOptions, useTheme } from "../hooks/use-theme";
 import { cn } from "../lib/utils";
@@ -138,7 +137,12 @@ const ThemeSwitcher = React.forwardRef<HTMLDivElement, ThemeSwitcherProps>(
             {showModeToggle && (
               <>
                 <div className={LABEL}>
-                  <Diamond />
+                  <CircleHalfIcon
+                    aria-hidden
+                    size={11}
+                    weight="bold"
+                    className="text-[var(--fg-brand)]"
+                  />
                   mode
                 </div>
                 <button
@@ -158,7 +162,12 @@ const ThemeSwitcher = React.forwardRef<HTMLDivElement, ThemeSwitcherProps>(
                 </button>
                 <div aria-hidden className="-mx-1 my-1 h-px bg-[var(--border-subtle)]" />
                 <div className={LABEL}>
-                  <Diamond />
+                  <PaletteIcon
+                    aria-hidden
+                    size={11}
+                    weight="bold"
+                    className="text-[var(--fg-brand)]"
+                  />
                   theme
                 </div>
               </>

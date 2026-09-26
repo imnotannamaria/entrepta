@@ -1,7 +1,8 @@
 "use client";
 
-import { motion, useReducedMotion } from "motion/react";
+import { motion, useInView, useReducedMotion } from "motion/react";
 import * as React from "react";
+import { revealViewport } from "../lib/motion";
 
 /**
  * Pointer handlers for a counter that rolls a full turn on hover.
@@ -38,11 +39,13 @@ function Digit({
   cycle,
   delay,
   height,
+  shown,
 }: {
   digit: number;
   cycle: number;
   delay: number;
   height: number;
+  shown: boolean;
 }) {
   const reduce = useReducedMotion() ?? false;
 
@@ -51,7 +54,8 @@ function Digit({
       <motion.span
         style={{ display: "block" }}
         initial={{ y: 0 }}
-        animate={{ y: -(digit + cycle * 10) * height }}
+        // rests on 0 until the number is on screen, so the roll is seen, not spent offscreen
+        animate={{ y: shown ? -(digit + cycle * 10) * height : 0 }}
         transition={
           reduce
             ? { duration: 0 }
@@ -85,7 +89,10 @@ interface RollingNumberProps {
   style?: React.CSSProperties;
 }
 
-/** A number that rolls into place like an odometer. The real value is in an sr-only copy. */
+/**
+ * A number that rolls into place like an odometer, once, when it comes on
+ * screen. The real value is in an sr-only copy.
+ */
 function RollingNumber({
   value,
   cycle = 0,
@@ -95,10 +102,17 @@ function RollingNumber({
   style,
 }: RollingNumberProps) {
   const chars = Array.from(String(value));
+  const ref = React.useRef<HTMLSpanElement>(null);
+  const shown = useInView(ref, revealViewport);
   let digitIndex = 0;
 
   return (
-    <span className={className} style={{ display: "flex", ...style }}>
+    <span
+      ref={ref}
+      data-in-view={shown || undefined}
+      className={className}
+      style={{ display: "flex", ...style }}
+    >
       <span className="sr-only">{value}</span>
       {chars.map((char, i) => {
         if (!/[0-9]/.test(char)) {
@@ -122,6 +136,7 @@ function RollingNumber({
             cycle={cycle}
             delay={delay + order * 0.06}
             height={height}
+            shown={shown}
           />
         );
       })}

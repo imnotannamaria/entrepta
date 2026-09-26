@@ -1,6 +1,6 @@
 "use client";
 
-import { XIcon } from "@phosphor-icons/react";
+import { type Icon, XIcon } from "@phosphor-icons/react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import * as React from "react";
 import { Diamond } from "../content/diamond";
@@ -111,9 +111,14 @@ const DialogDescription = React.forwardRef<
 ));
 DialogDescription.displayName = DialogPrimitive.Description.displayName;
 
+interface DialogLabelProps extends React.HTMLAttributes<HTMLDivElement> {
+  /** A Phosphor icon in place of the ◆. */
+  icon?: Icon;
+}
+
 /** Optional meta strip (file path / version / status) shown above the title. */
-const DialogLabel = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
-  ({ className, children, ...props }, ref) => (
+const DialogLabel = React.forwardRef<HTMLDivElement, DialogLabelProps>(
+  ({ className, children, icon: LabelIcon, ...props }, ref) => (
     <div
       ref={ref}
       className={cn(
@@ -123,7 +128,16 @@ const DialogLabel = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDi
       )}
       {...props}
     >
-      <Diamond size={10} />
+      {LabelIcon ? (
+        <LabelIcon
+          aria-hidden
+          size={12}
+          weight="bold"
+          className="shrink-0 text-[var(--fg-brand)]"
+        />
+      ) : (
+        <Diamond size={10} />
+      )}
       {children}
     </div>
   )

@@ -1,6 +1,6 @@
 import { OpenAgentsButton } from "@/components/agents-configurator";
 import { CommandPaletteTrigger } from "@/components/command-palette-trigger";
-import { CopyInit, HomeShowcase, ThemeRow } from "@/components/home-hero";
+import { CopyInit, HeroStats, HomeShowcase, ThemeRow } from "@/components/home-hero";
 import { HomeInstall } from "@/components/home-install";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteNav } from "@/components/site-nav";
@@ -28,7 +28,18 @@ import {
 } from "@entrepta/registry/primitives/card";
 import { Kbd } from "@entrepta/registry/primitives/kbd";
 import { Switch } from "@entrepta/registry/primitives/switch";
-import { CheckIcon } from "@phosphor-icons/react/dist/ssr";
+import type { Icon } from "@phosphor-icons/react";
+import {
+  BellSimpleIcon,
+  CheckIcon,
+  CubeIcon,
+  FileTextIcon,
+  LayoutIcon,
+  PaletteIcon,
+  SparkleIcon,
+  TerminalWindowIcon,
+  TextboxIcon,
+} from "@phosphor-icons/react/dist/ssr";
 import Link from "next/link";
 
 const PRINCIPLES = [
@@ -144,6 +155,16 @@ const SECTION_PREVIEWS: Record<(typeof SECTIONS)[number], React.ReactNode> = {
   ),
 };
 
+/** What each section's card label shows in place of the ◆. */
+const SECTION_ICONS: Record<(typeof SECTIONS)[number], Icon> = {
+  Primitives: CubeIcon,
+  Forms: TextboxIcon,
+  Layout: LayoutIcon,
+  Content: FileTextIcon,
+  Feedback: BellSimpleIcon,
+  Motion: SparkleIcon,
+};
+
 const SECTION_FIRST_PAGE = Object.fromEntries(
   SECTIONS.map((section) => [section, COMPONENT_INDEX.find((c) => c.section === section)?.slug])
 );
@@ -239,21 +260,9 @@ export default function Home() {
               </Reveal>
             </div>
 
-            <dl className="mx-auto mt-14 grid max-w-3xl grid-cols-2 gap-px overflow-hidden rounded-[var(--radius-md)] border border-[var(--border-subtle)] bg-[var(--border-subtle)] sm:grid-cols-4">
-              {HERO_STATS.map((s) => (
-                <div
-                  key={s.dt}
-                  className="flex flex-col items-center gap-1 bg-[var(--bg-canvas)] px-4 py-5"
-                >
-                  <dd className="order-1 m-0 font-serif text-display-md text-[var(--fg-primary)]">
-                    <RollingNumber value={s.dd} height={40} />
-                  </dd>
-                  <dt className="order-2 font-mono text-mono-xs uppercase tracking-[0.08em] text-[var(--fg-muted)]">
-                    {s.dt}
-                  </dt>
-                </div>
-              ))}
-            </dl>
+            <div className="mt-6">
+              <HeroStats stats={HERO_STATS} />
+            </div>
           </div>
         </section>
 
@@ -282,7 +291,7 @@ export default function Home() {
 
             <Card>
               <CardHeader>
-                <CardLabel>@entrepta/cli</CardLabel>
+                <CardLabel icon={TerminalWindowIcon}>@entrepta/cli</CardLabel>
                 <Badge variant="soft" color="brand">
                   v2.0.0
                 </Badge>
@@ -527,7 +536,7 @@ export default function Home() {
                   >
                     <Card className="h-full">
                       <CardHeader>
-                        <CardLabel>{section.toLowerCase()}</CardLabel>
+                        <CardLabel icon={SECTION_ICONS[section]}>{section.toLowerCase()}</CardLabel>
                         <CardMeta>{`${items.length} ${items.length === 1 ? "component" : "components"}`}</CardMeta>
                       </CardHeader>
                       <CardTitle className="text-heading-md">{section}</CardTitle>
@@ -551,7 +560,7 @@ export default function Home() {
               <Link href="/docs/themes" className="group block h-full">
                 <Card className="h-full">
                   <CardHeader>
-                    <CardLabel>themes</CardLabel>
+                    <CardLabel icon={PaletteIcon}>themes</CardLabel>
                     <CardMeta>{`${THEMES.length} presets`}</CardMeta>
                   </CardHeader>
                   <CardTitle className="text-heading-md">Themes</CardTitle>

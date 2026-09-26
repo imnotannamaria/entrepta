@@ -5,6 +5,7 @@ import { DEFAULT_MODE, DEFAULT_THEME, STORAGE_KEY_PREFIX, THEMES } from "@/lib/t
 import { cn } from "@/lib/utils";
 import { useTheme } from "@entrepta/registry/hooks/use-theme";
 import { StatusBar, StatusBarItem, StatusBarSeparator } from "@entrepta/registry/layout/status-bar";
+import { RollingNumber, useRollOnHover } from "@entrepta/registry/motion/rolling-number";
 import { Spotlight, useSpotlight } from "@entrepta/registry/motion/spotlight";
 import { Badge } from "@entrepta/registry/primitives/badge";
 import { Button } from "@entrepta/registry/primitives/button";
@@ -27,6 +28,7 @@ import {
   FileTsxIcon,
   FilesIcon,
   GitBranchIcon,
+  ListChecksIcon,
   MagnifyingGlassIcon,
   PaletteIcon,
   RobotIcon,
@@ -263,7 +265,7 @@ function LivePreview() {
       <div className="grid flex-1 place-items-center p-5 sm:p-8">
         <Card variant="featured" className="w-full max-w-sm">
           <CardHeader>
-            <CardLabel>launch</CardLabel>
+            <CardLabel icon={ListChecksIcon}>launch</CardLabel>
             <Badge variant="soft" color="brand" icon={RocketLaunchIcon}>
               v2.0
             </Badge>
@@ -491,5 +493,34 @@ export function HomeShowcase() {
         />
       </div>
     </div>
+  );
+}
+
+function Stat({ label, value, index }: { label: string; value: string; index: number }) {
+  // each cell rolls in a beat after the one before, then rolls a full turn on hover
+  const { cycle, delay, handlers } = useRollOnHover(0.15 + index * 0.12);
+  return (
+    <div
+      {...handlers}
+      className="group flex flex-col items-center gap-2 bg-[var(--bg-canvas)] px-4 py-8 transition-colors duration-[var(--motion-base)] hover:bg-[var(--bg-card-hover)] sm:py-10"
+    >
+      <dd className="m-0 font-serif text-display-lg text-[var(--fg-primary)] transition-colors group-hover:text-[var(--fg-brand)]">
+        <RollingNumber value={value} cycle={cycle} delay={delay} height={64} />
+      </dd>
+      <dt className="order-first font-mono text-mono-xs uppercase tracking-[0.08em] text-[var(--fg-muted)] sm:order-none">
+        {label}
+      </dt>
+    </div>
+  );
+}
+
+/** The counts under the editor, as wide as it. */
+export function HeroStats({ stats }: { stats: { dt: string; dd: string }[] }) {
+  return (
+    <dl className="m-0 grid grid-cols-2 gap-px overflow-hidden rounded-[var(--radius-lg)] border border-[var(--border-strong)] bg-[var(--border-subtle)] sm:grid-cols-4">
+      {stats.map((s, i) => (
+        <Stat key={s.dt} label={s.dt} value={s.dd} index={i} />
+      ))}
+    </dl>
   );
 }
