@@ -1,5 +1,6 @@
 import { DocPageHeader, DocSubhead } from "@/components/doc-page-header";
 import { NpmPackages } from "@/components/npm-packages";
+import { CLI_COMMANDS } from "@/lib/docs-data";
 import { CodeBlock } from "@entrepta/registry/content/code-block";
 import {
   Card,
@@ -15,45 +16,15 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "CLI",
   description:
-    "The entrepta CLI reference: init, add, diff, theme. Resolve dependencies, copy components, swap themes from the command line.",
-  alternates: { canonical: "/docs/cli" },
+    "The entrepta CLI reference: init and add, their flags, and entrepta.json. Copy components with everything they import.",
+  alternates: { canonical: "/docs/cli", types: { "text/markdown": "/docs/cli.md" } },
 };
-
-const COMMANDS = [
-  {
-    cmd: "npx @entrepta/cli@latest init",
-    title: "init",
-    desc: "Bootstraps a project. Writes globals.css, lib/utils.ts, and entrepta.json. Prompts for a theme, and for one fixed theme or all six.",
-    flags: [
-      { flag: "--theme=<preset>", desc: "Skip the prompts. Writes one fixed theme" },
-      { flag: "--themes=all", desc: "Write all six themes, switchable with data-theme" },
-      { flag: "--overwrite", desc: "Overwrite existing files without asking" },
-    ],
-  },
-  {
-    cmd: "npx @entrepta/cli@latest add <component>",
-    title: "add",
-    desc: "Copies one or more components into your project. Resolves dependencies automatically.",
-    flags: [{ flag: "--overwrite", desc: "Overwrite without confirming" }],
-  },
-  {
-    cmd: "npx @entrepta/cli@latest add",
-    title: "add (interactive)",
-    desc: "Same as above, no args. Opens a picker with every available component.",
-    flags: [],
-  },
-  {
-    cmd: "npx @entrepta/cli@latest diff <component>",
-    title: "diff",
-    desc: "Shows the diff between your local copy of a component and the current registry version.",
-    flags: [],
-  },
-];
 
 export default function CliPage() {
   return (
     <article>
       <DocPageHeader
+        markdown="/docs/cli"
         eyebrow="reference"
         title={
           <>
@@ -66,7 +37,7 @@ export default function CliPage() {
             No SDK, no runtime wrapper. You own the source.
           </>
         }
-        meta="4 commands"
+        meta={`${CLI_COMMANDS.length} commands`}
       />
 
       <section className="mb-12">
@@ -102,9 +73,9 @@ npx @entrepta/cli@latest add button`}
       </section>
 
       <section>
-        <DocSubhead count={`${COMMANDS.length} commands`}>Commands</DocSubhead>
+        <DocSubhead count={`${CLI_COMMANDS.length} commands`}>Commands</DocSubhead>
         <div className="flex flex-col gap-4">
-          {COMMANDS.map((c) => (
+          {CLI_COMMANDS.map((c) => (
             <Card key={c.cmd}>
               <CardHeader>
                 <CardLabel>{c.title}</CardLabel>

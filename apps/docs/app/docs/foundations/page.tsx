@@ -18,7 +18,10 @@ export const metadata: Metadata = {
   title: "Foundations",
   description:
     "entrepta foundations: color tokens, typography scale, spacing system, radius, motion. The CSS primitives every component is built on.",
-  alternates: { canonical: "/docs/foundations" },
+  alternates: {
+    canonical: "/docs/foundations",
+    types: { "text/markdown": "/docs/foundations.md" },
+  },
 };
 
 const PAGES = [
@@ -76,6 +79,7 @@ export default function FoundationsIndex() {
   return (
     <article>
       <DocPageHeader
+        markdown="/docs/foundations"
         eyebrow="foundations"
         title={
           <>

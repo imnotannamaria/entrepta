@@ -1,12 +1,15 @@
+import { AgentActions } from "@/components/agent-actions";
 import { COMPONENT_INDEX, SECTIONS } from "@/lib/component-index";
+import { NEW_IN_V2 } from "@/lib/docs-data";
 import { findComponent } from "@/lib/manifest";
+import { Badge } from "@entrepta/registry/primitives/badge";
 import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Components",
   description: `All ${COMPONENT_INDEX.length} entrepta components: ${COMPONENT_INDEX.map((c) => c.title).join(", ")}.`,
-  alternates: { canonical: "/docs/components" },
+  alternates: { canonical: "/docs/components", types: { "text/markdown": "/docs/components.md" } },
 };
 
 const GROUPS = SECTIONS.map((section) => ({
@@ -15,6 +18,7 @@ const GROUPS = SECTIONS.map((section) => ({
     name: c.title,
     href: `/docs/components/${c.slug}`,
     desc: findComponent(c.slug)?.description ?? "",
+    isNew: NEW_IN_V2.some((n) => n.slug === c.slug),
   })),
 }));
 
@@ -27,10 +31,13 @@ export default function ComponentsIndex() {
       <h1 className="font-serif text-display-md font-normal text-[var(--fg-primary)] leading-tight tracking-tight mb-4">
         Components
       </h1>
-      <p className="font-sans text-body-lg text-[var(--fg-secondary)] leading-relaxed mb-10">
-        {COMPONENT_INDEX.length} components across {SECTIONS.length} sections. Copy each one with
-        the CLI or by hand.
+      <p className="font-sans text-body-lg text-[var(--fg-secondary)] leading-relaxed mb-4">
+        {COMPONENT_INDEX.length} components across {SECTIONS.length} sections, {NEW_IN_V2.length} of
+        them new in v2. Copy each one with the CLI or by hand.
       </p>
+      <div className="mb-10">
+        <AgentActions path="/docs/components" />
+      </div>
 
       <div className="flex flex-col gap-10">
         {GROUPS.map((section) => (
@@ -46,8 +53,13 @@ export default function ComponentsIndex() {
                   className="group flex items-start justify-between p-4 border border-[var(--border-subtle)] rounded-[var(--radius-sm)] bg-[var(--bg-canvas)] hover:bg-[var(--bg-card-hover)] hover:border-[var(--border-strong)] transition-colors"
                 >
                   <div>
-                    <div className="font-mono text-mono-md text-[var(--fg-primary)] mb-1">
+                    <div className="mb-1 flex items-center gap-2 font-mono text-mono-md text-[var(--fg-primary)]">
                       {item.name}
+                      {item.isNew && (
+                        <Badge size="sm" variant="soft" color="brand">
+                          new
+                        </Badge>
+                      )}
                     </div>
                     <div className="font-sans text-mono-sm text-[var(--fg-muted)]">{item.desc}</div>
                   </div>

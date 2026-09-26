@@ -1144,6 +1144,20 @@ Smaller than the ones above, each with a recommendation.
   aside. That CSP carried `upgrade-insecure-requests`, which Safari applies to localhost, so
   `next start` rendered unstyled in Safari locally. It and HSTS are now sent only on Vercel
 
+## Review round 4
+
+- [x] Code review of round 3: light --fg-muted to #68686f (the sheen on a hovered card fell to
+      4.23), the family test reads .ts and globals.css, Skeleton and the skip link off zinc-900,
+      CardTerminalBar without its band, --bg-field following --bg-overlay, the sandbox re-run
+      through `init --overwrite`
+- [x] Docs for agents: a `.md` twin for every page with content, `/llms.txt`, `/llms-full.txt`,
+      `<link rel="alternate" type="text/markdown">`, and "copy for agent" on each of those pages
+- [x] Migrating to v2: a copy-the-guide block, and every new component with what it does, what
+      it replaces and a link. The components index marks the new ones
+- [x] Page content moved into lib/docs-data.ts so the page and its Markdown share it. On the
+      way: the CLI page documented a `diff` command that does not exist, installation called
+      Tailwind optional, and the themes page said a preset sets three variables (it sets six)
+
 ---
 
 ## Out of scope

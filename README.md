@@ -21,6 +21,8 @@ npx @entrepta/cli@latest init
 
 Plus 6 theme presets: `entrepta`, `blossom`, `marmalade`, `julia`, `ivy`, `bosco`. Pick one, or install all six and switch at runtime. Every text color clears WCAG AA in all 12 theme and mode combinations, and a test measures it on every change.
 
+The docs are written for agents too: every page has a Markdown version at the same URL plus `.md`, and [`/llms.txt`](https://entrepta.vercel.app/llms.txt) lists them all.
+
 ## Two ways to install
 
 ### With the CLI

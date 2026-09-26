@@ -1,5 +1,6 @@
 import fs from "node:fs/promises";
 import path from "node:path";
+import { AgentActions } from "@/components/agent-actions";
 import { ComponentInstall } from "@/components/component-install";
 import { findEntry } from "@/lib/component-index";
 import { COMPONENT_DOCS } from "@/lib/components";
@@ -95,7 +96,7 @@ export async function generateMetadata({
   return {
     title: component.title,
     description: component.description,
-    alternates: { canonical },
+    alternates: { canonical, types: { "text/markdown": `${canonical}.md` } },
     openGraph: {
       title: `${component.title} · entrepta`,
       description: component.description,
@@ -133,9 +134,12 @@ export default async function ComponentPage({
       <h1 className="font-serif text-display-md font-normal text-[var(--fg-primary)] leading-tight tracking-tight mb-3">
         {component.title}
       </h1>
-      <p className="font-sans text-body-lg text-[var(--fg-secondary)] leading-relaxed mb-10">
+      <p className="font-sans text-body-lg text-[var(--fg-secondary)] leading-relaxed mb-5">
         {component.description}
       </p>
+      <div className="mb-10">
+        <AgentActions path={`/docs/components/${slug}`} />
+      </div>
 
       <section className="mb-10">
         <h2 className="font-mono text-mono-xs uppercase tracking-widest text-[var(--fg-muted)] border-b border-[var(--border-subtle)] pb-2 mb-6">

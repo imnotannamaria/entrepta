@@ -52,6 +52,10 @@ const isProd = process.env.NODE_ENV === "production";
 const nextConfig: NextConfig = {
   transpilePackages: ["@entrepta/registry"],
   poweredByHeader: false,
+  // `/docs/cli.md` serves the page as Markdown, for agents (see lib/markdown.ts)
+  async rewrites() {
+    return [{ source: "/docs/:path*.md", destination: "/md/docs/:path*" }];
+  },
   reactStrictMode: true,
   async headers() {
     if (!isProd) return [];

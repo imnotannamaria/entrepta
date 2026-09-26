@@ -567,6 +567,14 @@ pnpm dlx file:"$(pwd)/../entrepta/packages/cli" init
   dark and 4% in light. Light `--fg-muted` is #68686F, not zinc-500, which had
   no margin on a hovered card under the glow. The contrast test measures labels
   on the glow's brightest point over the card, the hovered card and the overlay
+- The docs are readable by agents. Every page with content has a Markdown twin at
+  the same URL plus `.md` (a rewrite to `app/md/[...path]`), declared with
+  `<link rel="alternate" type="text/markdown">`, and `/llms.txt` indexes them
+  (llmstxt.org) with `/llms-full.txt` joining them. The Markdown is built in
+  `lib/markdown.ts` from the same data the pages render (`lib/docs-data.ts`,
+  the manifest, `lib/components.ts`), never written twice. A page's content
+  goes in data first; `lib/markdown.test.ts` fails if a component has no twin
+  or llms.txt misses a page
 - Docs live at https://entrepta.vercel.app/
 
 ---

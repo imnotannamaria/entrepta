@@ -1,5 +1,6 @@
 import { DocPageHeader, DocSubhead } from "@/components/doc-page-header";
 import { NpmPackages } from "@/components/npm-packages";
+import { INIT_FILES, REQUIREMENTS } from "@/lib/docs-data";
 import { CodeBlock } from "@entrepta/registry/content/code-block";
 import { Button } from "@entrepta/registry/primitives/button";
 import {
@@ -18,33 +19,24 @@ export const metadata: Metadata = {
   title: "Installation",
   description:
     "Install entrepta in a Next.js or Vite project. Run npx @entrepta/cli init, pick a theme, copy components into components/entrepta.",
-  alternates: { canonical: "/docs/installation" },
+  alternates: {
+    canonical: "/docs/installation",
+    types: { "text/markdown": "/docs/installation.md" },
+  },
 };
-
-const REQUIREMENTS = [
-  { label: "React", value: "19 or newer" },
-  { label: "Next.js", value: "15 (App Router)" },
-  { label: "Tailwind", value: "v4" },
-  { label: "TypeScript", value: "5.x" },
-];
-
-const FILES = [
-  { path: "app/globals.css", desc: "CSS tokens, reset, and fonts" },
-  { path: "lib/utils.ts", desc: "cn() helper (clsx + tailwind-merge)" },
-  { path: "entrepta.json", desc: "Config. Theme, paths, aliases." },
-];
 
 export default function InstallationPage() {
   return (
     <article>
       <DocPageHeader
+        markdown="/docs/installation"
         eyebrow="getting started"
         title={
           <>
             Install <em>entrepta.</em>
           </>
         }
-        description="Works with any React project. Tailwind v4 is recommended but not required. The CLI detects your framework and adjusts paths."
+        description="Works in Next.js and Vite projects with Tailwind v4. The CLI detects your framework and adjusts paths."
         meta="2 steps"
       />
 
@@ -106,10 +98,10 @@ npx @entrepta/cli@latest init --theme=ivy`}
       </section>
 
       <section className="mb-12">
-        <DocSubhead count={`${FILES.length} files`}>What init writes</DocSubhead>
+        <DocSubhead count={`${INIT_FILES.length} files`}>What init writes</DocSubhead>
         <Card>
           <div className="flex flex-col">
-            {FILES.map((f, i) => (
+            {INIT_FILES.map((f, i) => (
               <div
                 key={f.path}
                 className={`grid grid-cols-[20px_220px_1fr] gap-3 items-center py-3 font-mono text-mono-sm ${
