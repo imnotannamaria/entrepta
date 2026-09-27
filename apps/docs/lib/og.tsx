@@ -1,5 +1,6 @@
 import fs from "node:fs/promises";
 import path from "node:path";
+import { VERSION_LABEL } from "@/lib/version";
 import { ImageResponse } from "next/og";
 
 /**
@@ -115,7 +116,7 @@ export async function ogImage({ eyebrow, title, emphasis, description, command }
               color: INK.muted,
             }}
           >
-            v2.0
+            {VERSION_LABEL}
           </div>
         </div>
 

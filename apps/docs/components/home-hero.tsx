@@ -5,6 +5,7 @@ import { COMPONENT_INDEX } from "@/lib/component-index";
 import { DEFAULT_MODE, DEFAULT_THEME, STORAGE_KEY_PREFIX, THEMES } from "@/lib/theme";
 import { useCopy } from "@/lib/use-copy";
 import { cn } from "@/lib/utils";
+import { VERSION_LABEL } from "@/lib/version";
 import { useTheme } from "@entrepta/registry/hooks/use-theme";
 import { StatusBar, StatusBarItem, StatusBarSeparator } from "@entrepta/registry/layout/status-bar";
 import { RollingNumber, useRollOnHover } from "@entrepta/registry/motion/rolling-number";
@@ -182,7 +183,7 @@ function PageCode() {
       <span className={T}>Badge</span> <span className={P}>icon=</span>
       {"{RocketIcon}"}
       <span className={P}>{">"}</span>
-      <span className={X}>v2.0</span>
+      <span className={X}>{VERSION_LABEL}</span>
       <span className={P}>{"</"}</span>
       <span className={T}>Badge</span>
       <span className={P}>{">"}</span>
@@ -271,7 +272,7 @@ function LivePreview() {
           <CardHeader>
             <CardLabel icon={ListChecksIcon}>launch</CardLabel>
             <Badge variant="soft" color="brand" icon={RocketLaunchIcon}>
-              v2.0
+              {VERSION_LABEL}
             </Badge>
           </CardHeader>
           <CardTitle>

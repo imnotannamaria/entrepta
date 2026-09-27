@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import { VERSION_LABEL } from "@/lib/version";
 
 interface LogoMarkProps {
   className?: string;
@@ -36,7 +37,7 @@ export function Logo({ className, showTag = false }: LogoProps) {
       </span>
       {showTag && (
         <span className="hidden sm:inline-flex font-mono text-mono-xs text-[var(--fg-muted)] border border-[var(--border-subtle)] rounded px-1.5 py-0.5">
-          v2.0
+          {VERSION_LABEL}
         </span>
       )}
     </div>

@@ -12,6 +12,7 @@ import { USED_BY } from "@/lib/links";
 import { tokenCount } from "@/lib/stats";
 import { THEMES } from "@/lib/theme";
 import { cn } from "@/lib/utils";
+import { VERSION, VERSION_LABEL } from "@/lib/version";
 import { CodeBlock } from "@entrepta/registry/content/code-block";
 import { Diamond } from "@entrepta/registry/content/diamond";
 import { Reveal } from "@entrepta/registry/motion/reveal";
@@ -100,7 +101,7 @@ const SECTION_PREVIEWS: Record<(typeof SECTIONS)[number], React.ReactNode> = {
         shipped
       </Badge>
       <Badge variant="outline" color="neutral">
-        v2.0.0
+        v{VERSION}
       </Badge>
     </div>
   ),
@@ -217,7 +218,7 @@ export default function Home() {
                 className="group mb-8 inline-flex items-center gap-2 rounded-full border border-[var(--border-subtle)] bg-[var(--bg-card)] py-1 pr-3 pl-1.5 font-mono text-mono-sm text-[var(--fg-secondary)] transition-colors hover:border-[var(--border-brand)] hover:text-[var(--fg-primary)]"
               >
                 <Badge variant="solid" color="brand" size="sm" className="rounded-full">
-                  v2.0
+                  {VERSION_LABEL}
                 </Badge>
                 {`${COMPONENT_INDEX.length} components · ${THEMES.length} themes · motion`}
                 <span
@@ -318,7 +319,7 @@ export default function Home() {
               <CardHeader>
                 <CardLabel icon={TerminalWindowIcon}>@entrepta/cli</CardLabel>
                 <Badge variant="soft" color="brand">
-                  v2.0.0
+                  v{VERSION}
                 </Badge>
               </CardHeader>
               <CardContent className="flex flex-col gap-3">
