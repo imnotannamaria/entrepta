@@ -6,6 +6,9 @@ vi.mock("node:fs/promises", () => ({
     writeFile: vi.fn(),
     mkdir: vi.fn().mockResolvedValue(undefined),
     access: vi.fn(),
+    // every path resolves to itself: no symlinks in the fake project
+    realpath: vi.fn(async (p: string) => p),
+    lstat: vi.fn(),
   },
 }));
 
@@ -132,6 +135,17 @@ describe("add", () => {
     it("exits with code 1 and lists available components on unknown name", async () => {
       await expect(add(["nonexistent"], { overwrite: false })).rejects.toThrow("exit:1");
       expect(log.error).toHaveBeenCalledWith(expect.stringContaining("nonexistent"));
+      expect(mockWriteFile).not.toHaveBeenCalled();
+    });
+
+    it("refuses an alias that climbs out of the project, before asking anything", async () => {
+      mockReadConfig.mockResolvedValue({
+        ...MOCK_CONFIG,
+        aliases: { ...MOCK_CONFIG.aliases, components: "@/../../etc" },
+      });
+      await expect(add(["button"], { overwrite: false })).rejects.toThrow("exit:1");
+      expect(log.error).toHaveBeenCalledWith(expect.stringContaining("outside the project"));
+      expect(mockPrompts).not.toHaveBeenCalled();
       expect(mockWriteFile).not.toHaveBeenCalled();
     });
   });

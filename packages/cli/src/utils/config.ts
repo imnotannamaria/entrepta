@@ -1,5 +1,6 @@
 import fs from "node:fs/promises";
 import path from "node:path";
+import { writeProjectFile } from "./project-path.js";
 
 export interface EntryptaConfig {
   $schema?: string;
@@ -89,7 +90,7 @@ export async function readConfig(cwd: string): Promise<EntryptaConfig | null> {
 }
 
 export async function writeConfig(cwd: string, config: EntryptaConfig): Promise<void> {
-  await fs.writeFile(path.join(cwd, CONFIG_FILE), `${JSON.stringify(config, null, 2)}\n`, "utf-8");
+  await writeProjectFile(cwd, CONFIG_FILE, `${JSON.stringify(config, null, 2)}\n`);
 }
 
 /**

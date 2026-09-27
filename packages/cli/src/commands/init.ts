@@ -1,10 +1,11 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import prompts from "prompts";
-import { writeConfig } from "../utils/config.js";
+import { type EntryptaConfig, writeConfig } from "../utils/config.js";
 import { detectFramework } from "../utils/detect-framework.js";
 import { log } from "../utils/logger.js";
 import { detectPackageManager, installDeps } from "../utils/package-manager.js";
+import { OutsideProjectError, writeProjectFile } from "../utils/project-path.js";
 import { getRegistryRoot } from "../utils/registry.js";
 import { THEMES, type Theme, type ThemesMode, buildThemesCss } from "../utils/themes-css.js";
 
@@ -74,7 +75,7 @@ export async function init(options: { theme?: string; themes?: string; overwrite
     theme = answer.theme as Theme;
   }
 
-  const config = {
+  const config: EntryptaConfig = {
     $schema: "https://entrepta.vercel.app/schema.json",
     theme,
     themes: themesMode,
@@ -106,11 +107,11 @@ export async function init(options: { theme?: string; themes?: string; overwrite
     if (!confirm) {
       log.warn("Skipped entrepta.json.");
     } else {
-      await writeConfig(cwd, config);
+      await guard(() => writeConfig(cwd, config));
       log.success("Updated entrepta.json");
     }
   } else {
-    await writeConfig(cwd, config);
+    await guard(() => writeConfig(cwd, config));
     log.success("Created entrepta.json");
   }
 
@@ -138,7 +139,6 @@ export async function init(options: { theme?: string; themes?: string; overwrite
   }
 
   const cssPath = path.join(cwd, framework.cssPath);
-  await ensureDir(path.dirname(cssPath));
   const cssExists = await fileExists(cssPath);
   if (cssExists && !options.overwrite) {
     const { confirm } = await prompts({
@@ -150,22 +150,21 @@ export async function init(options: { theme?: string; themes?: string; overwrite
     if (!confirm) {
       log.warn(`Skipped ${framework.cssPath}.`);
     } else {
-      await fs.writeFile(cssPath, cssOutput, "utf-8");
+      await guard(() => writeProjectFile(cwd, framework.cssPath, cssOutput));
       log.success(`Updated ${framework.cssPath}`);
     }
   } else {
-    await fs.writeFile(cssPath, cssOutput, "utf-8");
+    await guard(() => writeProjectFile(cwd, framework.cssPath, cssOutput));
     log.success(`Created ${framework.cssPath}`);
   }
 
   const utilsPath = path.join(cwd, framework.utilsPath);
-  await ensureDir(path.dirname(utilsPath));
   const utilsExists = await fileExists(utilsPath);
   const utilsContent = await fs.readFile(path.join(registryRoot, "lib", "utils.ts"), "utf-8");
   if (utilsExists && !options.overwrite) {
     log.warn(`Skipped ${framework.utilsPath} (already exists).`);
   } else {
-    await fs.writeFile(utilsPath, utilsContent, "utf-8");
+    await guard(() => writeProjectFile(cwd, framework.utilsPath, utilsContent));
     log.success(`Created ${framework.utilsPath}`);
   }
 
@@ -199,6 +198,13 @@ async function fileExists(filePath: string): Promise<boolean> {
   }
 }
 
-async function ensureDir(dirPath: string): Promise<void> {
-  await fs.mkdir(dirPath, { recursive: true });
+/** A symlinked app/ or lib/ in a cloned repo would send a write elsewhere. */
+async function guard(write: () => Promise<void>): Promise<void> {
+  try {
+    await write();
+  } catch (error) {
+    if (!(error instanceof OutsideProjectError)) throw error;
+    log.error(`Refusing to write outside the project: ${error.message}`);
+    process.exit(1);
+  }
 }
