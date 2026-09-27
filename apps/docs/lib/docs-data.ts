@@ -101,6 +101,7 @@ export const NEW_IN_V2 = COMPONENT_INDEX.filter((c) => !V1_COMPONENTS.includes(c
  * portfolio entrepta came from: what to look for and replace.
  */
 export const REPLACES: Record<string, string> = {
+  avatar: "a round img with initials behind it, or a stack of overlapping circles",
   kbd: "hand-styled key chips next to shortcuts",
   checkbox: "native checkboxes with accent-color, or a custom box",
   switch: "a custom toggle built from a div",

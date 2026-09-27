@@ -115,7 +115,7 @@ entrepta/
 │   └── registry/             # @entrepta/registry, source of truth
 │       ├── manifest.ts       # every installable item: files, deps, registryDeps, usage, exports
 │       ├── styles/           # globals.css + themes/*.css
-│       ├── primitives/       # button, badge, input, card, dialog, dropdown, tooltip, tabs,
+│       ├── primitives/       # button, badge, avatar, input, card, dialog, dropdown, tooltip, tabs,
 │       │                     # kbd, checkbox, switch, textarea, field, filter-pill
 │       ├── layout/           # status-bar, top-nav, theme-switcher, mode-toggle,
 │       │                     # sidebar, page-outline
@@ -352,12 +352,13 @@ Vite. Aliases are relative to it, and `add` writes each file under it.
 - `styles/globals.css`, reset, tokens, fonts, type utilities, light mode
 - `styles/themes/*.css`, the 6 presets
 
-### Primitives (14)
+### Primitives (15)
 
 | Component | Radix                           | Notes                                   |
 | --------- | ------------------------------- | --------------------------------------- |
 | Button    | `@radix-ui/react-slot`          | 4 variants, 3 sizes, 3 square icon sizes, loading state |
 | Badge     | no                              | solid/soft/outline across 6 colors, a dot or an `icon` |
+| Avatar    | no                              | image over server-rendered initials, presence dot, `AvatarGroup` with `+N` |
 | Input     | no                              | text, search, command (⌘K)               |
 | Card      | no                              | default/featured/terminal/data, sm/md/xl |
 | Dialog    | `@radix-ui/react-dialog`        | base for modals                          |
@@ -610,6 +611,13 @@ pnpm dlx file:"$(pwd)/../entrepta/packages/cli" init
   transitions for hover; the switch is the one place they are held. Something
   meant to move during it, the sun and moon dial, opts out with
   `data-theme-motion` and must not transition a color
+- Avatar layers its image over initials that are in the server HTML, so nothing
+  waits for JavaScript and a failed image leaves the initials. An image that
+  settled before hydration is read off the element (`complete`,
+  `naturalWidth`), since its load event had no listener yet
+- A caller retunes a component for the surface under it through a scoped
+  variable with a fallback, not by reaching into it: `--toast-glow`,
+  `--avatar-cutout` (the ring that cuts a dot or an overlap out of a card)
 - Docs live at https://entrepta.vercel.app/
 
 ---

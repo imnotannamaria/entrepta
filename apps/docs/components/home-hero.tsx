@@ -1,6 +1,7 @@
 "use client";
 
 import { buildAgentsMd } from "@/lib/agents-md";
+import { COMPONENT_INDEX } from "@/lib/component-index";
 import { DEFAULT_MODE, DEFAULT_THEME, STORAGE_KEY_PREFIX, THEMES } from "@/lib/theme";
 import { useCopy } from "@/lib/use-copy";
 import { cn } from "@/lib/utils";
@@ -251,7 +252,9 @@ function LivePreview() {
     setTimeout(() => {
       setShipping(false);
       toast.success("Deployed to production", {
-        description: preview ? "preview url: entrepta.vercel.app" : "33 components, 0 errors",
+        description: preview
+          ? "preview url: entrepta.vercel.app"
+          : `${COMPONENT_INDEX.length} components, 0 errors`,
       });
     }, 900);
   };

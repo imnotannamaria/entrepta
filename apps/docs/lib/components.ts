@@ -106,6 +106,73 @@ import { CheckIcon, GitBranchIcon } from "@phosphor-icons/react"
       },
     ],
   },
+  avatar: {
+    description:
+      "A person or a thing, as an image over its initials. The initials are in the server HTML and the image covers them once it loads, so there is no empty circle and no broken image. A presence dot, a square for things, and a group that folds the rest into +N.",
+    usage: `import { Avatar, AvatarGroup } from "@/components/entrepta/avatar"
+import { RobotIcon } from "@phosphor-icons/react"
+
+<Avatar name="Anna Maria" src="/me.jpg" />
+<Avatar name="Anna Maria" size="lg" status="online" />
+<Avatar name="deploy bot" shape="square" color="brand" icon={RobotIcon} />
+
+// next to a written name, hide it so the name is read once
+<Avatar name="Anna Maria" size="sm" aria-hidden /> anna maria
+
+<AvatarGroup max={4} aria-label="contributors">
+  {people.map((p) => <Avatar key={p.login} name={p.name} src={p.avatar} />)}
+</AvatarGroup>
+
+// on a card, the dot and the overlaps cut out of the card's color
+<Card className="[--avatar-cutout:var(--bg-card)]">…</Card>`,
+    props: [
+      {
+        name: "name",
+        type: "string",
+        description:
+          "Who or what it is. Gives the initials and the name screen readers hear. Required",
+      },
+      {
+        name: "src",
+        type: "string",
+        description: "An image. The initials show until it loads, and stay if it fails",
+      },
+      {
+        name: "size",
+        type: '"sm" | "md" | "lg" | "xl"',
+        default: '"md"',
+        description: "24, 32, 40 or 64px. In a group, the group's size unless set here",
+      },
+      {
+        name: "shape",
+        type: '"circle" | "square"',
+        default: '"circle"',
+        description: "A circle for people, a square for things: a team, a bot, a repo",
+      },
+      {
+        name: "color",
+        type: '"neutral" | "brand"',
+        default: '"neutral"',
+        description: "The fill behind the initials. Brand is for you, or what you feature",
+      },
+      {
+        name: "status",
+        type: '"online" | "away" | "busy" | "offline"',
+        description: "A presence dot in the corner, announced with the name",
+      },
+      {
+        name: "icon",
+        type: "Icon | ReactElement",
+        description: "A glyph in place of the initials, for a thing rather than a person",
+      },
+      {
+        name: "max",
+        type: "number",
+        description:
+          "How many show before the rest fold into +N. The row never wraps, so set it when the list can grow (AvatarGroup)",
+      },
+    ],
+  },
   input: {
     description:
       "Text field in 3 variants: plain, search (magnifier icon), and command ($ prefix + ⌘K hint). Supports error state and 3 sizes.",

@@ -1,5 +1,6 @@
 "use client";
 
+import { COMPONENT_INDEX } from "@/lib/component-index";
 import { DEFAULT_MODE, DEFAULT_THEME, STORAGE_KEY_PREFIX, THEMES } from "@/lib/theme";
 import { CodeBlock } from "@entrepta/registry/content/code-block";
 import {
@@ -44,6 +45,7 @@ import { Reveal } from "@entrepta/registry/motion/reveal";
 import { RollingNumber, useRollOnHover } from "@entrepta/registry/motion/rolling-number";
 import { Spotlight, useSpotlight } from "@entrepta/registry/motion/spotlight";
 import { TypeIn } from "@entrepta/registry/motion/type-in";
+import { Avatar, AvatarGroup } from "@entrepta/registry/primitives/avatar";
 import { Badge } from "@entrepta/registry/primitives/badge";
 import { Button } from "@entrepta/registry/primitives/button";
 import {
@@ -113,6 +115,7 @@ import {
   InfoIcon,
   MagnifyingGlassIcon,
   PlusIcon,
+  RobotIcon,
   RocketLaunchIcon,
   SignOutIcon,
   SparkleIcon,
@@ -247,6 +250,68 @@ function BadgePreview() {
         <Badge variant="soft" color="neutral" dot>
           idle
         </Badge>
+      </Demo>
+    </div>
+  );
+}
+
+const PEOPLE = [
+  { name: "Ana Lima", src: "/avatars/ana.svg" },
+  { name: "Bruno Reis", src: "/avatars/bruno.svg" },
+  { name: "Caio Dias", src: "/avatars/caio.svg" },
+  { name: "Duda Melo", src: "/avatars/duda.svg" },
+  { name: "Eva Rios", src: "/avatars/eva.svg" },
+  { name: "Felipe Sá", src: "/avatars/felipe.svg" },
+  { name: "Gabi Nunes" },
+];
+
+function AvatarPreview() {
+  return (
+    <div className="flex w-full max-w-xl flex-col gap-7">
+      <Demo label="sizes">
+        {(["sm", "md", "lg", "xl"] as const).map((size) => (
+          <Avatar key={size} size={size} name="Ana Lima" src="/avatars/ana.svg" />
+        ))}
+      </Demo>
+      <Demo label="initials, and a square for things">
+        <Avatar name="Anna Maria" />
+        <Avatar name="Anna Maria" color="brand" />
+        <Avatar name="entrepta" shape="square" />
+        <Avatar name="deploy bot" shape="square" color="brand" icon={RobotIcon} />
+        <Avatar name="entrepta repo" shape="square" icon={GitBranchIcon} />
+      </Demo>
+      <Demo label="status">
+        {(["online", "away", "busy", "offline"] as const).map((status) => (
+          <Avatar
+            key={status}
+            size="lg"
+            name="Bruno Reis"
+            src="/avatars/bruno.svg"
+            status={status}
+          />
+        ))}
+      </Demo>
+      <Demo label="a group">
+        <AvatarGroup max={4} aria-label="contributors">
+          {PEOPLE.map((p) => (
+            <Avatar key={p.name} name={p.name} src={p.src} />
+          ))}
+        </AvatarGroup>
+        <AvatarGroup size="sm" aria-label="reviewers">
+          {PEOPLE.slice(0, 3).map((p) => (
+            <Avatar key={p.name} name={p.name} src={p.src} />
+          ))}
+        </AvatarGroup>
+      </Demo>
+      <Demo label="a broken image keeps the initials">
+        <Avatar name="Caio Dias" src="/avatars/missing.svg" />
+      </Demo>
+      <Demo label="beside a name">
+        <span className="flex items-center gap-2 font-mono text-mono-sm text-[var(--fg-secondary)]">
+          <Avatar size="sm" name="Duda Melo" src="/avatars/duda.svg" aria-hidden />
+          duda melo
+          <span className="text-[var(--fg-muted)]">committed 2h ago</span>
+        </span>
       </Demo>
     </div>
   );
@@ -638,7 +703,10 @@ function ToastPreview() {
   const fire: [string, () => void][] = [
     [
       "success",
-      () => toast.success("Build passed", { description: "33 components compiled in 1.4s" }),
+      () =>
+        toast.success("Build passed", {
+          description: `${COMPONENT_INDEX.length} components compiled in 1.4s`,
+        }),
     ],
     [
       "error",
@@ -1094,6 +1162,7 @@ function ArrowLinkPreview() {
 const PREVIEWS: Record<string, React.ReactNode> = {
   button: <ButtonPreview />,
   badge: <BadgePreview />,
+  avatar: <AvatarPreview />,
   input: <InputPreview />,
   card: <CardPreview />,
   dialog: <DialogPreview />,

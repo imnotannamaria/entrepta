@@ -1,0 +1,239 @@
+"use client";
+
+import { type VariantProps, cva } from "class-variance-authority";
+import * as React from "react";
+import { type IconProp, IconSlot } from "../lib/icon";
+import { cn } from "../lib/utils";
+
+type AvatarSize = "sm" | "md" | "lg" | "xl";
+type AvatarShape = "circle" | "square";
+type AvatarStatus = "online" | "away" | "busy" | "offline";
+
+/**
+ * The face: the fill, the initials and the clip for the image. The tints are
+ * translucent, so they are laid over the surface's own color rather than left
+ * to show whatever sits behind: in a group, that is the avatar it overlaps.
+ */
+const avatarVariants = cva(
+  [
+    "relative flex size-full items-center justify-center overflow-hidden border",
+    "bg-[var(--avatar-cutout,var(--bg-canvas))]",
+    "select-none font-mono font-medium leading-none",
+  ],
+  {
+    variants: {
+      size: {
+        sm: "text-mono-xs",
+        md: "text-mono-sm",
+        lg: "text-mono-md",
+        xl: "text-heading-lg",
+      },
+      shape: {
+        circle: "rounded-full",
+        square: "",
+      },
+      color: {
+        neutral: [
+          "border-[var(--border-subtle)] text-[var(--fg-secondary)]",
+          "bg-[image:linear-gradient(var(--bg-hover-strong),var(--bg-hover-strong))]",
+        ],
+        brand: [
+          "border-[var(--border-brand)] text-[var(--fg-brand-text)]",
+          "bg-[image:linear-gradient(var(--bg-surface-brand),var(--bg-surface-brand))]",
+        ],
+      },
+    },
+    compoundVariants: [
+      { shape: "square", size: ["sm", "md"], class: "rounded-[var(--radius-sm)]" },
+      { shape: "square", size: "lg", class: "rounded-[var(--radius-md)]" },
+      { shape: "square", size: "xl", class: "rounded-[var(--radius-lg)]" },
+    ],
+    defaultVariants: { size: "md", shape: "circle", color: "neutral" },
+  }
+);
+
+const SIZE: Record<AvatarSize, { box: string; dot: string; icon: number; overlap: string }> = {
+  sm: { box: "size-6", dot: "size-2", icon: 12, overlap: "-space-x-1.5" },
+  md: { box: "size-8", dot: "size-2.5", icon: 16, overlap: "-space-x-2" },
+  lg: { box: "size-10", dot: "size-3", icon: 20, overlap: "-space-x-2.5" },
+  xl: { box: "size-16", dot: "size-4", icon: 28, overlap: "-space-x-4" },
+};
+
+const STATUS: Record<AvatarStatus, string> = {
+  online: "bg-[var(--status-success)]",
+  away: "bg-[var(--status-warning)]",
+  busy: "bg-[var(--status-error)]",
+  offline: "bg-[var(--fg-muted)]",
+};
+
+// A ring in the color of what the avatar sits on, so a dot or an overlapping
+// avatar reads as cut out of it. Set --avatar-cutout on a parent that is not
+// the canvas, such as `[--avatar-cutout:var(--bg-card)]` on a Card.
+const CUTOUT = "ring-2 ring-[var(--avatar-cutout,var(--bg-canvas))]";
+
+/** "Anna Maria" is AM, "entrepta" is E, "@anna_maria" is AM. */
+function initialsOf(name: string): string {
+  const words = name.split(/[\s._@-]+/).filter(Boolean);
+  if (words.length === 0) return "";
+  const ends = words.length > 1 ? [words[0], words[words.length - 1]] : [words[0]];
+  return ends
+    .map((word) => Array.from(word)[0])
+    .join("")
+    .toLocaleUpperCase();
+}
+
+const AvatarGroupContext = React.createContext<{ size: AvatarSize; shape: AvatarShape } | null>(
+  null
+);
+
+interface AvatarProps
+  extends Omit<React.HTMLAttributes<HTMLSpanElement>, "children" | "color">,
+    Omit<VariantProps<typeof avatarVariants>, "size" | "shape"> {
+  /** Who or what it is. Gives the initials and the name screen readers hear. */
+  name: string;
+  /** An image. The initials show until it loads, and stay if it fails. */
+  src?: string;
+  /** Inside an AvatarGroup, the group's size unless set here. */
+  size?: AvatarSize;
+  /** `circle` for people, `square` for things: a team, a bot, a repo. */
+  shape?: AvatarShape;
+  /** A presence dot in the corner, announced with the name. */
+  status?: AvatarStatus;
+  /** A glyph in place of the initials, for a thing rather than a person. */
+  icon?: IconProp;
+}
+
+/**
+ * A person or a thing, as an image over their initials. The initials are in
+ * the server HTML and the image covers them once it loads, so there is no
+ * empty circle before hydration and no broken image after a failed load.
+ *
+ * It is one image to a screen reader, named by `name` and `status`. Next to a
+ * written name, pass `aria-hidden` so the name is not read twice.
+ */
+const Avatar = React.forwardRef<HTMLSpanElement, AvatarProps>(
+  (
+    { name, src, size: ownSize, shape: ownShape, color, status, icon, className, ...props },
+    ref
+  ) => {
+    const group = React.useContext(AvatarGroupContext);
+    const size = ownSize ?? group?.size ?? "md";
+    const shape = ownShape ?? group?.shape ?? "circle";
+
+    const [image, setImage] = React.useState<{ src: string; loaded: boolean } | null>(null);
+    // what happened to this src; a result for an earlier one no longer counts
+    const settled = src && image?.src === src ? image : null;
+    const loaded = settled?.loaded === true;
+    const failed = settled?.loaded === false;
+    const imgRef = React.useRef<HTMLImageElement>(null);
+
+    // An image that settled before hydration fired its load or error event
+    // with no listener attached yet. Read the outcome off the element instead.
+    React.useEffect(() => {
+      const img = imgRef.current;
+      if (!src || !img?.complete) return;
+      setImage({ src, loaded: img.naturalWidth > 0 });
+    }, [src]);
+
+    const hidden = props["aria-hidden"] === true || props["aria-hidden"] === "true";
+
+    return (
+      <span
+        ref={ref}
+        role={hidden ? undefined : "img"}
+        aria-label={hidden ? undefined : status ? `${name}, ${status}` : name}
+        className={cn("relative inline-flex shrink-0 align-middle", SIZE[size].box, className)}
+        {...props}
+      >
+        <span className={cn(avatarVariants({ size, shape, color }), group && CUTOUT)}>
+          <span aria-hidden className={cn(loaded && "invisible")}>
+            {icon ? <IconSlot icon={icon} size={SIZE[size].icon} /> : initialsOf(name)}
+          </span>
+          {src && !failed && (
+            <img
+              ref={imgRef}
+              src={src}
+              alt=""
+              loading="lazy"
+              decoding="async"
+              draggable={false}
+              onLoad={() => setImage({ src, loaded: true })}
+              onError={() => setImage({ src, loaded: false })}
+              className="absolute inset-0 size-full object-cover"
+            />
+          )}
+        </span>
+        {status && (
+          <span
+            aria-hidden
+            data-status={status}
+            className={cn(
+              "absolute right-0 bottom-0 rounded-full",
+              SIZE[size].dot,
+              STATUS[status],
+              CUTOUT
+            )}
+          />
+        )}
+      </span>
+    );
+  }
+);
+Avatar.displayName = "Avatar";
+
+interface AvatarGroupProps extends React.HTMLAttributes<HTMLUListElement> {
+  /**
+   * How many avatars show before the rest fold into a `+N`. The row never
+   * wraps, so set it when the list can grow. All of them by default.
+   */
+  max?: number;
+  /** The size of every avatar in the group. Default `"md"`. */
+  size?: AvatarSize;
+  /** The shape of every avatar in the group. Default `"circle"`. */
+  shape?: AvatarShape;
+}
+
+/**
+ * Overlapping avatars, as a list, with the rest folded into a `+N`. Name it
+ * with `aria-label`, such as "contributors".
+ */
+const AvatarGroup = React.forwardRef<HTMLUListElement, AvatarGroupProps>(
+  ({ max, size = "md", shape = "circle", className, children, ...props }, ref) => {
+    const items = React.Children.toArray(children);
+    const limit = max === undefined ? items.length : Math.max(1, Math.floor(max));
+    const shown = items.slice(0, limit);
+    const rest = items.length - shown.length;
+    const context = React.useMemo(() => ({ size, shape }), [size, shape]);
+
+    return (
+      <AvatarGroupContext.Provider value={context}>
+        <ul
+          ref={ref}
+          className={cn("m-0 flex list-none items-center p-0", SIZE[size].overlap, className)}
+          {...props}
+        >
+          {shown.map((child, index) => (
+            <li key={(React.isValidElement(child) && child.key) || index} className="flex">
+              {child}
+            </li>
+          ))}
+          {rest > 0 && (
+            <li className="flex">
+              <span className={cn("relative inline-flex shrink-0", SIZE[size].box)}>
+                <span className={cn(avatarVariants({ size, shape }), CUTOUT)}>
+                  {/* three characters at most, so it fits the smallest avatar */}
+                  <span aria-hidden>{rest > 99 ? "99+" : `+${rest}`}</span>
+                  <span className="sr-only">{rest} more</span>
+                </span>
+              </span>
+            </li>
+          )}
+        </ul>
+      </AvatarGroupContext.Provider>
+    );
+  }
+);
+AvatarGroup.displayName = "AvatarGroup";
+
+export { Avatar, AvatarGroup, avatarVariants };
+export type { AvatarGroupProps, AvatarProps, AvatarShape, AvatarSize, AvatarStatus };

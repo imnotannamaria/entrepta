@@ -13,6 +13,7 @@ export type ComponentEntry = { slug: string; title: string; section: Section };
 export const COMPONENT_INDEX: ComponentEntry[] = [
   { slug: "button", title: "Button", section: "Primitives" },
   { slug: "badge", title: "Badge", section: "Primitives" },
+  { slug: "avatar", title: "Avatar", section: "Primitives" },
   { slug: "card", title: "Card", section: "Primitives" },
   { slug: "dialog", title: "Dialog", section: "Primitives" },
   { slug: "dropdown", title: "Dropdown", section: "Primitives" },

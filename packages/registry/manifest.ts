@@ -38,6 +38,17 @@ export const COMPONENTS: RegistryComponent[] = [
     exports: ["Badge", "badgeVariants"],
   },
   {
+    name: "avatar",
+    description:
+      "A person or a thing as an image over its initials, with a presence dot and a stacked group",
+    category: "primitives",
+    files: ["primitives/avatar.tsx"],
+    deps: ["class-variance-authority", "@phosphor-icons/react"],
+    registryDeps: ["icon-lib"],
+    usage: `<Avatar name="Anna Maria" src="/me.jpg" status="online" />`,
+    exports: ["Avatar", "AvatarGroup", "avatarVariants"],
+  },
+  {
     name: "input",
     description: "Text input with default, search, and command (⌘K) variants",
     category: "primitives",
