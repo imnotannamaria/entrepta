@@ -1,10 +1,14 @@
+import { createRequire } from "node:module";
 import { Command } from "commander";
 import { add } from "./commands/add.js";
 import { init } from "./commands/init.js";
 
+// package.json sits one level up from both src/ and dist/, and npm always publishes it
+const { version } = createRequire(import.meta.url)("../package.json") as { version: string };
+
 const program = new Command();
 
-program.name("entrepta").description("entrepta design system CLI").version("0.0.1");
+program.name("entrepta").description("entrepta design system CLI").version(version);
 
 program
   .command("init")
