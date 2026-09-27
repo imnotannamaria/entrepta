@@ -22,8 +22,9 @@ interface ThemeSwitcherProps
 }
 
 // Both icons stay mounted and stacked so the swap can cross-fade. They turn in
-// opposite directions, which reads like a dial. The globals.css reduced-motion
-// block flattens the transition for anyone who asks for less movement.
+// opposite directions, which reads like a dial. data-theme-motion keeps the dial
+// turning while a theme switch holds every other transition. The globals.css
+// reduced-motion block flattens it for anyone who asks for less movement.
 const ICON_BASE =
   "col-start-1 row-start-1 text-[var(--fg-primary)] transition-[opacity,rotate,scale] duration-[var(--motion-base)] ease-[var(--ease-out)]";
 const ICON_IN = "opacity-100 rotate-0 scale-100";
@@ -34,11 +35,13 @@ function ModeIcon({ mode }: { mode: ThemeMode }) {
     <span aria-hidden className="relative inline-grid place-items-center w-4 h-4 shrink-0">
       <MoonIcon
         data-icon="moon"
+        data-theme-motion
         className={cn(ICON_BASE, mode === "dark" ? ICON_IN : "opacity-0 rotate-90 scale-50")}
         size={14}
       />
       <SunIcon
         data-icon="sun"
+        data-theme-motion
         className={cn(ICON_BASE, mode === "light" ? ICON_IN : "opacity-0 -rotate-90 scale-50")}
         size={14}
       />

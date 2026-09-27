@@ -391,6 +391,30 @@ select:autofill {
 }
 
 /* ============================================================
+   THEME SWITCH
+   Components ease their own colors, each on its own clock, so a
+   mode swapped under them lands piece by piece. useMode and
+   useTheme set data-theme-switching on <html> for the length of a
+   switch: every transition stops and the page changes in one
+   frame, which view transitions crossfade with the last one.
+   Something meant to move during the switch, such as the sun and
+   moon in the toggles, opts out with data-theme-motion. It must
+   not transition a color.
+   ============================================================ */
+
+:root[data-theme-switching],
+:root[data-theme-switching] *:not([data-theme-motion]),
+:root[data-theme-switching] *::before,
+:root[data-theme-switching] *::after {
+  transition: none !important;
+}
+
+:root[data-theme-switching]::view-transition-group(*) {
+  animation-duration: var(--motion-slow);
+  animation-timing-function: var(--ease-out);
+}
+
+/* ============================================================
    SCROLLBARS, themed to match the IDE chrome
    ============================================================ */
 

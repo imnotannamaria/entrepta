@@ -430,7 +430,7 @@ in `globals.css` for what must move before hydration. `lib/motion.ts` holds
 ### Hooks (4)
 
 - `use-theme`, controls preset and dark/light, built on `use-mode`
-- `use-mode`, controls dark/light only
+- `use-mode`, controls dark/light only, and exports `transitionTheme`
 - `use-command-palette`, controls open state and command registration
 - `use-url-filter`, a filter kept in the URL query, prerender safe
 
@@ -602,6 +602,14 @@ pnpm dlx file:"$(pwd)/../entrepta/packages/cli" init
   `DocSubhead` on every docs page, `NavGroups` for the sidebar and the mobile
   menu. Cards that link somewhere use a stretched link on their title, so a
   preview inside can hold real controls
+- A theme or mode switch lands in one frame. `transitionTheme` (in `use-mode`,
+  used by both hooks) sets `data-theme-switching` on `<html>` for its length,
+  `globals.css` holds every transition under it, and where the browser has view
+  transitions the page crossfades as one picture (`--motion-slow`, ease-out).
+  Reduced motion gets the instant switch. Components keep their color
+  transitions for hover; the switch is the one place they are held. Something
+  meant to move during it, the sun and moon dial, opts out with
+  `data-theme-motion` and must not transition a color
 - Docs live at https://entrepta.vercel.app/
 
 ---

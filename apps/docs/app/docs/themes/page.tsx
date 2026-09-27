@@ -1,5 +1,5 @@
 import { DocPageHeader, DocSubhead } from "@/components/doc-page-header";
-import { THEME_NOTES } from "@/lib/docs-data";
+import { THEME_NOTES, THEME_SWITCH } from "@/lib/docs-data";
 import { THEMES as THEME_LIST } from "@/lib/theme";
 import { CodeBlock } from "@entrepta/registry/content/code-block";
 import {
@@ -123,7 +123,7 @@ npx @entrepta/cli@latest init --theme=ivy --themes=all`}
         </p>
       </section>
 
-      <section>
+      <section className="mb-12">
         <DocSubhead count="2 modes">Dark or light</DocSubhead>
         <p className="font-sans text-body-md leading-relaxed text-[var(--fg-secondary)] mb-4 max-w-2xl">
           Every theme works in both dark and light mode. Dark is the default (no attribute needed).
@@ -151,6 +151,14 @@ npx @entrepta/cli@latest init --theme=ivy --themes=all`}
           choice, and its <code className="text-[var(--fg-primary)]">ModeScript</code> sets the
           attribute before the page paints.
         </p>
+      </section>
+
+      <section>
+        <DocSubhead count="1 frame">Switching</DocSubhead>
+        <p className="font-sans text-body-md leading-relaxed text-[var(--fg-secondary)] mb-4 max-w-2xl">
+          {THEME_SWITCH.text}
+        </p>
+        <CodeBlock variant="terminal" filename="theme.ts" language="ts" code={THEME_SWITCH.code} />
       </section>
     </article>
   );

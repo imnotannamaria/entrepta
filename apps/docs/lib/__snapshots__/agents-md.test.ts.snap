@@ -30,6 +30,7 @@ pnpm dlx @entrepta/cli@latest add button card field
 
 - One theme, \`entrepta\`, is installed. Changing it means running \`init\` again.
 - Default mode: dark. Light mode is \`data-mode="light"\` on \`<html>\`; dark is the absence of it.
+- To switch from your own code, wrap the attribute change in \`transitionTheme\` from the \`use-mode\` hook. It holds every transition so the page changes at once, not component by component.
 - ThemeScript and ModeScript set these attributes before React loads. Wherever they run, add \`suppressHydrationWarning\` to \`<html>\`.
 
 ## Tokens
@@ -149,6 +150,7 @@ pnpm dlx @entrepta/cli@latest add button card field
 
 - One theme, \`entrepta\`, is installed. Changing it means running \`init\` again.
 - Default mode: dark. Light mode is \`data-mode="light"\` on \`<html>\`; dark is the absence of it.
+- To switch from your own code, wrap the attribute change in \`transitionTheme\` from the \`use-mode\` hook. It holds every transition so the page changes at once, not component by component.
 - ThemeScript and ModeScript set these attributes before React loads. Wherever they run, add \`suppressHydrationWarning\` to \`<html>\`.
 
 ## Tokens
@@ -269,6 +271,7 @@ pnpm dlx @entrepta/cli@latest add button card field
 
 - One theme, \`entrepta\`, is installed. Changing it means running \`init\` again.
 - Default mode: dark. Light mode is \`data-mode="light"\` on \`<html>\`; dark is the absence of it.
+- To switch from your own code, wrap the attribute change in \`transitionTheme\` from the \`use-mode\` hook. It holds every transition so the page changes at once, not component by component.
 
 ## Tokens
 

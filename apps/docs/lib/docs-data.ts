@@ -60,6 +60,16 @@ export const THEME_NOTES: Record<string, { hover: string; vibe: string }> = {
   bosco: { hover: "#4F86F3", vibe: "Deep blue. Technical and steady." },
 };
 
+/** How a theme or mode switch lands, on the Themes page and in its Markdown. */
+export const THEME_SWITCH = {
+  text: "A switch lands all at once. For its length, the hooks hold every transition, so no component eases into the new colors on its own clock. Where the browser has view transitions, the old and new page crossfade as one picture. With reduced motion, the switch is instant. If you set the attributes yourself, wrap the change in transitionTheme.",
+  code: `import { transitionTheme } from "@/hooks/use-mode"
+
+transitionTheme(() => {
+  document.documentElement.setAttribute("data-theme", "ivy")
+})`,
+};
+
 /* ------------------------------------------------------------------ */
 /* Migrating to v2                                                     */
 /* ------------------------------------------------------------------ */

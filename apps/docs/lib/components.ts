@@ -547,7 +547,7 @@ import { TabNav, TabNavLink } from "@/components/entrepta/tabs"
   },
   "theme-switcher": {
     description:
-      "Floating theme and dark/light picker, with the same panel, labels and rows as a dropdown. Several on one page stay in step. Drives data-theme and data-mode on <html> and remembers the choice. It needs every theme in your CSS: run init with --themes=all. ThemeScript sets the attributes before paint; add suppressHydrationWarning to your <html>.",
+      "Floating theme and dark/light picker, with the same panel, labels and rows as a dropdown. Several on one page stay in step. Drives data-theme and data-mode on <html> and remembers the choice. A switch lands all at once, crossfaded where the browser has view transitions. It needs every theme in your CSS: run init with --themes=all. ThemeScript sets the attributes before paint; add suppressHydrationWarning to your <html>.",
     usage: `import {
   ThemeScript, ThemeSwitcher,
 } from "@/components/entrepta/theme-switcher"
@@ -614,7 +614,7 @@ const THEMES = [
   },
   "mode-toggle": {
     description:
-      "Dark/light switch with no theme picker. Drives data-mode on <html> and remembers the choice. Inline by default, or floating with position. ModeScript sets the mode before paint; add suppressHydrationWarning to your <html>.",
+      "Dark/light switch with no theme picker. Drives data-mode on <html> and remembers the choice. The whole page changes at once, crossfaded where the browser has view transitions. Inline by default, or floating with position. ModeScript sets the mode before paint; add suppressHydrationWarning to your <html>.",
     usage: `import {
   ModeScript, ModeToggle,
 } from "@/components/entrepta/mode-toggle"

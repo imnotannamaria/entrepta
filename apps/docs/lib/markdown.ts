@@ -9,6 +9,7 @@ import {
   REPLACES,
   REQUIREMENTS,
   THEME_NOTES,
+  THEME_SWITCH,
 } from "./docs-data";
 import { LINKS, USED_BY } from "./links";
 import { depsFor, filesFor, findComponent, installClosure } from "./manifest";
@@ -197,6 +198,9 @@ export function themesMd(): string {
     "## Or install all six",
     code("bash", "npx @entrepta/cli@latest init --theme=ivy --themes=all"),
     'All six land under `:root[data-theme="<id>"]`, the chosen one also on bare `:root`. Switch with `data-theme` on `<html>`, or the ThemeSwitcher. Light mode is `data-mode="light"` on `<html>`.',
+    "## Switching",
+    THEME_SWITCH.text,
+    code("ts", THEME_SWITCH.code),
   ].join("\n\n");
 }
 

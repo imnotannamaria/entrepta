@@ -173,6 +173,7 @@ ${bullets([
     ? `All six themes are installed. \`${theme.id}\` is the default; switch with \`data-theme\` on \`<html>\` or the ThemeSwitcher.`
     : `One theme, \`${theme.id}\`, is installed. Changing it means running \`init\` again.`,
   `Default mode: ${options.mode}. Light mode is \`data-mode="light"\` on \`<html>\`; dark is the absence of it.`,
+  "To switch from your own code, wrap the attribute change in `transitionTheme` from the `use-mode` hook. It holds every transition so the page changes at once, not component by component.",
   ...(options.mode === "light"
     ? ['Ship `data-mode="light"` on `<html>` in the server HTML so the first paint is light.']
     : []),
