@@ -39,8 +39,8 @@ export const RULES: Rule[] = [
   },
   {
     topic: "color",
-    do: "Put cards on --bg-card, menus on --bg-surface, dialogs on --bg-overlay",
-    dont: "Fill a grid of cards with --bg-surface. It reads as a field of gray",
+    do: "Put cards on --bg-card, and menus, tooltips, code and dialogs on --bg-overlay",
+    dont: "Paint an area in --bg-surface. It is zinc-900, for small fills, and a field of it reads as gray",
   },
   {
     topic: "type",

@@ -35,7 +35,7 @@ pnpm dlx @entrepta/cli@latest add button card field
 ## Tokens
 
 - Every color is a CSS variable from \`app/globals.css\`. Never write a hex in a component.
-- Surfaces: \`--bg-canvas\` for the page, \`--bg-card\` for cards, \`--bg-surface\` for what sits above a card (menus, tooltips, code), \`--bg-overlay\` for dialogs.
+- Surfaces: \`--bg-canvas\` for the page, \`--bg-card\` for cards, \`--bg-overlay\` for what covers the page (menus, tooltips, code, dialogs, toasts), \`--bg-field\` for inputs. \`--bg-surface\` is zinc-900, for small fills, never an area.
 - Text: \`--fg-primary\`, \`--fg-secondary\`, \`--fg-muted\`. Borders: \`--border-subtle\`, \`--border-strong\`.
 - Brand: \`--fg-brand\` for fills, borders, glyphs and text 24px and up. \`--fg-brand-text\` for brand-colored text below 24px. \`--fg-on-brand\` for text on a brand fill.
 - Brand accents mix from the brand, so they follow the theme: \`--border-brand\`, \`--border-brand-strong\`, \`--bg-surface-brand\`, \`--fg-brand-glow\`. For a new one, use \`color-mix(in srgb, var(--fg-brand) N%, transparent)\`.
@@ -55,7 +55,7 @@ pnpm dlx @entrepta/cli@latest add button card field
 - Do: Derive brand accents from --fg-brand with color-mix(). Don't: Hardcode the violet. It stops reacting when someone picks another theme.
 - Do: Put --fg-on-brand on a brand fill. Don't: Reach for a fixed near-white. It fails contrast in 7 of the 12 theme and mode pairs.
 - Do: Color brand text below 24px with --fg-brand-text. Don't: Use --fg-brand for small text. It fails AA in 4 of the 12 pairs.
-- Do: Put cards on --bg-card, menus on --bg-surface, dialogs on --bg-overlay. Don't: Fill a grid of cards with --bg-surface. It reads as a field of gray.
+- Do: Put cards on --bg-card, and menus, tooltips, code and dialogs on --bg-overlay. Don't: Paint an area in --bg-surface. It is zinc-900, for small fills, and a field of it reads as gray.
 - Do: Size text with the ten scale steps, such as text-mono-sm. Don't: Write text-[13px] or Tailwind's text-sm. A test fails on both.
 - Do: Pick the family at the call site: font-serif, font-sans or font-mono. Don't: Expect a scale step to set the font. It sets size and leading only.
 - Do: Let a row of two halves wrap, and keep each half on one line. Don't: Assume it fits. A card clips with no ellipsis, so overflow looks like missing data.
@@ -154,7 +154,7 @@ pnpm dlx @entrepta/cli@latest add button card field
 ## Tokens
 
 - Every color is a CSS variable from \`styles/globals.css\`. Never write a hex in a component.
-- Surfaces: \`--bg-canvas\` for the page, \`--bg-card\` for cards, \`--bg-surface\` for what sits above a card (menus, tooltips, code), \`--bg-overlay\` for dialogs.
+- Surfaces: \`--bg-canvas\` for the page, \`--bg-card\` for cards, \`--bg-overlay\` for what covers the page (menus, tooltips, code, dialogs, toasts), \`--bg-field\` for inputs. \`--bg-surface\` is zinc-900, for small fills, never an area.
 - Text: \`--fg-primary\`, \`--fg-secondary\`, \`--fg-muted\`. Borders: \`--border-subtle\`, \`--border-strong\`.
 - Brand: \`--fg-brand\` for fills, borders, glyphs and text 24px and up. \`--fg-brand-text\` for brand-colored text below 24px. \`--fg-on-brand\` for text on a brand fill.
 - Brand accents mix from the brand, so they follow the theme: \`--border-brand\`, \`--border-brand-strong\`, \`--bg-surface-brand\`, \`--fg-brand-glow\`. For a new one, use \`color-mix(in srgb, var(--fg-brand) N%, transparent)\`.
@@ -174,7 +174,7 @@ pnpm dlx @entrepta/cli@latest add button card field
 - Do: Derive brand accents from --fg-brand with color-mix(). Don't: Hardcode the violet. It stops reacting when someone picks another theme.
 - Do: Put --fg-on-brand on a brand fill. Don't: Reach for a fixed near-white. It fails contrast in 7 of the 12 theme and mode pairs.
 - Do: Color brand text below 24px with --fg-brand-text. Don't: Use --fg-brand for small text. It fails AA in 4 of the 12 pairs.
-- Do: Put cards on --bg-card, menus on --bg-surface, dialogs on --bg-overlay. Don't: Fill a grid of cards with --bg-surface. It reads as a field of gray.
+- Do: Put cards on --bg-card, and menus, tooltips, code and dialogs on --bg-overlay. Don't: Paint an area in --bg-surface. It is zinc-900, for small fills, and a field of it reads as gray.
 - Do: Size text with the ten scale steps, such as text-mono-sm. Don't: Write text-[13px] or Tailwind's text-sm. A test fails on both.
 - Do: Pick the family at the call site: font-serif, font-sans or font-mono. Don't: Expect a scale step to set the font. It sets size and leading only.
 - Do: Let a row of two halves wrap, and keep each half on one line. Don't: Assume it fits. A card clips with no ellipsis, so overflow looks like missing data.
@@ -273,7 +273,7 @@ pnpm dlx @entrepta/cli@latest add button card field
 ## Tokens
 
 - Every color is a CSS variable from \`src/index.css\`. Never write a hex in a component.
-- Surfaces: \`--bg-canvas\` for the page, \`--bg-card\` for cards, \`--bg-surface\` for what sits above a card (menus, tooltips, code), \`--bg-overlay\` for dialogs.
+- Surfaces: \`--bg-canvas\` for the page, \`--bg-card\` for cards, \`--bg-overlay\` for what covers the page (menus, tooltips, code, dialogs, toasts), \`--bg-field\` for inputs. \`--bg-surface\` is zinc-900, for small fills, never an area.
 - Text: \`--fg-primary\`, \`--fg-secondary\`, \`--fg-muted\`. Borders: \`--border-subtle\`, \`--border-strong\`.
 - Brand: \`--fg-brand\` for fills, borders, glyphs and text 24px and up. \`--fg-brand-text\` for brand-colored text below 24px. \`--fg-on-brand\` for text on a brand fill.
 - Brand accents mix from the brand, so they follow the theme: \`--border-brand\`, \`--border-brand-strong\`, \`--bg-surface-brand\`, \`--fg-brand-glow\`. For a new one, use \`color-mix(in srgb, var(--fg-brand) N%, transparent)\`.
@@ -293,7 +293,7 @@ pnpm dlx @entrepta/cli@latest add button card field
 - Do: Derive brand accents from --fg-brand with color-mix(). Don't: Hardcode the violet. It stops reacting when someone picks another theme.
 - Do: Put --fg-on-brand on a brand fill. Don't: Reach for a fixed near-white. It fails contrast in 7 of the 12 theme and mode pairs.
 - Do: Color brand text below 24px with --fg-brand-text. Don't: Use --fg-brand for small text. It fails AA in 4 of the 12 pairs.
-- Do: Put cards on --bg-card, menus on --bg-surface, dialogs on --bg-overlay. Don't: Fill a grid of cards with --bg-surface. It reads as a field of gray.
+- Do: Put cards on --bg-card, and menus, tooltips, code and dialogs on --bg-overlay. Don't: Paint an area in --bg-surface. It is zinc-900, for small fills, and a field of it reads as gray.
 - Do: Size text with the ten scale steps, such as text-mono-sm. Don't: Write text-[13px] or Tailwind's text-sm. A test fails on both.
 - Do: Pick the family at the call site: font-serif, font-sans or font-mono. Don't: Expect a scale step to set the font. It sets size and leading only.
 - Do: Let a row of two halves wrap, and keep each half on one line. Don't: Assume it fits. A card clips with no ellipsis, so overflow looks like missing data.

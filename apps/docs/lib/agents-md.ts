@@ -187,7 +187,7 @@ ${bullets([
 
 ${bullets([
   `Every color is a CSS variable from \`${paths.css}\`. Never write a hex in a component.`,
-  "Surfaces: `--bg-canvas` for the page, `--bg-card` for cards, `--bg-surface` for what sits above a card (menus, tooltips, code), `--bg-overlay` for dialogs.",
+  "Surfaces: `--bg-canvas` for the page, `--bg-card` for cards, `--bg-overlay` for what covers the page (menus, tooltips, code, dialogs, toasts), `--bg-field` for inputs. `--bg-surface` is zinc-900, for small fills, never an area.",
   "Text: `--fg-primary`, `--fg-secondary`, `--fg-muted`. Borders: `--border-subtle`, `--border-strong`.",
   "Brand: `--fg-brand` for fills, borders, glyphs and text 24px and up. `--fg-brand-text` for brand-colored text below 24px. `--fg-on-brand` for text on a brand fill.",
   "Brand accents mix from the brand, so they follow the theme: `--border-brand`, `--border-brand-strong`, `--bg-surface-brand`, `--fg-brand-glow`. For a new one, use `color-mix(in srgb, var(--fg-brand) N%, transparent)`.",
