@@ -130,6 +130,11 @@ describe("ThemeScript", () => {
     expect(script?.innerHTML).toContain("myapp:theme");
   });
 
+  it("cannot be closed early by a storageKey that holds a closing tag", () => {
+    const { container } = render(<ThemeScript storageKey="</script><script>alert(1)//" />);
+    expect(container.querySelector("script")?.innerHTML).not.toContain("</script");
+  });
+
   it("sits in the flow with position inline, and floats by default", () => {
     const { container, rerender } = render(<ThemeSwitcher themes={THEMES} />);
     expect(container.querySelector("[data-theme-switcher]")).toHaveClass("fixed");

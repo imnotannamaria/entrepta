@@ -146,7 +146,8 @@ interface ModeScriptProps {
  * which covers the mode too.
  */
 function ModeScript({ storageKey = "entrepta" }: ModeScriptProps) {
-  const modeKey = JSON.stringify(`${storageKey}:mode`);
+  // JSON.stringify leaves `<` alone, and a `</script>` in the key would end the tag early
+  const modeKey = JSON.stringify(`${storageKey}:mode`).replace(/</g, "\\u003c");
   const script = `(function(){try{var m=localStorage.getItem(${modeKey});if(m==='light')document.documentElement.setAttribute('data-mode','light');}catch(e){}})();`;
   // biome-ignore lint/security/noDangerouslySetInnerHtml: static string we control; no user input is interpolated.
   return <script dangerouslySetInnerHTML={{ __html: script }} />;

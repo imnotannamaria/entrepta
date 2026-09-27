@@ -250,8 +250,9 @@ interface ThemeScriptProps {
  * a flash of the default look on every page load.
  */
 function ThemeScript({ storageKey = "entrepta" }: ThemeScriptProps) {
-  const themeKey = JSON.stringify(`${storageKey}:theme`);
-  const modeKey = JSON.stringify(`${storageKey}:mode`);
+  // JSON.stringify leaves `<` alone, and a `</script>` in the key would end the tag early
+  const themeKey = JSON.stringify(`${storageKey}:theme`).replace(/</g, "\\u003c");
+  const modeKey = JSON.stringify(`${storageKey}:mode`).replace(/</g, "\\u003c");
   const script = `(function(){try{var t=localStorage.getItem(${themeKey});if(t)document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem(${modeKey});if(m==='light')document.documentElement.setAttribute('data-mode','light');}catch(e){}})();`;
   // biome-ignore lint/security/noDangerouslySetInnerHtml: static string we control; no user input is interpolated.
   return <script dangerouslySetInnerHTML={{ __html: script }} />;
