@@ -2,7 +2,7 @@
   "name": "@entrepta/registry",
   "version": "2.0.0",
   "private": false,
-  "description": "entrepta design system — component registry",
+  "description": "The component registry of the entrepta design system",
   "license": "MIT",
   "keywords": ["entrepta", "design-system", "components", "react", "tailwind", "radix-ui"],
   "homepage": "https://github.com/imnotannamaria/entrepta#readme",
@@ -36,8 +36,12 @@
     "@types/react-dom": "^19.0.0",
     "@vitejs/plugin-react": "^4.4.1",
     "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "cmdk": "^1.1.1",
     "jsdom": "^26.1.0",
     "motion": "^13.4.4",
+    "sonner": "^2.0.7",
+    "tailwind-merge": "^3.5.0",
     "typescript": "^5.7.2",
     "vitest": "^2.1.9"
   },
@@ -45,10 +49,12 @@
     "react": ">=19",
     "react-dom": ">=19"
   },
-  "dependencies": {
-    "clsx": "^2.1.1",
-    "cmdk": "^1.1.1",
-    "sonner": "^2.0.7",
-    "tailwind-merge": "^3.5.0"
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    },
+    "react-dom": {
+      "optional": true
+    }
   }
 }
