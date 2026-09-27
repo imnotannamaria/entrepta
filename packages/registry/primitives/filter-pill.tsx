@@ -1,5 +1,3 @@
-"use client";
-
 import type { Icon } from "@phosphor-icons/react";
 import * as React from "react";
 import { cn } from "../lib/utils";

@@ -46,6 +46,21 @@ describe("source rules", () => {
     expect(offenders).toEqual([]);
   });
 
+  /**
+   * A component with no state or effect stays out of the client bundle, and a
+   * server page can pass it any prop. A Phosphor icon is no reason to opt in:
+   * import it from `@phosphor-icons/react/dist/ssr` instead.
+   */
+  it("marks a registry file use client only when something in it needs the client", () => {
+    const needsClient =
+      /\buse[A-Z]\w*\(|createContext|from\s+["'](cmdk|sonner|motion\/react|@radix-ui\/react-(dialog|dropdown-menu|tooltip|tabs))["']/;
+    const offenders = FILES.filter(
+      ({ file, source }) =>
+        file.startsWith("packages/registry/") && isClient(source) && !needsClient.test(source)
+    ).map(({ file }) => file);
+    expect(offenders).toEqual([]);
+  });
+
   it("does not import lucide-react", () => {
     const offenders = FILES.filter(({ source }) => /["']lucide-react["']/.test(source)).map(
       ({ file }) => file
