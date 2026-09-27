@@ -114,6 +114,17 @@ describe("transitionTheme", () => {
     expect(holding()).toBe(false);
   });
 
+  it("lets transitions go even when the change itself throws", () => {
+    expect(() =>
+      transitionTheme(() => {
+        throw new Error("broken switch");
+      })
+    ).toThrow("broken switch");
+    runFrame();
+    runFrame();
+    expect(holding()).toBe(false);
+  });
+
   it("does not reject when a newer switch skips this one", async () => {
     const unhandled = vi.fn();
     window.addEventListener("unhandledrejection", unhandled);

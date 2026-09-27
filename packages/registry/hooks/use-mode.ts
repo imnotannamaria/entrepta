@@ -72,10 +72,13 @@ function transitionTheme(apply: () => void) {
     return;
   }
 
-  apply();
-  // The first frame paints the new colors with transitions off. Turning them
-  // back on before it would let every component ease into the change again.
-  requestAnimationFrame(() => requestAnimationFrame(done));
+  try {
+    apply();
+  } finally {
+    // The first frame paints the new colors with transitions off. Turning them
+    // back on before it would let every component ease into the change again.
+    requestAnimationFrame(() => requestAnimationFrame(done));
+  }
 }
 
 function safeRead(key: string): string | null {
