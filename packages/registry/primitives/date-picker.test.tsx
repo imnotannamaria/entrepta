@@ -108,9 +108,27 @@ describe("DatePicker", () => {
     const september = screen.getByRole("button", { name: /^September 2026/ });
     expect(september).toHaveAttribute("aria-pressed", "true");
     september.focus();
-    // right to October, down three rows would pass the end, so it stops on December
-    await user.keyboard("{ArrowRight}{ArrowDown}{Enter}");
-    expect(held()).toBe("2026-12");
+    // left to August, down to November; down again from the last row stays, as in any grid
+    await user.keyboard("{ArrowLeft}{ArrowDown}{ArrowDown}{Enter}");
+    expect(held()).toBe("2026-11");
+  });
+
+  it("opens inside min and max, with Tab on an open month and the arrows skipping closed ones", async () => {
+    const user = userEvent.setup();
+    // today is past max, so the grid opens on max's year instead of a page of closed months
+    render(<Single granularity="month" min="2020-03-01" max="2020-10-31" />);
+    await user.click(screen.getByRole("button", { name: "date" }));
+    const february = screen.getByRole("button", { name: "February 2020" });
+    const march = screen.getByRole("button", { name: "March 2020" });
+    expect(february).toBeDisabled();
+    expect(march).toBeEnabled();
+    expect(march).toHaveAttribute("tabindex", "0");
+    march.focus();
+    await user.keyboard("{ArrowLeft}{ArrowUp}");
+    expect(march).toHaveFocus();
+    await user.keyboard("{ArrowDown}{ArrowDown}{ArrowDown}");
+    // June, then September; December is past max, so focus stays on September
+    expect(screen.getByRole("button", { name: "September 2020" })).toHaveFocus();
   });
 
   it("disables months outside min and max, and turns the page", async () => {

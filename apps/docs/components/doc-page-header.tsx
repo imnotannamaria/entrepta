@@ -66,3 +66,15 @@ export function DocSubhead({ children, count }: DocSubheadProps) {
     </div>
   );
 }
+
+/** A short aside under a subhead, marked with the brand's `//`, like a code comment. */
+export function DocNote({ children }: { children: ReactNode }) {
+  return (
+    <p className="mt-0 mb-4 max-w-2xl font-mono text-mono-sm leading-relaxed text-[var(--fg-muted)]">
+      <span aria-hidden className="text-[var(--fg-brand)]">
+        {"// "}
+      </span>
+      {children}
+    </p>
+  );
+}

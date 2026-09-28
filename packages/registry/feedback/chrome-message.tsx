@@ -20,6 +20,11 @@ export interface ChromeMessageProps
   /** A line of terminal output under the command: `cat: ./missing-page: No such file`. */
   output?: string;
   title: React.ReactNode;
+  /**
+   * The title's heading level. 1 for a screen of its own, such as a 404; 2 when
+   * the page around it already has an h1, such as an error inside a layout.
+   */
+  headingLevel?: 1 | 2 | 3;
   note: React.ReactNode;
   /** A link or button back to safety. */
   action?: React.ReactNode;
@@ -34,40 +39,57 @@ export interface ChromeMessageProps
  * component that renders it too.
  */
 const ChromeMessage = React.forwardRef<HTMLDivElement, ChromeMessageProps>(
-  ({ className, command, accent, output, title, note, action, children, ...props }, ref) => (
-    <div
-      ref={ref}
-      className={cn(
-        "mx-auto flex min-h-[60vh] w-full max-w-[1280px] flex-col px-4 py-6 sm:px-6 lg:px-12 lg:py-8",
-        className
-      )}
-      {...props}
-    >
-      <div className="mb-3 font-mono text-mono-sm uppercase tracking-[0.08em] text-[var(--fg-muted)]">
-        <span aria-hidden className={promptVariants({ accent })}>
-          $
-        </span>{" "}
-        {command}
-      </div>
-
-      {output && <p className="m-0 font-mono text-mono-md text-[var(--fg-muted)]">{output}</p>}
-
-      <h1
+  (
+    {
+      className,
+      command,
+      accent,
+      output,
+      title,
+      headingLevel = 1,
+      note,
+      action,
+      children,
+      ...props
+    },
+    ref
+  ) => {
+    const Heading = `h${headingLevel}` as const;
+    return (
+      <div
+        ref={ref}
         className={cn(
-          "m-0 font-serif font-normal text-display-md leading-none text-[var(--fg-primary)]",
-          output && "mt-4"
+          "mx-auto flex min-h-[60vh] w-full max-w-[1280px] flex-col px-4 py-6 sm:px-6 lg:px-12 lg:py-8",
+          className
         )}
+        {...props}
       >
-        {title}
-      </h1>
+        <div className="mb-3 font-mono text-mono-sm uppercase tracking-[0.08em] text-[var(--fg-muted)]">
+          <span aria-hidden className={promptVariants({ accent })}>
+            $
+          </span>{" "}
+          {command}
+        </div>
 
-      <p className="mt-4 mb-0 font-mono text-mono-md text-[var(--fg-muted)]">{note}</p>
+        {output && <p className="m-0 font-mono text-mono-md text-[var(--fg-muted)]">{output}</p>}
 
-      {children}
+        <Heading
+          className={cn(
+            "m-0 font-serif font-normal text-display-md leading-none text-[var(--fg-primary)]",
+            output && "mt-4"
+          )}
+        >
+          {title}
+        </Heading>
 
-      {action && <div className="mt-6">{action}</div>}
-    </div>
-  )
+        <p className="mt-4 mb-0 font-mono text-mono-md text-[var(--fg-muted)]">{note}</p>
+
+        {children}
+
+        {action && <div className="mt-6">{action}</div>}
+      </div>
+    );
+  }
 );
 ChromeMessage.displayName = "ChromeMessage";
 

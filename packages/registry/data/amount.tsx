@@ -5,6 +5,7 @@ import * as React from "react";
 import { useFormat } from "../hooks/use-format";
 import { formatMoney, moneyParts } from "../lib/format";
 import { cn } from "../lib/utils";
+import { Redact } from "./redact";
 
 const amountVariants = cva("font-mono tabular-nums whitespace-nowrap", {
   variants: {
@@ -82,21 +83,24 @@ const Amount = React.forwardRef<HTMLSpanElement, AmountProps>(
     });
 
     return (
-      <span
-        ref={ref}
-        className={cn(amountVariants({ tone: resolvedTone }), className)}
-        title={full}
-        {...props}
-      >
-        {compact ? (
-          <>
-            <span aria-hidden>{pieces}</span>
-            <span className="sr-only">{full}</span>
-          </>
-        ) : (
-          pieces
-        )}
-      </span>
+      // hidden, behind a mask of its width, when the app asks (RedactProvider)
+      <Redact>
+        <span
+          ref={ref}
+          className={cn(amountVariants({ tone: resolvedTone }), className)}
+          title={full}
+          {...props}
+        >
+          {compact ? (
+            <>
+              <span aria-hidden>{pieces}</span>
+              <span className="sr-only">{full}</span>
+            </>
+          ) : (
+            pieces
+          )}
+        </span>
+      </Redact>
     );
   }
 );

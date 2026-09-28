@@ -134,4 +134,11 @@ describe("CodeBlock", () => {
     expect(root).toHaveClass("flex", "flex-col", "h-40");
     expect(root.lastElementChild).toHaveClass("min-h-0", "flex-1", "overflow-auto");
   });
+
+  it("never keeps the page from scrolling up and down over it", () => {
+    const { container } = render(<CodeBlock code="const a = 1" />);
+    const body = container.querySelector(".overflow-auto");
+    expect(body).toHaveClass("overscroll-x-contain");
+    expect(body?.className).not.toMatch(/(^|\s)overscroll-contain(\s|$)/);
+  });
 });

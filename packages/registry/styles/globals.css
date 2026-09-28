@@ -266,6 +266,9 @@
     background: none;
     border: none;
     outline: none;
+    /* A field shows exactly what was typed. JetBrains Mono's code ligatures
+       reshape "///" as it is typed and drew some slashes blank. */
+    font-variant-ligatures: none;
   }
 
   h1,
@@ -568,6 +571,55 @@ select:autofill {
   animation: sheet-out var(--motion-base) ease-in;
 }
 
+/* A panel that opens to its content's height and folds back, such as an
+   accordion's. The component hands the measured height over as
+   --collapse-height. Height eases in and out, since a height that starts at
+   full speed reads as a jump; the content fades with it and settles the last
+   few pixels, so the panel seems to open onto it rather than push it. */
+@keyframes collapse-open {
+  from {
+    height: 0;
+    opacity: 0;
+  }
+  to {
+    height: var(--collapse-height);
+    opacity: 1;
+  }
+}
+
+@keyframes collapse-close {
+  from {
+    height: var(--collapse-height);
+    opacity: 1;
+  }
+  to {
+    height: 0;
+    opacity: 0;
+  }
+}
+
+@keyframes collapse-settle {
+  from {
+    transform: translateY(-6px);
+  }
+}
+
+.motion-collapse {
+  overflow: hidden;
+}
+
+.motion-collapse[data-state="open"] {
+  animation: collapse-open var(--motion-slow) var(--ease-in-out);
+}
+
+.motion-collapse[data-state="open"] > * {
+  animation: collapse-settle var(--motion-slow) var(--ease-out);
+}
+
+.motion-collapse[data-state="closed"] {
+  animation: collapse-close var(--motion-slow) var(--ease-in-out);
+}
+
 /* ============================================================
    KEYFRAMES
    ============================================================ */
@@ -861,4 +913,27 @@ select:autofill {
   --chart-cursor: var(--bg-surface-brand);
 
   color-scheme: dark;
+}
+
+/* ============================================================
+   CHART PALETTE, WITHOUT RELATIVE COLOR
+   Browsers before relative color syntax (Safari 18, Chrome 119,
+   Firefox 128) read oklch(from …) as invalid, and every chart,
+   sparkline and swatch would be drawn in nothing. There the eight
+   hues are fixed, still at each mode's lightness and chroma, so
+   they keep the 3:1 but no longer follow the brand.
+   ============================================================ */
+
+@supports not (color: oklch(from red l c h)) {
+  :root,
+  [data-surface="dark"] {
+    --chart-1: oklch(var(--chart-l) var(--chart-c) 285);
+    --chart-2: oklch(var(--chart-l) var(--chart-c) 330);
+    --chart-3: oklch(var(--chart-l) var(--chart-c) 15);
+    --chart-4: oklch(var(--chart-l) var(--chart-c) 60);
+    --chart-5: oklch(var(--chart-l) var(--chart-c) 105);
+    --chart-6: oklch(var(--chart-l) var(--chart-c) 150);
+    --chart-7: oklch(var(--chart-l) var(--chart-c) 195);
+    --chart-8: oklch(var(--chart-l) var(--chart-c) 240);
+  }
 }

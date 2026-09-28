@@ -93,6 +93,10 @@ const CHECKS: Check[] = [
   { ink: "--fg-muted", on: "--bg-canvas", min: 4.5 },
   { ink: "--fg-muted", on: "--bg-card", min: 4.5 },
   { ink: "--fg-muted", on: "--bg-overlay", min: 4.5 },
+  // text on the brand tint: a selected row, a highlighted menu row, a range
+  { ink: "--fg-primary", on: "--bg-surface-brand", tintOver: "--bg-card", min: 4.5 },
+  { ink: "--fg-secondary", on: "--bg-surface-brand", tintOver: "--bg-card", min: 4.5 },
+  { ink: "--fg-secondary", on: "--bg-surface-brand", tintOver: "--bg-overlay", min: 4.5 },
   // the neutral soft fill: a soft Badge, an Avatar's initials
   { ink: "--fg-secondary", on: "--bg-hover-strong", tintOver: "--bg-canvas", min: 4.5 },
   { ink: "--fg-secondary", on: "--bg-hover-strong", tintOver: "--bg-card", min: 4.5 },
@@ -149,6 +153,26 @@ describe("theme contrast", () => {
             .filter(({ ratio }) => ratio < 4.5)
             .map(
               ({ ink, ratio }) => `${theme} ${mode}: ${ink} on sheen over ${on} ${ratio.toFixed(2)}`
+            );
+        });
+      })
+    );
+    expect(failures).toEqual([]);
+  });
+
+  // An Alert swaps the brand in its corner glow for its status, at 12%.
+  it("keeps an Alert's text readable on its status glow", () => {
+    const failures = THEMES.flatMap((theme) =>
+      MODES.flatMap((mode) => {
+        const set = tokens(theme, mode);
+        return (["success", "warning", "error", "info"] as const).flatMap((status) => {
+          const glow = { ...color(set, `--status-${status}`), a: 0.12 };
+          const bg = flatten([glow, color(set, "--bg-card")]);
+          return (["--fg-primary", "--fg-secondary"] as const)
+            .map((ink) => ({ ink, ratio: contrastRatio(color(set, ink), bg) }))
+            .filter(({ ratio }) => ratio < 4.5)
+            .map(
+              ({ ink, ratio }) => `${theme} ${mode}: ${ink} on ${status} glow ${ratio.toFixed(2)}`
             );
         });
       })

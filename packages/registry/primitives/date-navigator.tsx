@@ -11,6 +11,8 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./tool
 
 interface DateNavigatorProps
   extends Omit<React.FieldsetHTMLAttributes<HTMLFieldSetElement>, "onChange"> {
+  /** The group's name, such as "day": it holds three buttons and a picker. */
+  "aria-label": string;
   /** `YYYY-MM-DD`, `YYYY-MM` or `YYYY`, by granularity. */
   value: string;
   onValueChange: (value: string) => void;
@@ -148,13 +150,14 @@ function StepButton({
   onClick: () => void;
   children: React.ReactNode;
 }) {
+  const reasonId = React.useId();
   const button = (
     <Button
       variant="ghost"
       size="icon-sm"
       aria-label={label}
       aria-disabled={reason ? true : undefined}
-      aria-description={reason ?? undefined}
+      aria-describedby={reason ? reasonId : undefined}
       onClick={() => {
         if (!reason) onClick();
       }}
@@ -165,10 +168,16 @@ function StepButton({
   );
   if (!reason) return button;
   return (
-    <Tooltip>
-      <TooltipTrigger asChild>{button}</TooltipTrigger>
-      <TooltipContent>{reason}</TooltipContent>
-    </Tooltip>
+    <>
+      {/* read with the button everywhere; the Tooltip only shows while hovered or focused */}
+      <span id={reasonId} className="sr-only">
+        {reason}
+      </span>
+      <Tooltip>
+        <TooltipTrigger asChild>{button}</TooltipTrigger>
+        <TooltipContent>{reason}</TooltipContent>
+      </Tooltip>
+    </>
   );
 }
 

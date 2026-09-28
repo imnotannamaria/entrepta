@@ -3,17 +3,52 @@ import { COMPONENT_INDEX, SECTIONS, findEntry } from "./component-index";
 import { COMPONENT_DOCS } from "./components";
 import {
   CLI_COMMANDS,
+  DATA_FOUNDATION,
+  DOCS_INTRO,
   INIT_FILES,
   MIGRATION,
   NEW_IN_V2,
+  NEW_IN_V3,
   REPLACES,
   REQUIREMENTS,
   THEME_NOTES,
   THEME_SWITCH,
+  V3_CHANGES,
+  V3_UPDATE,
 } from "./docs-data";
+import {
+  A11Y_SECTIONS,
+  ACCENTS,
+  BRAND,
+  CHART,
+  COLOR_NOTES,
+  FINISH,
+  FOREGROUND,
+  FOUNDATIONS_INTRO,
+  FOUNDATION_PAGES,
+  type FoundationSlug,
+  GRID,
+  INK_PAIRS,
+  MOTION_CSS,
+  MOTION_NOTES,
+  MOTION_RULES,
+  MOTION_TOKENS,
+  NEUTRALS,
+  RADII,
+  SPACE_SCALE,
+  STATUS,
+  SURFACES,
+  type Swatch,
+  TYPE_FAMILIES,
+  TYPE_RULES,
+  TYPE_SCALE,
+  TYPE_USAGE,
+  foundationPage,
+  motionComponents,
+} from "./foundations";
 import { LINKS, USED_BY } from "./links";
 import { depsFor, filesFor, findComponent, installClosure } from "./manifest";
-import { RULES } from "./rules";
+import { RULES, RULE_TOPICS } from "./rules";
 import { THEMES } from "./theme";
 
 /**
@@ -128,7 +163,50 @@ export function migrationMd(): string {
     "If the project built its own version of one of these, replace it with `npx @entrepta/cli@latest add <name>` and delete the local copy.",
     newComponentsList(),
     "## Rules to keep while migrating",
-    agentsSections(["Tokens", "Type", "Rules"]),
+    // one level down, under the heading above
+    agentsSections(["Tokens", "Type", "Rules"]).replace(/^## /gm, "### "),
+  ].join("\n\n");
+}
+
+export function whatsNewMd(): string {
+  return [
+    "# What's new in entrepta 3",
+    `> ${NEW_IN_V3.length} components for products: money and dates, lists and tables, filters, dashboards, charts, onboarding and chat. Nothing in 2.x breaks, so there is nothing to migrate.`,
+    "## Update",
+    "The new tokens come with init: the chart palette, the height animation of the Accordion, and fields without code ligatures. Commit first: `--overwrite` replaces local edits.",
+    code("bash", V3_UPDATE),
+    ...SECTIONS.map((section) => {
+      const entries = NEW_IN_V3.filter((c) => c.section === section);
+      if (!entries.length) return "";
+      return [
+        `## New in ${section}`,
+        entries
+          .map(
+            (c) =>
+              `- **${c.title}**: ${findComponent(c.slug)?.description ?? ""}. [docs](${mdUrl(`/docs/components/${c.slug}`)})`
+          )
+          .join("\n"),
+      ].join("\n\n");
+    }).filter(Boolean),
+    "## Changed",
+    "Everything below keeps its API. It only gained.",
+    V3_CHANGES.map(([name, text]) => `- **${name}.** ${text}`).join("\n"),
+  ].join("\n\n");
+}
+
+export function dataFoundationMd(): string {
+  return [
+    "# Data",
+    "> How entrepta holds and shows data. Every data component follows these, so a screen reads the same wherever the number comes from.",
+    ...DATA_FOUNDATION.map((topic) =>
+      [
+        `## ${topic.title}`,
+        topic.notes.map((note) => `- ${note}`).join("\n"),
+        topic.code ? code("tsx", topic.code.body) : "",
+      ]
+        .filter(Boolean)
+        .join("\n\n")
+    ),
   ].join("\n\n");
 }
 
@@ -147,6 +225,26 @@ export function componentsIndexMd(): string {
           .join("\n"),
       ].join("\n\n")
     ),
+  ].join("\n\n");
+}
+
+export function introMd(): string {
+  return [
+    "# Build with entrepta",
+    `> ${DOCS_INTRO.description}`,
+    "## Philosophy",
+    DOCS_INTRO.philosophy,
+    "## Quick start",
+    code("bash", DOCS_INTRO.quickStart.map((s) => `${s.cmd}  # ${s.comment}`).join("\n")),
+    "## What init writes",
+    INIT_FILES.map((f) => `- \`${f.path}\`: ${f.desc}`).join("\n"),
+    "## Where to go next",
+    [
+      `- [Installation](${mdUrl("/docs/installation")}): setup for Next.js and Vite`,
+      `- [CLI reference](${mdUrl("/docs/cli")}): every flag of init and add`,
+      `- [Foundations](${mdUrl("/docs/foundations")}): what every component follows`,
+      `- [Components](${mdUrl("/docs/components")}): ${COMPONENT_INDEX.length} components in ${SECTIONS.length} sections`,
+    ].join("\n"),
   ].join("\n\n");
 }
 
@@ -204,20 +302,179 @@ export function themesMd(): string {
   ].join("\n\n");
 }
 
+const swatches = (list: Swatch[]) => list.map((w) => `- \`${w.token}\`: ${w.note}`).join("\n");
+const tokens = (list: { token: string; value: string; use: string }[]) =>
+  table(
+    ["Token", "Value", "Use"],
+    list.map((t) => [`\`${t.token}\``, t.value, t.use])
+  );
+const foundationHead = (slug: FoundationSlug) => {
+  const page = foundationPage(slug);
+  return [`# ${page.title}`, `> ${page.description}`];
+};
+
 export function foundationsMd(): string {
   return [
     "# Foundations",
-    "> Tokens, type, rules and accessibility: what every entrepta component follows, and what code written next to them should follow too.",
-    agentsSections(["Tokens", "Type", "Accessibility"]),
-    "## Rules",
-    RULES.map((r) => `- Do: ${r.do}. Don't: ${r.dont}.`).join("\n"),
+    `> ${FOUNDATIONS_INTRO}`,
+    FOUNDATION_PAGES.map(
+      (p) => `- [${p.title}](${mdUrl(`/docs/foundations/${p.slug}`)}): ${p.summary}`
+    ).join("\n"),
   ].join("\n\n");
 }
+
+export function colorMd(): string {
+  return [
+    ...foundationHead("color"),
+    "The values live in `app/globals.css`. The page shows them resolved for the theme you are in.",
+    "## Neutrals · zinc",
+    table(
+      ["Primitive", "Hex", "Use"],
+      NEUTRALS.map((c) => [c.token, c.hex, c.use])
+    ),
+    "## Accents",
+    table(
+      ["Primitive", "Hex", "Use"],
+      ACCENTS.map((c) => [c.token, c.hex, c.use])
+    ),
+    "## Surfaces",
+    COLOR_NOTES.surfaces,
+    swatches(SURFACES),
+    "## Finish",
+    COLOR_NOTES.finish,
+    swatches(FINISH),
+    "## Text and borders",
+    swatches(FOREGROUND),
+    "## Brand",
+    COLOR_NOTES.brand,
+    swatches(BRAND),
+    "## Inks",
+    COLOR_NOTES.inks,
+    table(
+      ["Ink", "On", "Floor", "Where"],
+      INK_PAIRS.map((p) => [
+        `\`${p.ink}\``,
+        p.over ? `\`${p.on}\` over \`${p.over}\`` : `\`${p.on}\``,
+        `${p.min}:1`,
+        p.note,
+      ])
+    ),
+    "## Chart palette",
+    COLOR_NOTES.chart,
+    swatches(CHART),
+    "## Status",
+    swatches(STATUS),
+  ].join("\n\n");
+}
+
+export function typographyMd(): string {
+  return [
+    ...foundationHead("typography"),
+    "## Families",
+    TYPE_FAMILIES.map((f) => `- **${f.name}** (${f.label}): ${f.use}`).join("\n"),
+    "## Scale",
+    "Size over line height, in px.",
+    table(
+      ["Utility", "Size / leading · family"],
+      TYPE_SCALE.map((t) => [`\`${t.token}\``, t.spec])
+    ),
+    "## Using the scale",
+    TYPE_RULES.map((r) => `- **${r.lead}** ${r.text}`).join("\n"),
+    code("tsx", TYPE_USAGE.body),
+  ].join("\n\n");
+}
+
+export function spacingMd(): string {
+  return [
+    ...foundationHead("spacing"),
+    "## Grid",
+    tokens(GRID),
+    "## Spacing",
+    tokens(SPACE_SCALE),
+  ].join("\n\n");
+}
+
+export function motionMd(): string {
+  const components = motionComponents();
+  return [
+    ...foundationHead("motion"),
+    "## Border radius",
+    tokens(RADII),
+    "## Motion",
+    tokens(MOTION_TOKENS),
+    MOTION_NOTES.reduced,
+    "## Motion components",
+    `${components.filter((c) => c.js).length} of them animate through JavaScript. ${MOTION_NOTES.components}`,
+    components
+      .map(
+        (c) =>
+          `- [${c.title}](${mdUrl(`/docs/components/${c.slug}`)}): ${c.note}${c.js ? "" : ". CSS only"}`
+      )
+      .join("\n"),
+    "## Motion in CSS",
+    MOTION_NOTES.css,
+    swatches(MOTION_CSS),
+    "## Motion rules",
+    MOTION_RULES.map((r) => `- Do: ${r.do}. Don't: ${r.dont}.`).join("\n"),
+  ].join("\n\n");
+}
+
+export function accessibilityMd(): string {
+  return [
+    ...foundationHead("accessibility"),
+    ...A11Y_SECTIONS.map((section) =>
+      [
+        `## ${section.title}`,
+        section.note ?? "",
+        section.inks
+          ? table(
+              ["Ink", "On", "Floor"],
+              INK_PAIRS.map((p) => [`\`${p.ink}\``, `\`${p.on}\``, `${p.min}:1`])
+            )
+          : "",
+        section.points ? section.points.map((p) => `- **${p.lead}** ${p.text}`).join("\n") : "",
+        section.code ? code("tsx", section.code.body) : "",
+      ]
+        .filter(Boolean)
+        .join("\n\n")
+    ),
+  ].join("\n\n");
+}
+
+export function rulesMd(): string {
+  return [
+    ...foundationHead("rules"),
+    ...RULE_TOPICS.map((topic) =>
+      [
+        `## ${topic}`,
+        RULES.filter((r) => r.topic === topic)
+          .map((r) => `- Do: ${r.do}. Don't: ${r.dont}.`)
+          .join("\n"),
+      ].join("\n\n")
+    ),
+  ].join("\n\n");
+}
+
+const FOUNDATION_MD: Record<FoundationSlug, () => string> = {
+  color: colorMd,
+  typography: typographyMd,
+  spacing: spacingMd,
+  motion: motionMd,
+  accessibility: accessibilityMd,
+  rules: rulesMd,
+  data: dataFoundationMd,
+};
 
 export type MdPage = { path: string; title: string; summary: string; render: () => string };
 
 /** Every page with a `.md` twin, in the order llms.txt lists them. */
 export const MD_PAGES: MdPage[] = [
+  {
+    path: "/docs",
+    title: "Introduction",
+    summary: "What entrepta is, the quick start, and where to go next",
+    render: introMd,
+  },
   {
     path: "/docs/installation",
     title: "Installation",
@@ -239,8 +496,20 @@ export const MD_PAGES: MdPage[] = [
   {
     path: "/docs/foundations",
     title: "Foundations",
-    summary: "Tokens, the type scale, rules and accessibility",
+    summary: "The seven foundations pages, one line each",
     render: foundationsMd,
+  },
+  ...FOUNDATION_PAGES.map((p) => ({
+    path: `/docs/foundations/${p.slug}`,
+    title: p.title,
+    summary: p.summary,
+    render: FOUNDATION_MD[p.slug],
+  })),
+  {
+    path: "/docs/whats-new-in-v3",
+    title: "What's new in v3",
+    summary: "Every new component by section, what changed, and the one command to update",
+    render: whatsNewMd,
   },
   {
     path: "/docs/migrating-to-v2",

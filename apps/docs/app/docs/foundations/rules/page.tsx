@@ -1,26 +1,33 @@
 import { DocPageHeader, DocSubhead } from "@/components/doc-page-header";
+import { foundationPage } from "@/lib/foundations";
 import { RULES, RULE_TOPICS } from "@/lib/rules";
 import type { Metadata } from "next";
 
+const PAGE = foundationPage("rules");
+
 export const metadata: Metadata = {
-  title: "Rules",
+  title: PAGE.title,
   description:
     "The do and don't list behind entrepta: color, type, cards, motion, accessibility, icons and routing.",
-  alternates: { canonical: "/docs/foundations/rules" },
+  alternates: {
+    canonical: "/docs/foundations/rules",
+    types: { "text/markdown": "/docs/foundations/rules.md" },
+  },
 };
 
 export default function RulesPage() {
   return (
     <article>
       <DocPageHeader
-        eyebrow="06 · foundations"
+        eyebrow={`${PAGE.num} · foundations`}
         title={
           <>
             <em>Rules.</em> What keeps it honest.
           </>
         }
-        description="Each rule was written after a real bug. The AGENTS.md generator on the home page reads this same list."
+        description={PAGE.description}
         meta={`${RULES.length} rules`}
+        markdown="/docs/foundations/rules"
       />
       {RULE_TOPICS.map((topic) => {
         const rules = RULES.filter((r) => r.topic === topic);

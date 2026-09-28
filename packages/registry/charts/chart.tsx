@@ -1,26 +1,75 @@
 "use client";
 
+import { ChartBarIcon, TableIcon } from "@phosphor-icons/react";
 import * as React from "react";
 import { Legend, ResponsiveContainer, Tooltip } from "recharts";
+import { Amount } from "../data/amount";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../data/table";
+import { useFormat } from "../hooks/use-format";
+import { formatMoney, formatNumber } from "../lib/format";
 import { OVERLAY_SURFACE } from "../lib/overlay";
+import { type PaletteKey, paletteColor } from "../lib/palette";
 import { cn } from "../lib/utils";
+import { Button } from "../primitives/button";
 
 /* ------------------------------------------------------------------ config */
 
+export type ChartPaletteKey = PaletteKey;
+
+/** How a series' values read: money from minor units, a number, or a share (`0.12` is 12%). */
+export type ChartFormat = "number" | "money" | "percent";
+
 export interface ChartSeriesConfig {
-  /** Human label shown in the tooltip and legend. */
+  /** The series' name, in the tooltip, the legend and the table. */
   label: string;
-  /** Any CSS color. Use a token: "var(--chart-1)". */
-  color: string;
+  /** A palette key (`"chart-3"`), a status for results above or below zero, or any CSS color. */
+  color: ChartPaletteKey | (string & {});
+  format?: ChartFormat;
+  /** A result above or below zero: "+" and the real minus on every value, never color alone. */
+  signed?: boolean;
 }
 
-/** Maps a series dataKey to its label and color. */
+/** Maps a series dataKey to its label, color and format. */
 export type ChartConfig = Record<string, ChartSeriesConfig>;
 
-const ChartContext = React.createContext<ChartConfig | null>(null);
+interface ChartContextValue {
+  config: ChartConfig;
+  currency?: string;
+  locale: string;
+}
 
+const ChartContext = React.createContext<ChartContextValue | null>(null);
+
+function useChart(): ChartContextValue {
+  return React.useContext(ChartContext) ?? { config: {}, locale: "en-US" };
+}
+
+/** Kept for charts written against the first version. */
 function useChartConfig(): ChartConfig {
-  return React.useContext(ChartContext) ?? {};
+  return useChart().config;
+}
+
+/** The CSS color for a config color: a palette key becomes its token. */
+export const chartColor = paletteColor;
+
+/**
+ * A value as its series reads it. `compact` is for an axis, where "$1.2K"
+ * fits and "$1,204.80" does not; the tooltip and the table always show it in
+ * full.
+ */
+export function formatChartValue(
+  value: number,
+  format: ChartFormat = "number",
+  options: { currency?: string; locale?: string; compact?: boolean; signed?: boolean } = {}
+): string {
+  const { currency, locale, compact, signed } = options;
+  const signDisplay = signed ? "always" : "auto";
+  if (format === "money" && currency)
+    return formatMoney(value, { currency, locale, compact, signDisplay });
+  if (format === "percent") {
+    return formatNumber(value, { locale, style: "percent", maximumFractionDigits: 1, signDisplay });
+  }
+  return formatNumber(value, { locale, compact, signDisplay });
 }
 
 /* ------------------------------------------------------------ style bridge */
@@ -35,7 +84,8 @@ const UNSAFE_VALUE = /[;{}<>\\]/;
 function seriesVars(config: ChartConfig): React.CSSProperties {
   const vars: Record<string, string> = {};
   for (const [key, item] of Object.entries(config)) {
-    if (SAFE_KEY.test(key) && !UNSAFE_VALUE.test(item.color)) vars[`--color-${key}`] = item.color;
+    const color = chartColor(item.color);
+    if (SAFE_KEY.test(key) && !UNSAFE_VALUE.test(color)) vars[`--color-${key}`] = color;
   }
   return vars as React.CSSProperties;
 }
@@ -45,7 +95,7 @@ function seriesVars(config: ChartConfig): React.CSSProperties {
 /**
  * Animation props for chart series, disabled under prefers-reduced-motion.
  * Recharts animates in JS, so the global CSS media query does not reach it.
- * Spread the result onto every Bar, Line or Area.
+ * Spread the result onto every Bar, Line, Area or Pie.
  */
 export function useChartMotion() {
   // Starts false so server and first client render agree; the effect corrects
@@ -72,7 +122,37 @@ export function useChartMotion() {
   );
 }
 
+/**
+ * True once the element has been on screen. Recharts plays its entrance when
+ * the plot mounts, so the plot mounts when it is seen, not offscreen.
+ */
+function useSeenOnce<T extends Element>(ref: React.RefObject<T | null>) {
+  const [seen, setSeen] = React.useState(false);
+  React.useEffect(() => {
+    const element = ref.current;
+    if (seen || !element) return;
+    if (typeof IntersectionObserver !== "function") {
+      setSeen(true);
+      return;
+    }
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          setSeen(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.25 }
+    );
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, [ref, seen]);
+  return seen;
+}
+
 /* -------------------------------------------------------------- container */
+
+const LABELS = { table: "View as table", chart: "View as chart", noData: "no data" };
 
 export interface ChartContainerProps
   extends Omit<React.HTMLAttributes<HTMLDivElement>, "children"> {
@@ -84,21 +164,61 @@ export interface ChartContainerProps
   height: number;
   /** Accessible name for the chart. Say what it shows, not that it is a chart. */
   label: string;
-  /** Longer text alternative. Becomes the plot's <desc>. */
+  /** Longer text alternative: the trend in words. Becomes the plot's <desc>. */
   description?: string;
-  /**
-   * Render a legend below the plot, built from `config`.
-   * Prefer this over recharts' own <Legend>, which strips the chart's
-   * keyboard layer. See ChartLegend.
-   */
+  /** A legend built from `config`. By default only from three series; name one or two in the title. */
   legend?: boolean;
+  /**
+   * The rows the chart draws, and the key of their category (the month, the
+   * category name). With both, a button shows the same numbers as a Table.
+   */
+  data?: readonly Record<string, unknown>[];
+  categoryKey?: string;
+  /** For money series. Falls back to the FormatProvider's. */
+  currency?: string;
+  locale?: string;
+  labels?: Partial<typeof LABELS>;
   children: React.ReactElement;
 }
 
+/**
+ * The frame for a Recharts chart: series colors from the palette, a tooltip
+ * on the overlay surface that shows full values, a legend when there are
+ * enough series to need one, and the same numbers as a table for anyone who
+ * would rather read them. Put it in a Card, which is the frame; the chart
+ * draws no border of its own.
+ */
 const ChartContainer = React.forwardRef<HTMLDivElement, ChartContainerProps>(
-  ({ config, height, label, description, legend, className, children, ...props }, ref) => {
+  (
+    {
+      config,
+      height,
+      label,
+      description,
+      legend,
+      data,
+      categoryKey,
+      currency: ownCurrency,
+      locale: ownLocale,
+      labels: labelsProp,
+      className,
+      style,
+      children,
+      ...props
+    },
+    ref
+  ) => {
+    const labels = { ...LABELS, ...labelsProp };
+    const { locale, currency } = useFormat({ locale: ownLocale, currency: ownCurrency });
     const reactId = React.useId();
     const id = `chart-${reactId.replace(/[^A-Za-z0-9_-]/g, "")}`;
+    const plotRef = React.useRef<HTMLDivElement>(null);
+    const seen = useSeenOnce(plotRef);
+    const [view, setView] = React.useState<"chart" | "table">("chart");
+
+    const context = React.useMemo(() => ({ config, currency, locale }), [config, currency, locale]);
+    const showLegend = legend ?? Object.keys(config).length >= 3;
+    const tabular = data !== undefined && categoryKey !== undefined;
 
     // The name goes on the plot itself, not on this wrapper. Recharts already
     // gives the <svg> role="application" and tabindex="0" so it can be explored
@@ -111,33 +231,147 @@ const ChartContainer = React.forwardRef<HTMLDivElement, ChartContainerProps>(
     });
 
     return (
-      <ChartContext.Provider value={config}>
+      <ChartContext.Provider value={context}>
         <div
           ref={ref}
           data-chart={id}
           className={cn(
-            "flex w-full flex-col",
+            "flex w-full min-w-0 flex-col",
             "[&_.recharts-surface]:outline-none",
             "[&_.recharts-surface:focus-visible]:outline-2",
             "[&_.recharts-surface:focus-visible]:outline-[var(--fg-brand)]",
             "[&_.recharts-surface:focus-visible]:outline-offset-2",
+            // Recharts 3 moves focus to an inner <g> on click, which the browser
+            // rings in its own blue; only a keyboard's focus is shown, in the brand
+            "[&_g:focus:not(:focus-visible)]:outline-none",
+            "[&_g:focus-visible]:outline-2 [&_g:focus-visible]:outline-[var(--fg-brand)]",
             className
           )}
-          style={{ ...seriesVars(config), height }}
+          style={{ ...seriesVars(config), height, ...style }}
           {...props}
         >
-          <div className="min-h-0 flex-1">
-            <ResponsiveContainer width="100%" height="100%">
-              {named}
-            </ResponsiveContainer>
+          <div ref={plotRef} id={id} className="min-h-0 flex-1">
+            {view === "table" && tabular ? (
+              <ChartTable
+                data={data}
+                categoryKey={categoryKey}
+                label={label}
+                noData={labels.noData}
+              />
+            ) : seen ? (
+              <ResponsiveContainer width="100%" height="100%">
+                {named}
+              </ResponsiveContainer>
+            ) : null}
           </div>
-          {legend ? <ChartLegendContent /> : null}
+          {showLegend || tabular ? (
+            <div className="flex shrink-0 flex-wrap items-center justify-between gap-x-4 gap-y-2 pt-3">
+              {showLegend ? (
+                // it shrinks and wraps, so a long legend never pushes past the card
+                <ChartLegendContent className="min-w-0 shrink justify-start pt-0" />
+              ) : (
+                <span />
+              )}
+              {tabular ? (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-7 gap-1.5 px-2"
+                  aria-controls={id}
+                  onClick={() => setView(view === "chart" ? "table" : "chart")}
+                >
+                  {view === "chart" ? (
+                    <TableIcon aria-hidden size={14} />
+                  ) : (
+                    <ChartBarIcon aria-hidden size={14} />
+                  )}
+                  {view === "chart" ? labels.table : labels.chart}
+                </Button>
+              ) : null}
+            </div>
+          ) : null}
         </div>
       </ChartContext.Provider>
     );
   }
 );
 ChartContainer.displayName = "ChartContainer";
+
+/** The chart's numbers in a Table, formatted in full, for reading instead of looking. */
+function ChartTable({
+  data,
+  categoryKey,
+  label,
+  noData,
+}: {
+  data: readonly Record<string, unknown>[];
+  categoryKey: string;
+  label: string;
+  noData: string;
+}) {
+  const { config } = useChart();
+  const keys = Object.keys(config);
+  return (
+    <Table aria-label={label} maxHeight="100%" className="h-full">
+      <TableHeader>
+        <TableRow>
+          <TableHead>{categoryKey}</TableHead>
+          {keys.map((key) => (
+            <TableHead key={key} align="end">
+              {config[key].label}
+            </TableHead>
+          ))}
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {data.map((row, index) => (
+          // biome-ignore lint/suspicious/noArrayIndexKey: the chart's rows, in the chart's order
+          <TableRow key={index}>
+            <TableCell className="text-[var(--fg-primary)]">
+              {String(row[categoryKey] ?? "")}
+            </TableCell>
+            {keys.map((key) => (
+              <TableCell key={key} align="end">
+                {row[key] == null ? (
+                  // a dash to see, words to hear
+                  <>
+                    <span aria-hidden>—</span>
+                    <span className="sr-only">{noData}</span>
+                  </>
+                ) : (
+                  <ChartValue value={row[key]} seriesKey={key} />
+                )}
+              </TableCell>
+            ))}
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
+  );
+}
+
+/** One value, full, as its series reads it. Money goes through Amount. */
+function ChartValue({ value, seriesKey }: { value: unknown; seriesKey: string }) {
+  const { config, currency, locale } = useChart();
+  if (typeof value !== "number") return <>{value == null ? "—" : String(value)}</>;
+  const format = config[seriesKey]?.format ?? "number";
+  const signed = config[seriesKey]?.signed ?? false;
+  if (format === "money" && currency) {
+    return (
+      <Amount
+        value={value}
+        currency={currency}
+        locale={locale}
+        signDisplay={signed ? "always" : "auto"}
+      />
+    );
+  }
+  return (
+    <span className="font-mono tabular-nums">
+      {formatChartValue(value, format, { locale, signed })}
+    </span>
+  );
+}
 
 /* --------------------------------------------------------------- presets */
 
@@ -155,33 +389,44 @@ export const chartGridHorizontal = {
   horizontal: false,
 } as const;
 
+/** Axis labels at the mono-xs step: 10px, in the axis ink. */
 export const chartTick = {
   fill: "var(--chart-axis)",
   fontFamily: "var(--font-mono)",
-  fontSize: 11,
+  fontSize: 10,
 } as const;
 
 export const chartXAxis = {
   tick: chartTick,
-  axisLine: { stroke: "var(--chart-grid)" },
+  axisLine: false,
   tickLine: false,
   tickMargin: 8,
+  // a phone gets the first and last labels and what fits between them
+  interval: "preserveStartEnd",
+  minTickGap: 12,
 } as const;
 
 export const chartYAxis = {
   tick: chartTick,
   axisLine: false,
   tickLine: false,
-  width: 34,
+  width: 44,
 } as const;
 
 export const chartCursor = { fill: "var(--chart-cursor)" } as const;
 
 export const chartMargin = {
   /** Column, line, area. */
-  vertical: { top: 4, right: 12, left: -8, bottom: 0 },
+  vertical: { top: 4, right: 8, left: -4, bottom: 0 },
   /** Horizontal bar. */
   horizontal: { top: 4, right: 12, left: 8, bottom: 0 },
+} as const;
+
+/** A projection or a forecast: dashed, fainter, and named "projected" in the config. */
+export const chartProjection = {
+  strokeDasharray: "4 4",
+  strokeOpacity: 0.7,
+  fillOpacity: 0.08,
 } as const;
 
 /* --------------------------------------------------------------- tooltip */
@@ -207,20 +452,26 @@ export interface ChartPayloadItem {
   color?: string;
   fill?: string;
   stroke?: string;
+  payload?: Record<string, unknown>;
 }
 
 export interface ChartTooltipContentProps {
   active?: boolean;
   payload?: ChartPayloadItem[];
   label?: string | number;
-  /** Format the value. Return a string or a node. */
+  /** Your own value, in place of the series format. */
   formatter?: (value: number | string, key: string, item: ChartPayloadItem) => React.ReactNode;
   labelFormatter?: (label: string | number) => React.ReactNode;
   hideLabel?: boolean;
+  /** A slice or a bar that carries its own name, such as a donut's, in `nameKey`. */
+  nameKey?: string;
   className?: string;
 }
 
-function seriesKey(item: ChartPayloadItem): string {
+function seriesKey(item: ChartPayloadItem, nameKey?: string): string {
+  if (nameKey && item.payload && item.payload[nameKey] !== undefined) {
+    return String(item.payload[nameKey]);
+  }
   return String(item.dataKey ?? item.name ?? "");
 }
 
@@ -228,9 +479,13 @@ function swatchColor(item: ChartPayloadItem): string | undefined {
   return item.color ?? item.fill ?? item.stroke;
 }
 
+/**
+ * The tooltip, on the overlay surface. Values show in full, through Amount for
+ * money, even when the axis shows them compact.
+ */
 const ChartTooltipContent = React.forwardRef<HTMLDivElement, ChartTooltipContentProps>(
-  ({ active, payload, label, formatter, labelFormatter, hideLabel, className }, ref) => {
-    const config = useChartConfig();
+  ({ active, payload, label, formatter, labelFormatter, hideLabel, nameKey, className }, ref) => {
+    const { config } = useChart();
 
     if (!active || !payload?.length) return null;
 
@@ -239,7 +494,7 @@ const ChartTooltipContent = React.forwardRef<HTMLDivElement, ChartTooltipContent
         ref={ref}
         className={cn(
           OVERLAY_SURFACE,
-          "min-w-[132px] rounded-[var(--radius-md)] px-3 py-2 font-mono text-mono-sm",
+          "min-w-[148px] rounded-[var(--radius-md)] px-3 py-2 font-mono text-mono-sm",
           className
         )}
       >
@@ -249,21 +504,24 @@ const ChartTooltipContent = React.forwardRef<HTMLDivElement, ChartTooltipContent
           </div>
         )}
         {payload.map((item) => {
-          const key = seriesKey(item);
-          const name = config[key]?.label ?? item.name ?? key;
-          const color = config[key]?.color ?? swatchColor(item);
+          const key = seriesKey(item, nameKey);
+          const series = config[key] ?? config[String(item.dataKey ?? "")];
+          const name = series?.label ?? item.name ?? key;
+          const color = series ? chartColor(series.color) : swatchColor(item);
           return (
-            <div key={key} className="flex items-center gap-2 py-[2px]">
+            <div key={key} className="flex items-center gap-2 py-0.5">
               <span
                 aria-hidden
-                className="h-2 w-2 shrink-0 rounded-[2px]"
+                className="size-2 shrink-0 rounded-[2px]"
                 style={{ background: color }}
               />
               <span className="text-[var(--fg-secondary)]">{name}</span>
-              <span className="ml-auto font-semibold text-[var(--fg-primary)]">
-                {formatter && item.value !== undefined
-                  ? formatter(item.value, key, item)
-                  : item.value}
+              <span className="ml-auto pl-3 text-[var(--fg-primary)]">
+                {formatter && item.value !== undefined ? (
+                  formatter(item.value, key, item)
+                ) : (
+                  <ChartValue value={item.value} seriesKey={String(item.dataKey ?? key)} />
+                )}
               </span>
             </div>
           );
@@ -288,7 +546,7 @@ export interface ChartLegendContentProps {
 
 const ChartLegendContent = React.forwardRef<HTMLDivElement, ChartLegendContentProps>(
   ({ payload, className }, ref) => {
-    const config = useChartConfig();
+    const { config } = useChart();
 
     const items: { key: string; name: string; color?: string }[] = payload?.length
       ? payload.map((item) => {
@@ -297,13 +555,13 @@ const ChartLegendContent = React.forwardRef<HTMLDivElement, ChartLegendContentPr
             key,
             // Recharts puts the series name in `value`, not `name`.
             name: config[key]?.label ?? (item.value !== undefined ? String(item.value) : key),
-            color: config[key]?.color ?? swatchColor(item),
+            color: config[key] ? chartColor(config[key].color) : swatchColor(item),
           };
         })
       : Object.entries(config).map(([key, item]) => ({
           key,
           name: item.label,
-          color: item.color,
+          color: chartColor(item.color),
         }));
 
     if (!items.length) return null;
@@ -312,7 +570,7 @@ const ChartLegendContent = React.forwardRef<HTMLDivElement, ChartLegendContentPr
       <div
         ref={ref}
         className={cn(
-          "flex shrink-0 flex-wrap items-center justify-center gap-4 pt-3",
+          "flex shrink-0 flex-wrap items-center justify-center gap-x-4 gap-y-1 pt-3",
           "font-mono text-mono-sm text-[var(--fg-secondary)]",
           className
         )}
@@ -321,7 +579,7 @@ const ChartLegendContent = React.forwardRef<HTMLDivElement, ChartLegendContentPr
           <span key={item.key} className="inline-flex items-center gap-1.5">
             <span
               aria-hidden
-              className="h-2 w-2 shrink-0 rounded-full"
+              className="size-2 shrink-0 rounded-full"
               style={{ background: item.color }}
             />
             {item.name}

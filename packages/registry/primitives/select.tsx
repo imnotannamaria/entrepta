@@ -5,7 +5,7 @@ import * as SelectPrimitive from "@radix-ui/react-select";
 import * as React from "react";
 import { MENU_LABEL, MENU_ROW, MENU_SEPARATOR, OVERLAY_SURFACE } from "../lib/overlay";
 import { cn } from "../lib/utils";
-import { inputWrapperVariants } from "./input";
+import { fieldTrigger } from "./input";
 
 // What a Field hands its control: the id its label points at, and the ids of
 // its error and hint. The root has no DOM of its own, so the trigger takes them.
@@ -60,13 +60,8 @@ const SelectTrigger = React.forwardRef<
       ref={ref}
       {...wiring}
       className={cn(
-        inputWrapperVariants({ size, state }),
-        "justify-between text-left font-mono text-mono-md text-[var(--fg-primary)] outline-none",
-        "focus-visible:border-[var(--fg-brand)] focus-visible:shadow-[0_0_0_3px_var(--bg-surface-brand)]",
-        "data-[placeholder]:text-[var(--fg-muted)]",
-        "aria-[invalid=true]:border-[var(--status-error)]",
-        "disabled:pointer-events-none disabled:opacity-40",
-        "[&>span]:min-w-0 [&>span]:truncate",
+        fieldTrigger({ size, state }),
+        "data-[placeholder]:text-[var(--fg-muted)] [&>span]:min-w-0 [&>span]:truncate",
         className
       )}
       {...props}

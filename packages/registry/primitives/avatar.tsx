@@ -17,7 +17,7 @@ type AvatarStatus = "online" | "away" | "busy" | "offline";
 const avatarVariants = cva(
   [
     "relative flex size-full items-center justify-center overflow-hidden border",
-    "bg-[var(--avatar-cutout,var(--bg-canvas))]",
+    "bg-[var(--cutout,var(--bg-canvas))]",
     "select-none font-mono font-medium leading-none",
   ],
   {
@@ -52,11 +52,13 @@ const avatarVariants = cva(
   }
 );
 
+// In a group each avatar overlaps the one before by about a fifth of its size:
+// little enough that two mono initials, centered, clear the next one's ring.
 const SIZE: Record<AvatarSize, { box: string; dot: string; icon: number; overlap: string }> = {
-  sm: { box: "size-6", dot: "size-2", icon: 12, overlap: "-space-x-1.5" },
-  md: { box: "size-8", dot: "size-2.5", icon: 16, overlap: "-space-x-2" },
-  lg: { box: "size-12", dot: "size-3.5", icon: 24, overlap: "-space-x-3" },
-  xl: { box: "size-24", dot: "size-5", icon: 48, overlap: "-space-x-6" },
+  sm: { box: "size-6", dot: "size-2", icon: 12, overlap: "-space-x-1" },
+  md: { box: "size-8", dot: "size-2.5", icon: 16, overlap: "-space-x-1.5" },
+  lg: { box: "size-12", dot: "size-3.5", icon: 24, overlap: "-space-x-2.5" },
+  xl: { box: "size-24", dot: "size-5", icon: 48, overlap: "-space-x-5" },
 };
 
 const STATUS: Record<AvatarStatus, string> = {
@@ -67,15 +69,15 @@ const STATUS: Record<AvatarStatus, string> = {
 };
 
 // A ring in the color of what the avatar sits on, so a dot or an overlapping
-// avatar reads as cut out of it. Set --avatar-cutout on a parent that is not
-// the canvas, such as `[--avatar-cutout:var(--bg-card)]` on a Card.
-const CUTOUT = "ring-2 ring-[var(--avatar-cutout,var(--bg-canvas))]";
+// avatar reads as cut out of it. Set --cutout on a parent that is not
+// the canvas, such as `[--cutout:var(--bg-card)]` on a Card.
+const CUTOUT = "ring-2 ring-[var(--cutout,var(--bg-canvas))]";
 
 // The active profile, or the person the page is about: a brand ring standing
 // off the face by the cutout color, so it also works inside a group.
 const EMPHASIS = {
   none: "",
-  ring: "ring-2 ring-[var(--fg-brand)] ring-offset-2 ring-offset-[var(--avatar-cutout,var(--bg-canvas))]",
+  ring: "ring-2 ring-[var(--fg-brand)] ring-offset-2 ring-offset-[var(--cutout,var(--bg-canvas))]",
 } as const;
 
 /** "Anna Maria" is AM, "entrepta" is E, "@anna_maria" is AM. */
@@ -110,6 +112,8 @@ interface AvatarProps
   icon?: IconProp;
   /** `ring` marks the active profile, or the person the page is about. */
   emphasis?: keyof typeof EMPHASIS;
+  /** The presence words screen readers hear after the name, for another language. */
+  statusLabels?: Partial<Record<AvatarStatus, string>>;
 }
 
 /**
@@ -131,6 +135,7 @@ const Avatar = React.forwardRef<HTMLSpanElement, AvatarProps>(
       status,
       icon,
       emphasis = "none",
+      statusLabels,
       className,
       ...props
     },
@@ -161,7 +166,9 @@ const Avatar = React.forwardRef<HTMLSpanElement, AvatarProps>(
       <span
         ref={ref}
         role={hidden ? undefined : "img"}
-        aria-label={hidden ? undefined : status ? `${name}, ${status}` : name}
+        aria-label={
+          hidden ? undefined : status ? `${name}, ${statusLabels?.[status] ?? status}` : name
+        }
         className={cn("relative inline-flex shrink-0 align-middle", SIZE[size].box, className)}
         {...props}
       >
@@ -217,6 +224,8 @@ interface AvatarGroupProps extends React.HTMLAttributes<HTMLUListElement> {
   size?: AvatarSize;
   /** The shape of every avatar in the group. Default `"circle"`. */
   shape?: AvatarShape;
+  /** What screen readers hear for the folded rest: "3 more". */
+  moreLabel?: (count: number) => string;
 }
 
 /**
@@ -224,7 +233,18 @@ interface AvatarGroupProps extends React.HTMLAttributes<HTMLUListElement> {
  * with `aria-label`, such as "contributors".
  */
 const AvatarGroup = React.forwardRef<HTMLUListElement, AvatarGroupProps>(
-  ({ max, size = "md", shape = "circle", className, children, ...props }, ref) => {
+  (
+    {
+      max,
+      size = "md",
+      shape = "circle",
+      moreLabel = (count) => `${count} more`,
+      className,
+      children,
+      ...props
+    },
+    ref
+  ) => {
     const items = React.Children.toArray(children);
     const limit = max === undefined ? items.length : Math.max(1, Math.floor(max));
     const shown = items.slice(0, limit);
@@ -249,7 +269,7 @@ const AvatarGroup = React.forwardRef<HTMLUListElement, AvatarGroupProps>(
                 <span className={cn(avatarVariants({ size, shape }), CUTOUT)}>
                   {/* three characters at most, so it fits the smallest avatar */}
                   <span aria-hidden>{rest > 99 ? "99+" : `+${rest}`}</span>
-                  <span className="sr-only">{rest} more</span>
+                  <span className="sr-only">{moreLabel(rest)}</span>
                 </span>
               </span>
             </li>

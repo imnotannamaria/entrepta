@@ -28,6 +28,7 @@ const MENUS = [
   "primitives/dropdown.tsx",
   "feedback/command-palette.tsx",
   "layout/theme-switcher.tsx",
+  "data/filter-builder.tsx",
 ];
 
 function registryFiles(dir = root): string[] {

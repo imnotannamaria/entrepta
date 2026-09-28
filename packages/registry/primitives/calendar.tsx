@@ -104,26 +104,33 @@ function Calendar(props: CalendarProps) {
   if (max) disabled.push({ after: toLocalDate(max) });
   if (isDisabled) disabled.push((date: Date) => isDisabled(fromLocalDate(date)));
 
-  const DayButton = React.useCallback(
-    function DayButton({ day, modifiers, children, ...buttonProps }: DayButtonProps) {
-      const ref = React.useRef<HTMLButtonElement>(null);
-      // react-day-picker moves the focus by marking a day focused; its own
-      // button does this, so the replacement has to as well
-      React.useEffect(() => {
-        if (modifiers.focused) ref.current?.focus();
-      }, [modifiers.focused]);
-      return (
-        <button ref={ref} {...buttonProps}>
-          {children}
-          {renderDay ? (
-            <span className="pointer-events-none absolute inset-x-0 bottom-1 flex justify-center">
-              {renderDay(fromLocalDate(day.date))}
-            </span>
-          ) : null}
-        </button>
-      );
-    },
-    [renderDay]
+  // The day button is made once. Remade whenever renderDay changes, which an
+  // inline function does on every render, all 42 days would remount each time.
+  // It reads the latest renderDay from a ref instead.
+  const renderDayRef = React.useRef(renderDay);
+  renderDayRef.current = renderDay;
+  const DayButton = React.useMemo(
+    () =>
+      function DayButton({ day, modifiers, children, ...buttonProps }: DayButtonProps) {
+        const ref = React.useRef<HTMLButtonElement>(null);
+        // react-day-picker moves the focus by marking a day focused; its own
+        // button does this, so the replacement has to as well
+        React.useEffect(() => {
+          if (modifiers.focused) ref.current?.focus();
+        }, [modifiers.focused]);
+        const extra = renderDayRef.current?.(fromLocalDate(day.date));
+        return (
+          <button ref={ref} {...buttonProps}>
+            {children}
+            {extra ? (
+              <span className="pointer-events-none absolute inset-x-0 bottom-1 flex justify-center">
+                {extra}
+              </span>
+            ) : null}
+          </button>
+        );
+      },
+    []
   );
 
   const shared = {
@@ -203,7 +210,8 @@ function Calendar(props: CalendarProps) {
   );
 }
 
-const NAV_BUTTON = cn(
+/** The arrows that turn a calendar's page; the month and year grids use them too. */
+const calendarNavButton = cn(
   "inline-flex size-8 items-center justify-center rounded-[var(--radius-sm)]",
   "text-[var(--fg-muted)] hover:bg-[var(--bg-hover-soft)] hover:text-[var(--fg-primary)]",
   "transition-colors duration-[var(--motion-fast)] focus-ring",
@@ -217,8 +225,8 @@ const CLASS_NAMES = {
   month_caption: "flex h-8 items-center justify-center px-9",
   caption_label: "text-mono-sm uppercase tracking-[0.08em] text-[var(--fg-primary)]",
   nav: "absolute inset-x-0 top-0 z-[1] flex h-8 items-center justify-between",
-  button_previous: NAV_BUTTON,
-  button_next: NAV_BUTTON,
+  button_previous: calendarNavButton,
+  button_next: calendarNavButton,
   chevron: "",
   month_grid: "border-collapse",
   weekdays: "",
@@ -247,5 +255,5 @@ const CLASS_NAMES = {
   focused: "",
 };
 
-export { Calendar };
+export { Calendar, calendarNavButton };
 export type { CalendarProps, DateRange };

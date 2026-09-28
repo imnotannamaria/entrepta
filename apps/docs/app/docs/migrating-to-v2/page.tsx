@@ -1,12 +1,10 @@
 import { AgentActions } from "@/components/agent-actions";
-import { DocPageHeader, DocSubhead } from "@/components/doc-page-header";
-import { MIGRATION, NEW_IN_V2, REPLACES } from "@/lib/docs-data";
-import { findComponent } from "@/lib/manifest";
+import { DocNote, DocPageHeader, DocSubhead } from "@/components/doc-page-header";
+import { NewComponentsGrid } from "@/components/new-components-grid";
+import { MIGRATION, NEW_IN_V2 } from "@/lib/docs-data";
 import { CodeBlock } from "@entrepta/registry/content/code-block";
-import { Badge } from "@entrepta/registry/primitives/badge";
 import { RobotIcon } from "@phosphor-icons/react/dist/ssr";
 import type { Metadata } from "next";
-import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Migrating to v2",
@@ -17,17 +15,6 @@ export const metadata: Metadata = {
     types: { "text/markdown": "/docs/migrating-to-v2.md" },
   },
 };
-
-function Note({ children }: { children: React.ReactNode }) {
-  return (
-    <p className="mt-0 mb-4 max-w-2xl font-mono text-mono-sm leading-relaxed text-[var(--fg-muted)]">
-      <span aria-hidden className="text-[var(--fg-brand)]">
-        {"// "}
-      </span>
-      {children}
-    </p>
-  );
-}
 
 function Table({ head, rows }: { head: [string, string]; rows: [string, string][] }) {
   return (
@@ -82,83 +69,62 @@ export default function MigratingPage() {
 
       <section className="mb-14">
         <DocSubhead count="2 commands">Update the files</DocSubhead>
-        <Note>
+        <DocNote>
           The CLI copies source, so nothing updates on its own. Rewrite the tokens, then each
           component you use. Commit first: --overwrite replaces your edits.
-        </Note>
+        </DocNote>
         <CodeBlock variant="terminal" language="bash" filename="terminal" code={MIGRATION.update} />
       </section>
 
       <section className="mb-14">
         <DocSubhead count={`${NEW_IN_V2.length} components`}>New in v2</DocSubhead>
-        <Note>
+        <DocNote>
           If your project built its own version of one of these, add the entrepta one and delete
           yours.
-        </Note>
-        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-          {NEW_IN_V2.map((c) => (
-            <Link
-              key={c.slug}
-              href={`/docs/components/${c.slug}`}
-              className="group flex flex-col gap-1.5 rounded-[var(--radius-md)] border border-[var(--border-subtle)] bg-[var(--bg-card)] p-4 transition-colors hover:border-[var(--border-strong)] hover:bg-[var(--bg-card-hover)]"
-            >
-              <span className="flex flex-wrap items-center justify-between gap-x-2 gap-y-1">
-                <span className="font-mono text-mono-md text-[var(--fg-primary)]">{c.title}</span>
-                <Badge size="sm" variant="outline" color="neutral">
-                  {c.section.toLowerCase()}
-                </Badge>
-              </span>
-              <span className="font-sans text-mono-sm text-[var(--fg-secondary)]">
-                {findComponent(c.slug)?.description}
-              </span>
-              {REPLACES[c.slug] && (
-                <span className="font-mono text-mono-xs text-[var(--fg-muted)]">
-                  replaces {REPLACES[c.slug]}
-                </span>
-              )}
-            </Link>
-          ))}
-        </div>
+        </DocNote>
+        <NewComponentsGrid entries={NEW_IN_V2} />
       </section>
 
       <section className="mb-14">
         <DocSubhead count={`${MIGRATION.sizes.length} mappings`}>Font sizes</DocSubhead>
-        <Note>
+        <DocNote>
           Sizes come from ten scale steps now. Arbitrary pixel sizes and Tailwind default steps go.
           A step sets size and leading, never the family, so keep your font-* class.
-        </Note>
+        </DocNote>
         <Table head={["before", "after"]} rows={MIGRATION.sizes} />
       </section>
 
       <section className="mb-14">
         <DocSubhead count={`${MIGRATION.tClasses.length} mappings`}>.t-* classes</DocSubhead>
-        <Note>The .t-* classes are gone. Each one becomes a family and a step.</Note>
+        <DocNote>The .t-* classes are gone. Each one becomes a family and a step.</DocNote>
         <Table head={["before", "after"]} rows={MIGRATION.tClasses} />
       </section>
 
       <section className="mb-14">
         <DocSubhead count={`${MIGRATION.icons.length} icons`}>lucide to Phosphor</DocSubhead>
-        <Note>
+        <DocNote>
           Install @phosphor-icons/react and remove lucide-react. A file without use client imports
           from @phosphor-icons/react/dist/ssr. Phosphor takes size, not width and strokeWidth.
-        </Note>
+        </DocNote>
         <Table head={["lucide", "phosphor"]} rows={MIGRATION.icons} />
       </section>
 
       <section className="mb-14">
         <DocSubhead count="same API">Card</DocSubhead>
-        <Note>{MIGRATION.card}</Note>
+        <DocNote>{MIGRATION.card}</DocNote>
       </section>
 
       <section className="mb-14">
         <DocSubhead count={`${MIGRATION.inks.length} swaps`}>Brand inks and surfaces</DocSubhead>
-        <Note>Search your own code for these. The components already use the new tokens.</Note>
+        <DocNote>
+          Search your own code for these. The components already use the new tokens.
+        </DocNote>
         <Table head={["before", "after"]} rows={MIGRATION.inks} />
       </section>
 
       <section className="mb-14">
         <DocSubhead count="3 changes">Themes</DocSubhead>
-        <Note>{MIGRATION.themes}</Note>
+        <DocNote>{MIGRATION.themes}</DocNote>
       </section>
 
       <section>

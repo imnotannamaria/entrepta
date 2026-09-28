@@ -28,20 +28,22 @@ npx @entrepta/cli@latest add button card command-palette
 
 ## What you get
 
-34 components across 6 sections, in React 19, Tailwind v4 and CSS variables.
+70 components across 8 sections, in React 19, Tailwind v4 and CSS variables.
 
-| Section    | Components                                                         |
-| ---------- | ------------------------------------------------------------------ |
-| Primitives | Button, Badge, Avatar, Card, Dialog, Dropdown, Tooltip, Kbd, Tabs  |
-| Forms      | Input, Textarea, Checkbox, Switch, Field, FilterPill               |
-| Layout     | StatusBar, TopNav, ThemeSwitcher, ModeToggle, Sidebar, PageOutline |
-| Content    | CodeBlock, SectHead, doc parts                                     |
-| Feedback   | Toast, Skeleton, CommandPalette, ChromeMessage, PageLoading        |
-| Motion     | Reveal, TypeIn, RollingNumber, Spotlight, ArrowLink                |
+| Section    | Components |
+| ---------- | ---------- |
+| Primitives | Button, Badge, Avatar, IconTile, Card, Dialog, Sheet, Popover, Accordion, Dropdown, Tooltip, Kbd, Tabs, Progress, Stepper |
+| Forms      | Input, Textarea, Checkbox, Switch, Field, MoneyInput, Select, Combobox, SegmentedControl, ChoiceCard, SwatchPicker, SecretField, FileDropzone, Calendar, DatePicker, DateNavigator, FilterPill |
+| Layout     | StatusBar, TopNav, ThemeSwitcher, ModeToggle, Sidebar, MobileNav, BentoGrid, PageOutline |
+| Content    | CodeBlock, SectHead, Doc parts |
+| Data       | Amount, Metric, Delta, Sparkline, Chart, BarList, ContributionGrid, Redact, ListRow, Table, DataTable, FilterBuilder |
+| Chat       | PromptInput, ChatThread |
+| Feedback   | Alert, EmptyState, Toast, Skeleton, CommandPalette, ChromeMessage, PageLoading |
+| Motion     | Reveal, TypeIn, RollingNumber, Spotlight, SpotlightCard, ArrowLink |
 
 Six theme presets: `entrepta`, `blossom`, `marmalade`, `julia`, `ivy` and `bosco`. Pick one, or install all six and switch at runtime. Every text color clears WCAG AA in all 12 theme and mode combinations, and a test measures it on every change.
 
-Upgrading from 1.x? The [migration guide](https://entrepta.vercel.app/docs/migrating-to-v2) lists every change and every new component, and copies as one Markdown file for your agent.
+New in 3: components for products, from money and dates to tables, filters, charts and chat, with nothing in 2.x broken. [What's new in v3](https://entrepta.vercel.app/docs/whats-new-in-v3) lists them and the one command to update. Upgrading from 1.x? The [migration guide](https://entrepta.vercel.app/docs/migrating-to-v2) lists every change, and copies as one Markdown file for your agent.
 
 ## Built for coding agents
 
@@ -112,7 +114,7 @@ export function Launch() {
 
 ## Stack
 
-React 19, Next.js 15 as the reference setup, Tailwind v4, Radix UI, CSS variables, TypeScript strict, class-variance-authority, Phosphor icons, and `motion` for the four components that animate through JavaScript.
+React 19, Next.js 15 as the reference setup, Tailwind v4, Radix UI, CSS variables, TypeScript strict, class-variance-authority, Phosphor icons, and `motion` for the components that animate through JavaScript. A few components bring a library for a job worth one: cmdk for the command palette, sonner for toasts, react-day-picker for the calendar, TanStack Table for the data table and Recharts for charts. Each installs only with the component that needs it.
 
 ## Repo
 

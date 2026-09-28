@@ -7,9 +7,7 @@ export default function DocsLayout({ children }: { children: React.ReactNode }) 
     <>
       <SiteNav />
       <div className="flex min-h-screen pt-14 pb-10 sm:pb-12 max-w-[1280px] mx-auto">
-        <aside className="hidden md:block w-56 shrink-0 border-r border-[var(--border-subtle)] sticky top-14 self-start h-[calc(100vh-3.5rem)] overflow-y-auto px-3">
-          <DocsSidebar />
-        </aside>
+        <DocsSidebar />
         <main
           id="main-content"
           tabIndex={-1}

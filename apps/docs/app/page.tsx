@@ -6,18 +6,18 @@ import { HomeSection, SectionHead, SpecList } from "@/components/home-section";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteNav } from "@/components/site-nav";
 import { SiteStatusBar } from "@/components/site-status-bar";
-import { SpotlightCard } from "@/components/spotlight-card";
 import { COMPONENT_INDEX, SECTIONS } from "@/lib/component-index";
 import { USED_BY } from "@/lib/links";
 import { tokenCount } from "@/lib/stats";
 import { THEMES } from "@/lib/theme";
 import { cn } from "@/lib/utils";
-import { VERSION, VERSION_LABEL } from "@/lib/version";
+import { NEWS, VERSION } from "@/lib/version";
 import { CodeBlock } from "@entrepta/registry/content/code-block";
 import { Diamond } from "@entrepta/registry/content/diamond";
 import { Amount } from "@entrepta/registry/data/amount";
 import { Reveal } from "@entrepta/registry/motion/reveal";
 import { RollingNumber } from "@entrepta/registry/motion/rolling-number";
+import { SpotlightCard } from "@entrepta/registry/motion/spotlight-card";
 import { Badge } from "@entrepta/registry/primitives/badge";
 import { buttonVariants } from "@entrepta/registry/primitives/button-variants";
 import {
@@ -37,6 +37,7 @@ import { Tabs, TabsList, TabsTrigger } from "@entrepta/registry/primitives/tabs"
 import type { Icon } from "@phosphor-icons/react";
 import {
   BellSimpleIcon,
+  ChatCircleIcon,
   CheckIcon,
   CubeIcon,
   FileMdIcon,
@@ -51,7 +52,7 @@ import {
   TextboxIcon,
 } from "@phosphor-icons/react/dist/ssr";
 import Link from "next/link";
-import type { CSSProperties } from "react";
+import { type CSSProperties, Fragment } from "react";
 
 const PRINCIPLES = [
   {
@@ -138,7 +139,7 @@ const SECTION_PREVIEWS: Record<(typeof SECTIONS)[number], React.ReactNode> = {
   Data: (
     <ul className="m-0 flex w-full max-w-[220px] list-none flex-col gap-1 p-0 font-mono text-mono-sm">
       {[
-        ["salary", 950000],
+        ["client invoice", 950000],
         ["rent", -180000],
         ["coffee", -1250],
       ].map(([label, value]) => (
@@ -148,6 +149,18 @@ const SECTION_PREVIEWS: Record<(typeof SECTIONS)[number], React.ReactNode> = {
         </li>
       ))}
     </ul>
+  ),
+  Chat: (
+    <div className="flex w-full max-w-[240px] flex-col gap-2 font-sans text-body-md">
+      <span className="self-end rounded-[var(--radius-lg)] rounded-br-[var(--radius-sm)] bg-[var(--bg-surface-brand)] px-3 py-1.5 text-[var(--fg-primary)]">
+        where did it go?
+      </span>
+      <span className="flex items-baseline gap-1.5 text-[var(--fg-secondary)]">
+        <Diamond size={9} />
+        mostly rent
+        <span aria-hidden className="type-caret ml-0.5" />
+      </span>
+    </div>
   ),
   Feedback: (
     <div className="flex items-start gap-3 rounded-[var(--radius-md)] border border-[var(--border-strong)] bg-[var(--bg-overlay)] p-3 font-mono shadow-[var(--shadow-card-hover)] [background-image:radial-gradient(140%_120%_at_0%_0%,color-mix(in_srgb,var(--status-success)_12%,transparent),transparent_55%)]">
@@ -181,6 +194,7 @@ const SECTION_ICONS: Record<(typeof SECTIONS)[number], Icon> = {
   Layout: LayoutIcon,
   Content: FileTextIcon,
   Data: TableIcon,
+  Chat: ChatCircleIcon,
   Feedback: BellSimpleIcon,
   Motion: SparkleIcon,
 };
@@ -215,6 +229,36 @@ const HERO_STATS = [
   { dt: "AA pairs", dd: String(THEMES.length * 2) },
 ];
 
+/**
+ * When each piece of the hero arrives, in seconds from the first paint. The
+ * heading goes word by word, the editor lands last, and the counts under it
+ * wait for the editor when they are on screen from the start.
+ */
+const HERO_AT = {
+  news: 0.1,
+  heading: 0.25,
+  italic: 0.5,
+  lede: 0.85,
+  actions: 1,
+  themes: 1.1,
+  editor: 1.2,
+  stats: 1.6,
+};
+
+const heroDelay = (seconds: number) => ({ "--hero-delay": `${seconds}s` }) as CSSProperties;
+
+/** A line of the heading, a word at a time. The spaces stay text, so it reads as one line. */
+function HeroWords({ text, at }: { text: string; at: number }) {
+  return text.split(" ").map((word, i) => (
+    <Fragment key={word}>
+      {i > 0 && " "}
+      <span className="hero-in hero-word" style={heroDelay(at + i * 0.08)}>
+        {word}
+      </span>
+    </Fragment>
+  ));
+}
+
 export default function Home() {
   return (
     <>
@@ -231,13 +275,14 @@ export default function Home() {
           <div className="relative mx-auto max-w-[1280px] px-4 pt-16 pb-16 sm:px-12 sm:pt-24">
             <div className="mx-auto flex max-w-4xl flex-col items-center text-center">
               <Link
-                href="/docs/migrating-to-v2"
-                className="group mb-8 inline-flex items-center gap-2 rounded-full border border-[var(--border-subtle)] bg-[var(--bg-card)] py-1 pr-3 pl-1.5 font-mono text-mono-sm text-[var(--fg-secondary)] transition-colors hover:border-[var(--border-brand)] hover:text-[var(--fg-primary)]"
+                href={NEWS.href}
+                style={heroDelay(HERO_AT.news)}
+                className="hero-in group mb-8 inline-flex items-center gap-2 rounded-full border border-[var(--border-subtle)] bg-[var(--bg-card)] py-1 pr-3 pl-1.5 font-mono text-mono-sm text-[var(--fg-secondary)] transition-colors hover:border-[var(--border-brand)] hover:text-[var(--fg-primary)]"
               >
                 <Badge variant="solid" color="brand" size="sm" className="rounded-full">
-                  {VERSION_LABEL}
+                  new
                 </Badge>
-                {`${COMPONENT_INDEX.length} components · ${THEMES.length} themes · motion`}
+                {`${NEWS.label} · ${COMPONENT_INDEX.length} components · ${NEWS.summary}`}
                 <span
                   aria-hidden
                   className="text-[var(--fg-brand-text)] transition-transform group-hover:translate-x-0.5"
@@ -247,29 +292,29 @@ export default function Home() {
               </Link>
 
               <h1 className="m-0 mb-7 font-serif text-display-md font-normal text-[var(--fg-primary)] sm:text-display-lg lg:text-display-xl">
-                {/* CSS, not TypeIn: the heading is the first thing on screen, so it fades in
+                {/* CSS, not TypeIn: the heading is the first thing on screen, so it rises in
                     before hydration and is there with JavaScript off */}
-                <span
-                  className="type-fade block"
-                  style={{ "--type-delay": "0.05s" } as CSSProperties}
-                >
-                  A design system,
-                </span>
-                <em
-                  className="type-fade block italic text-[var(--fg-brand)]"
-                  style={{ "--type-delay": "0.22s" } as CSSProperties}
-                >
-                  posed as an IDE.
+                <span className="block">
+                  <HeroWords text="A design system," at={HERO_AT.heading} />
+                </span>{" "}
+                <em className="block italic text-[var(--fg-brand)]">
+                  <HeroWords text="posed as an IDE." at={HERO_AT.italic} />
                 </em>
               </h1>
 
-              <p className="m-0 mb-10 max-w-2xl text-balance font-sans text-body-lg text-[var(--fg-secondary)] sm:text-heading-md sm:font-normal">
+              <p
+                style={heroDelay(HERO_AT.lede)}
+                className="hero-in m-0 mb-10 max-w-2xl text-balance font-sans text-body-lg text-[var(--fg-secondary)] sm:text-heading-md sm:font-normal"
+              >
                 <strong className="font-medium text-[var(--fg-primary)]">entrepta</strong> is a
                 dark-first React library you copy into your repo: tabs, a command palette, a status
                 bar, serif italic next to mono. Every ink is measured in six themes.
               </p>
 
-              <div className="mb-10 flex flex-wrap items-center justify-center gap-3">
+              <div
+                style={heroDelay(HERO_AT.actions)}
+                className="hero-in mb-10 flex flex-wrap items-center justify-center gap-3"
+              >
                 <Link href="/docs/components" className={buttonVariants({ size: "lg" })}>
                   browse components <span aria-hidden>→</span>
                 </Link>
@@ -277,20 +322,26 @@ export default function Home() {
                 <CommandPaletteTrigger />
               </div>
 
-              <ThemeRow />
+              <div style={heroDelay(HERO_AT.themes)} className="hero-in">
+                <ThemeRow />
+              </div>
             </div>
 
-            <div className="mt-16 sm:mt-20">
-              <Reveal>
-                <HomeShowcase />
-              </Reveal>
+            <div
+              style={heroDelay(HERO_AT.editor)}
+              className="hero-in mt-16 [--hero-dur:1.4s] [--hero-rise:48px] sm:mt-20"
+            >
+              <HomeShowcase />
             </div>
 
-            <div className="mt-6">
-              <HeroStats stats={HERO_STATS} />
+            <div style={heroDelay(HERO_AT.stats)} className="hero-in mt-6">
+              <HeroStats stats={HERO_STATS} at={HERO_AT.stats} />
             </div>
 
-            <p className="mt-6 text-center font-mono text-mono-sm text-[var(--fg-muted)]">
+            <p
+              style={heroDelay(HERO_AT.stats)}
+              className="hero-in mt-6 text-center font-mono text-mono-sm text-[var(--fg-muted)]"
+            >
               in use at{" "}
               {USED_BY.map((u, i) => (
                 <span key={u.name}>

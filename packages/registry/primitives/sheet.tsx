@@ -97,9 +97,10 @@ const sheetVariants = cva([OVERLAY_SURFACE, "motion-sheet fixed z-50 flex flex-c
       ],
     },
     size: {
-      sm: "sm:w-[min(360px,100vw)]",
-      md: "sm:w-[min(480px,100vw)]",
-      lg: "sm:w-[min(640px,100vw)]",
+      // of the containing block: the viewport, or the element given as `container`
+      sm: "sm:w-[min(360px,100%)]",
+      md: "sm:w-[min(480px,100%)]",
+      lg: "sm:w-[min(640px,100%)]",
     },
   },
   defaultVariants: { side: "right", size: "md" },
@@ -117,6 +118,12 @@ interface SheetContentProps
   discardPrompt?: React.ReactNode;
   keepLabel?: string;
   discardLabel?: string;
+  /**
+   * Where it renders, instead of the end of the body: a device frame in a
+   * preview, a shadow root. Give that element a transform, such as
+   * `transform-gpu`, so the sheet and its backdrop are fixed to it.
+   */
+  container?: HTMLElement | null;
 }
 
 const SheetContent = React.forwardRef<
@@ -133,6 +140,7 @@ const SheetContent = React.forwardRef<
       discardPrompt = "Discard your changes?",
       keepLabel = "Keep editing",
       discardLabel = "Discard",
+      container,
       className,
       children,
       ...props
@@ -142,7 +150,7 @@ const SheetContent = React.forwardRef<
     const sheet = React.useContext(SheetContext);
     const confirming = sheet?.confirming ?? false;
     return (
-      <DialogPrimitive.Portal>
+      <DialogPrimitive.Portal container={container}>
         <DialogOverlay />
         <DialogPrimitive.Content
           ref={ref}

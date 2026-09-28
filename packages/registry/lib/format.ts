@@ -26,12 +26,28 @@ export const DEFAULT_TIME_ZONE = "UTC";
 /** U+2212, the real minus. `Intl` gives a hyphen in most locales. */
 export const MINUS = "−";
 
+/**
+ * Building an Intl formatter costs far more than using one, and a table of
+ * amounts would build two per cell on every render. They are kept by their
+ * options, which a page only ever has a handful of.
+ */
+const formatters = new Map<string, Intl.NumberFormat>();
+function numberFormat(locale: string, options: Intl.NumberFormatOptions): Intl.NumberFormat {
+  const key = `${locale}|${JSON.stringify(options)}`;
+  let format = formatters.get(key);
+  if (!format) {
+    format = new Intl.NumberFormat(locale, options);
+    formatters.set(key, format);
+  }
+  return format;
+}
+
 /* ------------------------------------------------------------------ money */
 
 /** How many digits the currency's minor unit has: 2 for EUR, 0 for JPY, 3 for BHD. */
 export function currencyDigits(currency: string): number {
   return (
-    new Intl.NumberFormat("en-US", { style: "currency", currency }).resolvedOptions()
+    numberFormat("en-US", { style: "currency", currency }).resolvedOptions()
       .maximumFractionDigits ?? 2
   );
 }
@@ -57,7 +73,7 @@ export interface MoneyOptions extends FormatOptions {
 export type MoneyPart = { type: Intl.NumberFormatPartTypes; value: string };
 
 function moneyFormat({ locale, currency, signDisplay = "auto", compact }: MoneyOptions) {
-  return new Intl.NumberFormat(locale ?? DEFAULT_LOCALE, {
+  return numberFormat(locale ?? DEFAULT_LOCALE, {
     style: "currency",
     currency,
     signDisplay: signDisplay === "always" ? "exceptZero" : signDisplay,
@@ -151,7 +167,7 @@ export function formatNumber(value: number, options: NumberOptions = {}): string
     signDisplay = "auto",
     maximumFractionDigits,
   } = options;
-  return new Intl.NumberFormat(locale ?? DEFAULT_LOCALE, {
+  return numberFormat(locale ?? DEFAULT_LOCALE, {
     style,
     signDisplay: signDisplay === "always" ? "exceptZero" : signDisplay,
     ...(compact ? { notation: "compact" } : {}),

@@ -1,6 +1,15 @@
 import { DocPageHeader } from "@/components/doc-page-header";
+import { DATA_FOUNDATION } from "@/lib/docs-data";
+import {
+  FOUNDATIONS_INTRO,
+  FOUNDATION_PAGES,
+  type FoundationSlug,
+  SPACE_SCALE,
+  TYPE_SCALE,
+  motionComponents,
+} from "@/lib/foundations";
 import { RULES } from "@/lib/rules";
-import { Button } from "@entrepta/registry/primitives/button";
+import { buttonVariants } from "@entrepta/registry/primitives/button-variants";
 import {
   Card,
   CardComment,
@@ -24,56 +33,16 @@ export const metadata: Metadata = {
   },
 };
 
-const PAGES = [
-  {
-    num: "01",
-    label: "color",
-    title: "Color",
-    desc: "Zinc neutrals and one brand. Surfaces, inks and accents, measured live for your theme.",
-    count: "live",
-    href: "/docs/foundations/color",
-  },
-  {
-    num: "02",
-    label: "typography",
-    title: "Typography",
-    desc: "Three families. Newsreader serif for headlines, JetBrains Mono for UI, Inter for prose. Ten size tokens.",
-    count: "10 tokens",
-    href: "/docs/foundations/typography",
-  },
-  {
-    num: "03",
-    label: "spacing",
-    title: "Grid & Spacing",
-    desc: "12-column grid, 24px gutter, 1280px max. Base spacing scale from 4px to 96px.",
-    count: "9 tokens",
-    href: "/docs/foundations/spacing",
-  },
-  {
-    num: "04",
-    label: "motion",
-    title: "Radius & Motion",
-    desc: "Soft corners from 6 to 24px. Motion with a job: entrances, counters, light. Always a reduced-motion path.",
-    count: "5 components",
-    href: "/docs/foundations/motion",
-  },
-  {
-    num: "05",
-    label: "accessibility",
-    title: "Accessibility",
-    desc: "Inks measured in every theme, focus, the skip link, reduced motion, screen reader patterns.",
-    count: "WCAG AA",
-    href: "/docs/foundations/accessibility",
-  },
-  {
-    num: "06",
-    label: "rules",
-    title: "Rules",
-    desc: "The do and don't list, each one written after a real bug.",
-    count: `${RULES.length} rules`,
-    href: "/docs/foundations/rules",
-  },
-];
+/** What each card counts. The pages, their titles and summaries are in lib/foundations.ts. */
+const COUNTS: Record<FoundationSlug, string> = {
+  color: "live",
+  typography: `${TYPE_SCALE.length} tokens`,
+  spacing: `${SPACE_SCALE.length} tokens`,
+  motion: `${motionComponents().length} components`,
+  accessibility: "WCAG AA",
+  rules: `${RULES.length} rules`,
+  data: `${DATA_FOUNDATION.length} topics`,
+};
 
 export default function FoundationsIndex() {
   return (
@@ -86,21 +55,21 @@ export default function FoundationsIndex() {
             The <em>raw materials.</em>
           </>
         }
-        description="Tokens, type, grid, motion. Every component is built from these primitives. Change them once and the whole system shifts."
+        description={FOUNDATIONS_INTRO}
       />
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        {PAGES.map((p) => (
-          <Link key={p.label} href={p.href} className="group block">
+        {FOUNDATION_PAGES.map((p) => (
+          <Link key={p.slug} href={`/docs/foundations/${p.slug}`} className="group block">
             <Card className="h-full hover:border-[var(--fg-brand)]/40 transition-colors">
               <CardHeader>
-                <CardLabel>{p.label}</CardLabel>
+                <CardLabel>{p.slug}</CardLabel>
                 <CardMeta>{p.num}</CardMeta>
               </CardHeader>
               <CardTitle>{p.title}</CardTitle>
-              <CardDescription>{p.desc}</CardDescription>
+              <CardDescription>{p.summary}</CardDescription>
               <CardFooter>
-                <CardComment>{p.count}</CardComment>
+                <CardComment>{COUNTS[p.slug]}</CardComment>
                 <span className="text-[var(--fg-brand)] transition-transform group-hover:translate-x-0.5">
                   →
                 </span>
@@ -111,15 +80,11 @@ export default function FoundationsIndex() {
       </div>
 
       <div className="mt-12 flex gap-3 flex-wrap">
-        <Link href="/docs/components">
-          <Button size="md">
-            browse components <span aria-hidden>→</span>
-          </Button>
+        <Link href="/docs/components" className={buttonVariants({ size: "md" })}>
+          browse components <span aria-hidden>→</span>
         </Link>
-        <Link href="/docs/themes">
-          <Button variant="secondary" size="md">
-            see themes
-          </Button>
+        <Link href="/docs/themes" className={buttonVariants({ variant: "secondary", size: "md" })}>
+          see themes
         </Link>
       </div>
     </article>

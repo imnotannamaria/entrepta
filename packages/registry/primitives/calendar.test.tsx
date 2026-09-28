@@ -118,4 +118,29 @@ describe("Calendar", () => {
     render(<Single renderDay={(day) => (day === "2026-09-15" ? <i data-testid="dot" /> : null)} />);
     expect(screen.getByTestId("dot").closest("button")).toHaveAccessibleName(/September 15/);
   });
+
+  it("keeps the focus on a day through a re-render with an inline renderDay", async () => {
+    const user = userEvent.setup();
+    function Inline() {
+      const [value, setValue] = React.useState<string | null>("2026-09-15");
+      return (
+        <>
+          <Calendar
+            timeZone="UTC"
+            value={value}
+            onValueChange={setValue}
+            // a new function on every render, as most apps write it
+            renderDay={(day) => (day.endsWith("5") ? <i /> : null)}
+          />
+          <output data-testid="held">{value}</output>
+        </>
+      );
+    }
+    render(<Inline />);
+    screen.getByRole("button", { name: /September 15, 2026/ }).focus();
+    await user.keyboard("{ArrowRight}{Enter}");
+    expect(held()).toBe("2026-09-16");
+    // picking re-renders the parent; the focus stays on the day just picked
+    expect(screen.getByRole("button", { name: /September 16, 2026/ })).toHaveFocus();
+  });
 });

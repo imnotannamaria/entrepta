@@ -25,7 +25,7 @@ interface SegmentedControlProps
 }
 
 const SIZE = {
-  sm: { box: "h-7", segment: "px-2.5 text-mono-xs", icon: 12 },
+  sm: { box: "h-7", segment: "px-2 text-mono-xs", icon: 12 },
   md: { box: "h-9", segment: "px-3 text-mono-sm", icon: 14 },
 } as const;
 

@@ -4,24 +4,24 @@ import { buildAgentsMd } from "@/lib/agents-md";
 import { COMPONENT_INDEX } from "@/lib/component-index";
 import { DEFAULT_MODE, DEFAULT_THEME, STORAGE_KEY_PREFIX, THEMES } from "@/lib/theme";
 import { cn } from "@/lib/utils";
-import { VERSION_LABEL } from "@/lib/version";
 import { useCopy } from "@entrepta/registry/hooks/use-copy";
 import { useTheme } from "@entrepta/registry/hooks/use-theme";
 import { StatusBar, StatusBarItem, StatusBarSeparator } from "@entrepta/registry/layout/status-bar";
 import { RollingNumber, useRollOnHover } from "@entrepta/registry/motion/rolling-number";
 import { Spotlight, useSpotlight } from "@entrepta/registry/motion/spotlight";
+import { Avatar, AvatarGroup } from "@entrepta/registry/primitives/avatar";
 import { Badge } from "@entrepta/registry/primitives/badge";
 import { Button } from "@entrepta/registry/primitives/button";
 import {
   Card,
   CardComment,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardLabel,
   CardTitle,
 } from "@entrepta/registry/primitives/card";
 import { Checkbox } from "@entrepta/registry/primitives/checkbox";
+import { Progress } from "@entrepta/registry/primitives/progress";
 import { Switch } from "@entrepta/registry/primitives/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@entrepta/registry/primitives/tabs";
 import {
@@ -31,13 +31,12 @@ import {
   FileTsxIcon,
   FilesIcon,
   GitBranchIcon,
-  ListChecksIcon,
   MagnifyingGlassIcon,
   PaletteIcon,
   RobotIcon,
   RocketLaunchIcon,
 } from "@phosphor-icons/react";
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { OpenAgentsButton } from "./agents-configurator";
 
@@ -130,7 +129,6 @@ const K = "text-[var(--status-info)]"; // keyword
 const S = "text-[var(--status-warning)]"; // string
 const T = "text-[var(--fg-brand-text)]"; // tag
 const P = "text-[var(--fg-muted)]"; // punctuation and props
-const X = "text-[var(--fg-primary)]"; // text
 
 /** One line of code: a gutter number and the tokens. */
 function Line({ n, children }: { n: number; children?: React.ReactNode }) {
@@ -147,111 +145,123 @@ function Line({ n, children }: { n: number; children?: React.ReactNode }) {
   );
 }
 
+/** The code of the card on the right, kept in step with it by hand. */
+const LAUNCH_CODE = [
+  'import { Badge } from "@/components/entrepta/badge"',
+  'import { Button } from "@/components/entrepta/button"',
+  'import { Card, CardTitle } from "@/components/entrepta/card"',
+  'import { Checkbox } from "@/components/entrepta/checkbox"',
+  'import { Progress } from "@/components/entrepta/progress"',
+  "",
+  "export default function Launch({ tasks }) {",
+  "  const left = tasks.filter((t) => !t.done).length",
+  "  return (",
+  "    <Card>",
+  '      <Badge dot>{left ? `${left} left` : "ready"}</Badge>',
+  "      <CardTitle>Ship it <em>tonight.</em></CardTitle>",
+  "      <Progress segments={4} value={4 - left} max={4} />",
+  "      {tasks.map((t) => (",
+  "        <Checkbox key={t.id} label={t.label} checked={t.done} />",
+  "      ))}",
+  "      <Button disabled={left > 0}>deploy</Button>",
+  "    </Card>",
+  "  )",
+  "}",
+];
+
+// strings, keywords, an arrow (left alone), a tag's opening, a tag's end, a prop
+const TOKENS =
+  /("[^"]*"|`[^`]*`)|\b(import|from|export|default|function|const|return)\b|(=>)|(<\/?)([A-Za-z]+)|(\/?>)|\b([a-z][A-Za-z]*=)(?![=>])/g;
+
+/** One line of the sample, colored like the editor would. */
+function highlight(line: string): React.ReactNode[] {
+  const parts: React.ReactNode[] = [];
+  let last = 0;
+  for (const m of line.matchAll(TOKENS)) {
+    const at = m.index ?? 0;
+    const [all, str, keyword, , open, tag, close, prop] = m;
+    parts.push(line.slice(last, at));
+    if (str)
+      parts.push(
+        <span key={at} className={S}>
+          {str}
+        </span>
+      );
+    else if (keyword)
+      parts.push(
+        <span key={at} className={K}>
+          {keyword}
+        </span>
+      );
+    else if (tag)
+      parts.push(
+        <Fragment key={at}>
+          <span className={P}>{open}</span>
+          <span className={T}>{tag}</span>
+        </Fragment>
+      );
+    else if (close || prop)
+      parts.push(
+        <span key={at} className={P}>
+          {all}
+        </span>
+      );
+    else parts.push(all);
+    last = at + all.length;
+  }
+  parts.push(line.slice(last));
+  return parts;
+}
+
 function PageCode() {
-  const lines: React.ReactNode[] = [
-    <Fragment key="l1">
-      <span className={K}>import</span> {"{ Card, CardTitle }"} <span className={K}>from</span>{" "}
-      <span className={S}>"@/components/entrepta/card"</span>
-    </Fragment>,
-    <Fragment key="l2">
-      <span className={K}>import</span> {"{ Badge }"} <span className={K}>from</span>{" "}
-      <span className={S}>"@/components/entrepta/badge"</span>
-    </Fragment>,
-    <Fragment key="l3">
-      <span className={K}>import</span> {"{ Checkbox }"} <span className={K}>from</span>{" "}
-      <span className={S}>"@/components/entrepta/checkbox"</span>
-    </Fragment>,
-    null,
-    <Fragment key="l5">
-      <span className={K}>export default function</span> <span className={X}>Launch</span>
-      {"() {"}
-    </Fragment>,
-    <Fragment key="l6">
-      {"  "}
-      <span className={K}>return</span> (
-    </Fragment>,
-    <Fragment key="l7">
-      {"    "}
-      <span className={P}>{"<"}</span>
-      <span className={T}>Card</span> <span className={P}>variant=</span>
-      <span className={S}>"featured"</span>
-      <span className={P}>{">"}</span>
-    </Fragment>,
-    <Fragment key="l8">
-      {"      "}
-      <span className={P}>{"<"}</span>
-      <span className={T}>Badge</span> <span className={P}>icon=</span>
-      {"{RocketIcon}"}
-      <span className={P}>{">"}</span>
-      <span className={X}>{VERSION_LABEL}</span>
-      <span className={P}>{"</"}</span>
-      <span className={T}>Badge</span>
-      <span className={P}>{">"}</span>
-    </Fragment>,
-    <Fragment key="l9">
-      {"      "}
-      <span className={P}>{"<"}</span>
-      <span className={T}>CardTitle</span>
-      <span className={P}>{">"}</span>
-      <span className={X}>Ship it </span>
-      <span className={P}>{"<"}</span>
-      <span className={T}>em</span>
-      <span className={P}>{">"}</span>
-      <span className={X}>tonight.</span>
-      <span className={P}>{"</"}</span>
-      <span className={T}>em</span>
-      <span className={P}>{"></"}</span>
-      <span className={T}>CardTitle</span>
-      <span className={P}>{">"}</span>
-    </Fragment>,
-    <Fragment key="l10">
-      {"      "}
-      <span className={P}>{"<"}</span>
-      <span className={T}>Checkbox</span> <span className={P}>label=</span>
-      <span className={S}>"tests pass"</span> <span className={P}>checked /{">"}</span>
-    </Fragment>,
-    <Fragment key="l11">
-      {"      "}
-      <span className={P}>{"<"}</span>
-      <span className={T}>Button</span> <span className={P}>onClick=</span>
-      {"{deploy}"}
-      <span className={P}>{">"}</span>
-      <span className={X}>deploy</span>
-      <span className={P}>{"</"}</span>
-      <span className={T}>Button</span>
-      <span className={P}>{">"}</span>
-    </Fragment>,
-    <Fragment key="l12">
-      {"    "}
-      <span className={P}>{"</"}</span>
-      <span className={T}>Card</span>
-      <span className={P}>{">"}</span>
-    </Fragment>,
-    <Fragment key="l13">{"  )"}</Fragment>,
-    <Fragment key="l14">{"}"}</Fragment>,
-  ];
   return (
     <pre className="m-0 py-4 pr-4 font-mono text-mono-sm leading-6 text-[var(--fg-secondary)]">
-      {lines.map((l, i) => (
+      {LAUNCH_CODE.map((line, i) => (
         // biome-ignore lint/suspicious/noArrayIndexKey: fixed lines
         <Line key={i} n={i + 1}>
-          {l}
+          {highlight(line)}
         </Line>
       ))}
     </pre>
   );
 }
 
+const TASKS = [
+  { id: "tests", label: "tests pass" },
+  { id: "review", label: "review approved" },
+  { id: "changeset", label: "changeset added" },
+  { id: "docs", label: "docs updated" },
+] as const;
+
+type TaskId = (typeof TASKS)[number]["id"];
+
+const REVIEWERS = ["Anna Maria", "Lin Chen", "Rafa Souza", "Noor Haddad", "Theo Blum"];
+
 function LivePreview() {
-  const [tasks, setTasks] = useState({ tests: true, review: true, docs: false });
+  const [done, setDone] = useState<Record<TaskId, boolean>>({
+    tests: true,
+    review: true,
+    changeset: true,
+    docs: false,
+  });
   const [preview, setPreview] = useState(true);
   const [shipping, setShipping] = useState(false);
-  const ready = Object.values(tasks).every(Boolean);
+  const [live, setLive] = useState(false);
+  const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
+  useEffect(() => () => clearTimeout(timer.current), []);
+
+  const left = TASKS.filter((t) => !done[t.id]).length;
+
+  const toggle = (id: TaskId) => {
+    setDone((d) => ({ ...d, [id]: !d[id] }));
+    setLive(false);
+  };
 
   const deploy = () => {
     setShipping(true);
-    setTimeout(() => {
+    timer.current = setTimeout(() => {
       setShipping(false);
+      setLive(true);
       toast.success("Deployed to production", {
         description: preview
           ? "preview url: entrepta.vercel.app"
@@ -268,30 +278,55 @@ function LivePreview() {
         <span className="ml-auto uppercase tracking-[0.08em]">preview</span>
       </div>
       <div className="grid flex-1 place-items-center p-5 sm:p-8">
-        <Card variant="featured" className="w-full max-w-sm">
+        <Card className="w-full max-w-sm [--cutout:var(--bg-card)] hover:[--cutout:var(--bg-card-hover)]">
           <CardHeader>
-            <CardLabel icon={ListChecksIcon}>launch</CardLabel>
-            <Badge variant="soft" color="brand" icon={RocketLaunchIcon}>
-              {VERSION_LABEL}
-            </Badge>
+            <CardLabel icon={RocketLaunchIcon}>release</CardLabel>
+            {live ? (
+              <Badge variant="soft" color="success" dot>
+                live
+              </Badge>
+            ) : left === 0 ? (
+              <Badge variant="soft" color="brand" dot>
+                ready
+              </Badge>
+            ) : (
+              <Badge variant="outline" color="neutral">
+                {`${left} left`}
+              </Badge>
+            )}
           </CardHeader>
-          <CardTitle>
-            Ship it <em>tonight.</em>
-          </CardTitle>
-          <CardDescription>Check the list, then press deploy. It is a real button.</CardDescription>
+          <div className="flex flex-col gap-2">
+            <CardTitle>
+              Ship it <em>tonight.</em>
+            </CardTitle>
+            <div className="flex items-center justify-between gap-3">
+              <span className="flex min-w-0 items-center gap-1.5 font-mono text-mono-xs text-[var(--fg-muted)]">
+                <GitBranchIcon aria-hidden size={12} className="shrink-0" />
+                <span className="truncate">main → production</span>
+              </span>
+              <AvatarGroup size="sm" max={3} aria-label="reviewers" className="shrink-0">
+                {REVIEWERS.map((name, i) => (
+                  <Avatar key={name} name={name} color={i === 0 ? "brand" : "neutral"} />
+                ))}
+              </AvatarGroup>
+            </div>
+          </div>
+          <Progress
+            label="checklist"
+            segments={TASKS.length}
+            value={TASKS.length - left}
+            max={TASKS.length}
+            showValue
+            size="sm"
+            tone={live ? "success" : "brand"}
+          />
           <div className="flex flex-col gap-2.5">
-            {(
-              [
-                ["tests", "tests pass"],
-                ["review", "review approved"],
-                ["docs", "docs updated"],
-              ] as const
-            ).map(([key, label]) => (
+            {TASKS.map((t) => (
               <Checkbox
-                key={key}
-                label={label}
-                checked={tasks[key]}
-                onChange={() => setTasks({ ...tasks, [key]: !tasks[key] })}
+                key={t.id}
+                label={t.label}
+                checked={done[t.id]}
+                onChange={() => toggle(t.id)}
               />
             ))}
           </div>
@@ -301,11 +336,17 @@ function LivePreview() {
               checked={preview}
               onChange={(e) => setPreview(e.target.checked)}
             />
-            <Button size="sm" onClick={deploy} disabled={!ready} loading={shipping}>
-              deploy
+            <Button size="sm" onClick={deploy} disabled={left > 0} loading={shipping}>
+              {live ? "redeploy" : "deploy"}
             </Button>
           </CardFooter>
-          {!ready && <CardComment>check every box to deploy</CardComment>}
+          <CardComment className="font-mono text-mono-xs text-[var(--fg-muted)]">
+            {live
+              ? "live. change a box to ship again"
+              : left > 0
+                ? `check ${left} more to deploy`
+                : "it is a real button"}
+          </CardComment>
         </Card>
       </div>
     </div>
@@ -395,7 +436,7 @@ export function HomeShowcase() {
       {/* the brand light the window sits in; it follows the theme */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-[8%] -top-10 bottom-[20%] rounded-full bg-[var(--fg-brand)] opacity-20 blur-[120px]"
+        className="hero-glow pointer-events-none absolute inset-x-[8%] -top-10 bottom-[20%] rounded-full bg-[var(--fg-brand)] blur-[120px]"
       />
       <div
         onMouseMove={onMouseMove}
@@ -501,9 +542,9 @@ export function HomeShowcase() {
   );
 }
 
-function Stat({ label, value, index }: { label: string; value: string; index: number }) {
-  // each cell rolls in a beat after the one before, then rolls a full turn on hover
-  const { cycle, delay, handlers } = useRollOnHover(0.15 + index * 0.12);
+function Stat({ label, value, delay: entrance }: { label: string; value: string; delay: number }) {
+  // rolls in once, then a full turn on each hover
+  const { cycle, delay, handlers } = useRollOnHover(entrance);
   return (
     <div
       {...handlers}
@@ -519,12 +560,28 @@ function Stat({ label, value, index }: { label: string; value: string; index: nu
   );
 }
 
-/** The counts under the editor, as wide as it. */
-export function HeroStats({ stats }: { stats: { dt: string; dd: string }[] }) {
+/**
+ * The counts under the editor, as wide as it. Each cell rolls a beat after the
+ * one before. On a screen tall enough to show them at load they also wait
+ * `at` seconds, so they roll after the editor above has landed, not before.
+ */
+export function HeroStats({ stats, at = 0 }: { stats: { dt: string; dd: string }[]; at?: number }) {
+  const ref = useRef<HTMLDListElement>(null);
+  const [lead, setLead] = useState(0);
+
+  // a layout effect, so the wait is set before the counters see themselves on screen
+  useLayoutEffect(() => {
+    const top = ref.current?.getBoundingClientRect().top;
+    if (top !== undefined && top < window.innerHeight) setLead(at);
+  }, [at]);
+
   return (
-    <dl className="m-0 grid grid-cols-2 gap-px overflow-hidden rounded-[var(--radius-lg)] border border-[var(--border-strong)] bg-[var(--border-subtle)] sm:grid-cols-4">
+    <dl
+      ref={ref}
+      className="m-0 grid grid-cols-2 gap-px overflow-hidden rounded-[var(--radius-lg)] border border-[var(--border-strong)] bg-[var(--border-subtle)] sm:grid-cols-4"
+    >
       {stats.map((s, i) => (
-        <Stat key={s.dt} label={s.dt} value={s.dd} index={i} />
+        <Stat key={s.dt} label={s.dt} value={s.dd} delay={lead + 0.15 + i * 0.12} />
       ))}
     </dl>
   );

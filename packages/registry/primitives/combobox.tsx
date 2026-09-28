@@ -12,7 +12,7 @@ import {
 } from "../feedback/command-palette";
 import { cn } from "../lib/utils";
 import { Badge } from "./badge";
-import { inputWrapperVariants } from "./input";
+import { fieldTrigger } from "./input";
 import { Popover, PopoverContent, PopoverTrigger } from "./popover";
 
 interface ComboboxOption {
@@ -41,6 +41,8 @@ interface ComboboxBaseProps {
   onCreate?: (label: string) => string | undefined;
   createLabel?: (query: string) => React.ReactNode;
   suggestedLabel?: string;
+  /** Read after a chosen option, for another language. */
+  selectedLabel?: string;
   /** The row's content, such as an IconTile and a name. The check stays in front of it. */
   renderOption?: (option: ComboboxOption) => React.ReactNode;
   size?: "sm" | "md" | "lg";
@@ -114,6 +116,7 @@ const Combobox = React.forwardRef<HTMLButtonElement, ComboboxProps>((props, ref)
     onCreate,
     createLabel = (query: string) => `Create "${query}"`,
     suggestedLabel = "suggested",
+    selectedLabel = "selected",
     renderOption,
     size,
     state,
@@ -192,14 +195,7 @@ const Combobox = React.forwardRef<HTMLButtonElement, ComboboxProps>((props, ref)
           aria-describedby={describedBy}
           aria-invalid={invalid}
           disabled={disabled}
-          className={cn(
-            inputWrapperVariants({ size, state }),
-            "justify-between text-left font-mono text-mono-md text-[var(--fg-primary)] outline-none",
-            "focus-visible:border-[var(--fg-brand)] focus-visible:shadow-[0_0_0_3px_var(--bg-surface-brand)]",
-            "aria-[invalid=true]:border-[var(--status-error)]",
-            "disabled:pointer-events-none disabled:opacity-40",
-            className
-          )}
+          className={cn(fieldTrigger({ size, state }), className)}
         >
           <TriggerValue
             chosen={chosenOptions}
@@ -267,7 +263,7 @@ const Combobox = React.forwardRef<HTMLButtonElement, ComboboxProps>((props, ref)
                             {hintOf(option)}
                           </span>
                         ) : null}
-                        {isChosen ? <span className="sr-only">, selected</span> : null}
+                        {isChosen ? <span className="sr-only">, {selectedLabel}</span> : null}
                       </span>
                     </CommandItem>
                   );

@@ -50,6 +50,19 @@ export const INIT_FILES = [
   { path: "entrepta.json", desc: "Config: theme, paths, aliases" },
 ] as const;
 
+/** The docs introduction: what entrepta is opinionated about, and the first three steps. */
+export const DOCS_INTRO = {
+  description:
+    "A dark-first design system distributed as copy-paste components, not an npm package of pre-built UI. You own the source. Run a command, the component lives in your repo, styled with your tokens, editable without fighting a library.",
+  philosophy:
+    "entrepta is opinionated about three things: a deep zinc-950 canvas (light mode is optional, never priority), editor metaphors as personality (tabs, ◆ markers, file paths, shell prompts), and copy-paste distribution (no SDK, no runtime telemetry, no wrapper between you and your components).",
+  quickStart: [
+    { cmd: "npx @entrepta/cli@latest init --theme=entrepta", comment: "tokens and config" },
+    { cmd: "npx @entrepta/cli@latest add button badge input", comment: "copy components" },
+    { cmd: "npm run dev", comment: "use them" },
+  ],
+} as const;
+
 /** What each preset is for. Colors come from lib/theme.ts. */
 export const THEME_NOTES: Record<string, { hover: string; vibe: string }> = {
   entrepta: { hover: "#9B8EFF", vibe: "Default. Violet, playful, IDE personality." },
@@ -221,3 +234,128 @@ npx @entrepta/cli@latest add button card dialog --overwrite`,
     ],
   ] as [string, string][],
 };
+
+/**
+ * Foundations, Data: how numbers, money and dates are held and shown, and how
+ * a data component behaves while it loads, when it is empty and when it fails.
+ */
+export const DATA_FOUNDATION: {
+  id: string;
+  title: string;
+  count: string;
+  notes: string[];
+  code?: { file: string; body: string };
+}[] = [
+  {
+    id: "money",
+    title: "Money",
+    count: "minor units",
+    notes: [
+      "Money is an integer of minor units: 123456 is 1,234.56 in a currency with cents. Never a float, which drifts after a few sums.",
+      "Amount shows it one way everywhere: mono with tabular figures, the real minus sign, the symbol in the muted ink. MoneyInput takes it in, from any pasted format.",
+      "Set the locale, the currency and the time zone once, near the root, with FormatProvider. Every component that formats reads it.",
+    ],
+    code: {
+      file: "app/layout.tsx",
+      body: `<FormatProvider locale="pt-BR" currency="BRL" timeZone="America/Sao_Paulo">
+  {children}
+</FormatProvider>
+
+<Amount value={-123456} />          // −R$ 1.234,56
+<Amount value={950000} tone="auto" /> // +R$ 9.500,00, in the success ink`,
+    },
+  },
+  {
+    id: "dates",
+    title: "Dates",
+    count: "YYYY-MM-DD",
+    notes: [
+      "A day is a plain string, 2026-09-28, never a Date: a Date carries an instant, and a time zone can move it to the day before.",
+      "Today is today in the account's time zone, from FormatProvider. Words and the first day of the week come from the locale.",
+      "lib/format holds the helpers: today, addDays, addMonths, compareDates, formatDate, formatDateRange.",
+    ],
+  },
+  {
+    id: "changes",
+    title: "Changes",
+    count: "Delta",
+    notes: [
+      "A change is an arrow, a sign and words. Color only says whether it is good news, and intent decides which way is good: spending up is bad, income up is good.",
+      "A percentage needs a positive base. From zero or below, Delta shows the difference in value; never +300% from nothing.",
+      "A first value reads new. A missing one is a dash with its reason, never a zero.",
+    ],
+  },
+  {
+    id: "palette",
+    title: "Series colors",
+    count: "chart-1 to 8",
+    notes: [
+      "Series take the palette by name: chart-1 is the brand's hue, the other seven turn it by 45°. Every theme recolors its charts without a line of code.",
+      "Store the key a person picked, such as chart-3, never a hex. SwatchPicker hands back the key and names each swatch after the hue it shows.",
+      "The status colors appear in a chart only for results above and below zero, and always with a sign.",
+    ],
+  },
+  {
+    id: "states",
+    title: "States",
+    count: "loading, empty, error",
+    notes: [
+      "A data component takes loading and draws its own skeleton in its final shape: Metric, DataTable, ContributionGrid. Nothing jumps when the values arrive.",
+      "Empty and error are composed where the words are known: EmptyState for nothing yet and for filters that hide everything, Alert for a failure that stays, a Badge for data that is stale.",
+      "A failed load is never an empty list, which would read as current. DataTable takes an error and shows it in place of the rows.",
+    ],
+  },
+  {
+    id: "redact",
+    title: "Hiding values",
+    count: "Redact",
+    notes: [
+      "RedactProvider hides amounts and marked values behind a mask of their width, for a screen share or a café. Amount, Metric and RollingNumber follow it; wrap anything else in Redact.",
+      "It hides from view, not from the page: the values stay in the HTML. It is no place for a secret.",
+    ],
+    code: {
+      file: "app-shell.tsx",
+      body: `const [hidden, setHidden] = useState(false)
+
+<RedactProvider hidden={hidden}>
+  <Button variant="ghost" aria-pressed={hidden} onClick={() => setHidden(!hidden)}>hide values</Button>
+  <Metric label="balance" value={<Amount value={balance} />} />
+</RedactProvider>`,
+    },
+  },
+];
+
+/** What changed in components that were already there, for "What's new in v3". */
+export const V3_CHANGES: [string, string][] = [
+  [
+    "Theme and mode",
+    "A switch lands in one frame, crossfaded where the browser can, instead of piece by piece.",
+  ],
+  [
+    "Sidebar",
+    'variant="labeled" with groups, a search slot, a footer and collapsible. It keeps the current item in view, and a labeled sidebar can be text only.',
+  ],
+  ["FilterPill", "With onRemove it is an applied filter, with a × named after what it removes."],
+  ["Amount, Metric, RollingNumber", "They hide behind a mask when a RedactProvider asks."],
+  [
+    "Button",
+    "asChild works again, and Button, Input, Textarea, StatusBar and TopNav render on the server.",
+  ],
+  ["Sheet", "container renders it inside a frame of your own."],
+  ["Tabs", "An icon tab keeps its name for screen readers on a phone."],
+  ["CodeBlock", "Scrolling the page over a block works again: it only holds sideways scrolls."],
+  ["ChromeMessage", "Takes headingLevel, for an error inside a layout that has its own h1."],
+  ["Form fields", "No code ligatures, which drew some typed slashes blank."],
+  [
+    "The CLI",
+    "Every write resolves inside the project, symlinks included, and --version tells the truth.",
+  ],
+];
+
+export const V3_UPDATE = `# the new tokens: the chart palette, the collapse animation, fields without ligatures
+npx @entrepta/cli@latest init --theme=entrepta --overwrite
+
+# the 2.x components that changed; keep the ones your project has
+npx @entrepta/cli@latest add button input textarea card dialog tabs toast \\
+  command-palette code-block sidebar filter-pill rolling-number \\
+  mode-toggle theme-switcher status-bar top-nav use-mode use-theme --overwrite`;

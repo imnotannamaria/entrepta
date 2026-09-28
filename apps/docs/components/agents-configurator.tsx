@@ -10,9 +10,9 @@ import {
   closureOf,
 } from "@/lib/agents-md";
 import { COMPONENT_INDEX, SECTIONS } from "@/lib/component-index";
-import { THEMES } from "@/lib/theme";
-import { cn } from "@/lib/utils";
+import { THEMES, type ThemeId } from "@/lib/theme";
 import { CodeBlock } from "@entrepta/registry/content/code-block";
+import { Diamond } from "@entrepta/registry/content/diamond";
 import { useUrlFilter } from "@entrepta/registry/hooks/use-url-filter";
 import type { IconProp } from "@entrepta/registry/lib/icon";
 import { Button } from "@entrepta/registry/primitives/button";
@@ -25,7 +25,9 @@ import {
   DialogLabel,
   DialogTitle,
 } from "@entrepta/registry/primitives/dialog";
+import { fieldLabelClass } from "@entrepta/registry/primitives/field";
 import { SegmentedControl } from "@entrepta/registry/primitives/segmented-control";
+import { SwatchPicker } from "@entrepta/registry/primitives/swatch-picker";
 import {
   CheckIcon,
   DownloadSimpleIcon,
@@ -132,7 +134,9 @@ function Segmented<T extends string>({
   const labelId = `agents-${name}-label`;
   return (
     <div className="flex min-w-0 flex-col gap-2">
-      <span id={labelId} className="font-mono text-mono-sm text-[var(--fg-secondary)]">
+      {/* a form's label, like Field's and the SwatchPicker's legend above */}
+      <span id={labelId} className={fieldLabelClass}>
+        <Diamond />
         {legend}
       </span>
       <SegmentedControl
@@ -250,41 +254,18 @@ function Configurator() {
         </Step>
 
         <Step num="02" title="look">
-          <fieldset className="m-0 flex min-w-0 flex-col border-0 p-0">
-            <legend className="mb-2 p-0 font-mono text-mono-sm text-[var(--fg-secondary)]">
-              Theme
-            </legend>
-            <div className="grid grid-cols-2 gap-1.5 sm:grid-cols-3">
-              {THEMES.map((t) => (
-                <label
-                  key={t.id}
-                  className={cn(
-                    "relative flex h-9 cursor-pointer items-center gap-2 rounded-[var(--radius-sm)] border px-2.5",
-                    "border-[var(--border-subtle)] font-mono text-mono-sm text-[var(--fg-muted)]",
-                    "transition-colors hover:border-[var(--border-strong)] hover:text-[var(--fg-secondary)]",
-                    "has-[:checked]:border-[var(--border-brand-strong)] has-[:checked]:bg-[var(--bg-surface-brand)]",
-                    "has-[:checked]:text-[var(--fg-primary)]",
-                    "has-[:focus-visible]:shadow-[0_0_0_2px_var(--ring)]"
-                  )}
-                >
-                  <input
-                    type="radio"
-                    name="theme"
-                    value={t.id}
-                    checked={options.theme === t.id}
-                    onChange={() => setTheme(t.id)}
-                    className="sr-only"
-                  />
-                  <span
-                    aria-hidden
-                    className="size-3 shrink-0 rounded-full ring-1 ring-[var(--border-strong)]"
-                    style={{ background: t.color }}
-                  />
-                  {t.id}
-                </label>
-              ))}
-            </div>
-          </fieldset>
+          <SwatchPicker
+            legend="Theme"
+            name="theme"
+            // each brand as it looks in the mode picked below
+            options={THEMES.map((t) => ({
+              value: t.id,
+              color: options.mode === "light" ? t.lightColor : t.color,
+              name: t.label,
+            }))}
+            value={options.theme}
+            onValueChange={(next) => setTheme(next as ThemeId)}
+          />
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <Segmented
               legend="Default mode"

@@ -64,6 +64,8 @@ describe("DateNavigator", () => {
     const next = screen.getByRole("button", { name: "Next day" });
     expect(next).toHaveAttribute("aria-disabled", "true");
     expect(next).not.toBeDisabled();
+    // an id reference, which every screen reader reads, not aria-description
+    expect(next).toHaveAttribute("aria-describedby");
     expect(next).toHaveAccessibleDescription("Nothing after this day");
     await user.click(next);
     expect(held()).toBe("2026-09-27");

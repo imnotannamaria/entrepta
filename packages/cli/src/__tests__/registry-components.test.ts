@@ -14,10 +14,7 @@ const REGISTRY_ROOT = path.resolve(
 );
 
 function listRegistryFiles(): string[] {
-  // charts/chart.tsx joins the manifest with its docs page, in phase 7 of
-  // docs/v3-plan.md. Drop this filter then.
-  const all: RegistryComponent["category"][] = [...COMPONENT_FOLDERS, "hooks", "lib"];
-  const dirs = all.filter((dir) => dir !== "charts");
+  const dirs: RegistryComponent["category"][] = [...COMPONENT_FOLDERS, "hooks", "lib"];
   const out: string[] = [];
   for (const dir of dirs) {
     const full = path.join(REGISTRY_ROOT, dir);

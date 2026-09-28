@@ -6,14 +6,13 @@ import {
   CaretLeftIcon,
   CaretRightIcon,
 } from "@phosphor-icons/react";
-import { cva } from "class-variance-authority";
 import * as React from "react";
 import { useFormat } from "../hooks/use-format";
 import { formatDate, formatDateRange, formatMonth, today as todayIn } from "../lib/format";
 import { MENU_LABEL, MENU_ROW } from "../lib/overlay";
 import { cn } from "../lib/utils";
-import { Calendar, type DateRange } from "./calendar";
-import { inputWrapperVariants } from "./input";
+import { Calendar, type DateRange, calendarNavButton } from "./calendar";
+import { fieldTrigger } from "./input";
 import { Popover, PopoverContent, PopoverTrigger } from "./popover";
 
 type Granularity = "day" | "month" | "year";
@@ -47,6 +46,9 @@ interface DatePickerBaseProps {
     today?: string;
     selected?: string;
     presets?: string;
+    /** The arrows of the month and year grids, which turn a year or twelve. */
+    previousPeriod?: string;
+    nextPeriod?: string;
   };
   // what a Field wires
   id?: string;
@@ -73,23 +75,11 @@ type DatePickerProps = DatePickerBaseProps &
       }
   );
 
-const triggerVariants = cva(
-  "justify-between gap-2 text-left font-mono text-mono-md outline-none disabled:pointer-events-none disabled:opacity-40",
-  {
-    variants: {
-      appearance: {
-        field: [
-          "focus-visible:border-[var(--fg-brand)] focus-visible:shadow-[0_0_0_3px_var(--bg-surface-brand)]",
-          "aria-[invalid=true]:border-[var(--status-error)]",
-        ],
-        inline: [
-          "inline-flex h-8 w-auto items-center rounded-[var(--radius-sm)] px-2",
-          "text-[var(--fg-primary)] hover:bg-[var(--bg-hover-soft)] focus-ring",
-        ],
-      },
-    },
-    defaultVariants: { appearance: "field" },
-  }
+// Without the frame, for a date in a line of text or a toolbar.
+const INLINE_TRIGGER = cn(
+  "inline-flex h-8 w-auto items-center justify-between gap-2 rounded-[var(--radius-sm)] px-2",
+  "font-mono text-mono-md text-[var(--fg-primary)] outline-none",
+  "hover:bg-[var(--bg-hover-soft)] focus-ring disabled:pointer-events-none disabled:opacity-40"
 );
 
 /**
@@ -158,8 +148,7 @@ const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>((props, 
           aria-invalid={invalid}
           disabled={disabled}
           className={cn(
-            appearance === "field" && inputWrapperVariants({ size, state }),
-            triggerVariants({ appearance }),
+            appearance === "field" ? cn(fieldTrigger({ size, state }), "gap-2") : INLINE_TRIGGER,
             className
           )}
         >
@@ -284,7 +273,11 @@ function PeriodGrid({
 }) {
   const monthly = granularity === "month";
   const key = (day: string) => (monthly ? day.slice(0, 7) : day.slice(0, 4));
-  const startYear = Number((value ?? current).slice(0, 4));
+  // opens on the chosen period, else on today moved inside min and max
+  const start =
+    value ??
+    (min !== undefined && current < min ? min : max !== undefined && current > max ? max : current);
+  const startYear = Number(start.slice(0, 4));
   const [page, setPage] = React.useState(monthly ? startYear : startYear - (startYear % 12));
   const buttons = React.useRef<(HTMLButtonElement | null)[]>([]);
 
@@ -303,15 +296,27 @@ function PeriodGrid({
     return { period, short: period, long: period };
   });
   const selectedPeriod = value === null ? null : key(value.length === 4 ? value : `${value}-01`);
-  // the one cell Tab lands on: the chosen period, else the current one, else the first
-  const indexOf = (period: string | null) => cells.findIndex((cell) => cell.period === period);
-  const tabStop = [indexOf(selectedPeriod), indexOf(key(current)), 0].find((i) => i >= 0) ?? 0;
   const outside = (period: string) =>
     (min !== undefined && period < key(min)) || (max !== undefined && period > key(max));
+  // a period outside min and max is a disabled button, which takes no focus
+  const open = (index: number) => index >= 0 && index < 12 && !outside(cells[index].period);
+  // the one cell Tab lands on: the chosen period, else the current one, else the first open one
+  const indexOf = (period: string | null) => cells.findIndex((cell) => cell.period === period);
+  const tabStop =
+    [indexOf(selectedPeriod), indexOf(key(current))].find(open) ??
+    Math.max(
+      0,
+      cells.findIndex((_, i) => open(i))
+    );
 
+  // steps over closed periods to the next open one, and stays put when there is none
   const move = (from: number, by: number) => {
-    const target = buttons.current[Math.min(11, Math.max(0, from + by))];
-    target?.focus();
+    for (let i = from + by; i >= 0 && i < 12; i += by) {
+      if (open(i)) {
+        buttons.current[i]?.focus();
+        return;
+      }
+    }
   };
 
   return (
@@ -319,9 +324,9 @@ function PeriodGrid({
       <div className="flex h-8 items-center justify-between">
         <button
           type="button"
-          aria-label={labels?.previous ?? (monthly ? "Previous year" : "Previous years")}
+          aria-label={labels?.previousPeriod ?? (monthly ? "Previous year" : "Previous years")}
           onClick={() => setPage((p) => p - (monthly ? 1 : 12))}
-          className={PAGE_BUTTON}
+          className={calendarNavButton}
         >
           <CaretLeftIcon aria-hidden size={14} weight="bold" />
         </button>
@@ -333,9 +338,9 @@ function PeriodGrid({
         </span>
         <button
           type="button"
-          aria-label={labels?.next ?? (monthly ? "Next year" : "Next years")}
+          aria-label={labels?.nextPeriod ?? (monthly ? "Next year" : "Next years")}
           onClick={() => setPage((p) => p + (monthly ? 1 : 12))}
-          className={PAGE_BUTTON}
+          className={calendarNavButton}
         >
           <CaretRightIcon aria-hidden size={14} weight="bold" />
         </button>
@@ -383,11 +388,6 @@ function PeriodGrid({
     </div>
   );
 }
-
-const PAGE_BUTTON = cn(
-  "inline-flex size-8 items-center justify-center rounded-[var(--radius-sm)]",
-  "text-[var(--fg-muted)] hover:bg-[var(--bg-hover-soft)] hover:text-[var(--fg-primary)] focus-ring"
-);
 
 export { DatePicker };
 export type { DatePickerProps, DatePreset, Granularity };

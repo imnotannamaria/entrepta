@@ -41,6 +41,21 @@ const inputWrapperVariants = cva(
   }
 );
 
+/**
+ * The Input's frame on a button that opens a choice: Select, Combobox,
+ * DatePicker. A button has no caret to focus within, so its ring shows on
+ * focus-visible, and it reads its error from its own aria-invalid.
+ */
+function fieldTrigger(options: VariantProps<typeof inputWrapperVariants> = {}): string {
+  return cn(
+    inputWrapperVariants(options),
+    "justify-between text-left font-mono text-mono-md text-[var(--fg-primary)] outline-none",
+    "focus-visible:border-[var(--fg-brand)] focus-visible:shadow-[0_0_0_3px_var(--bg-surface-brand)]",
+    "aria-[invalid=true]:border-[var(--status-error)]",
+    "disabled:pointer-events-none disabled:opacity-40"
+  );
+}
+
 /** The field inside the frame, for a control that shares the Input's look. */
 const inputFieldClass = [
   "flex-1 min-w-0 h-full",
@@ -84,4 +99,4 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 );
 Input.displayName = "Input";
 
-export { Input, inputFieldClass, inputWrapperVariants };
+export { Input, fieldTrigger, inputFieldClass, inputWrapperVariants };

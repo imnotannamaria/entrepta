@@ -112,13 +112,13 @@ describe("Avatar", () => {
     const { container, rerender } = render(<Avatar name="a" />);
     // opaque underneath, so an overlapped avatar does not show through the tint
     expect(face(container)).toHaveClass(
-      "bg-[var(--avatar-cutout,var(--bg-canvas))]",
+      "bg-[var(--cutout,var(--bg-canvas))]",
       "bg-[image:linear-gradient(var(--bg-hover-strong),var(--bg-hover-strong))]",
       "text-[var(--fg-secondary)]"
     );
     rerender(<Avatar name="a" color="brand" />);
     expect(face(container)).toHaveClass(
-      "bg-[var(--avatar-cutout,var(--bg-canvas))]",
+      "bg-[var(--cutout,var(--bg-canvas))]",
       "bg-[image:linear-gradient(var(--bg-surface-brand),var(--bg-surface-brand))]",
       "text-[var(--fg-brand-text)]"
     );
@@ -153,7 +153,7 @@ describe("Avatar", () => {
     const face = container.querySelector("[role=img]")?.firstChild;
     // the emphasis ring wins over the group's cutout ring, and its offset does the cutting
     expect(face).toHaveClass("ring-[var(--fg-brand)]", "ring-offset-2");
-    expect(face).not.toHaveClass("ring-[var(--avatar-cutout,var(--bg-canvas))]");
+    expect(face).not.toHaveClass("ring-[var(--cutout,var(--bg-canvas))]");
   });
 
   it("forwards its ref and merges className on the outer box", () => {
@@ -215,11 +215,43 @@ describe("AvatarGroup", () => {
     expect(first).toHaveClass("size-6");
     expect(second).toHaveClass("size-12");
     expect(first.firstChild).toHaveClass("ring-2");
-    expect(container.firstChild).toHaveClass("-space-x-1.5");
+    expect(container.firstChild).toHaveClass("-space-x-1");
+  });
+
+  it("overlaps each size by about a fifth, so two initials stay whole", () => {
+    const overlap = (size: "sm" | "md" | "lg" | "xl") => {
+      const { container, unmount } = render(
+        <AvatarGroup size={size}>
+          <Avatar name="Ana Lima" />
+          <Avatar name="Bruno Reis" />
+        </AvatarGroup>
+      );
+      const classes = (container.firstChild as HTMLElement).className;
+      unmount();
+      return classes.match(/-space-x-[\d.]+/)?.[0];
+    };
+    // 4px of 24, 6 of 32, 10 of 48, 20 of 96
+    expect([overlap("sm"), overlap("md"), overlap("lg"), overlap("xl")]).toEqual([
+      "-space-x-1",
+      "-space-x-1.5",
+      "-space-x-2.5",
+      "-space-x-5",
+    ]);
   });
 
   it("leaves a lone avatar without the ring", () => {
     const { container } = render(<Avatar name="Ana Lima" />);
     expect(container.firstChild?.firstChild).not.toHaveClass("ring-2");
+  });
+
+  it("takes its presence and overflow words in another language", () => {
+    render(
+      <AvatarGroup aria-label="equipe" max={1} moreLabel={(n) => `mais ${n}`}>
+        <Avatar name="Ana Lima" status="online" statusLabels={{ online: "online agora" }} />
+        <Avatar name="Bruno" />
+      </AvatarGroup>
+    );
+    expect(screen.getByRole("img", { name: "Ana Lima, online agora" })).toBeInTheDocument();
+    expect(screen.getByText("mais 1")).toHaveClass("sr-only");
   });
 });

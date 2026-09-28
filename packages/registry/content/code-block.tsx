@@ -132,7 +132,10 @@ const CodeBlock = React.forwardRef<HTMLDivElement, CodeBlockProps>(
             </div>
           </div>
         )}
-        <div className="min-h-0 flex-1 overflow-auto overscroll-contain">
+        {/* Sideways it holds the scroll, so a swipe along a long line does not
+            go back a page. Up and down it lets go: a block with nothing to
+            scroll there, or at its end, hands the wheel to the page. */}
+        <div className="min-h-0 flex-1 overflow-auto overscroll-x-contain">
           {children ? (
             <div
               className={cn(
