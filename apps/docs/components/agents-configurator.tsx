@@ -14,6 +14,7 @@ import { THEMES } from "@/lib/theme";
 import { cn } from "@/lib/utils";
 import { CodeBlock } from "@entrepta/registry/content/code-block";
 import { useUrlFilter } from "@entrepta/registry/hooks/use-url-filter";
+import type { IconProp } from "@entrepta/registry/lib/icon";
 import { Button } from "@entrepta/registry/primitives/button";
 import { Checkbox } from "@entrepta/registry/primitives/checkbox";
 import {
@@ -24,6 +25,7 @@ import {
   DialogLabel,
   DialogTitle,
 } from "@entrepta/registry/primitives/dialog";
+import { SegmentedControl } from "@entrepta/registry/primitives/segmented-control";
 import {
   CheckIcon,
   DownloadSimpleIcon,
@@ -111,9 +113,9 @@ function Step({
   );
 }
 
-type Option<T extends string> = { value: T; label: string; icon?: React.ReactNode };
+type Option<T extends string> = { value: T; label: string; icon?: IconProp };
 
-/** A segmented radio group over native radios. */
+/** A labelled SegmentedControl that fills its row. */
 function Segmented<T extends string>({
   legend,
   name,
@@ -127,37 +129,21 @@ function Segmented<T extends string>({
   value: T;
   onChange: (next: T) => void;
 }) {
+  const labelId = `agents-${name}-label`;
   return (
-    <fieldset className="m-0 flex min-w-0 flex-col gap-2 border-0 p-0">
-      <legend className="mb-2 p-0 font-mono text-mono-sm text-[var(--fg-secondary)]">
+    <div className="flex min-w-0 flex-col gap-2">
+      <span id={labelId} className="font-mono text-mono-sm text-[var(--fg-secondary)]">
         {legend}
-      </legend>
-      <div className="flex flex-wrap gap-1 rounded-[var(--radius-md)] border border-[var(--border-subtle)] bg-[var(--bg-canvas)] p-1">
-        {options.map((option) => (
-          <label
-            key={option.value}
-            className={cn(
-              "relative inline-flex h-7 flex-1 cursor-pointer items-center justify-center gap-1.5 whitespace-nowrap",
-              "rounded-[var(--radius-sm)] px-2.5 font-mono text-mono-sm text-[var(--fg-muted)]",
-              "transition-colors duration-[var(--motion-fast)] hover:text-[var(--fg-secondary)]",
-              "has-[:checked]:bg-[var(--bg-surface-brand)] has-[:checked]:text-[var(--fg-brand-text)]",
-              "has-[:focus-visible]:shadow-[0_0_0_2px_var(--ring)]"
-            )}
-          >
-            <input
-              type="radio"
-              name={name}
-              value={option.value}
-              checked={value === option.value}
-              onChange={() => onChange(option.value)}
-              className="sr-only"
-            />
-            {option.icon}
-            {option.label}
-          </label>
-        ))}
-      </div>
-    </fieldset>
+      </span>
+      <SegmentedControl
+        aria-labelledby={labelId}
+        name={name}
+        className="w-full"
+        options={options}
+        value={value}
+        onValueChange={(next) => onChange(next as T)}
+      />
+    </div>
   );
 }
 
@@ -244,11 +230,12 @@ function Configurator() {
 
         <Step num="01" title="project">
           <Segmented
-            legend="Framework"
+            legend="Framework · Next.js router or Vite"
             name="fw"
             options={FRAMEWORKS.map((v) => ({
               value: v,
-              label: FRAMEWORK_LABELS[v].replace("Next.js ", ""),
+              // one word each, so three equal segments fit the dialog at 375px
+              label: FRAMEWORK_LABELS[v].replace("Next.js ", "").replace(" Router", ""),
             }))}
             value={options.framework}
             onChange={setFramework}
@@ -303,8 +290,8 @@ function Configurator() {
               legend="Default mode"
               name="mode"
               options={[
-                { value: "dark", label: "dark", icon: <MoonIcon aria-hidden size={12} /> },
-                { value: "light", label: "light", icon: <SunIcon aria-hidden size={12} /> },
+                { value: "dark", label: "dark", icon: MoonIcon },
+                { value: "light", label: "light", icon: SunIcon },
               ]}
               value={options.mode}
               onChange={setMode}
