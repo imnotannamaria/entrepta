@@ -49,6 +49,7 @@ import { TypeIn } from "@entrepta/registry/motion/type-in";
 import { Avatar, AvatarGroup } from "@entrepta/registry/primitives/avatar";
 import { Badge } from "@entrepta/registry/primitives/badge";
 import { Button } from "@entrepta/registry/primitives/button";
+import { Calendar, type DateRange } from "@entrepta/registry/primitives/calendar";
 import {
   Card,
   CardComment,
@@ -63,6 +64,9 @@ import {
   CardTitle,
 } from "@entrepta/registry/primitives/card";
 import { Checkbox } from "@entrepta/registry/primitives/checkbox";
+import { Combobox, type ComboboxOption } from "@entrepta/registry/primitives/combobox";
+import { DateNavigator } from "@entrepta/registry/primitives/date-navigator";
+import { DatePicker } from "@entrepta/registry/primitives/date-picker";
 import {
   Dialog,
   DialogContent,
@@ -92,6 +96,17 @@ import { Input } from "@entrepta/registry/primitives/input";
 import { Kbd } from "@entrepta/registry/primitives/kbd";
 import { MoneyInput } from "@entrepta/registry/primitives/money-input";
 import { Popover, PopoverContent, PopoverTrigger } from "@entrepta/registry/primitives/popover";
+import { SegmentedControl } from "@entrepta/registry/primitives/segmented-control";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectSeparator,
+  SelectTrigger,
+  SelectValue,
+} from "@entrepta/registry/primitives/select";
 import { Sheet, SheetClose, SheetContent, SheetTrigger } from "@entrepta/registry/primitives/sheet";
 import { Switch } from "@entrepta/registry/primitives/switch";
 import { TabNav, TabNavLink } from "@entrepta/registry/primitives/tabs";
@@ -117,12 +132,14 @@ import {
   HouseIcon,
   HouseLineIcon,
   InfoIcon,
+  ListIcon,
   MagnifyingGlassIcon,
   PlusIcon,
   RobotIcon,
   RocketLaunchIcon,
   SignOutIcon,
   SparkleIcon,
+  SquaresFourIcon,
   TagIcon,
   TerminalWindowIcon,
   UserIcon,
@@ -396,6 +413,260 @@ function MoneyInputPreview() {
           onValueChange={setFree}
         />
       </Field>
+    </div>
+  );
+}
+
+function SelectPreview() {
+  const [size, setSize] = useState("");
+  return (
+    <div className="flex w-full max-w-sm flex-col gap-6">
+      <Field
+        id="select-size"
+        label="export size"
+        hint={size ? `value: ${size}` : "nothing picked yet"}
+      >
+        <Select value={size} onValueChange={setSize}>
+          <SelectTrigger>
+            <SelectValue placeholder="Pick a size…" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectLabel>phone</SelectLabel>
+              <SelectItem value="story" hint="1080×1920">
+                story
+              </SelectItem>
+              <SelectItem value="square" hint="1080×1080">
+                square
+              </SelectItem>
+            </SelectGroup>
+            <SelectSeparator />
+            <SelectGroup>
+              <SelectLabel>desktop</SelectLabel>
+              <SelectItem value="wide" hint="1920×1080">
+                wide
+              </SelectItem>
+              <SelectItem value="print" hint="A4" disabled>
+                print
+              </SelectItem>
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+      </Field>
+      <Field id="select-error" label="year" error="Pick the year to show">
+        <Select>
+          <SelectTrigger>
+            <SelectValue placeholder="Pick a year…" />
+          </SelectTrigger>
+          <SelectContent>
+            {["2026", "2025", "2024"].map((year) => (
+              <SelectItem key={year} value={year}>
+                {year}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </Field>
+    </div>
+  );
+}
+
+// Every IANA zone the browser knows, grouped by region: a long list worth searching.
+const ZONES: ComboboxOption[] = (() => {
+  const all =
+    typeof Intl.supportedValuesOf === "function"
+      ? Intl.supportedValuesOf("timeZone")
+      : ["America/Sao_Paulo", "America/New_York", "Europe/Lisbon", "Asia/Tokyo"];
+  return all.map((zone) => {
+    const [region, ...rest] = zone.split("/");
+    return {
+      value: zone,
+      label: (rest.join(" / ") || region).replaceAll("_", " "),
+      group: region,
+      keywords: [zone],
+    };
+  });
+})();
+
+function ComboboxPreview() {
+  const [zone, setZone] = useState<string | null>("America/Sao_Paulo");
+  const [tagOptions, setTagOptions] = useState<ComboboxOption[]>(
+    ["design", "docs", "release", "research"].map((t) => ({ value: t, label: t }))
+  );
+  const [tags, setTags] = useState<string[]>(["docs"]);
+  const [category, setCategory] = useState<string | null>("groceries");
+  return (
+    <div className="flex w-full max-w-sm flex-col gap-6">
+      <Field id="combo-zone" label="time zone" hint={`${ZONES.length} zones. Try "tok" or "sao"`}>
+        <Combobox
+          options={ZONES}
+          value={zone}
+          onValueChange={setZone}
+          placeholder="Pick a time zone…"
+          searchPlaceholder="Search time zones…"
+          emptyText="No time zones match"
+        />
+      </Field>
+      <Field id="combo-tags" label="tags" hint="several values; type a new one to create it">
+        <Combobox
+          multiple
+          creatable
+          onCreate={(label) => {
+            setTagOptions((now) => [...now, { value: label, label }]);
+            return label;
+          }}
+          options={tagOptions}
+          value={tags}
+          onValueChange={setTags}
+          placeholder="Add tags…"
+          searchPlaceholder="Search or create a tag…"
+        />
+      </Field>
+      <Field id="combo-category" label="category" hint="one suggested, to confirm">
+        <Combobox
+          options={[
+            { value: "groceries", label: "groceries", group: "home", suggested: true },
+            { value: "rent", label: "rent", group: "home" },
+            { value: "coffee", label: "coffee", group: "out" },
+            { value: "cinema", label: "cinema", group: "out" },
+          ]}
+          value={category}
+          onValueChange={setCategory}
+          searchPlaceholder="Search categories…"
+        />
+      </Field>
+    </div>
+  );
+}
+
+function SegmentedControlPreview() {
+  const [kind, setKind] = useState("expense");
+  return (
+    <div className="flex flex-col items-start gap-6">
+      <SegmentedControl
+        aria-label="kind"
+        options={[
+          { value: "expense", label: "expense" },
+          { value: "income", label: "income" },
+          { value: "transfer", label: "transfer" },
+        ]}
+        value={kind}
+        onValueChange={setKind}
+      />
+      <SegmentedControl
+        aria-label="period"
+        size="sm"
+        defaultValue="6M"
+        options={["3M", "6M", "12M"].map((v) => ({ value: v, label: v }))}
+      />
+      <SegmentedControl
+        aria-label="view"
+        defaultValue="list"
+        options={[
+          { value: "list", label: "list", icon: <ListIcon /> },
+          { value: "grid", label: "grid", icon: <SquaresFourIcon /> },
+        ]}
+      />
+    </div>
+  );
+}
+
+const DATA_DAYS = new Set([
+  "2026-09-02",
+  "2026-09-03",
+  "2026-09-08",
+  "2026-09-15",
+  "2026-09-16",
+  "2026-09-22",
+]);
+
+function CalendarPreview() {
+  const [day, setDay] = useState<string | null>("2026-09-15");
+  const [range, setRange] = useState<DateRange | null>({ start: "2026-09-08", end: "2026-09-12" });
+  return (
+    <div className="flex flex-wrap items-start justify-center gap-10">
+      <div className="flex flex-col gap-2">
+        <Calendar
+          value={day}
+          onValueChange={setDay}
+          month="2026-09-01"
+          max="2026-09-27"
+          renderDay={(d) =>
+            DATA_DAYS.has(d) ? (
+              <span aria-hidden className="size-1 rounded-full bg-[var(--fg-brand)]" />
+            ) : null
+          }
+        />
+        <span className="font-mono text-mono-xs text-[var(--fg-muted)]">
+          {day ?? "no day"} · dots mark days with data
+        </span>
+      </div>
+      <div className="flex flex-col gap-2">
+        <Calendar mode="range" value={range} onValueChange={setRange} month="2026-09-01" />
+        <span className="font-mono text-mono-xs text-[var(--fg-muted)]">
+          {range ? `${range.start} → ${range.end ?? "…"}` : "no range"}
+        </span>
+      </div>
+    </div>
+  );
+}
+
+function DatePickerPreview() {
+  const [day, setDay] = useState<string | null>("2026-09-15");
+  const [range, setRange] = useState<DateRange | null>(null);
+  const [month, setMonth] = useState<string | null>("2026-09");
+  const [year, setYear] = useState<string | null>("2026");
+  return (
+    <div className="flex w-full max-w-sm flex-col gap-6">
+      <Field id="dp-day" label="date">
+        <DatePicker value={day} onValueChange={setDay} max="2026-12-31" />
+      </Field>
+      <Field id="dp-range" label="period">
+        <DatePicker
+          mode="range"
+          value={range}
+          onValueChange={setRange}
+          placeholder="Pick a period…"
+          presets={[
+            { label: "This month", value: { start: "2026-09-01", end: "2026-09-30" } },
+            { label: "Last month", value: { start: "2026-08-01", end: "2026-08-31" } },
+            { label: "Last 3 months", value: { start: "2026-07-01", end: "2026-09-30" } },
+          ]}
+        />
+      </Field>
+      <div className="grid grid-cols-2 gap-3">
+        <Field id="dp-month" label="month">
+          <DatePicker granularity="month" value={month} onValueChange={setMonth} />
+        </Field>
+        <Field id="dp-year" label="year">
+          <DatePicker granularity="year" value={year} onValueChange={setYear} />
+        </Field>
+      </div>
+    </div>
+  );
+}
+
+function DateNavigatorPreview() {
+  const [day, setDay] = useState("2026-09-27");
+  const [month, setMonth] = useState("2026-09");
+  return (
+    <div className="flex flex-col items-start gap-5">
+      <DateNavigator
+        aria-label="day"
+        value={day}
+        onValueChange={setDay}
+        min="2026-09-01"
+        max="2026-09-30"
+      />
+      <DateNavigator
+        aria-label="month"
+        granularity="month"
+        value={month}
+        onValueChange={setMonth}
+      />
+      <span className="font-mono text-mono-xs text-[var(--fg-muted)]">
+        {day} · {month} · the day stops at Sep 1 and Sep 30
+      </span>
     </div>
   );
 }
@@ -1321,6 +1592,12 @@ const PREVIEWS: Record<string, React.ReactNode> = {
   avatar: <AvatarPreview />,
   input: <InputPreview />,
   "money-input": <MoneyInputPreview />,
+  select: <SelectPreview />,
+  combobox: <ComboboxPreview />,
+  "segmented-control": <SegmentedControlPreview />,
+  calendar: <CalendarPreview />,
+  "date-picker": <DatePickerPreview />,
+  "date-navigator": <DateNavigatorPreview />,
   amount: <AmountPreview />,
   card: <CardPreview />,
   dialog: <DialogPreview />,

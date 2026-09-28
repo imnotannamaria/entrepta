@@ -117,7 +117,8 @@ entrepta/
 │       ├── styles/           # globals.css + themes/*.css
 │       ├── primitives/       # button, badge, avatar, input, card, dialog, sheet, popover,
 │       │                     # dropdown, tooltip, tabs, kbd, checkbox, switch, textarea, field,
-│       │                     # filter-pill, money-input
+│       │                     # filter-pill, money-input, select, combobox, segmented-control,
+│       │                     # calendar, date-picker, date-navigator
 │       ├── data/             # amount
 │       ├── charts/           # chart (not in the manifest until v3 phase 7)
 │       ├── layout/           # status-bar, top-nav, theme-switcher, mode-toggle,
@@ -357,7 +358,7 @@ Vite. Aliases are relative to it, and `add` writes each file under it.
 - `styles/globals.css`, reset, tokens, fonts, type utilities, light mode
 - `styles/themes/*.css`, the 6 presets
 
-### Primitives (18)
+### Primitives (24)
 
 | Component | Radix                           | Notes                                   |
 | --------- | ------------------------------- | --------------------------------------- |
@@ -379,6 +380,12 @@ Vite. Aliases are relative to it, and `add` writes each file under it.
 | Field     | no                              | label, control, error or hint, wires `aria-describedby` and `aria-invalid` |
 | FilterPill | no                             | `aria-pressed` toggle, pairs with `use-url-filter` |
 | MoneyInput | no                             | cash-machine or free entry, any pasted format, minor units |
+| Select    | `@radix-ui/react-select`        | short list, the field's look, the menu's rows, wired by Field |
+| Combobox  | no (Popover + cmdk)             | long searchable list, groups, `multiple`, `creatable`, `suggested`, own ranking |
+| SegmentedControl | no                       | native radios, equal segments, indicator slides in CSS |
+| Calendar  | no (`react-day-picker` 10)      | plain dates, today in the account's zone, words from `Intl` |
+| DatePicker | no                             | day, range with presets, month, year, in a Popover |
+| DateNavigator | no                          | previous, period, next, today; limits stay focusable and say why |
 
 ### Data (1)
 
@@ -641,6 +648,15 @@ pnpm dlx file:"$(pwd)/../entrepta/packages/cli" init
   sRGB for every hue of all six brands. Even `--chart-1` is not the raw brand,
   which falls under 3:1 on a tile in marmalade light and on a dark surface in a
   light page. Results above and below zero use the status colors and a sign
+- Dates in components are plain `YYYY-MM-DD` strings (`YYYY-MM`, `YYYY` for a
+  month or a year), bridged to a `Date` at local midnight only inside
+  Calendar. Calendar is react-day-picker 10 with every visible piece replaced
+  and its words from `Intl`, not date-fns locales. Its range selection is our
+  own: the library's first click is already a one-day range
+- Combobox filters and ranks itself (`shouldFilter={false}`): the start of the
+  label, then a word, then anywhere, then a keyword or group, accents folded.
+  cmdk's fuzzy score matched letters scattered across words and ranked only
+  within a group, which buried Tokyo under Khartoum in the time zone list
 - Docs live at https://entrepta.vercel.app/
 
 ---

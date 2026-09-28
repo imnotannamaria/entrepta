@@ -10,13 +10,17 @@ import {
   formatDateRange,
   formatInstant,
   formatMoney,
+  formatMonth,
   formatNumber,
+  fromLocalDate,
   fromMinor,
   isPlainDate,
   moneyParts,
   parseMoney,
+  toLocalDate,
   toMinor,
   today,
+  weekStart,
 } from "./format";
 
 // Intl puts narrow no-break spaces in some locales; compare on plain spaces.
@@ -166,5 +170,27 @@ describe("plain dates", () => {
 
   it("refuses a date with a time", () => {
     expect(() => addDays("2026-09-27T10:00", 1)).toThrow("YYYY-MM-DD");
+  });
+});
+
+describe("bridges to date pickers", () => {
+  it("round-trips a plain date through local midnight", () => {
+    for (const date of ["2026-01-01", "2026-03-08", "2026-10-18", "2028-02-29"]) {
+      const local = toLocalDate(date);
+      expect(local.getHours()).toBe(0);
+      expect(fromLocalDate(local)).toBe(date);
+    }
+  });
+
+  it("knows the first day of the week by locale", () => {
+    expect(weekStart("en-US")).toBe(0);
+    expect(weekStart("de-DE")).toBe(1);
+    expect(weekStart("pt-BR")).toBe(0);
+  });
+
+  it("writes a month in words, from a month or a day", () => {
+    expect(formatMonth("2026-09")).toBe("September 2026");
+    expect(formatMonth("2026-09-27", { locale: "pt-BR" })).toBe("setembro de 2026");
+    expect(formatMonth("2026-09", { month: "short" })).toBe("Sep 2026");
   });
 });

@@ -36,6 +36,11 @@ global.ResizeObserver = class ResizeObserver {
 // cmdk calls scrollIntoView on selected items
 Element.prototype.scrollIntoView = () => {};
 
+// Radix Select captures the pointer on its trigger; jsdom has no pointer capture
+Element.prototype.hasPointerCapture = () => false;
+Element.prototype.setPointerCapture = () => {};
+Element.prototype.releasePointerCapture = () => {};
+
 // jsdom's default url is `about:blank`, which disables Storage. Replace it
 // with a Map-backed shim so hooks that persist preferences can be tested.
 const store = new Map<string, string>();

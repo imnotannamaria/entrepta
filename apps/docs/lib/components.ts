@@ -1234,6 +1234,290 @@ const [price, setPrice] = useState<number | null>(null)
       },
     ],
   },
+  select: {
+    description:
+      "A value picked from a short list, in a form. A Dropdown is a menu of actions; this is a field with a value, the look of an Input and the rows of every other menu. Inside a Field it takes the label and the error. For a long list, or one to search, use Combobox.",
+    usage: `import {
+  Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue,
+} from "@/components/entrepta/select"
+
+<Field id="size" label="export size">
+  <Select value={size} onValueChange={setSize}>
+    <SelectTrigger>
+      <SelectValue placeholder="Pick a size…" />
+    </SelectTrigger>
+    <SelectContent>
+      <SelectGroup>
+        <SelectLabel>phone</SelectLabel>
+        <SelectItem value="story" hint="1080×1920">story</SelectItem>
+        <SelectItem value="square" hint="1080×1080">square</SelectItem>
+      </SelectGroup>
+    </SelectContent>
+  </Select>
+</Field>`,
+    props: [
+      {
+        name: "value / onValueChange",
+        type: "string / (value: string) => void",
+        description: "Controlled value. defaultValue for uncontrolled",
+      },
+      {
+        name: "size",
+        type: '"sm" | "md" | "lg"',
+        default: '"md"',
+        description: "The trigger's height, like an Input (SelectTrigger)",
+      },
+      {
+        name: "hint",
+        type: "ReactNode",
+        description: "A short note on the right of a row, left out of the trigger (SelectItem)",
+      },
+      {
+        name: "disabled",
+        type: "boolean",
+        default: "false",
+        description: "On the root for all of it, on an item for one row",
+      },
+    ],
+  },
+  combobox: {
+    description:
+      "A value picked from a long list you can search: a time zone, a category, a set of tags. Options come as data, in groups, with keywords that find them. It takes one value or several, can create what was typed, and marks an option picked for the person, such as by a model, so they confirm or change it. On the overlay surface, with the command palette's rows.",
+    usage: `import { Combobox } from "@/components/entrepta/combobox"
+
+<Field id="zone" label="time zone">
+  <Combobox
+    options={[
+      { value: "America/Sao_Paulo", label: "São Paulo", group: "Americas", keywords: ["brazil"] },
+      { value: "Europe/Lisbon", label: "Lisbon", group: "Europe", hint: "UTC+1" },
+    ]}
+    value={zone}
+    onValueChange={setZone}
+    searchPlaceholder="Search time zones…"
+    emptyText="No time zones match"
+  />
+</Field>
+
+// several values, created on the spot
+<Combobox
+  aria-label="tags"
+  multiple
+  creatable
+  onCreate={(label) => addTag(label)}   // returns the new value
+  options={tags}
+  value={chosen}
+  onValueChange={setChosen}
+/>`,
+    props: [
+      {
+        name: "options",
+        type: "{ value; label; group?; hint?; keywords?; suggested?; disabled? }[]",
+        description: "The list. group is the heading an option sits under",
+      },
+      {
+        name: "value / onValueChange",
+        type: "string | null, or string[] with multiple",
+        description: "Controlled. With multiple, each pick toggles and the list stays open",
+      },
+      {
+        name: "multiple",
+        type: "boolean",
+        default: "false",
+        description: "Several values, shown as two chips and a count",
+      },
+      {
+        name: "creatable / onCreate",
+        type: "boolean / (label: string) => string",
+        description:
+          "Offer to create what was typed when nothing matches it; the returned value is selected",
+      },
+      {
+        name: "renderOption",
+        type: "(option) => ReactNode",
+        description: "The row's content, such as an IconTile and a name",
+      },
+      {
+        name: "emptyText, searchPlaceholder, createLabel, suggestedLabel",
+        type: "ReactNode, string, (query) => ReactNode, string",
+        description: "The words, for another language or a more precise message",
+      },
+    ],
+  },
+  "segmented-control": {
+    description:
+      "One choice out of two to five, all in view: expense or income, 3M, 6M or 12M. Picking one clears the other, unlike a FilterPill. It is made of native radio inputs, so the arrow keys move between them and it takes one Tab stop. The indicator slides in CSS alone and stays still with reduced motion.",
+    usage: `import { SegmentedControl } from "@/components/entrepta/segmented-control"
+
+<SegmentedControl
+  aria-label="kind"
+  options={[
+    { value: "expense", label: "expense" },
+    { value: "income", label: "income" },
+  ]}
+  value={kind}
+  onValueChange={setKind}
+/>`,
+    props: [
+      {
+        name: "options",
+        type: "{ value; label; icon?; disabled? }[]",
+        description: "Two to five. More than that wants a Select",
+      },
+      {
+        name: "value / onValueChange",
+        type: "string / (value: string) => void",
+        description: "Controlled. defaultValue for uncontrolled",
+      },
+      {
+        name: "size",
+        type: '"sm" | "md"',
+        default: '"md"',
+        description: "28 or 36px tall",
+      },
+      {
+        name: "aria-label",
+        type: "string",
+        description: "The group's name. Or aria-labelledby",
+      },
+    ],
+  },
+  calendar: {
+    description:
+      "A month of days to pick one day or a range from. Plain YYYY-MM-DD strings in and out, never a Date, so no time zone can move the day. Today is today in the account's zone. Weekdays, months and every label come from Intl in its locale, and the week starts where the locale starts it. Built on react-day-picker with every piece replaced.",
+    usage: `import { Calendar } from "@/components/entrepta/calendar"
+
+<Calendar value={day} onValueChange={setDay} min="2025-01-01" max={today} />
+
+<Calendar
+  mode="range"
+  value={range}                 // { start, end? }
+  onValueChange={setRange}
+  renderDay={(day) => hasData(day) ? <Dot /> : null}
+/>`,
+    props: [
+      {
+        name: "mode",
+        type: '"single" | "range"',
+        default: '"single"',
+        description: "A range is { start, end? }: end is missing until the second click",
+      },
+      {
+        name: "min / max",
+        type: "string",
+        description: "The first and last days that can be picked",
+      },
+      {
+        name: "isDisabled",
+        type: "(day: string) => boolean",
+        description: "Days that cannot be picked, such as days with no data",
+      },
+      {
+        name: "renderDay",
+        type: "(day: string) => ReactNode",
+        description: "Something small under a day's number, such as a coverage dot",
+      },
+      {
+        name: "locale / timeZone",
+        type: "string",
+        description: "Fall back to the FormatProvider's. timeZone decides which day is today",
+      },
+      {
+        name: "labels",
+        type: "{ previous?, next?, today?, selected? }",
+        description: "The words screen readers hear, for another language",
+      },
+    ],
+  },
+  "date-picker": {
+    description:
+      'A date picked from a calendar in a popover: a day, a range with quick presets, a month or a year. The trigger has the look of an Input and takes a Field\'s label and error. It closes on a pick, or when a range has both ends. appearance="inline" drops the frame for a toolbar.',
+    usage: `import { DatePicker } from "@/components/entrepta/date-picker"
+
+<Field id="when" label="date">
+  <DatePicker value={day} onValueChange={setDay} max={today} />
+</Field>
+
+<DatePicker
+  aria-label="period"
+  mode="range"
+  value={range}
+  onValueChange={setRange}
+  presets={[{ label: "This month", value: { start: "2026-09-01", end: "2026-09-30" } }]}
+/>
+
+<DatePicker granularity="month" value="2026-09" onValueChange={setMonth} />`,
+    props: [
+      {
+        name: "mode",
+        type: '"single" | "range"',
+        default: '"single"',
+        description: "A range closes the popover once it has both ends",
+      },
+      {
+        name: "granularity",
+        type: '"day" | "month" | "year"',
+        default: '"day"',
+        description: "The value is YYYY-MM-DD, YYYY-MM or YYYY",
+      },
+      {
+        name: "presets",
+        type: "{ label; value: { start; end } }[]",
+        description: "Ranges one click away, beside the calendar",
+      },
+      {
+        name: "min / max / isDisabled",
+        type: "string / string / (day) => boolean",
+        description: "What cannot be picked",
+      },
+      {
+        name: "appearance",
+        type: '"field" | "inline"',
+        default: '"field"',
+        description: "inline drops the field's frame",
+      },
+    ],
+  },
+  "date-navigator": {
+    description:
+      "Previous, the period, next and today, to walk through days, months or years. The period opens a DatePicker. At a limit the arrow stays focusable, and its Tooltip says why it goes no further. Put the value in the URL so a link and the back button work.",
+    usage: `import { DateNavigator } from "@/components/entrepta/date-navigator"
+
+const [day, setDay] = useUrlFilter(...)   // or any state
+
+<DateNavigator
+  aria-label="day"
+  value={day}
+  onValueChange={setDay}
+  min={firstDay}
+  max={today}
+/>
+
+<DateNavigator aria-label="month" granularity="month" value="2026-09" onValueChange={setMonth} />`,
+    props: [
+      {
+        name: "value / onValueChange",
+        type: "string",
+        description: "YYYY-MM-DD, YYYY-MM or YYYY, by granularity",
+      },
+      {
+        name: "granularity",
+        type: '"day" | "month" | "year"',
+        default: '"day"',
+        description: "What one step moves",
+      },
+      {
+        name: "min / max",
+        type: "string",
+        description: "The first and last days there is anything to show",
+      },
+      {
+        name: "labels",
+        type: "{ previous?, next?, today?, atStart?, atEnd? }",
+        description:
+          "The words, for another language. atStart and atEnd say why a step is not possible",
+      },
+    ],
+  },
   "filter-pill": {
     description:
       "A toggle for one filter value, announced as pressed. Pair it with the use-url-filter hook to keep the choice in the URL.",

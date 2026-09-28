@@ -262,3 +262,50 @@ export function formatDateRange(start: string, end: string, options: FormatOptio
   });
   return format.formatRange(toUtc(start), toUtc(end));
 }
+
+/* ------------------------------------------------ bridges to Date pickers */
+
+/**
+ * A plain date as a `Date` at local midnight, for a date picker library that
+ * wants one. Local midnight comes back to the same day whatever the browser's
+ * zone, which a UTC instant does not.
+ */
+export function toLocalDate(date: string): Date {
+  if (!isPlainDate(date)) throw new Error(`Not a YYYY-MM-DD date: ${date}`);
+  const [y, m, d] = date.split("-").map(Number);
+  return new Date(y, m - 1, d);
+}
+
+/** Back from a `Date` a picker handed over, read in local time. */
+export function fromLocalDate(date: Date): string {
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+}
+
+/**
+ * The day a week starts on in a locale, 0 for Sunday: Sunday in en-US and
+ * pt-BR, Monday in de-DE. Where the browser cannot say, Sunday.
+ */
+export function weekStart(locale = DEFAULT_LOCALE): 0 | 1 | 2 | 3 | 4 | 5 | 6 {
+  try {
+    const info = new Intl.Locale(locale) as Intl.Locale & {
+      getWeekInfo?: () => { firstDay: number };
+      weekInfo?: { firstDay: number };
+    };
+    const first = (info.getWeekInfo?.() ?? info.weekInfo)?.firstDay;
+    if (typeof first === "number") return (first % 7) as 0 | 1 | 2 | 3 | 4 | 5 | 6;
+  } catch {}
+  return 0;
+}
+
+/** `2026-09` or `2026-09-27` as the month in words: `September 2026`. */
+export function formatMonth(
+  date: string,
+  options: FormatOptions & { month?: "long" | "short" } = {}
+): string {
+  const plain = date.length === 7 ? `${date}-01` : date;
+  return formatDate(plain, {
+    locale: options.locale,
+    style: { month: options.month ?? "long", year: "numeric" },
+  });
+}

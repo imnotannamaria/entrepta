@@ -13,6 +13,7 @@ const read = (file: string) => fs.readFileSync(path.join(root, file), "utf8");
 
 const OVERLAYS = [
   "primitives/popover.tsx",
+  "primitives/select.tsx",
   "primitives/dropdown.tsx",
   "primitives/tooltip.tsx",
   "primitives/dialog.tsx",
@@ -22,6 +23,8 @@ const OVERLAYS = [
 ];
 
 const MENUS = [
+  "primitives/select.tsx",
+  "primitives/date-picker.tsx",
   "primitives/dropdown.tsx",
   "feedback/command-palette.tsx",
   "layout/theme-switcher.tsx",
