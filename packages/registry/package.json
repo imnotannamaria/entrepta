@@ -1,6 +1,6 @@
 {
   "name": "@entrepta/registry",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "private": false,
   "description": "The component registry of the entrepta design system",
   "license": "MIT",

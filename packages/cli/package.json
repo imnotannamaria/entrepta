@@ -1,6 +1,6 @@
 {
   "name": "@entrepta/cli",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "private": false,
   "description": "The entrepta CLI. Adds components to your project",
   "license": "MIT",

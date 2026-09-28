@@ -1,5 +1,57 @@
 # @entrepta/registry
 
+## 3.0.0
+
+### Major Changes
+
+- 8177858: entrepta 3.0: the components a product needs, on top of everything 2.x has. Nothing in 2.x breaks, so there is nothing to migrate: run `init --overwrite` for the new tokens and add what you need. The whole list, with what each is for: https://entrepta.vercel.app/docs/whats-new-in-v3
+
+  **New components**
+
+  - **Money and numbers.** Amount shows money one way everywhere, from integer minor units, with the real minus sign. MoneyInput takes it in like a cash machine or freely, from any pasted format. Delta says how a value moved, in an arrow, a sign and words, and never shows a percentage from a base of zero. `FormatProvider` sets the locale, currency and time zone once, and `lib/format` does the formatting.
+  - **Choosing.** Select, Combobox (a long list you can search, ranked by the start of a word, accents ignored), SegmentedControl, ChoiceCard and SwatchPicker, which hands back a palette key and names each swatch after the hue it shows.
+  - **Dates.** Calendar, DatePicker and DateNavigator, for a day, a range, a month or a year, as plain `YYYY-MM-DD` strings that no time zone can shift. Built on react-day-picker 10 with every piece replaced.
+  - **Lists and tables.** ListRow and ListGroup, Table, and DataTable on TanStack Table v9, with sorting, selection, column visibility, virtualization past 500 rows, and loading, empty, filtered and error states in place of the rows.
+  - **Filters.** FilterBuilder builds filters from fields, each one an applied FilterPill, and `lib/filters` keeps them in the URL, dropping anything the fields cannot answer.
+  - **Dashboards.** Metric, Progress, Sparkline, BarList, BentoGrid, SpotlightCard and ContributionGrid.
+  - **Charts.** ChartContainer for Recharts: series take a palette color by name, the tooltip shows full values, a legend appears from three series, and a button shows the same numbers as a Table. The Chart page has five recipes.
+  - **Layout and overlays.** Popover, Sheet (from the edge, asking before it throws away changes), Accordion, MobileNav and Stepper.
+  - **Feedback.** Alert, EmptyState, IconTile and FileDropzone.
+  - **Everything else.** Avatar and AvatarGroup (the initials are in the server HTML and the image covers them once it loads, with a presence dot and a `+N` for the rest), SecretField, Redact (hide values on screen when the app says so; Amount, Metric and RollingNumber follow it), and PromptInput and ChatThread, which draw a conversation and take input, with no model and no network.
+
+  **Changed**
+
+  - Sidebar takes `variant="labeled"`: groups, a search slot, a footer and `collapsible`. It keeps the current item in view, a labeled sidebar can be text only, and the rail gives each icon a Tooltip.
+  - FilterPill with `onRemove` is an applied filter, with a × named after what it removes. Its icon, and the Sidebar's, can be an element, for a server file.
+  - Scrolling the page over a CodeBlock works again: the block only holds sideways scrolls.
+  - ChromeMessage takes `headingLevel`, for an error inside a layout that has its own h1.
+  - Resizing a Textarea follows the cursor, and Input and Button name the properties they ease.
+  - Dialog exports `DialogCloseButton`, CommandInput takes `size="sm"`, Input exports its frame (`inputWrapperVariants`, `fieldTrigger`, `inputFieldClass`), and the Toast's status tile is an IconTile.
+  - `useUrlFilterList` keeps a filter with several values in the URL, and `useCopy` is the copy logic CodeBlock uses, as its own hook.
+
+  **Tokens** (run `init --overwrite`)
+
+  - A chart palette with no fixed color: `--chart-1` to `--chart-8` turn the brand's hue in steps of 45°, at a lightness per mode that clears 3:1 on a card. Browsers without relative color get fixed hues at the same lightness.
+  - The height animation of the Accordion (`motion-collapse`).
+  - Form fields without JetBrains Mono's code ligatures, which reshaped "///" as it was typed and drew slashes blank.
+
+### Minor Changes
+
+- d679394: Switching the theme or the mode now changes the whole page at once. Components eased their own colors on their own clocks (a card over 200ms, a button over 150ms, a badge not at all), so a switch landed piece by piece. `useMode` and `useTheme` now run every switch through `transitionTheme`, exported from `use-mode`. For the length of a switch it sets `data-theme-switching` on `<html>`, which holds every transition, and where the browser has view transitions the page crossfades as one picture over `--motion-slow`. Reduced motion gets the instant switch. The sun and moon in the toggles keep turning through `data-theme-motion`.
+
+  Run `init --overwrite` for the new block in `globals.css`, and `add use-mode use-theme --overwrite` for the hooks. Wrap your own attribute changes in `transitionTheme` if you switch the theme some other way.
+
+### Patch Changes
+
+- 17ed563: Card transitions `translate` instead of `transform`. The hover lift still eases, and a card animated by Motion (a `Reveal` entrance, a `layout` move) no longer has every frame of its `transform` smoothed by a 200ms CSS transition, which made entrances land late.
+- 0ba6e70: `npx @entrepta/cli` installs one package for the registry instead of 33. The registry listed cmdk, sonner, clsx and tailwind-merge as dependencies and React as a required peer, so every CLI run downloaded React, Radix and the rest just to copy text files. They are dev dependencies now, and the React peers are optional. Your project still installs what each component needs when you `add` it.
+- 128b991: Button, Input, Textarea, FilterPill, StatusBar and TopNav no longer carry `"use client"`. None of them has state or an effect, so a server page renders them with no client JavaScript, and can pass FilterPill a Phosphor icon component. Button and Input import their icons from `@phosphor-icons/react/dist/ssr`.
+
+  `<Button asChild>` works again. The label wrapper and the spinner were handed to Slot along with your element, so it threw `React.Children.only`. With `asChild`, Slot now gets your element alone, and `loading` does not apply.
+
+- 1a65d88: An inactive icon tab keeps its name on phones. The label was `hidden` below `sm`, which also removed it from the accessibility tree, so screen readers and Lighthouse saw links with no name. It is `sr-only` there now: still off screen, still announced.
+- 42d70af: `ThemeScript` and `ModeScript` escape `<` in the storage key, so a key that holds `</script>` cannot end the inline script early.
+
 ## 2.0.0
 
 ### Major Changes
