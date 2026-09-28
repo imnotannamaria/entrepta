@@ -280,6 +280,10 @@ function AvatarPreview() {
         <Avatar name="deploy bot" shape="square" color="brand" icon={RobotIcon} />
         <Avatar name="entrepta repo" shape="square" icon={GitBranchIcon} />
       </Demo>
+      <Demo label="the active profile">
+        <Avatar size="lg" name="Ana Lima" src="/avatars/ana.svg" emphasis="ring" />
+        <Avatar size="lg" name="Anna Maria" color="brand" emphasis="ring" />
+      </Demo>
       <Demo label="status">
         {(["online", "away", "busy", "offline"] as const).map((status) => (
           <Avatar

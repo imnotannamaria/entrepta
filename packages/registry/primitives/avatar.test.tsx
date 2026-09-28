@@ -104,7 +104,7 @@ describe("Avatar", () => {
     rerender(<Avatar name="a" shape="square" size="sm" />);
     expect(face(container)).toHaveClass("rounded-[var(--radius-sm)]");
     rerender(<Avatar name="a" shape="square" size="xl" />);
-    expect(face(container)).toHaveClass("rounded-[var(--radius-lg)]", "text-heading-lg");
+    expect(face(container)).toHaveClass("rounded-[var(--radius-xl)]", "text-display-md");
   });
 
   it("lays the neutral fill, or the brand tint, over the surface's own color", () => {
@@ -131,11 +131,36 @@ describe("Avatar", () => {
     expect(dot).toHaveAttribute("aria-hidden", "true");
   });
 
+  it("takes the four sizes Wristkit uses: 24, 32, 48 and 96px", () => {
+    const { container, rerender } = render(<Avatar name="a" size="sm" />);
+    for (const [size, box] of [
+      ["sm", "size-6"],
+      ["md", "size-8"],
+      ["lg", "size-12"],
+      ["xl", "size-24"],
+    ] as const) {
+      rerender(<Avatar name="a" size={size} />);
+      expect(container.firstChild).toHaveClass(box);
+    }
+  });
+
+  it("rings the active profile in the brand, standing off by the cutout color", () => {
+    const { container } = render(
+      <AvatarGroup>
+        <Avatar name="Ana Lima" emphasis="ring" />
+      </AvatarGroup>
+    );
+    const face = container.querySelector("[role=img]")?.firstChild;
+    // the emphasis ring wins over the group's cutout ring, and its offset does the cutting
+    expect(face).toHaveClass("ring-[var(--fg-brand)]", "ring-offset-2");
+    expect(face).not.toHaveClass("ring-[var(--avatar-cutout,var(--bg-canvas))]");
+  });
+
   it("forwards its ref and merges className on the outer box", () => {
     const ref = React.createRef<HTMLSpanElement>();
     const { container } = render(<Avatar ref={ref} name="a" size="lg" className="mr-2" />);
     expect(ref.current).toBe(container.firstChild);
-    expect(ref.current).toHaveClass("size-10", "mr-2");
+    expect(ref.current).toHaveClass("size-12", "mr-2");
   });
 });
 
@@ -188,7 +213,7 @@ describe("AvatarGroup", () => {
     );
     const [first, second] = screen.getAllByRole("img");
     expect(first).toHaveClass("size-6");
-    expect(second).toHaveClass("size-10");
+    expect(second).toHaveClass("size-12");
     expect(first.firstChild).toHaveClass("ring-2");
     expect(container.firstChild).toHaveClass("-space-x-1.5");
   });

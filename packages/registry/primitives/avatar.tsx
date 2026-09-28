@@ -25,8 +25,8 @@ const avatarVariants = cva(
       size: {
         sm: "text-mono-xs",
         md: "text-mono-sm",
-        lg: "text-mono-md",
-        xl: "text-heading-lg",
+        lg: "text-heading-md",
+        xl: "text-display-md tracking-normal",
       },
       shape: {
         circle: "rounded-full",
@@ -46,7 +46,7 @@ const avatarVariants = cva(
     compoundVariants: [
       { shape: "square", size: ["sm", "md"], class: "rounded-[var(--radius-sm)]" },
       { shape: "square", size: "lg", class: "rounded-[var(--radius-md)]" },
-      { shape: "square", size: "xl", class: "rounded-[var(--radius-lg)]" },
+      { shape: "square", size: "xl", class: "rounded-[var(--radius-xl)]" },
     ],
     defaultVariants: { size: "md", shape: "circle", color: "neutral" },
   }
@@ -55,8 +55,8 @@ const avatarVariants = cva(
 const SIZE: Record<AvatarSize, { box: string; dot: string; icon: number; overlap: string }> = {
   sm: { box: "size-6", dot: "size-2", icon: 12, overlap: "-space-x-1.5" },
   md: { box: "size-8", dot: "size-2.5", icon: 16, overlap: "-space-x-2" },
-  lg: { box: "size-10", dot: "size-3", icon: 20, overlap: "-space-x-2.5" },
-  xl: { box: "size-16", dot: "size-4", icon: 28, overlap: "-space-x-4" },
+  lg: { box: "size-12", dot: "size-3.5", icon: 24, overlap: "-space-x-3" },
+  xl: { box: "size-24", dot: "size-5", icon: 48, overlap: "-space-x-6" },
 };
 
 const STATUS: Record<AvatarStatus, string> = {
@@ -70,6 +70,13 @@ const STATUS: Record<AvatarStatus, string> = {
 // avatar reads as cut out of it. Set --avatar-cutout on a parent that is not
 // the canvas, such as `[--avatar-cutout:var(--bg-card)]` on a Card.
 const CUTOUT = "ring-2 ring-[var(--avatar-cutout,var(--bg-canvas))]";
+
+// The active profile, or the person the page is about: a brand ring standing
+// off the face by the cutout color, so it also works inside a group.
+const EMPHASIS = {
+  none: "",
+  ring: "ring-2 ring-[var(--fg-brand)] ring-offset-2 ring-offset-[var(--avatar-cutout,var(--bg-canvas))]",
+} as const;
 
 /** "Anna Maria" is AM, "entrepta" is E, "@anna_maria" is AM. */
 function initialsOf(name: string): string {
@@ -101,6 +108,8 @@ interface AvatarProps
   status?: AvatarStatus;
   /** A glyph in place of the initials, for a thing rather than a person. */
   icon?: IconProp;
+  /** `ring` marks the active profile, or the person the page is about. */
+  emphasis?: keyof typeof EMPHASIS;
 }
 
 /**
@@ -113,7 +122,18 @@ interface AvatarProps
  */
 const Avatar = React.forwardRef<HTMLSpanElement, AvatarProps>(
   (
-    { name, src, size: ownSize, shape: ownShape, color, status, icon, className, ...props },
+    {
+      name,
+      src,
+      size: ownSize,
+      shape: ownShape,
+      color,
+      status,
+      icon,
+      emphasis = "none",
+      className,
+      ...props
+    },
     ref
   ) => {
     const group = React.useContext(AvatarGroupContext);
@@ -145,7 +165,13 @@ const Avatar = React.forwardRef<HTMLSpanElement, AvatarProps>(
         className={cn("relative inline-flex shrink-0 align-middle", SIZE[size].box, className)}
         {...props}
       >
-        <span className={cn(avatarVariants({ size, shape, color }), group && CUTOUT)}>
+        <span
+          className={cn(
+            avatarVariants({ size, shape, color }),
+            group && CUTOUT,
+            EMPHASIS[emphasis]
+          )}
+        >
           <span aria-hidden className={cn(loaded && "invisible")}>
             {icon ? <IconSlot icon={icon} size={SIZE[size].icon} /> : initialsOf(name)}
           </span>

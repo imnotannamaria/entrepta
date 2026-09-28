@@ -114,6 +114,7 @@ import { RobotIcon } from "@phosphor-icons/react"
 
 <Avatar name="Anna Maria" src="/me.jpg" />
 <Avatar name="Anna Maria" size="lg" status="online" />
+<Avatar name="Anna Maria" size="xl" emphasis="ring" />
 <Avatar name="deploy bot" shape="square" color="brand" icon={RobotIcon} />
 
 // next to a written name, hide it so the name is read once
@@ -141,7 +142,7 @@ import { RobotIcon } from "@phosphor-icons/react"
         name: "size",
         type: '"sm" | "md" | "lg" | "xl"',
         default: '"md"',
-        description: "24, 32, 40 or 64px. In a group, the group's size unless set here",
+        description: "24, 32, 48 or 96px. In a group, the group's size unless set here",
       },
       {
         name: "shape",
@@ -164,6 +165,12 @@ import { RobotIcon } from "@phosphor-icons/react"
         name: "icon",
         type: "Icon | ReactElement",
         description: "A glyph in place of the initials, for a thing rather than a person",
+      },
+      {
+        name: "emphasis",
+        type: '"none" | "ring"',
+        default: '"none"',
+        description: "A brand ring for the active profile, or the person the page is about",
       },
       {
         name: "max",
