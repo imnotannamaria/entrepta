@@ -837,6 +837,59 @@ const THEMES = [
       },
     ],
   },
+  amount: {
+    description:
+      "One way to show money across an app, so every screen formats alike and columns line up: mono, tabular figures, the real minus sign. The currency symbol takes the muted ink, so the number reads first. With a tone the sign always shows, since color only reinforces it. Set the locale and currency once on a FormatProvider.",
+    usage: `import { Amount } from "@/components/entrepta/amount"
+import { FormatProvider } from "@/hooks/use-format"
+
+// once, near the root
+<FormatProvider locale="pt-BR" currency="BRL" timeZone="America/Sao_Paulo">
+  …
+</FormatProvider>
+
+<Amount value={123456} />                       // R$ 1.234,56
+<Amount value={-4500} tone="auto" />            // −R$ 45,00, in the error ink
+<Amount value={250000} muteCents />             // R$ 2.500,00, cents muted
+<Amount value={110000} compact />               // R$ 1,1 mil, the full value on hover
+<Amount value={9900} currency="USD" locale="en-US" />`,
+    props: [
+      {
+        name: "value",
+        type: "number",
+        description: "Integer minor units: 123456 is 1,234.56 in a currency with cents",
+      },
+      {
+        name: "currency / locale",
+        type: "string",
+        description: "Fall back to the FormatProvider's. A currency is required somewhere",
+      },
+      {
+        name: "tone",
+        type: '"auto" | "neutral" | "positive" | "negative"',
+        default: '"neutral"',
+        description: "auto colors by the sign. Any tone but neutral also shows the sign",
+      },
+      {
+        name: "signDisplay",
+        type: '"auto" | "always" | "never"',
+        description: "always with a tone, auto without one",
+      },
+      {
+        name: "compact",
+        type: "boolean",
+        default: "false",
+        description:
+          "1.2K, for axes and small widgets. Screen readers and hover get the full value",
+      },
+      {
+        name: "muteCents",
+        type: "boolean",
+        default: "false",
+        description: "Cents in the muted ink, for a large value",
+      },
+    ],
+  },
   toast: {
     description:
       "Notification toasts via Sonner, on the overlay surface. The status shows as a tinted icon tile and a glow in the corner, and each status has its own icon shape. Mount <Toaster> once in the root layout, then call toast() anywhere.",
@@ -1122,6 +1175,63 @@ import { Textarea } from "@/components/entrepta/textarea"
       },
       { name: "error", type: "ReactNode", description: "Replaces the hint, announced as an alert" },
       { name: "hint", type: "ReactNode", description: "Muted line under the control" },
+    ],
+  },
+  "money-input": {
+    description:
+      "Money typed without a wrong comma or point. By default it types like a cash machine: digits enter from the right, so nobody hunts for the decimal key, and the caret stays at the end. Free entry takes the text as typed and formats it on blur. Pasting R$ 1.234,56, €1,234.56 or 1234.5 works either way. The value is an integer in the currency's smallest unit, never a float.",
+    usage: `import { MoneyInput } from "@/components/entrepta/money-input"
+import { Field } from "@/components/entrepta/field"
+
+const [price, setPrice] = useState<number | null>(null)
+
+<Field id="price" label="price" error={error}>
+  <MoneyInput currency="EUR" value={price} onValueChange={setPrice} size="lg" />
+</Field>
+
+// with React Hook Form
+<Controller
+  name="amount"
+  control={control}
+  render={({ field }) => (
+    <MoneyInput currency="EUR" value={field.value} onValueChange={field.onChange} />
+  )}
+/>`,
+    props: [
+      {
+        name: "value / onValueChange",
+        type: "number | null",
+        description: "Integer minor units: 123456 is 1,234.56 in euros. null when empty",
+      },
+      {
+        name: "currency",
+        type: "string",
+        description: "ISO 4217. Falls back to the FormatProvider's",
+      },
+      {
+        name: "locale",
+        type: "string",
+        description:
+          "Separators and the symbol's side. Falls back to the FormatProvider's, then en-US",
+      },
+      {
+        name: "entry",
+        type: '"cents-first" | "free"',
+        default: '"cents-first"',
+        description: "Digits from the right, or free text formatted on blur",
+      },
+      {
+        name: "allowNegative",
+        type: "boolean",
+        default: "false",
+        description: "Most amounts take their sign from elsewhere, such as expense or income",
+      },
+      {
+        name: "size",
+        type: '"md" | "lg"',
+        default: '"md"',
+        description: "lg for the main value of a form",
+      },
     ],
   },
   "filter-pill": {

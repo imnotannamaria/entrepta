@@ -12,6 +12,7 @@ import {
   Strong,
 } from "@entrepta/registry/content/doc-parts";
 import { SectHead } from "@entrepta/registry/content/sect-head";
+import { Amount } from "@entrepta/registry/data/amount";
 import { ChromeMessage } from "@entrepta/registry/feedback/chrome-message";
 import {
   Command,
@@ -89,6 +90,7 @@ import { Field } from "@entrepta/registry/primitives/field";
 import { FilterPill } from "@entrepta/registry/primitives/filter-pill";
 import { Input } from "@entrepta/registry/primitives/input";
 import { Kbd } from "@entrepta/registry/primitives/kbd";
+import { MoneyInput } from "@entrepta/registry/primitives/money-input";
 import { Popover, PopoverContent, PopoverTrigger } from "@entrepta/registry/primitives/popover";
 import { Sheet, SheetClose, SheetContent, SheetTrigger } from "@entrepta/registry/primitives/sheet";
 import { Switch } from "@entrepta/registry/primitives/switch";
@@ -319,6 +321,81 @@ function AvatarPreview() {
           <span className="text-[var(--fg-muted)]">committed 2h ago</span>
         </span>
       </Demo>
+    </div>
+  );
+}
+
+function AmountPreview() {
+  const rows = [
+    { label: "rent", value: -180000 },
+    { label: "salary", value: 950000 },
+    { label: "coffee", value: -1250 },
+    { label: "refund", value: 8990 },
+  ];
+  return (
+    <div className="flex w-full max-w-xl flex-col gap-7">
+      <Demo label="the same amount, four currencies">
+        <Amount value={123456} currency="BRL" locale="pt-BR" />
+        <Amount value={123456} currency="EUR" locale="de-DE" />
+        <Amount value={123456} currency="USD" locale="en-US" />
+        <Amount value={1234} currency="JPY" locale="ja-JP" />
+      </Demo>
+      <Demo label="tone, always with a sign">
+        <Amount value={4500} currency="USD" tone="auto" />
+        <Amount value={-4500} currency="USD" tone="auto" />
+        <Amount value={0} currency="USD" tone="auto" />
+      </Demo>
+      <Demo label="compact, the full value on hover">
+        <Amount value={110000} currency="BRL" locale="pt-BR" compact />
+        <Amount value={123456789} currency="USD" compact />
+      </Demo>
+      <Demo label="a large value with muted cents">
+        <Amount
+          value={2350000}
+          currency="USD"
+          muteCents
+          className="font-serif text-display-md text-[var(--fg-primary)]"
+        />
+      </Demo>
+      <Demo label="tabular figures line up">
+        <ul className="m-0 flex w-full max-w-xs list-none flex-col gap-1.5 p-0">
+          {rows.map((row) => (
+            <li
+              key={row.label}
+              className="flex items-center justify-between gap-4 font-mono text-mono-sm"
+            >
+              <span className="text-[var(--fg-secondary)]">{row.label}</span>
+              <Amount value={row.value} currency="USD" tone="auto" />
+            </li>
+          ))}
+        </ul>
+      </Demo>
+    </div>
+  );
+}
+
+function MoneyInputPreview() {
+  const [cash, setCash] = useState<number | null>(123456);
+  const [free, setFree] = useState<number | null>(null);
+  const held = (value: number | null) => (value === null ? "null" : String(value));
+  return (
+    <div className="flex w-full max-w-sm flex-col gap-6">
+      <Field id="money-cash" label="amount" hint={`holds ${held(cash)}, in cents`}>
+        <MoneyInput currency="BRL" locale="pt-BR" size="lg" value={cash} onValueChange={setCash} />
+      </Field>
+      <Field
+        id="money-free"
+        label="free entry"
+        hint={`holds ${held(free)}. Paste 1,234.56 or R$ 99,90`}
+      >
+        <MoneyInput
+          currency="EUR"
+          locale="de-DE"
+          entry="free"
+          value={free}
+          onValueChange={setFree}
+        />
+      </Field>
     </div>
   );
 }
@@ -1243,6 +1320,8 @@ const PREVIEWS: Record<string, React.ReactNode> = {
   badge: <BadgePreview />,
   avatar: <AvatarPreview />,
   input: <InputPreview />,
+  "money-input": <MoneyInputPreview />,
+  amount: <AmountPreview />,
   card: <CardPreview />,
   dialog: <DialogPreview />,
   sheet: <SheetPreview />,

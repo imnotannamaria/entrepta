@@ -15,6 +15,7 @@ import { cn } from "@/lib/utils";
 import { VERSION, VERSION_LABEL } from "@/lib/version";
 import { CodeBlock } from "@entrepta/registry/content/code-block";
 import { Diamond } from "@entrepta/registry/content/diamond";
+import { Amount } from "@entrepta/registry/data/amount";
 import { Reveal } from "@entrepta/registry/motion/reveal";
 import { RollingNumber } from "@entrepta/registry/motion/rolling-number";
 import { Badge } from "@entrepta/registry/primitives/badge";
@@ -45,6 +46,7 @@ import {
   PaletteIcon,
   RobotIcon,
   SparkleIcon,
+  TableIcon,
   TerminalWindowIcon,
   TextboxIcon,
 } from "@phosphor-icons/react/dist/ssr";
@@ -133,6 +135,20 @@ const SECTION_PREVIEWS: Record<(typeof SECTIONS)[number], React.ReactNode> = {
       code="npx @entrepta/cli@latest add code-block"
     />
   ),
+  Data: (
+    <ul className="m-0 flex w-full max-w-[220px] list-none flex-col gap-1 p-0 font-mono text-mono-sm">
+      {[
+        ["salary", 950000],
+        ["rent", -180000],
+        ["coffee", -1250],
+      ].map(([label, value]) => (
+        <li key={label} className="flex items-center justify-between gap-4">
+          <span className="text-[var(--fg-secondary)]">{label}</span>
+          <Amount value={value as number} currency="USD" tone="auto" />
+        </li>
+      ))}
+    </ul>
+  ),
   Feedback: (
     <div className="flex items-start gap-3 rounded-[var(--radius-md)] border border-[var(--border-strong)] bg-[var(--bg-overlay)] p-3 font-mono shadow-[var(--shadow-card-hover)] [background-image:radial-gradient(140%_120%_at_0%_0%,color-mix(in_srgb,var(--status-success)_12%,transparent),transparent_55%)]">
       <span className="grid size-6 shrink-0 place-items-center rounded-[var(--radius-sm)] bg-[var(--status-success-soft)] text-[var(--status-success-fg)]">
@@ -164,6 +180,7 @@ const SECTION_ICONS: Record<(typeof SECTIONS)[number], Icon> = {
   Forms: TextboxIcon,
   Layout: LayoutIcon,
   Content: FileTextIcon,
+  Data: TableIcon,
   Feedback: BellSimpleIcon,
   Motion: SparkleIcon,
 };

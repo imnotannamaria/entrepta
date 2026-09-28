@@ -73,7 +73,7 @@ export const COMPONENTS: RegistryComponent[] = [
     deps: ["class-variance-authority", "@phosphor-icons/react"],
     registryDeps: ["kbd"],
     usage: `<Input variant="search" placeholder="search…" />`,
-    exports: ["Input"],
+    exports: ["Input", "inputFieldClass", "inputWrapperVariants"],
   },
   {
     name: "card",
@@ -122,6 +122,27 @@ export const COMPONENTS: RegistryComponent[] = [
       "DialogTitle",
       "DialogTrigger",
     ],
+  },
+  {
+    name: "money-input",
+    description:
+      "Money typed like a cash machine or freely, pasted in any format, held in minor units",
+    category: "primitives",
+    files: ["primitives/money-input.tsx"],
+    deps: [],
+    registryDeps: ["input", "use-format", "format-lib"],
+    usage: '<MoneyInput currency="EUR" value={minor} onValueChange={setMinor} size="lg" />',
+    exports: ["MoneyInput"],
+  },
+  {
+    name: "amount",
+    description: "Money shown one way everywhere: mono, tabular, the real minus, a muted symbol",
+    category: "data",
+    files: ["data/amount.tsx"],
+    deps: ["class-variance-authority"],
+    registryDeps: ["use-format", "format-lib"],
+    usage: '<Amount value={-4500} currency="EUR" tone="auto" />',
+    exports: ["Amount", "amountVariants"],
   },
   {
     name: "popover",
@@ -262,6 +283,15 @@ export const COMPONENTS: RegistryComponent[] = [
     registryDeps: [],
   },
   {
+    name: "use-format",
+    description:
+      "FormatProvider and useFormat: the locale, currency and time zone formatting reads",
+    category: "hooks",
+    files: ["hooks/use-format.ts"],
+    deps: [],
+    registryDeps: ["format-lib"],
+  },
+  {
     name: "use-mode",
     description: "Hook that manages dark/light mode with localStorage persistence",
     category: "hooks",
@@ -359,6 +389,14 @@ export const COMPONENTS: RegistryComponent[] = [
     description: "Shared motion values: the ease-out curve, the viewport rule and the stagger cap",
     category: "lib",
     files: ["lib/motion.ts"],
+    deps: [],
+    registryDeps: [],
+  },
+  {
+    name: "format-lib",
+    description: "Money in minor units, numbers and plain dates, formatted and parsed with Intl",
+    category: "lib",
+    files: ["lib/format.ts"],
     deps: [],
     registryDeps: [],
   },

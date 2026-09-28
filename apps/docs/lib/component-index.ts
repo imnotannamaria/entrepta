@@ -5,7 +5,15 @@
  */
 
 /** Docs sections. Not the registry folders: Input lives in primitives/ but reads as a form. */
-export const SECTIONS = ["Primitives", "Forms", "Layout", "Content", "Feedback", "Motion"] as const;
+export const SECTIONS = [
+  "Primitives",
+  "Forms",
+  "Layout",
+  "Content",
+  "Data",
+  "Feedback",
+  "Motion",
+] as const;
 export type Section = (typeof SECTIONS)[number];
 
 export type ComponentEntry = { slug: string; title: string; section: Section };
@@ -27,6 +35,7 @@ export const COMPONENT_INDEX: ComponentEntry[] = [
   { slug: "checkbox", title: "Checkbox", section: "Forms" },
   { slug: "switch", title: "Switch", section: "Forms" },
   { slug: "field", title: "Field", section: "Forms" },
+  { slug: "money-input", title: "MoneyInput", section: "Forms" },
   { slug: "filter-pill", title: "FilterPill", section: "Forms" },
   { slug: "status-bar", title: "StatusBar", section: "Layout" },
   { slug: "top-nav", title: "TopNav", section: "Layout" },
@@ -37,6 +46,7 @@ export const COMPONENT_INDEX: ComponentEntry[] = [
   { slug: "code-block", title: "CodeBlock", section: "Content" },
   { slug: "sect-head", title: "SectHead", section: "Content" },
   { slug: "doc-parts", title: "Doc parts", section: "Content" },
+  { slug: "amount", title: "Amount", section: "Data" },
   { slug: "toast", title: "Toast", section: "Feedback" },
   { slug: "skeleton", title: "Skeleton", section: "Feedback" },
   { slug: "command-palette", title: "CommandPalette", section: "Feedback" },

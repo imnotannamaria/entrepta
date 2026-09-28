@@ -115,15 +115,19 @@ entrepta/
 │   └── registry/             # @entrepta/registry, source of truth
 │       ├── manifest.ts       # every installable item: files, deps, registryDeps, usage, exports
 │       ├── styles/           # globals.css + themes/*.css
-│       ├── primitives/       # button, badge, avatar, input, card, dialog, dropdown, tooltip, tabs,
-│       │                     # kbd, checkbox, switch, textarea, field, filter-pill
+│       ├── primitives/       # button, badge, avatar, input, card, dialog, sheet, popover,
+│       │                     # dropdown, tooltip, tabs, kbd, checkbox, switch, textarea, field,
+│       │                     # filter-pill, money-input
+│       ├── data/             # amount
+│       ├── charts/           # chart (not in the manifest until v3 phase 7)
 │       ├── layout/           # status-bar, top-nav, theme-switcher, mode-toggle,
 │       │                     # sidebar, page-outline
 │       ├── content/          # code-block, diamond, sect-head, doc-parts
 │       ├── feedback/         # toast, skeleton, command-palette, chrome-message, page-loading
 │       ├── motion/           # reveal, type-in, rolling-number, spotlight, arrow-link
-│       ├── hooks/            # use-theme, use-mode, use-command-palette, use-url-filter
-│       └── lib/              # utils.ts (cn), motion.ts, overlay.ts, color-contrast.ts
+│       ├── hooks/            # use-theme, use-mode, use-command-palette, use-url-filter,
+│       │                     # use-copy, use-format
+│       └── lib/              # utils.ts (cn), motion.ts, overlay.ts, color-contrast.ts, format.ts
 ├── sandbox/
 │   └── wirst-test/           # local Next.js app to test the CLI output (gitignored)
 ├── scripts/release.sh
@@ -353,7 +357,7 @@ Vite. Aliases are relative to it, and `add` writes each file under it.
 - `styles/globals.css`, reset, tokens, fonts, type utilities, light mode
 - `styles/themes/*.css`, the 6 presets
 
-### Primitives (15)
+### Primitives (18)
 
 | Component | Radix                           | Notes                                   |
 | --------- | ------------------------------- | --------------------------------------- |
@@ -363,6 +367,8 @@ Vite. Aliases are relative to it, and `add` writes each file under it.
 | Input     | no                              | text, search, command (⌘K)               |
 | Card      | no                              | default/featured/terminal/data, sm/md/xl |
 | Dialog    | `@radix-ui/react-dialog`        | base for modals                          |
+| Sheet     | `@radix-ui/react-dialog`        | from the edge, bottom below 640px, `dirty` asks before closing |
+| Popover   | `@radix-ui/react-popover`       | anchored panel on the overlay surface     |
 | Dropdown  | `@radix-ui/react-dropdown-menu` | on the overlay surface, highlighted row in the brand tint |
 | Tooltip   | `@radix-ui/react-tooltip`       | hover info on the overlay surface, a Kbd for shortcuts |
 | Kbd       | no                              | every keyboard hint, chip or plain, brand in a highlighted row |
@@ -372,6 +378,13 @@ Vite. Aliases are relative to it, and `add` writes each file under it.
 | Textarea  | no                              | sans prose, mono placeholder, error state |
 | Field     | no                              | label, control, error or hint, wires `aria-describedby` and `aria-invalid` |
 | FilterPill | no                             | `aria-pressed` toggle, pairs with `use-url-filter` |
+| MoneyInput | no                             | cash-machine or free entry, any pasted format, minor units |
+
+### Data (1)
+
+| Component | Notes                                                     |
+| --------- | --------------------------------------------------------- |
+| Amount    | minor units, mono and tabular, real minus, muted symbol, reads `FormatProvider` |
 
 ### Layout (6)
 
@@ -429,12 +442,14 @@ in `globals.css` for what must move before hydration. `lib/motion.ts` holds
 `EASE_OUT`, `revealViewport` and `STAGGER_LIMIT`, and the CLI copies it to the
 `lib` alias.
 
-### Hooks (4)
+### Hooks (6)
 
 - `use-theme`, controls preset and dark/light, built on `use-mode`
 - `use-mode`, controls dark/light only, and exports `transitionTheme`
 - `use-command-palette`, controls open state and command registration
-- `use-url-filter`, a filter kept in the URL query, prerender safe
+- `use-url-filter`, a filter kept in the URL query, prerender safe; `useUrlFilterList` for several values
+- `use-copy`, copies text and reports copied or failed
+- `use-format`, `FormatProvider` and `useFormat`: locale, currency and time zone for every formatting component
 
 ---
 

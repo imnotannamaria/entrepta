@@ -4,6 +4,7 @@ import * as React from "react";
 import { cn } from "../lib/utils";
 import { Kbd } from "./kbd";
 
+/** The Input's frame: the field, its border, focus ring and error state. */
 const inputWrapperVariants = cva(
   [
     "flex items-center gap-2 w-full",
@@ -40,7 +41,8 @@ const inputWrapperVariants = cva(
   }
 );
 
-const inputBaseClass = [
+/** The field inside the frame, for a control that shares the Input's look. */
+const inputFieldClass = [
   "flex-1 min-w-0 h-full",
   "bg-transparent border-0 appearance-none outline-none",
   "font-mono text-mono-md text-[var(--fg-primary)]",
@@ -72,7 +74,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         <input
           ref={ref}
           aria-invalid={state === "error" || undefined}
-          className={inputBaseClass}
+          className={inputFieldClass}
           {...props}
         />
         {variant === "command" && <Kbd aria-hidden>⌘K</Kbd>}
@@ -82,4 +84,4 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 );
 Input.displayName = "Input";
 
-export { Input };
+export { Input, inputFieldClass, inputWrapperVariants };
