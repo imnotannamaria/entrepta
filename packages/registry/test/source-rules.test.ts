@@ -61,6 +61,17 @@ describe("source rules", () => {
     expect(offenders).toEqual([]);
   });
 
+  // transition-all eases whatever changes, including a height the browser sets
+  // while a textarea is resized, and a size a layout change hands down. Name
+  // the properties that are meant to move.
+  it("never transitions all properties in the registry", () => {
+    const offenders = FILES.filter(
+      ({ file, source }) =>
+        file.startsWith("packages/registry/") && /\btransition-all\b/.test(source)
+    ).map(({ file }) => file);
+    expect(offenders).toEqual([]);
+  });
+
   it("does not import lucide-react", () => {
     const offenders = FILES.filter(({ source }) => /["']lucide-react["']/.test(source)).map(
       ({ file }) => file

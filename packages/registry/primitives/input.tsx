@@ -9,7 +9,7 @@ const inputWrapperVariants = cva(
     "flex items-center gap-2 w-full",
     "bg-[var(--bg-field)]",
     "border rounded-[var(--radius-md)]",
-    "transition-all duration-150 ease-out",
+    "transition-[border-color,box-shadow] duration-150 ease-out",
     "hover:border-[var(--fg-muted)]",
     "focus-within:border-[var(--fg-brand)] focus-within:shadow-[0_0_0_3px_var(--bg-surface-brand)]",
     "has-[:disabled]:opacity-40 has-[:disabled]:pointer-events-none",
