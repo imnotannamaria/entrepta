@@ -20,6 +20,12 @@ describe("ChromeMessage", () => {
     expect(screen.getByRole("link", { name: "go home" })).toBeInTheDocument();
   });
 
+  it("takes a lower heading level inside a page that has its own h1", () => {
+    render(<ChromeMessage command="x" title="Something broke." note="n" headingLevel={2} />);
+    expect(screen.getByRole("heading", { level: 2, name: "Something broke." })).toBeInTheDocument();
+    expect(screen.queryByRole("heading", { level: 1 })).toBeNull();
+  });
+
   it("colors the prompt by accent and hides it from screen readers", () => {
     const { rerender } = render(<ChromeMessage command="x" title="t" note="n" />);
     const prompt = () => screen.getByText("$");

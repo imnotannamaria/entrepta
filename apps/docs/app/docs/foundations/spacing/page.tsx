@@ -1,30 +1,32 @@
 import { DocPageHeader, DocSubhead } from "@/components/doc-page-header";
+import { GRID, SPACE_SCALE, foundationPage } from "@/lib/foundations";
 import { Card } from "@entrepta/registry/primitives/card";
+import type { Metadata } from "next";
 
-const SCALE = [
-  { token: "space.1", value: "4px", use: "badge ↔ text", px: 4 },
-  { token: "space.2", value: "8px", use: "internal gap", px: 8 },
-  { token: "space.3", value: "12px", use: "chip padding", px: 12 },
-  { token: "space.4", value: "16px", use: "default padding", px: 16 },
-  { token: "space.6", value: "24px", use: "card padding", px: 24 },
-  { token: "space.8", value: "32px", use: "section gap", px: 32 },
-  { token: "space.12", value: "48px", use: "block separator", px: 48 },
-  { token: "space.16", value: "64px", use: "section gap large", px: 64 },
-  { token: "space.24", value: "96px", use: "hero margin", px: 96 },
-];
+const PAGE = foundationPage("spacing");
+
+export const metadata: Metadata = {
+  title: PAGE.title,
+  description: PAGE.summary,
+  alternates: {
+    canonical: "/docs/foundations/spacing",
+    types: { "text/markdown": "/docs/foundations/spacing.md" },
+  },
+};
 
 export default function SpacingPage() {
   return (
     <article>
       <DocPageHeader
-        eyebrow="03 · foundations"
+        eyebrow={`${PAGE.num} · foundations`}
         title={
           <>
             <em>Grid</em> & spacing.
           </>
         }
-        description="12 columns · 24px gutters · 1280px max container · 4px base spacing. Density is high but never chaotic."
-        meta="9 scale tokens"
+        description={PAGE.description}
+        meta={`${SPACE_SCALE.length} scale tokens`}
+        markdown="/docs/foundations/spacing"
       />
 
       <section className="grid grid-cols-1 lg:grid-cols-2 gap-10">
@@ -44,22 +46,24 @@ export default function SpacingPage() {
               ))}
             </div>
           </div>
-          <div className="mt-4 grid grid-cols-2 gap-2 font-mono text-mono-sm text-[var(--fg-muted)]">
-            <div className="border border-[var(--border-subtle)] rounded-[var(--radius-sm)] px-3 py-2">
-              <span className="text-[var(--fg-primary)]">1280px</span> max container
-            </div>
-            <div className="border border-[var(--border-subtle)] rounded-[var(--radius-sm)] px-3 py-2">
-              <span className="text-[var(--fg-primary)]">24px</span> gutter
-            </div>
+          <div className="mt-4 grid grid-cols-1 gap-2 font-mono text-mono-sm text-[var(--fg-muted)] sm:grid-cols-3">
+            {GRID.map((g) => (
+              <div
+                key={g.token}
+                className="rounded-[var(--radius-sm)] border border-[var(--border-subtle)] px-3 py-2"
+              >
+                <span className="text-[var(--fg-primary)]">{g.value}</span> {g.token}
+              </div>
+            ))}
           </div>
         </div>
 
         {/* Spacing */}
         <div>
-          <DocSubhead count={`${SCALE.length} tokens`}>Spacing</DocSubhead>
+          <DocSubhead count={`${SPACE_SCALE.length} tokens`}>Spacing</DocSubhead>
           <Card>
             <div className="flex flex-col">
-              {SCALE.map((s, i) => (
+              {SPACE_SCALE.map((s, i) => (
                 <div
                   key={s.token}
                   className={`grid grid-cols-[100px_60px_1fr_100px] gap-3 items-center py-2.5 font-mono text-mono-sm ${

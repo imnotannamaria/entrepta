@@ -2,11 +2,12 @@
 
 import type { NavGroup } from "@/lib/component-index";
 import { cn } from "@/lib/utils";
+import { NAV_ROW_CURRENT, NAV_ROW_IDLE } from "@entrepta/registry/lib/nav";
 import Link from "next/link";
 
 /**
- * Groups of links under a small heading, the current one on a raised row with
- * a brand dot. The docs sidebar and the mobile menu both render this, so a
+ * Groups of links under a small heading, the current one on the registry's
+ * raised nav row with a brand dot. The docs sidebar and the mobile menu both render this, so a
  * change to how the current page looks lands in one place.
  */
 export function NavGroups({
@@ -36,9 +37,7 @@ export function NavGroups({
                     {...(item.external ? { target: "_blank", rel: "noreferrer" } : {})}
                     className={cn(
                       "flex h-8 items-center rounded-[var(--radius-sm)] px-3 font-mono text-mono-sm transition-colors",
-                      active
-                        ? "sheen bg-[var(--bg-card-hover)] text-[var(--fg-primary)] shadow-[var(--shadow-card)]"
-                        : "text-[var(--fg-muted)] hover:bg-[var(--bg-hover-soft)] hover:text-[var(--fg-secondary)]"
+                      active ? NAV_ROW_CURRENT : NAV_ROW_IDLE
                     )}
                   >
                     {active && (

@@ -1,10 +1,15 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import prompts from "prompts";
-import { COMPONENTS } from "../registry/components.js";
+import { COMPONENTS, COMPONENT_FOLDERS } from "../registry/components.js";
 import { ConfigError, aliasToPath, readConfig } from "../utils/config.js";
 import { log } from "../utils/logger.js";
 import { detectPackageManager, installDeps } from "../utils/package-manager.js";
+import {
+  OutsideProjectError,
+  assertInsideProject,
+  writeProjectFile,
+} from "../utils/project-path.js";
 import { getRegistryRoot } from "../utils/registry.js";
 
 export async function add(components: string[], options: { overwrite: boolean }) {
@@ -91,17 +96,18 @@ export async function add(components: string[], options: { overwrite: boolean })
       const destRelative = path.join(aliasToPath(baseAlias, config.srcDir), path.basename(file));
       const dest = path.join(cwd, destRelative);
 
-      // Guard against a tampered entrepta.json whose alias escapes the project,
-      // e.g. "components": "@/../../etc". Refuse to write outside cwd.
-      const relFromCwd = path.relative(cwd, dest);
-      if (relFromCwd.startsWith("..") || path.isAbsolute(relFromCwd)) {
+      // A tampered entrepta.json ("components": "@/../../etc") or a symlinked
+      // folder in a cloned repo would send the write elsewhere. Checked before
+      // the overwrite prompt, so nobody is asked about a file that is not theirs.
+      try {
+        await assertInsideProject(cwd, dest);
+      } catch (error) {
+        if (!(error instanceof OutsideProjectError)) throw error;
         log.error(
-          `Refusing to write outside the project. Check the aliases in entrepta.json: "${destRelative}" resolves outside ${cwd}.`
+          `Refusing to write outside the project: ${error.message} Check the aliases in entrepta.json and the folders they point at.`
         );
         process.exit(1);
       }
-
-      await fs.mkdir(path.dirname(dest), { recursive: true });
 
       const destExists = await fileExists(dest);
       if (destExists && !options.overwrite) {
@@ -124,7 +130,7 @@ export async function add(components: string[], options: { overwrite: boolean })
         config.aliases.hooks,
         config.aliases.lib ?? "@/lib"
       );
-      await fs.writeFile(dest, content, "utf-8");
+      await writeProjectFile(cwd, dest, content);
       log.success(`Copied ${destRelative}`);
     }
 
@@ -172,6 +178,12 @@ export function resolveComponents(names: string[]): string[] {
   return [...resolved];
 }
 
+// An import from one component folder to another: `../content/diamond`.
+const SIBLING_IMPORT = new RegExp(
+  `from\\s+["']\\.\\.[/\\\\](?:${COMPONENT_FOLDERS.join("|")})[/\\\\]([A-Za-z0-9_-]+)["']`,
+  "g"
+);
+
 /**
  * Registry files import across folders (`../lib/utils`, `../hooks/use-mode`,
  * `../content/diamond`). In a user project every component lands in one
@@ -214,10 +226,7 @@ export function rewriteImports(
       /from\s+["']\.\.[/\\]hooks[/\\]([A-Za-z0-9_-]+)["']/g,
       (_match, name: string) => `from "${safeHooks}/${name.replace(/\$/g, "$$$$")}"`
     )
-    .replace(
-      /from\s+["']\.\.[/\\](?:primitives|layout|content|feedback|motion)[/\\]([A-Za-z0-9_-]+)["']/g,
-      (_match, name: string) => `from "./${name}"`
-    );
+    .replace(SIBLING_IMPORT, (_match, name: string) => `from "./${name}"`);
 }
 
 async function fileExists(filePath: string): Promise<boolean> {

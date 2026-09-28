@@ -46,6 +46,32 @@ describe("source rules", () => {
     expect(offenders).toEqual([]);
   });
 
+  /**
+   * A component with no state or effect stays out of the client bundle, and a
+   * server page can pass it any prop. Every Radix package but Slot keeps state. A Phosphor icon is no reason to opt in:
+   * import it from `@phosphor-icons/react/dist/ssr` instead.
+   */
+  it("marks a registry file use client only when something in it needs the client", () => {
+    const needsClient =
+      /\buse[A-Z]\w*\(|createContext|from\s+["'](cmdk|sonner|motion\/react|recharts|react-day-picker|@tanstack\/[\w-]+|@radix-ui\/react-(?!slot)[\w-]+)["']/;
+    const offenders = FILES.filter(
+      ({ file, source }) =>
+        file.startsWith("packages/registry/") && isClient(source) && !needsClient.test(source)
+    ).map(({ file }) => file);
+    expect(offenders).toEqual([]);
+  });
+
+  // transition-all eases whatever changes, including a height the browser sets
+  // while a textarea is resized, and a size a layout change hands down. Name
+  // the properties that are meant to move.
+  it("never transitions all properties in the registry", () => {
+    const offenders = FILES.filter(
+      ({ file, source }) =>
+        file.startsWith("packages/registry/") && /\btransition-all\b/.test(source)
+    ).map(({ file }) => file);
+    expect(offenders).toEqual([]);
+  });
+
   it("does not import lucide-react", () => {
     const offenders = FILES.filter(({ source }) => /["']lucide-react["']/.test(source)).map(
       ({ file }) => file

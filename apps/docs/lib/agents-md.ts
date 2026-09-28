@@ -173,6 +173,7 @@ ${bullets([
     ? `All six themes are installed. \`${theme.id}\` is the default; switch with \`data-theme\` on \`<html>\` or the ThemeSwitcher.`
     : `One theme, \`${theme.id}\`, is installed. Changing it means running \`init\` again.`,
   `Default mode: ${options.mode}. Light mode is \`data-mode="light"\` on \`<html>\`; dark is the absence of it.`,
+  "To switch from your own code, wrap the attribute change in `transitionTheme` from the `use-mode` hook. It holds every transition so the page changes at once, not component by component.",
   ...(options.mode === "light"
     ? ['Ship `data-mode="light"` on `<html>` in the server HTML so the first paint is light.']
     : []),
@@ -187,7 +188,7 @@ ${bullets([
 
 ${bullets([
   `Every color is a CSS variable from \`${paths.css}\`. Never write a hex in a component.`,
-  "Surfaces: `--bg-canvas` for the page, `--bg-card` for cards, `--bg-surface` for what sits above a card (menus, tooltips, code), `--bg-overlay` for dialogs.",
+  "Surfaces: `--bg-canvas` for the page, `--bg-card` for cards, `--bg-overlay` for what covers the page (menus, tooltips, code, dialogs, toasts), `--bg-field` for inputs. `--bg-surface` is zinc-900, for small fills, never an area.",
   "Text: `--fg-primary`, `--fg-secondary`, `--fg-muted`. Borders: `--border-subtle`, `--border-strong`.",
   "Brand: `--fg-brand` for fills, borders, glyphs and text 24px and up. `--fg-brand-text` for brand-colored text below 24px. `--fg-on-brand` for text on a brand fill.",
   "Brand accents mix from the brand, so they follow the theme: `--border-brand`, `--border-brand-strong`, `--bg-surface-brand`, `--fg-brand-glow`. For a new one, use `color-mix(in srgb, var(--fg-brand) N%, transparent)`.",
@@ -245,6 +246,17 @@ ${bullets([
     : []),
 ])}`);
 
+  sections.push(`## Data
+
+${bullets([
+  "Money is an integer of minor units (123456 is 1,234.56), shown with Amount and typed with MoneyInput. Never a float.",
+  "A day is a plain `YYYY-MM-DD` string, never a Date. Set the locale, currency and time zone once with `FormatProvider`; `lib/format` has the helpers.",
+  "A change is a Delta: an arrow, a sign and words. No percentage from a base of zero or below; a missing value is a dash with its reason, never a zero.",
+  "Series colors are palette keys, `chart-1` to `chart-8`, stored as the key, never a hex. The status colors appear in a chart only for results above and below zero, with a sign.",
+  "A data component takes `loading` and draws its skeleton in its final shape. Empty and error are composed where the words are known: EmptyState, Alert, a Badge for stale data. A failed load is never an empty list.",
+  "`RedactProvider` hides values on screen; Amount, Metric and RollingNumber follow it. It hides from view, not from the page.",
+])}`);
+
   if (picked.length) {
     const sheet = picked.map((c) => {
       const exportsList = c.manifest?.exports ?? [];
@@ -271,7 +283,8 @@ ${sheet.join("\n\n")}${also}`);
 ${bullets([
   "Every docs page has a Markdown version at the same URL plus `.md`. Read that instead of the HTML. The component index is https://entrepta.vercel.app/docs/components.md, and each component has its own, such as https://entrepta.vercel.app/docs/components/button.md.",
   "https://entrepta.vercel.app/llms.txt lists every page. https://entrepta.vercel.app/llms-full.txt is all of them in one file.",
-  "Upgrading from 1.x: https://entrepta.vercel.app/docs/migrating-to-v2.md, step by step, with every new component.",
+  "Upgrading from 1.x: https://entrepta.vercel.app/docs/migrating-to-v2.md, step by step, with every new component. From 2.x to 3 nothing breaks: https://entrepta.vercel.app/docs/whats-new-in-v3.md.",
+  "Money, dates, series colors and data states: https://entrepta.vercel.app/docs/foundations/data.md.",
 ])}`);
 
   sections.push(`## Before calling a UI change done

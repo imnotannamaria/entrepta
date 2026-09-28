@@ -54,7 +54,10 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   // `/docs/cli.md` serves the page as Markdown, for agents (see lib/markdown.ts)
   async rewrites() {
-    return [{ source: "/docs/:path*.md", destination: "/md/docs/:path*" }];
+    return [
+      { source: "/docs.md", destination: "/md/docs" },
+      { source: "/docs/:path*.md", destination: "/md/docs/:path*" },
+    ];
   },
   reactStrictMode: true,
   async headers() {

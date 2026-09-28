@@ -28,4 +28,12 @@ describe("Textarea", () => {
     render(<Textarea ref={ref} />);
     expect(ref.current).toBeInstanceOf(HTMLTextAreaElement);
   });
+
+  it("does not ease its height, so resizing follows the cursor", () => {
+    const { container } = render(<Textarea />);
+    const transition = [...(container.firstChild as HTMLElement).classList].find((c) =>
+      c.startsWith("transition")
+    );
+    expect(transition).toBe("transition-[border-color,box-shadow]");
+  });
 });

@@ -17,6 +17,8 @@ const STATIC_ROUTES: { path: string; priority: number; changeFrequency: "weekly"
   { path: "/docs/foundations/motion", priority: 0.6, changeFrequency: "monthly" },
   { path: "/docs/foundations/accessibility", priority: 0.6, changeFrequency: "monthly" },
   { path: "/docs/foundations/rules", priority: 0.6, changeFrequency: "monthly" },
+  { path: "/docs/foundations/data", priority: 0.6, changeFrequency: "monthly" },
+  { path: "/docs/whats-new-in-v3", priority: 0.8, changeFrequency: "monthly" },
   { path: "/docs/migrating-to-v2", priority: 0.7, changeFrequency: "monthly" },
 ];
 

@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
-import { COMPONENTS } from "../registry/components.js";
+import { COMPONENTS, COMPONENT_FOLDERS } from "../registry/components.js";
 import type { RegistryComponent } from "../registry/types.js";
 
 const REGISTRY_ROOT = path.resolve(
@@ -14,15 +14,7 @@ const REGISTRY_ROOT = path.resolve(
 );
 
 function listRegistryFiles(): string[] {
-  const dirs: RegistryComponent["category"][] = [
-    "primitives",
-    "layout",
-    "content",
-    "feedback",
-    "motion",
-    "hooks",
-    "lib",
-  ];
+  const dirs: RegistryComponent["category"][] = [...COMPONENT_FOLDERS, "hooks", "lib"];
   const out: string[] = [];
   for (const dir of dirs) {
     const full = path.join(REGISTRY_ROOT, dir);
@@ -38,15 +30,7 @@ function listRegistryFiles(): string[] {
   return out;
 }
 
-const VALID_CATEGORIES: RegistryComponent["category"][] = [
-  "primitives",
-  "layout",
-  "content",
-  "feedback",
-  "motion",
-  "hooks",
-  "lib",
-];
+const VALID_CATEGORIES: RegistryComponent["category"][] = [...COMPONENT_FOLDERS, "hooks", "lib"];
 
 describe("COMPONENTS registry", () => {
   it("has at least one component", () => {

@@ -1,15 +1,45 @@
 import "@testing-library/jest-dom";
 import { installIntersectionObserver, installMatchMedia } from "./media";
 
-// cmdk and some Radix components use ResizeObserver which jsdom doesn't implement
+// cmdk and some Radix components use ResizeObserver which jsdom doesn't implement.
+// It reports a fixed size on observe: recharts' ResponsiveContainer renders
+// nothing until it is told a non-zero box, and jsdom never lays anything out.
+const OBSERVED_SIZE = { width: 800, height: 400 };
+
 global.ResizeObserver = class ResizeObserver {
-  observe() {}
+  private callback: ResizeObserverCallback;
+
+  constructor(callback: ResizeObserverCallback) {
+    this.callback = callback;
+  }
+
+  observe(target: Element) {
+    const box = { ...OBSERVED_SIZE, top: 0, left: 0, bottom: 400, right: 800, x: 0, y: 0 };
+    this.callback(
+      [
+        {
+          target,
+          contentRect: box as DOMRectReadOnly,
+          borderBoxSize: [{ inlineSize: box.width, blockSize: box.height }],
+          contentBoxSize: [{ inlineSize: box.width, blockSize: box.height }],
+          devicePixelContentBoxSize: [{ inlineSize: box.width, blockSize: box.height }],
+        },
+      ],
+      this
+    );
+  }
+
   unobserve() {}
   disconnect() {}
 };
 
 // cmdk calls scrollIntoView on selected items
 Element.prototype.scrollIntoView = () => {};
+
+// Radix Select captures the pointer on its trigger; jsdom has no pointer capture
+Element.prototype.hasPointerCapture = () => false;
+Element.prototype.setPointerCapture = () => {};
+Element.prototype.releasePointerCapture = () => {};
 
 // jsdom's default url is `about:blank`, which disables Storage. Replace it
 // with a Map-backed shim so hooks that persist preferences can be tested.

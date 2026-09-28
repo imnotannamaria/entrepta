@@ -1,1 +1,1 @@
-export { COMPONENTS } from "@entrepta/registry/manifest.js";
+export { COMPONENTS, COMPONENT_FOLDERS } from "@entrepta/registry/manifest.js";

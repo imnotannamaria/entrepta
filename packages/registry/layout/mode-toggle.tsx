@@ -57,8 +57,9 @@ const ICON_SIZE: Record<NonNullable<VariantProps<typeof modeToggle>["size"]>, nu
 };
 
 // Both icons stay mounted and stacked so the swap can cross-fade. They turn in
-// opposite directions, which reads like a dial. The globals.css reduced-motion
-// block flattens the transition for anyone who asks for less movement.
+// opposite directions, which reads like a dial. data-theme-motion keeps the dial
+// turning while a theme switch holds every other transition. The globals.css
+// reduced-motion block flattens it for anyone who asks for less movement.
 const ICON_BASE =
   "col-start-1 row-start-1 transition-[opacity,rotate,scale] duration-[var(--motion-base)] ease-[var(--ease-out)]";
 const ICON_IN = "opacity-100 rotate-0 scale-100";
@@ -73,11 +74,13 @@ function ModeIcon({ mode, size }: { mode: ThemeMode; size: number }) {
     >
       <MoonIcon
         data-icon="moon"
+        data-theme-motion
         className={cn(ICON_BASE, mode === "dark" ? ICON_IN : "opacity-0 rotate-90 scale-50")}
         size={size}
       />
       <SunIcon
         data-icon="sun"
+        data-theme-motion
         className={cn(ICON_BASE, mode === "light" ? ICON_IN : "opacity-0 -rotate-90 scale-50")}
         size={size}
       />
@@ -146,7 +149,8 @@ interface ModeScriptProps {
  * which covers the mode too.
  */
 function ModeScript({ storageKey = "entrepta" }: ModeScriptProps) {
-  const modeKey = JSON.stringify(`${storageKey}:mode`);
+  // JSON.stringify leaves `<` alone, and a `</script>` in the key would end the tag early
+  const modeKey = JSON.stringify(`${storageKey}:mode`).replace(/</g, "\\u003c");
   const script = `(function(){try{var m=localStorage.getItem(${modeKey});if(m==='light')document.documentElement.setAttribute('data-mode','light');}catch(e){}})();`;
   // biome-ignore lint/security/noDangerouslySetInnerHtml: static string we control; no user input is interpolated.
   return <script dangerouslySetInnerHTML={{ __html: script }} />;

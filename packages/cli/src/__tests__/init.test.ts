@@ -6,6 +6,9 @@ vi.mock("node:fs/promises", () => ({
     writeFile: vi.fn(),
     mkdir: vi.fn().mockResolvedValue(undefined),
     access: vi.fn(),
+    // every path resolves to itself: no symlinks in the fake project
+    realpath: vi.fn(async (p: string) => p),
+    lstat: vi.fn(),
   },
 }));
 

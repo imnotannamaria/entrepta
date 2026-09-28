@@ -7,6 +7,8 @@ export type PackageManager = "pnpm" | "yarn" | "bun" | "npm";
 export async function detectPackageManager(cwd: string): Promise<PackageManager> {
   if (await fileExists(path.join(cwd, "pnpm-lock.yaml"))) return "pnpm";
   if (await fileExists(path.join(cwd, "yarn.lock"))) return "yarn";
+  // bun.lock is the text lockfile Bun writes since 1.2; bun.lockb is the older binary one
+  if (await fileExists(path.join(cwd, "bun.lock"))) return "bun";
   if (await fileExists(path.join(cwd, "bun.lockb"))) return "bun";
   return "npm";
 }

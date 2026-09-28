@@ -43,6 +43,18 @@ describe("Button", () => {
     expect(container.firstChild).toHaveClass("text-[var(--fg-on-brand)]");
   });
 
+  it("renders the caller's element with asChild, styled as a button", () => {
+    render(
+      <Button asChild variant="secondary">
+        <a href="/docs">docs</a>
+      </Button>
+    );
+    const link = screen.getByRole("link", { name: "docs" });
+    expect(link).toHaveAttribute("href", "/docs");
+    expect(link).toHaveClass("inline-flex", "border-[var(--border-strong)]");
+    expect(screen.queryByRole("button")).not.toBeInTheDocument();
+  });
+
   it("exports the variants from a module without a client boundary", async () => {
     const fs = await import("node:fs");
     const path = await import("node:path");

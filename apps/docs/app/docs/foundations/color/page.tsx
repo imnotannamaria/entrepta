@@ -1,85 +1,48 @@
-import { DocPageHeader, DocSubhead } from "@/components/doc-page-header";
-import { INK_PAIRS, InkTable, type Swatch, SwatchGrid } from "@/components/token-values";
+import { DocNote, DocPageHeader, DocSubhead } from "@/components/doc-page-header";
+import { InkTable, SwatchGrid } from "@/components/token-values";
+import {
+  ACCENTS,
+  BRAND,
+  CHART,
+  COLOR_NOTES,
+  FINISH,
+  FOREGROUND,
+  INK_PAIRS,
+  NEUTRALS,
+  type Primitive,
+  STATUS,
+  SURFACES,
+  foundationPage,
+} from "@/lib/foundations";
+import type { Metadata } from "next";
 
-const NEUTRALS = [
-  { token: "zinc-950", hex: "#09090B", use: "bg.canvas" },
-  { token: "zinc-900", hex: "#18181B", use: "bg.surface, small fills" },
-  { token: "zinc-800", hex: "#27272A", use: "border.subtle" },
-  { token: "zinc-700", hex: "#3F3F46", use: "border.strong" },
-  { token: "zinc-500", hex: "#71717A", use: "a reference; light fg.muted is #68686F" },
-  { token: "zinc-400", hex: "#A1A1AA", use: "fg.secondary" },
-  { token: "zinc-200", hex: "#E4E4E7", use: "text on dark" },
-  { token: "zinc-50", hex: "#FAFAFA", use: "fg.primary" },
-];
+const PAGE = foundationPage("color");
 
-const ACCENTS = [
-  { token: "violet-500", hex: "#7C6BFF", use: "entrepta brand" },
-  { token: "violet-400", hex: "#9B8EFF", use: "brand hover" },
-  { token: "indigo-400", hex: "#818CF8", use: "status.info" },
-  { token: "emerald-500", hex: "#10B981", use: "status.success" },
-  { token: "emerald-400", hex: "#34D399", use: "soft success fg" },
-  { token: "amber-500", hex: "#F59E0B", use: "status.warning" },
-  { token: "rose-500", hex: "#F43F5E", use: "status.error" },
-];
+export const metadata: Metadata = {
+  title: PAGE.title,
+  description: PAGE.summary,
+  alternates: {
+    canonical: "/docs/foundations/color",
+    types: { "text/markdown": "/docs/foundations/color.md" },
+  },
+};
 
-const SURFACES: Swatch[] = [
-  { token: "--bg-canvas", note: "the page" },
-  { token: "--bg-card", note: "cards, a hair above the canvas" },
-  { token: "--bg-card-hover", note: "a card under the pointer" },
-  { token: "--bg-overlay", note: "menus, tooltips, code, dialogs, the palette, toasts" },
-  { token: "--bg-field", note: "inputs, textareas, the box of a checkbox or switch" },
-  { token: "--bg-surface", note: "zinc-900: small fills only, never an area" },
-];
-
-const FINISH: Swatch[] = [
-  { token: "--sheen-tint", note: "the brand glow in a corner, 9% dark and 4% light" },
-  { token: "--bg-surface-brand", note: "the tint a highlighted row takes" },
-];
-
-const FOREGROUND: Swatch[] = [
-  { token: "--fg-primary", note: "titles and body text" },
-  { token: "--fg-secondary", note: "supporting text" },
-  { token: "--fg-muted", note: "metadata, timestamps" },
-  { token: "--border-subtle", note: "card and divider borders" },
-  { token: "--border-strong", note: "inputs, hover borders" },
-];
-
-const BRAND: Swatch[] = [
-  { token: "--fg-brand", note: "fills, borders, glyphs, text 24px and up" },
-  { token: "--fg-brand-hover", note: "the fill on hover" },
-  { token: "--fg-brand-text", note: "brand-colored text below 24px" },
-  { token: "--fg-on-brand", note: "text on a brand fill" },
-  { token: "--bg-surface-brand", note: "the tint: soft badges, selected items" },
-  { token: "--border-brand", note: "35% of the brand" },
-  { token: "--border-brand-strong", note: "60%, a featured card on hover" },
-  { token: "--fg-brand-glow", note: "50%, pulses and glows" },
-  { token: "--bg-spotlight", note: "the cursor glow, stronger in light mode" },
-];
-
-const STATUS: Swatch[] = [
-  { token: "--status-success", note: "synced, shipped" },
-  { token: "--status-warning", note: "stale, partial" },
-  { token: "--status-error", note: "error, denied" },
-  { token: "--status-info", note: "loading, syncing" },
-];
-
-function PrimitiveSwatch({
-  chip,
-  token,
-  hex,
-  use,
-}: { chip: string; token: string; hex: string; use: string }) {
+function PrimitiveGrid({ colors }: { colors: Primitive[] }) {
   return (
-    <div className="flex flex-col gap-2">
-      <div
-        className="w-full h-20 rounded-[var(--radius-md)] border border-[var(--border-subtle)]"
-        style={{ background: chip }}
-      />
-      <div className="flex flex-col gap-0.5 font-mono text-mono-sm">
-        <div className="text-[var(--fg-primary)]">{token}</div>
-        <div className="text-[var(--fg-muted)]">{hex}</div>
-        <div className="text-[var(--fg-secondary)]">{use}</div>
-      </div>
+    <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+      {colors.map((c) => (
+        <div key={c.token} className="flex flex-col gap-2">
+          <div
+            className="h-20 w-full rounded-[var(--radius-md)] border border-[var(--border-subtle)]"
+            style={{ background: c.hex }}
+          />
+          <div className="flex flex-col gap-0.5 font-mono text-mono-sm">
+            <div className="text-[var(--fg-primary)]">{c.token}</div>
+            <div className="text-[var(--fg-muted)]">{c.hex}</div>
+            <div className="text-[var(--fg-secondary)]">{c.use}</div>
+          </div>
+        </div>
+      ))}
     </div>
   );
 }
@@ -88,53 +51,36 @@ export default function ColorPage() {
   return (
     <article>
       <DocPageHeader
-        eyebrow="01 · foundations"
+        eyebrow={`${PAGE.num} · foundations`}
         title={
           <>
             <em>Color.</em> Zinc neutrals, one accent.
           </>
         }
-        description="Primitives are the atoms. Components consume only the semantic tokens below, never a primitive or a hex. The brand shifts per theme. Everything else is shared."
+        description={PAGE.description}
         meta="live for your theme"
+        markdown="/docs/foundations/color"
       />
 
       <section className="mb-14">
         <DocSubhead count={`${NEUTRALS.length} tokens`}>Neutrals · zinc</DocSubhead>
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-          {NEUTRALS.map((c) => (
-            <PrimitiveSwatch key={c.token} chip={c.hex} token={c.token} hex={c.hex} use={c.use} />
-          ))}
-        </div>
+        <PrimitiveGrid colors={NEUTRALS} />
       </section>
 
       <section className="mb-14">
         <DocSubhead count={`${ACCENTS.length} tokens`}>Accents</DocSubhead>
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-          {ACCENTS.map((c) => (
-            <PrimitiveSwatch key={c.token} chip={c.hex} token={c.token} hex={c.hex} use={c.use} />
-          ))}
-        </div>
+        <PrimitiveGrid colors={ACCENTS} />
       </section>
 
       <section className="mb-14">
         <DocSubhead count={`${SURFACES.length} tokens`}>Surfaces</DocSubhead>
-        <p className="mb-4 max-w-2xl font-mono text-mono-sm leading-relaxed text-[var(--fg-muted)]">
-          <span className="text-[var(--fg-brand)]">{"// "}</span>
-          Cards sit on --bg-card, a hair above the canvas and defined by their border. Anything that
-          covers the page, and code, sits on --bg-overlay. Fields sit on --bg-field. A zinc-900 area
-          reads as a field of gray, so no component paints one.
-        </p>
+        <DocNote>{COLOR_NOTES.surfaces}</DocNote>
         <SwatchGrid swatches={SURFACES} />
       </section>
 
       <section className="mb-14">
         <DocSubhead count="1 class, 3 tokens">Finish</DocSubhead>
-        <p className="mb-4 max-w-2xl font-mono text-mono-sm leading-relaxed text-[var(--fg-muted)]">
-          <span className="text-[var(--fg-brand)]">{"// "}</span>
-          Every surface has the same finish: near black underneath, the .sheen class for a brand
-          glow in the top-left corner, and --edge-light, a line of light on the top edge, which
-          --shadow-card and --shadow-overlay already carry. Put both on a surface of your own.
-        </p>
+        <DocNote>{COLOR_NOTES.finish}</DocNote>
         <div className="mb-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div className="flex h-24 items-end rounded-[var(--radius-lg)] border border-[var(--border-subtle)] bg-[var(--bg-card)] p-4 font-mono text-mono-sm text-[var(--fg-muted)]">
             bg-card
@@ -153,23 +99,20 @@ export default function ColorPage() {
 
       <section className="mb-14">
         <DocSubhead count={`${BRAND.length} tokens`}>Brand</DocSubhead>
-        <p className="mb-4 max-w-2xl font-mono text-mono-sm leading-relaxed text-[var(--fg-muted)]">
-          <span className="text-[var(--fg-brand)]">{"// "}</span>
-          Every theme sets the brand and its two inks. The rest is mixed from --fg-brand with
-          color-mix, so it follows any theme on its own. Switch the theme with the button in the
-          corner and these repaint.
-        </p>
+        <DocNote>{COLOR_NOTES.brand}</DocNote>
         <SwatchGrid swatches={BRAND} />
       </section>
 
       <section className="mb-14">
         <DocSubhead count="measured live">Inks</DocSubhead>
-        <p className="mb-4 max-w-2xl font-mono text-mono-sm leading-relaxed text-[var(--fg-muted)]">
-          <span className="text-[var(--fg-brand)]">{"// "}</span>
-          Each ink on what it actually sits on, measured for the theme and mode you are in. The
-          floors are what the contrast test enforces in all twelve combinations.
-        </p>
+        <DocNote>{COLOR_NOTES.inks}</DocNote>
         <InkTable pairs={INK_PAIRS} />
+      </section>
+
+      <section className="mb-14">
+        <DocSubhead count={`${CHART.length} tokens`}>Chart palette</DocSubhead>
+        <DocNote>{COLOR_NOTES.chart}</DocNote>
+        <SwatchGrid swatches={CHART} />
       </section>
 
       <section>

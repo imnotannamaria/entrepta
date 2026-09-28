@@ -1,6 +1,7 @@
 "use client";
 
 import { LINKS } from "@/lib/links";
+import { VERSION_LABEL } from "@/lib/version";
 import { StatusBar, StatusBarItem, StatusBarSeparator } from "@entrepta/registry/layout/status-bar";
 import { usePathname } from "next/navigation";
 
@@ -19,7 +20,7 @@ export function SiteStatusBar({ where: fixed }: { where?: string }) {
         <>
           <StatusBarItem>entrepta</StatusBarItem>
           <StatusBarSeparator />
-          <StatusBarItem>v2.0</StatusBarItem>
+          <StatusBarItem>{VERSION_LABEL}</StatusBarItem>
           <StatusBarSeparator />
           <StatusBarItem className="max-w-[40vw] truncate">{where}</StatusBarItem>
         </>

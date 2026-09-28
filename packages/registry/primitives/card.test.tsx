@@ -30,6 +30,15 @@ describe("Card", () => {
     );
   });
 
+  it("transitions the lift through translate, leaving transform to Motion", () => {
+    const { container } = render(<Card>card</Card>);
+    const transition = [...(container.firstChild as HTMLElement).classList].find((c) =>
+      c.startsWith("transition-[")
+    );
+    expect(transition).toContain("translate");
+    expect(transition).not.toContain("transform");
+  });
+
   it("featured sits on the brand tint and lifts on hover", () => {
     const { container } = render(<Card variant="featured">featured</Card>);
     expect(container.firstChild).toHaveClass(

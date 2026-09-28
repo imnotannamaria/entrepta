@@ -1,6 +1,6 @@
 "use client";
 
-import { useCopy } from "@/lib/use-copy";
+import { useCopy } from "@entrepta/registry/hooks/use-copy";
 import { Button, buttonVariants } from "@entrepta/registry/primitives/button";
 import { CheckIcon, FileMdIcon, RobotIcon } from "@phosphor-icons/react";
 import { toast } from "sonner";

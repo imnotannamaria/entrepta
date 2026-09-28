@@ -37,4 +37,53 @@ describe("FilterPill", () => {
     await userEvent.click(screen.getByRole("button"));
     expect(onClick).toHaveBeenCalled();
   });
+
+  it("takes an icon as an element, for a server file", () => {
+    render(<FilterPill label="tags" icon={<TagIcon data-testid="glyph" />} active />);
+    expect(screen.getByTestId("glyph")).toBeInTheDocument();
+  });
+});
+
+describe("FilterPill, applied", () => {
+  it("names the × after what it removes, and calls onRemove", async () => {
+    const onRemove = vi.fn();
+    render(<FilterPill label="category is Groceries" onRemove={onRemove} />);
+    await userEvent.click(
+      screen.getByRole("button", { name: "Remove filter: category is Groceries" })
+    );
+    expect(onRemove).toHaveBeenCalledTimes(1);
+  });
+
+  it("is not a toggle, and edits through onClick", async () => {
+    const onClick = vi.fn();
+    render(<FilterPill label="amount over 50" onClick={onClick} onRemove={() => {}} />);
+    const edit = screen.getByRole("button", { name: "amount over 50" });
+    expect(edit).not.toHaveAttribute("aria-pressed");
+    await userEvent.click(edit);
+    expect(onClick).toHaveBeenCalled();
+  });
+
+  it("without onClick, the label is plain text and the × the one button", () => {
+    render(<FilterPill label="income" onRemove={() => {}} />);
+    expect(screen.getAllByRole("button")).toHaveLength(1);
+  });
+
+  it("takes a remove label when the label is not text", () => {
+    render(
+      <FilterPill
+        label={<strong>income</strong>}
+        removeLabel="Remove the income filter"
+        onRemove={() => {}}
+      />
+    );
+    expect(screen.getByRole("button", { name: "Remove the income filter" })).toBeInTheDocument();
+  });
+
+  it("shortens a long label instead of overflowing its row, and keeps the ×", () => {
+    render(<FilterPill label="note contains a very long phrase" onRemove={() => {}} />);
+    const remove = screen.getByRole("button", { name: /^Remove filter/ });
+    expect(remove.parentElement).toHaveClass("max-w-full");
+    expect(remove).toHaveClass("shrink-0");
+    expect(screen.getByText("note contains a very long phrase")).toHaveClass("truncate");
+  });
 });

@@ -6,6 +6,9 @@ vi.mock("node:fs/promises", () => ({
     writeFile: vi.fn(),
     mkdir: vi.fn().mockResolvedValue(undefined),
     access: vi.fn(),
+    // every path resolves to itself: no symlinks in the fake project
+    realpath: vi.fn(async (p: string) => p),
+    lstat: vi.fn(),
   },
 }));
 
@@ -134,6 +137,17 @@ describe("add", () => {
       expect(log.error).toHaveBeenCalledWith(expect.stringContaining("nonexistent"));
       expect(mockWriteFile).not.toHaveBeenCalled();
     });
+
+    it("refuses an alias that climbs out of the project, before asking anything", async () => {
+      mockReadConfig.mockResolvedValue({
+        ...MOCK_CONFIG,
+        aliases: { ...MOCK_CONFIG.aliases, components: "@/../../etc" },
+      });
+      await expect(add(["button"], { overwrite: false })).rejects.toThrow("exit:1");
+      expect(log.error).toHaveBeenCalledWith(expect.stringContaining("outside the project"));
+      expect(mockPrompts).not.toHaveBeenCalled();
+      expect(mockWriteFile).not.toHaveBeenCalled();
+    });
   });
 
   describe("transitive dependency resolution", () => {
@@ -234,7 +248,8 @@ describe("add", () => {
 
     it("does not infinite-loop when resolving cyclic registryDeps", async () => {
       vi.resetModules();
-      vi.doMock("../registry/components.js", () => ({
+      vi.doMock("../registry/components.js", async (importOriginal) => ({
+        ...(await importOriginal<typeof import("../registry/components.js")>()),
         COMPONENTS: [
           { name: "a", category: "primitives", files: [], deps: [], registryDeps: ["b"] },
           { name: "b", category: "primitives", files: [], deps: [], registryDeps: ["a"] },

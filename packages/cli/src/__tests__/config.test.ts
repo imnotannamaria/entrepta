@@ -4,6 +4,9 @@ vi.mock("node:fs/promises", () => ({
   default: {
     readFile: vi.fn(),
     writeFile: vi.fn(),
+    mkdir: vi.fn().mockResolvedValue(undefined),
+    realpath: vi.fn(async (p: string) => p),
+    lstat: vi.fn(),
   },
 }));
 

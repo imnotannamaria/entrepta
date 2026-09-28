@@ -1,8 +1,8 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import * as React from "react";
 
-export type CopyState = "idle" | "copied" | "error";
+type CopyState = "idle" | "copied" | "error";
 
 /**
  * Copies text and says how it went, then settles back to idle. A failed copy
@@ -10,13 +10,13 @@ export type CopyState = "idle" | "copied" | "error";
  * reports "error" instead of claiming it worked. The text can come from an
  * async function, such as a fetch of a page's Markdown.
  */
-export function useCopy(resetAfter = 1600) {
-  const [state, setState] = useState<CopyState>("idle");
-  const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+function useCopy(resetAfter = 1600) {
+  const [state, setState] = React.useState<CopyState>("idle");
+  const timer = React.useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
-  useEffect(() => () => clearTimeout(timer.current), []);
+  React.useEffect(() => () => clearTimeout(timer.current), []);
 
-  const copy = useCallback(
+  const copy = React.useCallback(
     async (text: string | (() => Promise<string>)): Promise<boolean> => {
       let ok = false;
       try {
@@ -36,3 +36,6 @@ export function useCopy(resetAfter = 1600) {
 
   return { state, copy };
 }
+
+export { useCopy };
+export type { CopyState };

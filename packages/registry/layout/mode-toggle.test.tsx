@@ -130,4 +130,12 @@ describe("ModeScript", () => {
     const { container } = render(<ModeScript storageKey="myapp" />);
     expect(container.querySelector("script")?.innerHTML).toContain("myapp:mode");
   });
+
+  it("cannot be closed early by a storageKey that holds a closing tag", () => {
+    const { container } = render(<ModeScript storageKey="</script><script>alert(1)//" />);
+    const source = container.querySelector("script")?.innerHTML ?? "";
+    expect(source).not.toContain("</script");
+    // the escape reads back as the same key once the script runs
+    expect(source).toContain("\\u003c/script>");
+  });
 });

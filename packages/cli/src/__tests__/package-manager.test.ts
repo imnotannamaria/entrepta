@@ -36,6 +36,14 @@ describe("detectPackageManager", () => {
     expect(await detectPackageManager("/fake")).toBe("yarn");
   });
 
+  it("detects bun from the text lockfile Bun writes since 1.2", async () => {
+    mockAccess.mockImplementation(async (p) => {
+      if (String(p).endsWith("bun.lock")) return;
+      throw new Error("not found");
+    });
+    expect(await detectPackageManager("/fake")).toBe("bun");
+  });
+
   it("detects bun when bun.lockb exists", async () => {
     mockAccess.mockImplementation(async (p) => {
       if (String(p).endsWith("bun.lockb")) return;

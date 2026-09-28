@@ -1,5 +1,6 @@
 "use client";
 
+import type { InkPair, Swatch } from "@/lib/foundations";
 import { contrastRatio, flatten, parseRgb, wcagGrade } from "@entrepta/registry/lib/color-contrast";
 import { useMemo, useSyncExternalStore } from "react";
 
@@ -62,8 +63,6 @@ function useColors(tokens: string[]): Record<string, string> {
   }, [key, theme]);
 }
 
-export type Swatch = { token: string; note: string };
-
 export function SwatchGrid({ swatches }: { swatches: Swatch[] }) {
   const values = useColors(swatches.map((s) => s.token));
   return (
@@ -86,16 +85,6 @@ export function SwatchGrid({ swatches }: { swatches: Swatch[] }) {
     </div>
   );
 }
-
-export type InkPair = {
-  ink: string;
-  on: string;
-  /** The `on` token is translucent: measure it flattened over this one. */
-  over?: string;
-  /** The floor the contrast test enforces. */
-  min: number;
-  note: string;
-};
 
 /**
  * Each ink on what it actually sits on, with the ratio measured right now. The
@@ -175,30 +164,3 @@ export function InkTable({ pairs }: { pairs: InkPair[] }) {
     </div>
   );
 }
-
-/** The inks entrepta promises, with the floors its contrast test enforces. */
-export const INK_PAIRS: InkPair[] = [
-  { ink: "--fg-on-brand", on: "--fg-brand", min: 4.5, note: "text on a brand fill" },
-  { ink: "--fg-brand-text", on: "--bg-canvas", min: 4.5, note: "brand text on the page" },
-  { ink: "--fg-brand-text", on: "--bg-card", min: 4.5, note: "brand text on a card" },
-  {
-    ink: "--fg-brand-text",
-    on: "--bg-surface-brand",
-    over: "--bg-canvas",
-    min: 5,
-    note: "brand text on the tint",
-  },
-  { ink: "--fg-primary", on: "--bg-canvas", min: 4.5, note: "body text" },
-  { ink: "--fg-secondary", on: "--bg-card", min: 4.5, note: "secondary text on a card" },
-  { ink: "--fg-muted", on: "--bg-canvas", min: 4.5, note: "metadata on the page" },
-  { ink: "--fg-muted", on: "--bg-card", min: 4.5, note: "metadata on a card" },
-  { ink: "--fg-muted", on: "--bg-overlay", min: 4.5, note: "metadata in a dialog" },
-  {
-    ink: "--status-success-fg",
-    on: "--status-success-soft",
-    over: "--bg-canvas",
-    min: 4.5,
-    note: "a soft success badge",
-  },
-  { ink: "--status-error-fg", on: "--bg-card", min: 4.5, note: "a field error on a card" },
-];

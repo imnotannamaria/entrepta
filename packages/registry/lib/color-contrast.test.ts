@@ -3,9 +3,11 @@ import {
   composite,
   contrastRatio,
   flatten,
+  fromOklch,
   parseColor,
   parseHex,
   parseRgb,
+  toOklch,
   wcagGrade,
 } from "./color-contrast";
 
@@ -90,5 +92,33 @@ describe("wcagGrade", () => {
     expect(wcagGrade(4.6)).toBe("AA");
     expect(wcagGrade(3.2)).toBe("fail");
     expect(wcagGrade(3.2, true)).toBe("AA");
+  });
+});
+
+describe("OKLCH", () => {
+  it("round-trips an sRGB color", () => {
+    for (const hex of ["#7c6bff", "#cc2e36", "#35a365", "#09090b", "#fafafa"]) {
+      const color = parseColor(hex) as NonNullable<ReturnType<typeof parseColor>>;
+      const back = fromOklch(toOklch(color)) as NonNullable<ReturnType<typeof fromOklch>>;
+      expect(back.r).toBeCloseTo(color.r, 3);
+      expect(back.g).toBeCloseTo(color.g, 3);
+      expect(back.b).toBeCloseTo(color.b, 3);
+    }
+  });
+
+  it("matches known values", () => {
+    const white = toOklch(rgb(255, 255, 255));
+    expect(white.l).toBeCloseTo(1, 4);
+    expect(white.c).toBeCloseTo(0, 4);
+    // #ff0000 is oklch(0.628 0.2577 29.23)
+    const red = toOklch(rgb(255, 0, 0));
+    expect(red.l).toBeCloseTo(0.628, 3);
+    expect(red.c).toBeCloseTo(0.2577, 3);
+    expect(red.h).toBeCloseTo(29.23, 1);
+  });
+
+  it("refuses a color outside the sRGB gamut instead of clipping it", () => {
+    expect(fromOklch({ l: 0.7, c: 0.4, h: 150 })).toBeNull();
+    expect(fromOklch({ l: 0.72, c: 0.12, h: 150 })).not.toBeNull();
   });
 });
