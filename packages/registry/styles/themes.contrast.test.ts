@@ -1,7 +1,14 @@
 import fs from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import { type Rgba, contrastRatio, flatten, parseColor } from "../lib/color-contrast";
+import {
+  type Rgba,
+  contrastRatio,
+  flatten,
+  fromOklch,
+  parseColor,
+  toOklch,
+} from "../lib/color-contrast";
 
 /**
  * Every ink the themes promise, measured in all 12 theme and mode combinations
@@ -44,11 +51,31 @@ function tokens(theme: string, mode: (typeof MODES)[number]): Record<string, str
   };
 }
 
+// oklch(from var(--base) L C calc(h + N)), where L and C may be var() too:
+// the relative color the chart palette is written in.
+const RELATIVE_OKLCH =
+  /^oklch\(from var\((--[\w-]+)\) (var\(--[\w-]+\)|[\d.]+) (var\(--[\w-]+\)|[\d.]+) calc\(h \+ (\d+)\)\)$/;
+
+function number(set: Record<string, string>, raw: string): number {
+  const value = raw.startsWith("var(") ? set[/var\((--[\w-]+)\)/.exec(raw)?.[1] ?? ""] : raw;
+  const n = Number(value);
+  if (!value || Number.isNaN(n)) throw new Error(`${raw} is not a number: ${value}`);
+  return n;
+}
+
 function color(set: Record<string, string>, name: string): Rgba {
   let value = set[name];
   for (let hops = 0; value?.startsWith("var("); hops++) {
     if (hops > 5) throw new Error(`${name} does not resolve`);
     value = set[/var\((--[\w-]+)\)/.exec(value)?.[1] ?? ""];
+  }
+  const relative = value ? RELATIVE_OKLCH.exec(value) : null;
+  if (relative) {
+    const [, base, l, c, turn] = relative;
+    const { h } = toOklch(color(set, base));
+    const turned = fromOklch({ l: number(set, l), c: number(set, c), h: h + Number(turn) });
+    if (!turned) throw new Error(`${name} leaves the sRGB gamut: ${value}`);
+    return turned;
   }
   const parsed = value ? parseColor(value) : null;
   if (!parsed) throw new Error(`${name} is not a color: ${value}`);
@@ -138,6 +165,47 @@ describe("theme contrast", () => {
       contrastRatio(color(set, "--fg-muted"), color(set, on))
     );
     expect(Math.min(...muted)).toBeGreaterThanOrEqual(4.5);
+  });
+
+  // Series, bars and IconTile glyphs are graphics: 3:1 against what they sit
+  // on. An IconTile draws the color over 15% of itself on the card.
+  const PALETTE = Array.from({ length: 8 }, (_, i) => `--chart-${i + 1}`);
+
+  it("keeps every chart color at 3:1 on the card and on its own tile, inside sRGB", () => {
+    const measure = (set: Record<string, string>, id: string) =>
+      PALETTE.flatMap((name) => {
+        const ink = color(set, name);
+        const card = color(set, "--bg-card");
+        const tile = flatten([{ ...ink, a: 0.15 }, card]);
+        return [
+          { where: "card", ratio: contrastRatio(ink, card) },
+          { where: "tile", ratio: contrastRatio(ink, tile) },
+        ]
+          .filter(({ ratio }) => ratio < 3)
+          .map(({ where, ratio }) => `${id}: ${name} on ${where} ${ratio.toFixed(2)}`);
+      });
+    const low = [
+      ...THEMES.flatMap((theme) =>
+        MODES.flatMap((mode) => measure(tokens(theme, mode), `${theme} ${mode}`))
+      ),
+      // a dark surface inside a light page gets the dark palette
+      ...THEMES.flatMap((theme) =>
+        measure(
+          { ...tokens(theme, "light"), ...declarations(GLOBALS, '[data-surface="dark"]') },
+          `${theme} dark surface`
+        )
+      ),
+    ];
+    expect(low).toEqual([]);
+  });
+
+  it("derives the palette from the brand, with no fixed color", () => {
+    const set = tokens("entrepta", "dark");
+    const brandHue = toOklch(color(set, "--fg-brand")).h;
+    expect(toOklch(color(set, "--chart-1")).h).toBeCloseTo(brandHue, 0);
+    for (const name of PALETTE) expect(set[name]).toMatch(RELATIVE_OKLCH);
+    const hues = PALETTE.map((name) => Math.round(toOklch(color(set, name)).h));
+    expect(new Set(hues).size).toBe(8);
   });
 
   // The brand itself is only for fills, borders, glyphs and large text.

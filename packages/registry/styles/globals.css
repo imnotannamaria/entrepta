@@ -155,20 +155,28 @@
   --status-error-soft: rgba(244, 63, 94, 0.12);
   --status-info-soft: rgba(129, 140, 248, 0.12);
 
-  /* chart, categorical series. --chart-1 follows the theme, the rest are
-     fixed so the palette stays readable in all six presets. Every value
-     clears 3:1 against --bg-surface, checked in both modes.
-     Above three series, do not rely on colour alone: give the extra series
-     a dashed stroke or a direct label. */
-  --chart-1: var(--fg-brand);
-  --chart-2: var(--zinc-300);
-  --chart-3: var(--zinc-500);
-  --chart-4: #38bdf8;
-  --chart-5: #2dd4bf;
-  --chart-6: #e879f9;
+  /* chart, the categorical palette. No fixed color: --chart-1 is the brand's
+     hue, and the other seven turn it in steps of 45 degrees, all at one
+     lightness and chroma per mode, so every theme recolors its charts by
+     itself. The brand itself does not always clear 3:1 on a tile. The
+     lightness clears 3:1 on --bg-card, and the chroma is the highest that stays
+     inside sRGB for every hue of all six brands (the blues and yellows set
+     it). A result above or below zero takes the status colors and a sign,
+     never this palette. From four series on, add a label or a dash pattern:
+     color alone does not tell them apart. */
+  --chart-l: 0.72;
+  --chart-c: 0.12;
+  --chart-1: oklch(from var(--fg-brand) var(--chart-l) var(--chart-c) calc(h + 0));
+  --chart-2: oklch(from var(--fg-brand) var(--chart-l) var(--chart-c) calc(h + 45));
+  --chart-3: oklch(from var(--fg-brand) var(--chart-l) var(--chart-c) calc(h + 90));
+  --chart-4: oklch(from var(--fg-brand) var(--chart-l) var(--chart-c) calc(h + 135));
+  --chart-5: oklch(from var(--fg-brand) var(--chart-l) var(--chart-c) calc(h + 180));
+  --chart-6: oklch(from var(--fg-brand) var(--chart-l) var(--chart-c) calc(h + 225));
+  --chart-7: oklch(from var(--fg-brand) var(--chart-l) var(--chart-c) calc(h + 270));
+  --chart-8: oklch(from var(--fg-brand) var(--chart-l) var(--chart-c) calc(h + 315));
 
-  --chart-grid: var(--border-subtle);
-  --chart-axis: var(--fg-secondary);
+  --chart-grid: color-mix(in srgb, var(--border-subtle) 60%, transparent);
+  --chart-axis: var(--fg-muted);
   --chart-cursor: var(--bg-surface-brand);
 
   /* ============================================================
@@ -765,12 +773,10 @@ select:autofill {
   --shadow-overlay: var(--edge-light), 0 24px 48px rgba(0, 0, 0, 0.12);
   --bg-field: var(--bg-overlay);
 
-  /* The zinc ramp has to flip: what reads on #18181b vanishes on white.
-     The 400-level accents drop to 600 for the same reason. */
-  --chart-2: var(--zinc-700);
-  --chart-4: #0284c7;
-  --chart-5: #0d9488;
-  --chart-6: #c026d3;
+  /* the palette darkens on white. Declared on the same element as the
+     --chart-* tokens, so they pick these up with nothing else to redeclare */
+  --chart-l: 0.58;
+  --chart-c: 0.095;
 
   color-scheme: light;
 }
@@ -813,20 +819,22 @@ select:autofill {
   --status-error-fg: var(--rose-400);
   --status-info-fg: var(--indigo-400);
 
-  /* Undo the light-mode chart flip, since a chart in here sits on a dark surface
-     even when the page is light. */
-  --chart-2: var(--zinc-300);
-  --chart-4: #38bdf8;
-  --chart-5: #2dd4bf;
-  --chart-6: #e879f9;
-
-  /* These four alias other tokens that this block overrides. A var() in a
-     custom property is substituted once, on the element that declares it,
-     then inherits as a literal, so the :root copies would carry the page's
-     values in here. Redeclaring re-runs the substitution in this scope. */
-  --chart-1: var(--fg-brand);
-  --chart-grid: var(--border-subtle);
-  --chart-axis: var(--fg-secondary);
+  /* The chart tokens read other tokens this block changes. A var() in a
+     custom property is substituted on the element that declares it, then
+     inherits as a literal, so the page's values would carry in here.
+     Redeclaring them runs the substitution again in this scope. */
+  --chart-l: 0.72;
+  --chart-c: 0.12;
+  --chart-1: oklch(from var(--fg-brand) var(--chart-l) var(--chart-c) calc(h + 0));
+  --chart-2: oklch(from var(--fg-brand) var(--chart-l) var(--chart-c) calc(h + 45));
+  --chart-3: oklch(from var(--fg-brand) var(--chart-l) var(--chart-c) calc(h + 90));
+  --chart-4: oklch(from var(--fg-brand) var(--chart-l) var(--chart-c) calc(h + 135));
+  --chart-5: oklch(from var(--fg-brand) var(--chart-l) var(--chart-c) calc(h + 180));
+  --chart-6: oklch(from var(--fg-brand) var(--chart-l) var(--chart-c) calc(h + 225));
+  --chart-7: oklch(from var(--fg-brand) var(--chart-l) var(--chart-c) calc(h + 270));
+  --chart-8: oklch(from var(--fg-brand) var(--chart-l) var(--chart-c) calc(h + 315));
+  --chart-grid: color-mix(in srgb, var(--border-subtle) 60%, transparent);
+  --chart-axis: var(--fg-muted);
   --chart-cursor: var(--bg-surface-brand);
 
   color-scheme: dark;

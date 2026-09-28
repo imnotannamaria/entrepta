@@ -56,6 +56,16 @@ const BRAND: Swatch[] = [
   { token: "--bg-spotlight", note: "the cursor glow, stronger in light mode" },
 ];
 
+const CHART: Swatch[] = [
+  { token: "--chart-1", note: "the brand's hue" },
+  ...[45, 90, 135, 180, 225, 270, 315].map((turn, i) => ({
+    token: `--chart-${i + 2}`,
+    note: `the brand's hue turned ${turn}°`,
+  })),
+  { token: "--chart-grid", note: "horizontal grid lines only" },
+  { token: "--chart-axis", note: "axis labels" },
+];
+
 const STATUS: Swatch[] = [
   { token: "--status-success", note: "synced, shipped" },
   { token: "--status-warning", note: "stale, partial" },
@@ -170,6 +180,17 @@ export default function ColorPage() {
           floors are what the contrast test enforces in all twelve combinations.
         </p>
         <InkTable pairs={INK_PAIRS} />
+      </section>
+
+      <section className="mb-14">
+        <DocSubhead count={`${CHART.length} tokens`}>Chart palette</DocSubhead>
+        <p className="mb-4 max-w-2xl font-mono text-mono-sm leading-relaxed text-[var(--fg-muted)]">
+          <span className="text-[var(--fg-brand)]">{"// "}</span>
+          No fixed color. Each series is the brand's hue, turned in steps of 45°, at one lightness
+          per mode that clears 3:1 on a card. Switch the theme and the palette follows. A result
+          above or below zero uses the status colors and a sign instead.
+        </p>
+        <SwatchGrid swatches={CHART} />
       </section>
 
       <section>

@@ -211,7 +211,8 @@ inks cannot be derived from the brand, so every theme file sets them.
 straight from the CSS: 4.5 for `--fg-on-brand` on the brand, 4.5 for
 `--fg-brand-text` on canvas and card, 5.0 on the tint, and 4.5 for
 `--fg-muted` on canvas, card and overlay and for each `--status-*-fg` on the
-canvas, a card and its own soft tint. Light mode sets darker status inks
+canvas, a card and its own soft tint, and each `--chart-*` color at 3:1 on a
+card and on its own tile, inside sRGB. Light mode sets darker status inks
 (emerald-700, amber-800, rose-700, indigo-700); the 400s only work on dark.
 Change a hex and that test says whether it still holds.
 
@@ -618,6 +619,13 @@ pnpm dlx file:"$(pwd)/../entrepta/packages/cli" init
 - A caller retunes a component for the surface under it through a scoped
   variable with a fallback, not by reaching into it: `--toast-glow`,
   `--avatar-cutout` (the ring that cuts a dot or an overlap out of a card)
+- The chart palette has no fixed color. `--chart-1` is the brand's hue and the
+  other seven turn it by 45° with CSS relative color
+  (`oklch(from var(--fg-brand) var(--chart-l) var(--chart-c) calc(h + N))`), at
+  one lightness and chroma per mode. The chroma is the highest that stays in
+  sRGB for every hue of all six brands. Even `--chart-1` is not the raw brand,
+  which falls under 3:1 on a tile in marmalade light and on a dark surface in a
+  light page. Results above and below zero use the status colors and a sign
 - Docs live at https://entrepta.vercel.app/
 
 ---
