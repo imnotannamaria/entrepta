@@ -2,6 +2,7 @@
 
 import { CheckIcon, CopyIcon, WarningIcon } from "@phosphor-icons/react";
 import * as React from "react";
+import { useCopy } from "../hooks/use-copy";
 import { cn } from "../lib/utils";
 
 interface CodeBlockProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "title"> {
@@ -43,31 +44,8 @@ const CodeBlock = React.forwardRef<HTMLDivElement, CodeBlockProps>(
     },
     ref
   ) => {
-    const [copyState, setCopyState] = React.useState<"idle" | "copied" | "error">("idle");
-    const timerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
-
-    React.useEffect(() => {
-      return () => {
-        if (timerRef.current) clearTimeout(timerRef.current);
-      };
-    }, []);
-
-    const handleCopy = React.useCallback(async () => {
-      try {
-        if (typeof navigator === "undefined" || !navigator.clipboard?.writeText) {
-          throw new Error("Clipboard unavailable");
-        }
-        await navigator.clipboard.writeText(code);
-        setCopyState("copied");
-      } catch {
-        // No clipboard on an insecure origin, or permission denied. Say so instead
-        // of claiming a copy that did not happen.
-        setCopyState("error");
-      } finally {
-        if (timerRef.current) clearTimeout(timerRef.current);
-        timerRef.current = setTimeout(() => setCopyState("idle"), copyTimeout);
-      }
-    }, [code, copyTimeout]);
+    const { state: copyState, copy } = useCopy(copyTimeout);
+    const handleCopy = () => copy(code);
 
     const hasChrome = variant === "terminal" || Boolean(filename) || Boolean(meta) || showCopy;
 

@@ -3,9 +3,9 @@
 import { buildAgentsMd } from "@/lib/agents-md";
 import { COMPONENT_INDEX } from "@/lib/component-index";
 import { DEFAULT_MODE, DEFAULT_THEME, STORAGE_KEY_PREFIX, THEMES } from "@/lib/theme";
-import { useCopy } from "@/lib/use-copy";
 import { cn } from "@/lib/utils";
 import { VERSION_LABEL } from "@/lib/version";
+import { useCopy } from "@entrepta/registry/hooks/use-copy";
 import { useTheme } from "@entrepta/registry/hooks/use-theme";
 import { StatusBar, StatusBarItem, StatusBarSeparator } from "@entrepta/registry/layout/status-bar";
 import { RollingNumber, useRollOnHover } from "@entrepta/registry/motion/rolling-number";

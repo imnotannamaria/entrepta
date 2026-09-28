@@ -213,6 +213,14 @@ export const COMPONENTS: RegistryComponent[] = [
     registryDeps: [],
   },
   {
+    name: "use-copy",
+    description: "Hook that copies text and reports copied or failed, then settles back",
+    category: "hooks",
+    files: ["hooks/use-copy.ts"],
+    deps: [],
+    registryDeps: [],
+  },
+  {
     name: "use-mode",
     description: "Hook that manages dark/light mode with localStorage persistence",
     category: "hooks",
@@ -285,7 +293,7 @@ export const COMPONENTS: RegistryComponent[] = [
     category: "content",
     files: ["content/code-block.tsx"],
     deps: ["@phosphor-icons/react"],
-    registryDeps: [],
+    registryDeps: ["use-copy"],
     usage: `<CodeBlock code="npm run dev" language="bash" variant="terminal" />`,
     exports: ["CodeBlock"],
   },
