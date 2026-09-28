@@ -89,6 +89,8 @@ import { Field } from "@entrepta/registry/primitives/field";
 import { FilterPill } from "@entrepta/registry/primitives/filter-pill";
 import { Input } from "@entrepta/registry/primitives/input";
 import { Kbd } from "@entrepta/registry/primitives/kbd";
+import { Popover, PopoverContent, PopoverTrigger } from "@entrepta/registry/primitives/popover";
+import { Sheet, SheetClose, SheetContent, SheetTrigger } from "@entrepta/registry/primitives/sheet";
 import { Switch } from "@entrepta/registry/primitives/switch";
 import { TabNav, TabNavLink } from "@entrepta/registry/primitives/tabs";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@entrepta/registry/primitives/tabs";
@@ -414,6 +416,79 @@ function CardPreview() {
         </CardFooter>
       </Card>
     </div>
+  );
+}
+
+function PopoverPreview() {
+  const kinds = ["posts", "notes", "talks"] as const;
+  const [shown, setShown] = useState<string[]>(["posts", "notes"]);
+  return (
+    <Popover>
+      <PopoverTrigger asChild>
+        <Button variant="secondary">
+          filters <Badge size="sm">{shown.length}</Badge>
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent aria-label="Filters" className="flex w-64 flex-col gap-3">
+        <span className="font-mono text-mono-xs uppercase tracking-[0.08em] text-[var(--fg-muted)]">
+          show
+        </span>
+        {kinds.map((kind) => (
+          <Checkbox
+            key={kind}
+            label={kind}
+            checked={shown.includes(kind)}
+            onChange={(event) =>
+              setShown((now) =>
+                event.target.checked ? [...now, kind] : now.filter((k) => k !== kind)
+              )
+            }
+          />
+        ))}
+      </PopoverContent>
+    </Popover>
+  );
+}
+
+function SheetPreview() {
+  const [open, setOpen] = useState(false);
+  const [name, setName] = useState("");
+  return (
+    <Sheet
+      open={open}
+      onOpenChange={(next) => {
+        setOpen(next);
+        if (!next) setName("");
+      }}
+      dirty={name.length > 0}
+    >
+      <SheetTrigger asChild>
+        <Button>
+          <PlusIcon aria-hidden size={14} weight="bold" /> new entry
+        </Button>
+      </SheetTrigger>
+      <SheetContent
+        title="New entry"
+        description="Type a name, then try to close: it asks first."
+        footer={
+          <>
+            <SheetClose asChild>
+              <Button variant="ghost">cancel</Button>
+            </SheetClose>
+            <Button onClick={() => setOpen(false)}>save</Button>
+          </>
+        }
+      >
+        <div className="flex flex-col gap-4">
+          <Field id="sheet-name" label="name">
+            <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Q4 notes" />
+          </Field>
+          <Field id="sheet-note" label="note" hint="optional">
+            <Textarea placeholder="// what it is about" />
+          </Field>
+        </div>
+      </SheetContent>
+    </Sheet>
   );
 }
 
@@ -1170,6 +1245,8 @@ const PREVIEWS: Record<string, React.ReactNode> = {
   input: <InputPreview />,
   card: <CardPreview />,
   dialog: <DialogPreview />,
+  sheet: <SheetPreview />,
+  popover: <PopoverPreview />,
   dropdown: <DropdownPreview />,
   tooltip: <TooltipPreview />,
   tabs: <TabsPreview />,

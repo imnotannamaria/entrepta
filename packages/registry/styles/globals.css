@@ -545,6 +545,29 @@ select:autofill {
   --pop-from: 4px;
 }
 
+/* A sheet slides in from the edge it belongs to and leaves faster than it
+   came. The component sets --sheet-from to that edge, such as
+   translateX(100%) on the right. */
+@keyframes sheet-in {
+  from {
+    transform: var(--sheet-from);
+  }
+}
+
+@keyframes sheet-out {
+  to {
+    transform: var(--sheet-from);
+  }
+}
+
+.motion-sheet[data-state="open"] {
+  animation: sheet-in var(--motion-slow) var(--ease-out);
+}
+
+.motion-sheet[data-state="closed"] {
+  animation: sheet-out var(--motion-base) ease-in;
+}
+
 /* ============================================================
    KEYFRAMES
    ============================================================ */

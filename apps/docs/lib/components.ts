@@ -320,6 +320,104 @@ import { Button } from "@/components/entrepta/button"
       },
     ],
   },
+  popover: {
+    description:
+      "A panel anchored to a trigger, for content you work in: a calendar, a filter, a list of notifications. A Tooltip only shows text and a Dropdown is a menu of actions. It stands on the same surface as the rest of the overlay family. Focus moves in on open and back to the trigger on Esc.",
+    usage: `import { Popover, PopoverContent, PopoverTrigger } from "@/components/entrepta/popover"
+
+<Popover>
+  <PopoverTrigger asChild>
+    <Button variant="secondary">filters</Button>
+  </PopoverTrigger>
+  {/* a dialog to screen readers: name it when it has no heading */}
+  <PopoverContent aria-label="Filters" className="w-72">
+    …
+  </PopoverContent>
+</Popover>`,
+    props: [
+      {
+        name: "open / onOpenChange",
+        type: "boolean / (open: boolean) => void",
+        description: "Controlled state. Leave both out and it manages itself",
+      },
+      {
+        name: "side",
+        type: '"top" | "right" | "bottom" | "left"',
+        default: '"bottom"',
+        description: "Where it opens. It flips when there is no room (PopoverContent)",
+      },
+      {
+        name: "align",
+        type: '"start" | "center" | "end"',
+        default: '"start"',
+        description: "Alignment against the trigger (PopoverContent)",
+      },
+      {
+        name: "modal",
+        type: "boolean",
+        default: "false",
+        description: "Traps focus and blocks the page behind it",
+      },
+    ],
+  },
+  sheet: {
+    description:
+      "A panel from the edge of the screen, to create or edit something without losing the list, the filters and the scroll behind it. From the right on a desktop, from the bottom below 640px. The title is required and names it. With unsaved changes, closing asks first, inside the sheet, with focus on keeping them.",
+    usage: `import { Sheet, SheetClose, SheetContent, SheetTrigger } from "@/components/entrepta/sheet"
+
+<Sheet dirty={form.formState.isDirty}>
+  <SheetTrigger asChild>
+    <Button>new entry</Button>
+  </SheetTrigger>
+  <SheetContent
+    title="New entry"
+    description="It lands at the top of the list."
+    footer={
+      <>
+        <SheetClose asChild><Button variant="ghost">cancel</Button></SheetClose>
+        <Button type="submit" form="entry">save</Button>
+      </>
+    }
+  >
+    <form id="entry">…</form>
+  </SheetContent>
+</Sheet>`,
+    props: [
+      {
+        name: "dirty",
+        type: "boolean",
+        default: "false",
+        description: "Unsaved changes: Esc, a click outside and the × ask before closing",
+      },
+      {
+        name: "side",
+        type: '"right" | "bottom"',
+        default: '"right"',
+        description: "right becomes a bottom sheet below 640px (SheetContent)",
+      },
+      {
+        name: "size",
+        type: '"sm" | "md" | "lg"',
+        default: '"md"',
+        description: "360, 480 or 640px wide on a desktop (SheetContent)",
+      },
+      {
+        name: "title",
+        type: "ReactNode",
+        description: "The heading and the sheet's name. Required (SheetContent)",
+      },
+      {
+        name: "footer",
+        type: "ReactNode",
+        description: "Actions pinned to the bottom while the body scrolls (SheetContent)",
+      },
+      {
+        name: "discardPrompt, keepLabel, discardLabel",
+        type: "ReactNode, string, string",
+        description: "The words of the question, for another language (SheetContent)",
+      },
+    ],
+  },
   dropdown: {
     description:
       "Context menu on Radix, on the overlay surface. The highlighted row takes the brand tint and its icon and shortcut turn brand. Items, icons, labels, shortcuts, checkbox and radio items, submenus and keyboard navigation.",

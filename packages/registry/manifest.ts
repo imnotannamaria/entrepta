@@ -111,6 +111,7 @@ export const COMPONENTS: RegistryComponent[] = [
     exports: [
       "Dialog",
       "DialogClose",
+      "DialogCloseButton",
       "DialogContent",
       "DialogDescription",
       "DialogFooter",
@@ -121,6 +122,29 @@ export const COMPONENTS: RegistryComponent[] = [
       "DialogTitle",
       "DialogTrigger",
     ],
+  },
+  {
+    name: "popover",
+    description: "A panel anchored to a trigger, for content you work in: a calendar, a filter",
+    category: "primitives",
+    files: ["primitives/popover.tsx"],
+    deps: ["@radix-ui/react-popover"],
+    registryDeps: ["overlay-lib"],
+    usage:
+      '<Popover><PopoverTrigger asChild><Button>filters</Button></PopoverTrigger><PopoverContent aria-label="Filters">…</PopoverContent></Popover>',
+    exports: ["Popover", "PopoverAnchor", "PopoverClose", "PopoverContent", "PopoverTrigger"],
+  },
+  {
+    name: "sheet",
+    description:
+      "A panel from the edge to create or edit without leaving the list, that asks before losing changes",
+    category: "primitives",
+    files: ["primitives/sheet.tsx"],
+    deps: ["@radix-ui/react-dialog", "class-variance-authority"],
+    registryDeps: ["dialog", "button", "overlay-lib"],
+    usage:
+      '<Sheet dirty={dirty}><SheetTrigger asChild><Button>new</Button></SheetTrigger><SheetContent title="New entry" footer={…}>…</SheetContent></Sheet>',
+    exports: ["Sheet", "SheetClose", "SheetContent", "SheetTrigger", "sheetVariants"],
   },
   {
     name: "dropdown",

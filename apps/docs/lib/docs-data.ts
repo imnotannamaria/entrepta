@@ -74,7 +74,7 @@ transitionTheme(() => {
 /* Migrating to v2                                                     */
 /* ------------------------------------------------------------------ */
 
-/** The components 1.x shipped. Everything else in the index is new in 2.0. */
+/** The components 1.x shipped. */
 export const V1_COMPONENTS = [
   "button",
   "badge",
@@ -94,14 +94,38 @@ export const V1_COMPONENTS = [
   "code-block",
 ];
 
-export const NEW_IN_V2 = COMPONENT_INDEX.filter((c) => !V1_COMPONENTS.includes(c.slug));
+/** The components 2.0 added. Anything in the index after them is new in v3. */
+export const V2_COMPONENTS = [
+  "kbd",
+  "checkbox",
+  "switch",
+  "textarea",
+  "field",
+  "filter-pill",
+  "sidebar",
+  "page-outline",
+  "sect-head",
+  "doc-parts",
+  "chrome-message",
+  "page-loading",
+  "reveal",
+  "type-in",
+  "rolling-number",
+  "spotlight",
+  "arrow-link",
+];
+
+export const NEW_IN_V2 = COMPONENT_INDEX.filter((c) => V2_COMPONENTS.includes(c.slug));
+
+export const NEW_IN_V3 = COMPONENT_INDEX.filter(
+  (c) => !V1_COMPONENTS.includes(c.slug) && !V2_COMPONENTS.includes(c.slug)
+);
 
 /**
  * For a project that rolled its own version of a new component, such as the
  * portfolio entrepta came from: what to look for and replace.
  */
 export const REPLACES: Record<string, string> = {
-  avatar: "a round img with initials behind it, or a stack of overlapping circles",
   kbd: "hand-styled key chips next to shortcuts",
   checkbox: "native checkboxes with accent-color, or a custom box",
   switch: "a custom toggle built from a div",

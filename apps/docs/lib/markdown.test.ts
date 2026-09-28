@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { COMPONENT_INDEX } from "./component-index";
-import { NEW_IN_V2, REPLACES, V1_COMPONENTS } from "./docs-data";
+import { NEW_IN_V2, NEW_IN_V3, REPLACES, V1_COMPONENTS, V2_COMPONENTS } from "./docs-data";
 import { MD_PAGES, SITE_URL, componentMd, llmsFullTxt, llmsTxt, migrationMd } from "./markdown";
 
 /**
@@ -63,10 +63,11 @@ describe("llms.txt", () => {
 });
 
 describe("migration guide", () => {
-  it("splits the index into 1.x components and new ones, with no strays", () => {
+  it("splits the index into 1.x, 2.0 and v3 components, with no strays", () => {
     const slugs = COMPONENT_INDEX.map((c) => c.slug);
-    expect(V1_COMPONENTS.filter((s) => !slugs.includes(s))).toEqual([]);
-    expect(NEW_IN_V2.length + V1_COMPONENTS.length).toBe(COMPONENT_INDEX.length);
+    expect([...V1_COMPONENTS, ...V2_COMPONENTS].filter((s) => !slugs.includes(s))).toEqual([]);
+    expect(NEW_IN_V2.length).toBe(V2_COMPONENTS.length);
+    expect(V1_COMPONENTS.length + NEW_IN_V2.length + NEW_IN_V3.length).toBe(COMPONENT_INDEX.length);
   });
 
   it("lists every new component, with what it replaces, in the Markdown an agent copies", () => {

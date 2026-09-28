@@ -12,6 +12,7 @@ const root = path.join(__dirname, "..");
 const read = (file: string) => fs.readFileSync(path.join(root, file), "utf8");
 
 const OVERLAYS = [
+  "primitives/popover.tsx",
   "primitives/dropdown.tsx",
   "primitives/tooltip.tsx",
   "primitives/dialog.tsx",
