@@ -100,7 +100,8 @@ entrepta/
 │       ├── components/       # site chrome (nav, nav groups, footer, status bar, palette),
 │       │                     # home sections, agents configurator, agent actions
 │       ├── lib/              # component-index.ts (nav), components.ts (page text),
-│       │                     # docs-data.ts (other pages' content), markdown.ts, og.tsx,
+│       │                     # docs-data.ts (other pages' content), foundations.ts
+│       │                     # (the foundations pages' content), markdown.ts, og.tsx,
 │       │                     # manifest.ts, agents-md.ts, rules.ts, theme.ts, links.ts
 │       └── public/schema.json  # the entrepta.json schema the CLI points at
 ├── packages/
@@ -118,17 +119,23 @@ entrepta/
 │       ├── primitives/       # button, badge, avatar, input, card, dialog, sheet, popover,
 │       │                     # dropdown, tooltip, tabs, kbd, checkbox, switch, textarea, field,
 │       │                     # filter-pill, money-input, select, combobox, segmented-control,
-│       │                     # calendar, date-picker, date-navigator
-│       ├── data/             # amount
-│       ├── charts/           # chart (not in the manifest until v3 phase 7)
+│       │                     # calendar, date-picker, date-navigator, icon-tile, progress,
+│       │                     # accordion, stepper, choice-card, secret-field, swatch-picker,
+│       │                     # file-dropzone, prompt-input
+│       ├── data/             # amount, metric, delta, sparkline, bar-list, list-row, table,
+│       │                     # data-table, filter-builder, contribution-grid, redact
+│       ├── charts/           # chart (ChartContainer and presets on Recharts)
 │       ├── layout/           # status-bar, top-nav, theme-switcher, mode-toggle,
-│       │                     # sidebar, page-outline
-│       ├── content/          # code-block, diamond, sect-head, doc-parts
-│       ├── feedback/         # toast, skeleton, command-palette, chrome-message, page-loading
-│       ├── motion/           # reveal, type-in, rolling-number, spotlight, arrow-link
+│       │                     # sidebar, mobile-nav, bento-grid, page-outline
+│       ├── content/          # code-block, diamond, sect-head, doc-parts, chat-thread
+│       ├── feedback/         # toast, skeleton, command-palette, chrome-message, page-loading,
+│       │                     # empty-state, alert
+│       ├── motion/           # reveal, type-in, rolling-number, spotlight, spotlight-card,
+│       │                     # arrow-link
 │       ├── hooks/            # use-theme, use-mode, use-command-palette, use-url-filter,
-│       │                     # use-copy, use-format
-│       └── lib/              # utils.ts (cn), motion.ts, overlay.ts, color-contrast.ts, format.ts
+│       │                     # use-copy, use-format, use-redact
+│       └── lib/              # utils.ts (cn), motion.ts, overlay.ts, color-contrast.ts, format.ts,
+│                             # filters.ts, nav.ts, palette.ts
 ├── sandbox/
 │   └── wirst-test/           # local Next.js app to test the CLI output (gitignored)
 ├── scripts/release.sh
@@ -358,13 +365,13 @@ Vite. Aliases are relative to it, and `add` writes each file under it.
 - `styles/globals.css`, reset, tokens, fonts, type utilities, light mode
 - `styles/themes/*.css`, the 6 presets
 
-### Primitives (24)
+### Primitives (33)
 
 | Component | Radix                           | Notes                                   |
 | --------- | ------------------------------- | --------------------------------------- |
 | Button    | `@radix-ui/react-slot`          | 4 variants, 3 sizes, 3 square icon sizes, loading state |
 | Badge     | no                              | solid/soft/outline across 6 colors, a dot or an `icon` |
-| Avatar    | no                              | image over server-rendered initials, presence dot, `AvatarGroup` with `+N` |
+| Avatar    | no                              | image over server-rendered initials, presence dot, `AvatarGroup` with `+N`, overlapping a fifth so initials stay whole |
 | Input     | no                              | text, search, command (⌘K)               |
 | Card      | no                              | default/featured/terminal/data, sm/md/xl |
 | Dialog    | `@radix-ui/react-dialog`        | base for modals                          |
@@ -378,7 +385,7 @@ Vite. Aliases are relative to it, and `add` writes each file under it.
 | Switch    | no                              | native checkbox with `role="switch"`     |
 | Textarea  | no                              | sans prose, mono placeholder, error state |
 | Field     | no                              | label, control, error or hint, wires `aria-describedby` and `aria-invalid` |
-| FilterPill | no                             | `aria-pressed` toggle, pairs with `use-url-filter` |
+| FilterPill | no                             | `aria-pressed` toggle, pairs with `use-url-filter`; with `onRemove` an applied filter and its × |
 | MoneyInput | no                             | cash-machine or free entry, any pasted format, minor units |
 | Select    | `@radix-ui/react-select`        | short list, the field's look, the menu's rows, wired by Field |
 | Combobox  | no (Popover + cmdk)             | long searchable list, groups, `multiple`, `creatable`, `suggested`, own ranking |
@@ -386,14 +393,39 @@ Vite. Aliases are relative to it, and `add` writes each file under it.
 | Calendar  | no (`react-day-picker` 10)      | plain dates, today in the account's zone, words from `Intl` |
 | DatePicker | no                             | day, range with presets, month, year, in a Popover |
 | DateNavigator | no                          | previous, period, next, today; limits stay focusable and say why |
+| IconTile  | no                              | tinted square in the palette, brand or a status, corner badge; the Toast's tile |
+| Progress  | no                              | bar, steps or ring, fills once on screen with a lit head; `progressbar` with its value in words; a status only through `tone` |
+| Accordion | `@radix-ui/react-accordion`     | heading plus button, `trailing` in the name, `actions` outside it, height in CSS |
+| Stepper   | no                              | ordered list, `aria-current="step"`, state in words, ◆ on the current step; server safe |
+| ChoiceCard | no                             | cards that are labels of native radios or checkboxes, strong brand border and a drawn check, disabled with a reason |
+| SecretField | no                            | masked read-only secret, reveal toggle, copy through `use-copy` announced politely, expired with an action |
+| SwatchPicker | no                           | native radios over palette keys, each named after the hue it shows in the theme |
+| FileDropzone | no                           | a real file input as the drop area, type and size checked with the limit stated, progress per file; no upload code |
+| PromptInput | no                            | grows, ⌘↵ sends, stop while streaming, suggestion chips; no model |
 
-### Data (1)
+### Data (11)
 
 | Component | Notes                                                     |
 | --------- | --------------------------------------------------------- |
 | Amount    | minor units, mono and tabular, real minus, muted symbol, reads `FormatProvider` |
+| Metric    | `dl` of label and value, delta and comparison, `loading` in the final shape; server safe |
+| Delta     | arrow, sign and words; color by `intent`; no percentage from a base of zero or below; `pill` on its tone's tint |
+| Sparkline | a series with no axes, line and soft fill in a palette color, wipes in once on screen, `aria-hidden` |
+| BarList   | a ranking in rows, full labels on bars as long as their share, `max` and `showOthers`; server safe |
+| ContributionGrid | a year of days as weeks, levels from the brand, no data apart from none, one Tab stop, one tooltip in the body |
+| Redact    | a mask of the value's width when `RedactProvider` says so, "hidden value" for screen readers; Amount, Metric and RollingNumber follow it |
+| ListRow   | leading, truncating title and meta, trailing never truncates; `ListGroup` with a sticky heading |
+| Table     | real `<table>`, scrolls in its box, sticky header, numbers right; server safe |
+| DataTable | TanStack Table v9: sorting, selection, visibility, virtualized past 500 rows |
+| FilterBuilder | fields to applied FilterPills in a Popover; `lib/filters` serializes, parses against the fields and matches |
 
-### Layout (6)
+### Charts (1)
+
+| Component | Lib        | Notes                                                    |
+| --------- | ---------- | -------------------------------------------------------- |
+| Chart     | `recharts` | ChartContainer: palette colors by name, tooltip in full values through Amount, legend from three series, View as table, mounts on screen; presets for grid, axes, cursor and projection. Recipes on its docs page |
+
+### Layout (8)
 
 | Component     | Notes                                            |
 | ------------- | ------------------------------------------------ |
@@ -401,10 +433,12 @@ Vite. Aliases are relative to it, and `add` writes each file under it.
 | TopNav        | top nav with logo, breadcrumb and menu           |
 | ThemeSwitcher | floating preset and dark/light button, uses `use-theme` |
 | ModeToggle    | dark/light only, inline or floating, uses `use-mode` |
-| Sidebar       | 56px icon rail, a ◆ travels to the active item, `linkComponent` for routers |
+| Sidebar       | 56px rail with Tooltips, or `labeled` with groups, search, footer, `collapsible` and the choice stored; a ◆ travels to the active item, which it keeps in view. The docs sidebar is one |
+| MobileNav     | bottom bar, four destinations and More as a grid of IconTiles in a bottom Sheet, safe-area padding |
+| BentoGrid     | 1, 6 and 12 columns, each tile a `@container`, markup order, Reveal entrance |
 | PageOutline   | sticky scrollspy outline from 1100px, `scrollContainer` prop |
 
-### Content (4)
+### Content (5)
 
 | Component | Notes                                                    |
 | --------- | -------------------------------------------------------- |
@@ -412,25 +446,28 @@ Vite. Aliases are relative to it, and `add` writes each file under it.
 | Diamond   | the `◆` before a label, `aria-hidden`. No docs page: it comes with what uses it |
 | SectHead  | the `$ command` rule that opens a section                |
 | doc-parts | DocLabel, Section, DisplayH2, Prose, Em, Strong          |
+| ChatThread | messages by role, tool results in a Card, follows the bottom only when you are there, a reply announced once when done |
 
-Card, Dialog, Field, Tabs and PageOutline import Diamond from `content/`. CardLabel, DialogLabel and Field take an `icon` that replaces the ◆ when the label names a kind of thing. The CLI rewrites
+Card, Dialog, Field, Tabs, PageOutline, Metric, Stepper and the chat thread import Diamond from `content/`. CardLabel, DialogLabel and Field take an `icon` that replaces the ◆ when the label names a kind of thing. The CLI rewrites
 an import between categories (`../content/diamond`) to a sibling (`./diamond`),
 and `registryDeps` makes sure the file is copied. A manifest test checks that
 every such import is covered.
 
-### Feedback (5)
+### Feedback (7)
 
 | Component      | Lib     | Notes                              |
 | -------------- | ------- | ---------------------------------- |
 | Toast          | `sonner`| unstyled sonner, status as an icon tile and a corner glow |
 | Skeleton       | no      | shimmer, respects reduced motion    |
 | CommandPalette | `cmdk`  | ⌘K, rows highlight like a dropdown, Kbd hints |
-| ChromeMessage  | no      | 404 and error screens, server safe  |
+| ChromeMessage  | no      | 404 and error screens, `headingLevel` inside a layout, server safe |
 | PageLoading    | no      | CSS only, extra lines only on a long wait |
+| EmptyState     | no      | what is missing and one action; fits in a Card |
+| Alert          | no      | stays until dealt with; status in a tile and the glow; server safe |
 
-### Motion (5)
+### Motion (6)
 
-`motion` is a dependency of the four items that animate through JS. The
+`motion` is a dependency of the items that animate through JS. The
 rest of the system does not need it, and ArrowLink is CSS only.
 
 | Component     | Notes                                                          |
@@ -439,6 +476,7 @@ rest of the system does not need it, and ArrowLink is CSS only.
 | TypeIn        | text assembling piece by piece, full sentence always in the DOM |
 | RollingNumber | odometer digits, `useRollOnHover` spends the entrance delay once |
 | Spotlight     | brand glow trailing the cursor on a spring, moved by transform  |
+| SpotlightCard | a Card with the Spotlight, holds the hook so a server page can use it |
 | ArrowLink     | arrow that travels, brand rule that wipes in, `asChild` for routers |
 
 Rules they follow: `whileInView` with `once`, never `animate`; every one calls
@@ -449,7 +487,7 @@ in `globals.css` for what must move before hydration. `lib/motion.ts` holds
 `EASE_OUT`, `revealViewport` and `STAGGER_LIMIT`, and the CLI copies it to the
 `lib` alias.
 
-### Hooks (6)
+### Hooks (7)
 
 - `use-theme`, controls preset and dark/light, built on `use-mode`
 - `use-mode`, controls dark/light only, and exports `transitionTheme`
@@ -457,6 +495,7 @@ in `globals.css` for what must move before hydration. `lib/motion.ts` holds
 - `use-url-filter`, a filter kept in the URL query, prerender safe; `useUrlFilterList` for several values
 - `use-copy`, copies text and reports copied or failed
 - `use-format`, `FormatProvider` and `useFormat`: locale, currency and time zone for every formatting component
+- `use-redact`, `RedactProvider` and `useRedacted`: the app's switch to hide values on screen
 
 ---
 
@@ -583,6 +622,61 @@ pnpm dlx file:"$(pwd)/../entrepta/packages/cli" init
 - No colored bar on the edge of a highlighted or hovered item, anywhere. A
   highlighted menu row takes the brand tint, a toast carries its status in an
   icon tile, a nav item gets a surface and a dot
+- The current row of a nav is defined once, in `lib/nav.ts` (`NAV_ROW_CURRENT`,
+  `NAV_ROW_IDLE`): raised, with a card's finish. The labeled Sidebar, the
+  MobileNav's More sheet and the docs menu use it, so "you are here" looks the
+  same in every list of destinations
+- A panel that opens to its height animates in CSS (`motion-collapse` in
+  `globals.css`), from a height the component hands over as
+  `--collapse-height`, like `--sheet-from` for the sheet
+- Series colors are named once, in `lib/palette.ts`: the eight palette colors
+  and the statuses. Chart, Sparkline and BarList read it, so "chart-3" is the
+  same color in each. The statuses appear in a chart only for results above
+  and below zero, with `signed` putting a sign on every value
+- Charts follow the recipes on the Chart docs page (`apps/docs/lib/chart-recipes.ts`):
+  only horizontal grid lines, no frame (the Card is the frame), a compact Y
+  axis, full values in the tooltip and the table, a legend from three series,
+  a donut of five slices at most. The plot mounts when it is seen, so
+  Recharts' entrance plays on screen
+- An entrance that starts hidden is watched from an element that is not.
+  IntersectionObserver counts a clip-path, so a line clipped to nothing never
+  enters the viewport; Sparkline watches its container and hands the wipe
+  down through variants. SVG colors go through CSS (`style`, a class), since
+  a presentation attribute does not read a variable
+- Redact hides from view, not from the page: the value stays in the HTML,
+  invisible under a mask of its width. It is for a screen share, never for a
+  secret. A value inside a mask draws no mask of its own (`MaskedScope`), so
+  an Amount in a Metric is covered once
+- Chat components draw and take input; the model, the streaming and the tools
+  stay in the app. ChatThread announces a reply once, when it finishes, from a
+  live region of its own: a live list would read every streamed word, and the
+  history there on arrival is never read out
+- A tooltip that must float over a moved parent (a Reveal, a transformed tile)
+  goes to the body through a portal, like ContributionGrid's
+- The README's component table is generated from the docs index, and a test
+  (`apps/docs/lib/readme.test.ts`) fails when a component or the count is
+  missing from it
+- Docs pages share their parts: `DocNote` for the `//` aside under a subhead,
+  `NewComponentsGrid` for a release's new components, next to `DocPageHeader`
+  and `DocSubhead`
+- A scroll box that scrolls sideways holds only its own axis
+  (`overscroll-x-contain`). `overscroll-contain` on both axes swallowed the
+  wheel over a CodeBlock that had nothing to scroll down, and the page stopped
+- The docs sidebar is the registry's labeled Sidebar with a filter field, not
+  a docs-only list. The Sidebar keeps the current item in view on its own, so
+  a reload deep in a long list still shows where you are
+- A swatch is named after the hue it shows, read from the rendered color,
+  since the palette turns with the brand: chart-1 is violet in entrepta and
+  red in blossom. The value stays the key
+- A size container (`@container`) has no width of its own, so a component
+  that is one takes `w-full`, or it collapses in a flex row
+- A change needs a positive base to be a percentage. Delta shows the
+  difference in value from zero or below, never "+300%" from nothing, and a
+  missing value is a dash with its reason, never a zero
+- FilterBuilder's filters travel as `field:op:value` strings. `parseFilters`
+  treats the URL as input: a field id is letters, digits, `-` and `_`, the
+  operator must belong to the field's type, the value must be one the field
+  takes, and past twenty the rest is dropped
 - The title bar is a variant of the tabs (`variant="window"`), not a component
   of its own: two tab rows that differ only by window dots were one component
 - Overlays animate with plain CSS (`motion-fade`, `motion-pop` in
@@ -614,8 +708,8 @@ pnpm dlx file:"$(pwd)/../entrepta/packages/cli" init
   `apps/docs/assets/fonts`, because satori reads no woff2 and the build must not
   need the network. The README hero is the site's image, in `.github/assets`
 - Overlay classes live once, in `lib/overlay.ts` (`OVERLAY_SURFACE`,
-  `MENU_ROW`, `MENU_LABEL`, `MENU_SEPARATOR`), copied by the CLI as `overlay-lib`
-  with the six components that use them. The row's highlighted state stays in
+  `MENU_ROW`, `MENU_LABEL`, `MENU_SEPARATOR`, `DISMISS_BUTTON`), copied by the CLI as
+  `overlay-lib` with every component that uses them. The row's highlighted state stays in
   each component, because Radix, cmdk and plain buttons mark it differently
 - `entrepta.json` is validated when the CLI reads it (`configProblems`): its
   aliases end up in import lines, and the file can come from a cloned repo.
@@ -640,7 +734,8 @@ pnpm dlx file:"$(pwd)/../entrepta/packages/cli" init
   `naturalWidth`), since its load event had no listener yet
 - A caller retunes a component for the surface under it through a scoped
   variable with a fallback, not by reaching into it: `--toast-glow`,
-  `--avatar-cutout` (the ring that cuts a dot or an overlap out of a card)
+  `--cutout` (the color under a dot, an overlap or a sticky header: set it once
+  on a Card and every cutout inside follows)
 - The chart palette has no fixed color. `--chart-1` is the brand's hue and the
   other seven turn it by 45° with CSS relative color
   (`oklch(from var(--fg-brand) var(--chart-l) var(--chart-c) calc(h + N))`), at
@@ -657,6 +752,21 @@ pnpm dlx file:"$(pwd)/../entrepta/packages/cli" init
   label, then a word, then anywhere, then a keyword or group, accents folded.
   cmdk's fuzzy score matched letters scattered across words and ranked only
   within a group, which buried Tokyo under Khartoum in the time zone list
+- A button that opens a choice (Select, Combobox, DatePicker) wears the
+  Input's frame through `fieldTrigger` in `input.tsx`; the × that puts a toast
+  or an alert away is `DISMISS_BUTTON` in `lib/overlay.ts`
+- DataTable is on TanStack Table v9 (`useTable`, features registered in
+  `dataTableFeatures`). Columns come from `dataTableColumns<T>()`, and numeric
+  columns are named in a `numeric` prop rather than column meta, whose typing
+  would need `@tanstack/table-core`, which pnpm does not let a project import
+- The foundations pages keep their content in `lib/foundations.ts`, as the
+  other docs pages keep theirs in `docs-data.ts`, so each one has its Markdown
+  twin. `lib/markdown.test.ts` fails when a folder under `app/docs/foundations`
+  has no twin, or when a page hands its copy button a path other than its own
+- The home hero enters in CSS, one sequence from the first paint: `hero-in` in
+  the docs `globals.css`, the order in `HERO_AT` in `app/page.tsx`. The heading
+  rises a word at a time and the editor lands last. Only transform and opacity
+  move, and reduced motion shows it all at once
 - Docs live at https://entrepta.vercel.app/
 
 ---

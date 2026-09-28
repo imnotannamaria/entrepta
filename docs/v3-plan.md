@@ -2,8 +2,8 @@
 
 A working plan, published with the repo. It is not product copy.
 
-**Status:** planned. Phase 0 has started: the 2.1 work (Avatar, the theme switch, the security
-review) and the charts branch are merged on `v3`.
+**Status:** done. Every phase below is in 3.0.0. The plan stays as the record of what was asked
+and where each request landed.
 
 - **Sources:** the next products built on entrepta listed the components they miss, among them
   [Wristkit](https://wristkit-web.vercel.app) (Apple Health cards and a yearly calendar) and a
@@ -235,8 +235,9 @@ P3 later), with the items Wristkit also needs moved as early as they can go.
    lines, no frame (the Card is the frame), compact Y axis, abbreviated X axis at 375px.
 3. **BarList.** No Recharts, server safe. `items: { label; value; color?; href? }[]`, `max`,
    `showOthers`. Full labels next to bars.
-4. **Sparkline.** No Recharts, plain SVG, server safe, `aria-hidden` (the Metric carries the
-   value).
+4. **Sparkline.** No Recharts, plain SVG, `aria-hidden` (the Metric carries the value).
+   Shipped with phase 6, for Metric's trend. It is a client component, since it wipes in when
+   it comes on screen; its props are plain data, so a server page still renders it.
 
 ### Phase 8: Onboarding and settings (P2, Wristkit phase 2)
 
