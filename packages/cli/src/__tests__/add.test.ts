@@ -248,7 +248,8 @@ describe("add", () => {
 
     it("does not infinite-loop when resolving cyclic registryDeps", async () => {
       vi.resetModules();
-      vi.doMock("../registry/components.js", () => ({
+      vi.doMock("../registry/components.js", async (importOriginal) => ({
+        ...(await importOriginal<typeof import("../registry/components.js")>()),
         COMPONENTS: [
           { name: "a", category: "primitives", files: [], deps: [], registryDeps: ["b"] },
           { name: "b", category: "primitives", files: [], deps: [], registryDeps: ["a"] },

@@ -6,6 +6,7 @@ import { findEntry } from "@/lib/component-index";
 import { COMPONENT_DOCS } from "@/lib/components";
 import { depsFor, filesFor } from "@/lib/manifest";
 import { CodeBlock } from "@entrepta/registry/content/code-block";
+import { COMPONENT_FOLDERS } from "@entrepta/registry/manifest";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ComponentPreview } from "./component-preview";
@@ -31,6 +32,11 @@ async function readSourceFile(relPath: string): Promise<string> {
   return rewriteImportsForConsumer(raw);
 }
 
+const SIBLING_IMPORT = new RegExp(
+  `from\\s+(['"])\\.\\./(?:${COMPONENT_FOLDERS.join("|")})/([A-Za-z0-9_-]+)\\1`,
+  "g"
+);
+
 /**
  * Rewrite registry-internal import paths to the aliases users see in their
  * own project, so Manual-tab copy-paste works without manual edits. Mirrors
@@ -46,10 +52,7 @@ function rewriteImportsForConsumer(source: string): string {
       /from\s+(['"])\.\.\/hooks\/([A-Za-z0-9_-]+)\1/g,
       (_, quote: string, name: string) => `from ${quote}@/hooks/${name}${quote}`
     )
-    .replace(
-      /from\s+(['"])\.\.\/(?:primitives|layout|content|feedback|motion)\/([A-Za-z0-9_-]+)\1/g,
-      (_, quote: string, name: string) => `from ${quote}./${name}${quote}`
-    );
+    .replace(SIBLING_IMPORT, (_, quote: string, name: string) => `from ${quote}./${name}${quote}`);
 }
 
 async function getComponentSources(

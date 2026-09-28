@@ -3,10 +3,27 @@
  * what the docs site lists. One source, so the two cannot drift.
  */
 
+/**
+ * The folders components live in. In a user project they all land in one
+ * folder, so an import from one to another becomes a sibling import; the CLI
+ * and the docs build that rewrite from this list.
+ */
+export const COMPONENT_FOLDERS = [
+  "primitives",
+  "layout",
+  "content",
+  "feedback",
+  "motion",
+  "data",
+  "charts",
+] as const;
+
+export type RegistryCategory = (typeof COMPONENT_FOLDERS)[number] | "hooks" | "lib";
+
 export interface RegistryComponent {
   name: string;
   description: string;
-  category: "primitives" | "layout" | "content" | "feedback" | "motion" | "hooks" | "lib";
+  category: RegistryCategory;
   files: string[];
   deps: string[];
   registryDeps: string[];

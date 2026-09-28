@@ -1,7 +1,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import prompts from "prompts";
-import { COMPONENTS } from "../registry/components.js";
+import { COMPONENTS, COMPONENT_FOLDERS } from "../registry/components.js";
 import { ConfigError, aliasToPath, readConfig } from "../utils/config.js";
 import { log } from "../utils/logger.js";
 import { detectPackageManager, installDeps } from "../utils/package-manager.js";
@@ -178,6 +178,12 @@ export function resolveComponents(names: string[]): string[] {
   return [...resolved];
 }
 
+// An import from one component folder to another: `../content/diamond`.
+const SIBLING_IMPORT = new RegExp(
+  `from\\s+["']\\.\\.[/\\\\](?:${COMPONENT_FOLDERS.join("|")})[/\\\\]([A-Za-z0-9_-]+)["']`,
+  "g"
+);
+
 /**
  * Registry files import across folders (`../lib/utils`, `../hooks/use-mode`,
  * `../content/diamond`). In a user project every component lands in one
@@ -220,10 +226,7 @@ export function rewriteImports(
       /from\s+["']\.\.[/\\]hooks[/\\]([A-Za-z0-9_-]+)["']/g,
       (_match, name: string) => `from "${safeHooks}/${name.replace(/\$/g, "$$$$")}"`
     )
-    .replace(
-      /from\s+["']\.\.[/\\](?:primitives|layout|content|feedback|motion)[/\\]([A-Za-z0-9_-]+)["']/g,
-      (_match, name: string) => `from "./${name}"`
-    );
+    .replace(SIBLING_IMPORT, (_match, name: string) => `from "./${name}"`);
 }
 
 async function fileExists(filePath: string): Promise<boolean> {
