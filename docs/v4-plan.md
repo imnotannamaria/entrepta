@@ -2,7 +2,7 @@
 
 A working plan, published with the repo. It is not product copy.
 
-**Status:** planned. Nothing below is built yet.
+**Status:** built on the `v4` branch, in 4.0.0. The phases below are what was asked; "What changed from the plan" at the end says where the build went another way.
 
 - **Source:** the new [annamaria.app](https://annamaria.app), the first site built on entrepta
   that does not want entrepta's mark. It removed the `◆`, the `//`, the cursor glow and the editor
@@ -208,7 +208,7 @@ brand is the same as the primary ink.
    | `--bg-surface-brand` | `rgba(250, 250, 250, 0.08)` | `rgba(9, 9, 11, 0.06)` |
    | `--ring` | `rgba(250, 250, 250, 0.45)` | `rgba(9, 9, 11, 0.4)` |
    | `--finish-glow` | `0` | (inherits) |
-   | `--chart-from` | `oklch(0.6 0.1 250)` | same |
+   | `--chart-from` | `#3b82f6` | same |
 
    The third block, `:root[data-mode="light"] [data-surface="dark"]`, puts the dark values back
    inside a dark surface on a light page (a tooltip, a code block). The other themes get by
@@ -412,6 +412,23 @@ EmptyState is most of one already.
   audit in phase 2 is the defence, and its fixes help every theme.
 - **Wristkit** uses two of the removed items. It moves them into its own code, as the docs site
   does.
+
+## What changed from the plan
+
+- **Tabs have no indicator by default.** The travelling underline already says which tab is
+  active, so a dot would say it twice. `indicator` is still there on Tabs and TabNav.
+- **SectHead, doc-parts and PageOutline were deleted, not moved.** The docs site only used them in
+  their own component previews, so moving them would have kept dead code. StatusBar and
+  ChromeMessage moved, and `WindowBar` is new, since the title bar was a Tabs variant.
+- **The docs keep the look through two wrappers**, `CardLabel` (with the ◆) and `CardComment` (with
+  the `//`), in `apps/docs/components/editor/`.
+- **`truncate={false}` does not scroll.** Segments stay equal and the control grows to the longest
+  word.
+- **Phases 1 and 2 did not ship as 3.1.** Everything is one 4.0.
+- **`--chart-from` is `#3b82f6`**, a hex, because the contrast test reads the color from the file.
+- **Docs component tests run in jsdom** (`apps/docs/test/setup.ts`), with testing-library as docs
+  devDependencies, so the editor pieces keep their tests.
+- **Two pages shipped**, "What's new in v4" and "Migrating to v4".
 
 ## Out of scope
 
