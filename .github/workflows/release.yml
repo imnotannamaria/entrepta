@@ -11,14 +11,54 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  # Everything that runs project code, dependencies and build tools lives here,
+  # with a read-only token and no way to mint an npm credential. The publish job
+  # below never builds: it takes the finished CLI from this job.
+  verify:
+    name: Typecheck, test and build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Test
+        run: pnpm test
+
+      - name: Build
+        run: pnpm build
+
+      - name: Keep the built CLI for the publish job
+        uses: actions/upload-artifact@v4
+        with:
+          name: cli-dist
+          path: packages/cli/dist
+          if-no-files-found: error
+          retention-days: 1
+
   release:
     name: Version or publish
+    needs: verify
     runs-on: ubuntu-latest
     permissions:
       contents: write
       pull-requests: write
       # Lets npm mint a short-lived publish credential for this job. Required
-      # by trusted publishing, which is why there is no NPM_TOKEN here.
+      # by trusted publishing, which is why there is no NPM_TOKEN here. Only
+      # this job has it, and it runs no build or test code.
       id-token: write
     steps:
       - uses: actions/checkout@v4
@@ -34,22 +74,22 @@ jobs:
           registry-url: https://registry.npmjs.org
 
       # npm trusted publishing needs npm >=11.5.1. The npm bundled with a
-      # given Node 22 build lags behind that, so pin it explicitly rather
-      # than gamble on whatever ships with the runner today.
+      # given Node 22 build lags behind that, so install one that works rather
+      # than whatever is newest today: a publish credential should not meet
+      # code nobody has looked at. Raise this on purpose.
       - name: Update npm
-        run: npm install -g npm@latest
+        run: npm install -g npm@11.6.0
 
+      # No lifecycle scripts: nothing in the dependency tree runs here. The
+      # packages are packed from the sources and the CLI from the build above.
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install --frozen-lockfile --ignore-scripts
 
-      - name: Typecheck
-        run: pnpm typecheck
-
-      - name: Test
-        run: pnpm test
-
-      - name: Build
-        run: pnpm build
+      - name: Get the built CLI
+        uses: actions/download-artifact@v4
+        with:
+          name: cli-dist
+          path: packages/cli/dist
 
       # With changesets pending, this opens or updates the "Version Packages"
       # PR. With none pending, which is what merging that PR looks like, it

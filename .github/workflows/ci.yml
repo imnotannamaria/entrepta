@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [main]
 
+# Reads the repo and nothing else: a pull request runs this with its own code.
+permissions:
+  contents: read
+
 jobs:
   ci:
     name: Lint, Typecheck & Build
@@ -21,7 +25,7 @@ jobs:
           cache: pnpm
 
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
 
       - name: Lint
         run: pnpm lint
