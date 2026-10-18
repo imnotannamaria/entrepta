@@ -16,6 +16,10 @@ import {
   THEME_TAYLOR,
   V3_CHANGES,
   V3_UPDATE,
+  V4_BREAKS,
+  V4_NEW,
+  V4_REMOVED,
+  V4_UPDATE,
 } from "./docs-data";
 import {
   A11Y_SECTIONS,
@@ -192,6 +196,38 @@ export function whatsNewMd(): string {
     "## Changed",
     "Everything below keeps its API. It only gained.",
     V3_CHANGES.map(([name, text]) => `- **${name}.** ${text}`).join("\n"),
+  ].join("\n\n");
+}
+
+export function migrationV4Md(): string {
+  return [
+    "# Migrating an entrepta project to v4",
+    "> For a coding agent working in a project that uses entrepta 3.x. entrepta 4 takes the mark out of the defaults: the ◆ and the // go, and the editor look leaves the library. Nothing is lost: each change below says how to bring the old look back. Check the app at 375px, in dark and light, after each step.",
+    "## 1. Update the files",
+    "The CLI copies source, so nothing updates on its own. Commit first: `--overwrite` replaces local edits.",
+    code("bash", V4_UPDATE),
+    "## 2. What changed",
+    V4_BREAKS.map(
+      (b) =>
+        `### ${b.name}\n\nBefore: ${b.before}\n\nAfter: ${b.after}${b.back ? `\n\nTo bring the old look back:\n\n${code("tsx", b.back)}` : ""}`
+    ).join("\n\n"),
+    "## 3. What was removed",
+    table(
+      ["removed", "instead"],
+      V4_REMOVED.map(([a, b]) => [a, b])
+    ),
+    "`add` says so when asked for one of them, and links this page.",
+    "## 4. What is new",
+    V4_NEW.map(([name, text]) => `- **${name}.** ${text}`).join("\n"),
+  ].join("\n\n");
+}
+
+export function whatsNewV4Md(): string {
+  return [
+    "# What's new in entrepta 4",
+    "> The library without the mark. The ◆ and the // stop being defaults, the editor look leaves, and a seventh theme, taylor, is flat and monochrome. Breaking: see the migration guide.",
+    `## New and changed\n\n${V4_NEW.map(([name, text]) => `- **${name}.** ${text}`).join("\n")}`,
+    `## Breaking\n\nEach change, and how to get the old look back, is on ${mdUrl("/docs/migrating-to-v4")}.`,
   ].join("\n\n");
 }
 
@@ -509,6 +545,18 @@ export const MD_PAGES: MdPage[] = [
     summary: p.summary,
     render: FOUNDATION_MD[p.slug],
   })),
+  {
+    path: "/docs/whats-new-in-v4",
+    title: "What's new in v4",
+    summary: "The library without the mark, and taylor, a flat monochrome theme",
+    render: whatsNewV4Md,
+  },
+  {
+    path: "/docs/migrating-to-v4",
+    title: "Migrating to v4",
+    summary: "What changed from 3.x, how to bring the old look back, and what was removed",
+    render: migrationV4Md,
+  },
   {
     path: "/docs/whats-new-in-v3",
     title: "What's new in v3",

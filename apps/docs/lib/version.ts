@@ -11,7 +11,7 @@ export const VERSION_LABEL = `v${VERSION.split(".").slice(0, 2).join(".")}`;
 
 /** What the pill over the home heading announces, and where it leads. */
 export const NEWS = {
-  label: "v3",
-  summary: "money, dates, tables, charts",
-  href: "/docs/whats-new-in-v3",
+  label: "v4",
+  summary: "no mark by default, and taylor",
+  href: "/docs/whats-new-in-v4",
 } as const;

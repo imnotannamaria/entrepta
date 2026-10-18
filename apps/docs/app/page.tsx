@@ -63,9 +63,9 @@ const PRINCIPLES = [
   },
   {
     num: "02",
-    title: "Editor as metaphor.",
-    desc: "Tabs, command palette, status bar, file paths, inline comments, shell prompts, monospace metadata. Not decoration. Personality.",
-    tag: "tabs · ⌘K · > · $ · //",
+    title: "No mark of its own.",
+    desc: "No ◆, no //, no editor frame in the components. Pass an icon or an indicator where you want a mark, or add one of the docs' own.",
+    tag: "icon · indicator · taylor",
   },
   {
     num: "03",

@@ -101,7 +101,7 @@ export function Launch() {
 ## Principles
 
 1. **Dark-first.** Light mode exists; dark is the default.
-2. **Editor as metaphor.** Tabs, a command palette, a status bar, file paths, comments.
+2. **No mark of its own.** No ◆, no //, no editor frame in the components. Pass them in where you want them.
 3. **Deliberate type contrast.** Serif italic for names, mono for UI, sans for prose.
 4. **Color used sparingly.** The brand only on actions, focus and featured states.
 5. **High density, clear hierarchy.** A 12 column grid, 1280px wide.
@@ -109,7 +109,7 @@ export function Launch() {
 
 ## Built with entrepta
 
-- [annamaria.app](https://annamaria.app), a personal site posed as an IDE, where entrepta started
+- [annamaria.app](https://annamaria.app), a personal site, where entrepta started
 - [wristkit](https://wristkit-web.vercel.app), Apple Health components for Next.js
 
 ## Stack

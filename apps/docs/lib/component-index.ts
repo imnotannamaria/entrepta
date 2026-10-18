@@ -106,6 +106,8 @@ export const DOCS_NAV: NavGroup[] = [
       { label: "Installation", href: "/docs/installation" },
       { label: "CLI Reference", href: "/docs/cli" },
       { label: "Themes", href: "/docs/themes" },
+      { label: "What's new in v4", href: "/docs/whats-new-in-v4" },
+      { label: "Migrating to v4", href: "/docs/migrating-to-v4" },
       { label: "What's new in v3", href: "/docs/whats-new-in-v3" },
       { label: "Migrating to v2", href: "/docs/migrating-to-v2" },
     ],

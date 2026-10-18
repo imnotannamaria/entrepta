@@ -55,7 +55,7 @@ export const DOCS_INTRO = {
   description:
     "A dark-first design system distributed as copy-paste components, not an npm package of pre-built UI. You own the source. Run a command, the component lives in your repo, styled with your tokens, editable without fighting a library.",
   philosophy:
-    "entrepta is opinionated about three things: a deep zinc-950 canvas (light mode is optional, never priority), editor metaphors as personality (tabs, ◆ markers, file paths, shell prompts), and copy-paste distribution (no SDK, no runtime telemetry, no wrapper between you and your components).",
+    "entrepta is opinionated about three things: a deep zinc-950 canvas (light mode is optional, never priority), no mark of its own (no ◆, no //, no editor frame: you pass them in), and copy-paste distribution (no SDK, no runtime telemetry, no wrapper between you and your components).",
   quickStart: [
     { cmd: "npx @entrepta/cli@latest init --theme=entrepta", comment: "tokens and config" },
     { cmd: "npx @entrepta/cli@latest add button badge input", comment: "copy components" },
@@ -65,7 +65,7 @@ export const DOCS_INTRO = {
 
 /** What each preset is for. Colors come from lib/theme.ts. */
 export const THEME_NOTES: Record<string, { hover: string; vibe: string }> = {
-  entrepta: { hover: "#9B8EFF", vibe: "Default. Violet, playful, IDE personality." },
+  entrepta: { hover: "#9B8EFF", vibe: "Default. Violet, playful." },
   blossom: { hover: "#E04750", vibe: "Cherry red. Bold and confident." },
   marmalade: { hover: "#FF9D45", vibe: "Warm orange. Editorial and energetic." },
   julia: { hover: "#F178A0", vibe: "Warm pink. Soft and expressive." },
@@ -360,3 +360,116 @@ npx @entrepta/cli@latest init --theme=entrepta --overwrite
 npx @entrepta/cli@latest add button input textarea card dialog tabs toast \\
   command-palette code-block sidebar filter-pill rolling-number \\
   mode-toggle theme-switcher top-nav use-mode use-theme --overwrite`;
+
+/* ------------------------------------------------------------------ */
+/* Migrating to v4                                                     */
+/* ------------------------------------------------------------------ */
+
+export const V4_UPDATE = `# the new tokens: --finish-glow, --chart-from and the taylor theme
+npx @entrepta/cli@latest init --theme=entrepta --overwrite
+
+# the components that changed. Commit first: --overwrite replaces your edits
+npx @entrepta/cli@latest add card dialog field metric choice-card swatch-picker \\
+  chat-thread tabs stepper sidebar mobile-nav dropdown command-palette tooltip \\
+  segmented-control empty-state --overwrite
+
+# the format file has a new name. Reinstall what uses it, then delete lib/format.ts
+# if it was entrepta's
+npx @entrepta/cli@latest add amount delta money-input calendar date-picker \\
+  date-navigator filter-builder bar-list contribution-grid chart --overwrite`;
+
+/** What changed under a name that stays, with the way back to the old look where there is one. */
+export const V4_BREAKS: { name: string; before: string; after: string; back?: string }[] = [
+  {
+    name: "Labels",
+    before:
+      "CardLabel, FieldLabel, DialogLabel, Metric, ChoiceCard, SwatchPicker and ChatThread put a ◆ in front of their text.",
+    after:
+      "They draw nothing in front. Pass an icon for something there, a Phosphor icon or an element.",
+    back: "<CardLabel icon={<Diamond size={10} />}>layout</CardLabel>",
+  },
+  {
+    name: "The current marker",
+    before: "Sidebar, MobileNav, Stepper and Tabs marked the current item with a ◆.",
+    after:
+      "Sidebar, MobileNav and Stepper take an indicator, a dot by default. Tabs have none by default, since the underline already says it. null hides it.",
+    back: "<Sidebar items={items} indicator={<Diamond size={10} />} />",
+  },
+  {
+    name: "Menu titles",
+    before: "DropdownMenuLabel and a command palette group had a ◆ before the title.",
+    after: "They are text. Put a Diamond in the label's children if you want it.",
+  },
+  {
+    name: "The //",
+    before: "FieldError and the command palette footer started with a dimmed //.",
+    after: "FieldError is the message alone. The palette footer says palette.",
+  },
+  {
+    name: "CardComment",
+    before: "CardComment drew a // in front of a footer note.",
+    after: "It is CardNote now, the text alone in the footer's ink.",
+    back: "<CardNote>{`// ${text}`}</CardNote>",
+  },
+  {
+    name: "lib/format.ts",
+    before: "The format helpers lived in lib/format.ts, a name many projects already use.",
+    after:
+      "They live in lib/entrepta-format.ts. Reinstall what imports them, then delete lib/format.ts if it was entrepta's. Never delete one that is yours.",
+  },
+];
+
+/** What left the registry, and where to look instead. */
+export const V4_REMOVED: [string, string][] = [
+  [
+    "StatusBar",
+    "Moved to the docs app (apps/docs/components/editor/status-bar.tsx). Copy it from there. It is the bar at the bottom of this site.",
+  ],
+  [
+    "ChromeMessage",
+    'Use EmptyState with size="page". It takes an illustration and a heading level.',
+  ],
+  [
+    "SectHead, doc-parts",
+    "Removed. Nothing used them. They were the $ command rule and the heading pieces.",
+  ],
+  ["PageOutline", "Removed. Nothing used it."],
+  [
+    "Card variant terminal, CardTerminalBar, CardTerminalBody",
+    'Removed. A block of shell commands is CodeBlock variant="terminal". Anything else is a Card.',
+  ],
+  [
+    'Tabs variant="window"',
+    "Removed. The title bar with the three dots is WindowBar in the docs app (apps/docs/components/editor/window-bar.tsx), around a plain TabsList.",
+  ],
+];
+
+/** What is new in 4.0, for "What's new in v4". */
+export const V4_NEW: [string, string][] = [
+  [
+    "taylor",
+    "A seventh theme with no hue: the brand is white on dark and black on light, and cards and overlays carry no brand glow. Every ink is measured like the others.",
+  ],
+  [
+    "--finish-glow",
+    "How much brand light the finish carries, from 0 to 1. It scales the corner glow of cards and overlays and the lift of a hovered card. Any theme or project sets it once.",
+  ],
+  [
+    "--chart-from",
+    "Where the chart colors start turning. It is the brand, unless a theme with no hue names one.",
+  ],
+  [
+    "EmptyState",
+    'size="page" is a whole screen, such as a 404 or an error. It takes an illustration and a headingLevel.',
+  ],
+  ["ChatThread", "An avatar for each role, or for one message."],
+  ["Tooltip", 'surface="page" follows the mode of the page instead of staying near black.'],
+  ["SegmentedControl", 'shape="pill", and truncate={false} so a segment grows to its word.'],
+  ["Sidebar", "The rail's tooltip clears the rail's border, and an indicator replaces the dot."],
+  ["Field", "The star of a required label is drawn by CSS, so a test finds the label by its name."],
+  ["Diamond", "Has its own page. It is what you pass where you want the ◆."],
+  [
+    "The CLI",
+    "add says when an item was removed and where to look, and the init prompt offers taylor.",
+  ],
+];

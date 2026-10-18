@@ -128,7 +128,7 @@ export function buildAgentsMd(options: AgentsOptions): string {
 
   sections.push(`# entrepta in this project
 
-This project uses [entrepta](https://entrepta.vercel.app), a dark-first design system with an editor metaphor: tabs, a command palette, a status bar, shell prompts, serif italic next to mono. Its components are copied into the repo as source, so they are this project's code: read them, and edit them when a change calls for it.
+This project uses [entrepta](https://entrepta.vercel.app), a dark-first design system: near black surfaces, mono for UI, serif italic for titles, and no mark of its own. Its components are copied into the repo as source, so they are this project's code: read them, and edit them when a change calls for it.
 
 Built for ${FRAMEWORK_LABELS[options.framework]} with the ${theme.label} theme.`);
 
@@ -283,7 +283,7 @@ ${sheet.join("\n\n")}${also}`);
 ${bullets([
   "Every docs page has a Markdown version at the same URL plus `.md`. Read that instead of the HTML. The component index is https://entrepta.vercel.app/docs/components.md, and each component has its own, such as https://entrepta.vercel.app/docs/components/button.md.",
   "https://entrepta.vercel.app/llms.txt lists every page. https://entrepta.vercel.app/llms-full.txt is all of them in one file.",
-  "Upgrading from 1.x: https://entrepta.vercel.app/docs/migrating-to-v2.md, step by step, with every new component. From 2.x to 3 nothing breaks: https://entrepta.vercel.app/docs/whats-new-in-v3.md.",
+  "Upgrading from 1.x: https://entrepta.vercel.app/docs/migrating-to-v2.md, step by step, with every new component. From 2.x to 3 nothing breaks: https://entrepta.vercel.app/docs/whats-new-in-v3.md. From 3.x to 4: https://entrepta.vercel.app/docs/migrating-to-v4.md, which says how to bring the old look back.",
   "Money, dates, series colors and data states: https://entrepta.vercel.app/docs/foundations/data.md.",
 ])}`);
 
