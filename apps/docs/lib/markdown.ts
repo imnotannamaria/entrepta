@@ -592,7 +592,7 @@ export function llmsTxt(): string {
   const components = MD_PAGES.filter((p) => p.path.startsWith("/docs/components/"));
   return `${[
     "# entrepta",
-    "> A dark-first React design system you copy into your repo with a CLI, in the shadcn model: tabs, a command palette, a status bar, serif italic next to mono. Tailwind v4, Radix, seven themes, every ink measured for WCAG AA.",
+    "> A dark-first React design system you copy into your repo with a CLI, in the shadcn model: near black surfaces, mono for UI, serif italic for titles, no mark of its own. Tailwind v4, Radix, seven themes, every ink measured for WCAG AA.",
     `Every page below is Markdown. Add \`.md\` to any docs URL for the same. For a guide fitted to one project, build an AGENTS.md at ${SITE_URL}/?agents=open.`,
     "## Docs",
     docs.map((p) => `- [${p.title}](${mdUrl(p.path)}): ${p.summary}`).join("\n"),

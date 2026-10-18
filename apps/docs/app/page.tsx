@@ -307,8 +307,8 @@ export default function Home() {
                 className="hero-in m-0 mb-10 max-w-2xl text-balance font-sans text-body-lg text-[var(--fg-secondary)] sm:text-heading-md sm:font-normal"
               >
                 <strong className="font-medium text-[var(--fg-primary)]">entrepta</strong> is a
-                dark-first React library you copy into your repo: tabs, a command palette, a status
-                bar, serif italic next to mono. Every ink is measured in seven themes.
+                dark-first React library you copy into your repo: near black surfaces, mono for UI,
+                serif italic for titles. Every ink is measured in seven themes.
               </p>
 
               <div

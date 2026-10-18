@@ -12,7 +12,7 @@ export default function Image() {
     title: "A design system,",
     emphasis: "posed as an IDE.",
     description:
-      "Dark-first React components you copy into your repo. Tabs, a command palette, a status bar, serif italic next to mono.",
+      "Dark-first React components you copy into your repo. Near black surfaces, mono for UI, serif italic for titles.",
     command: "$ npx @entrepta/cli@latest init",
   });
 }
