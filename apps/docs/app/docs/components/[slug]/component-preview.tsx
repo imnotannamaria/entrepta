@@ -178,6 +178,7 @@ import {
   TooltipTrigger,
 } from "@entrepta/registry/primitives/tooltip";
 import {
+  ArrowClockwiseIcon,
   ArrowCounterClockwiseIcon,
   ArrowRightIcon,
   BooksIcon,
@@ -2026,6 +2027,36 @@ function EmptyStatePreview() {
           action={
             <Button size="sm" variant="ghost">
               clear filters
+            </Button>
+          }
+        />
+      </Card>
+      <Card>
+        <EmptyState
+          size="page"
+          headingLevel={3}
+          className="min-h-0 py-10"
+          title="Page not found"
+          description="It moved, or it never was."
+          action={
+            <Button size="sm" variant="secondary">
+              go home
+            </Button>
+          }
+        />
+      </Card>
+      <Card>
+        <EmptyState
+          size="page"
+          headingLevel={3}
+          tone="error"
+          icon={WarningIcon}
+          className="min-h-0 py-10"
+          title="Something broke"
+          description="Try again. If it keeps happening, tell us."
+          action={
+            <Button size="sm">
+              <ArrowClockwiseIcon aria-hidden size={14} weight="bold" /> try again
             </Button>
           }
         />

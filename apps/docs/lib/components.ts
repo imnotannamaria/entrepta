@@ -1808,7 +1808,7 @@ const rows = entries.filter((row) => filters.every((f) => matchesFilter(row[f.fi
   },
   "empty-state": {
     description:
-      "A list or a widget with nothing in it. It fits inside a Card, where ChromeMessage takes the whole page. It says what is missing and offers the one thing to do: create or connect when there is nothing yet, clear the filters when a filter found nothing.",
+      'A list or a widget with nothing in it, or with size="page" a whole screen: a 404, an error with a retry, something that was removed. It says what is missing and offers the one thing to do: create or connect when there is nothing yet, clear the filters when a filter found nothing, go home when the page is gone. It has no hooks, so a server file such as not-found.tsx can render it.',
     usage: `import { EmptyState } from "@/components/entrepta/empty-state"
 
 <EmptyState
@@ -1822,7 +1822,19 @@ const rows = entries.filter((row) => filters.every((f) => matchesFilter(row[f.fi
   size="sm"
   title="Nothing for this filter"
   action={<Button variant="ghost" onClick={clear}>clear filters</Button>}
-/>`,
+/>
+
+// a screen of its own, in app/not-found.tsx
+<EmptyState
+  size="page"
+  illustration={<NotFoundArt />}
+  title="Page not found"
+  description="It moved, or it never was."
+  action={<ButtonLink href="/">go home</ButtonLink>}
+/>
+
+// inside a layout that already has an h1
+<EmptyState size="page" headingLevel={2} tone="error" icon={WarningIcon} title="Something broke" />`,
     props: [
       {
         name: "title",
@@ -1840,10 +1852,28 @@ const rows = entries.filter((row) => filters.every((f) => matchesFilter(row[f.fi
         description: "A tile above, and one action below",
       },
       {
+        name: "illustration",
+        type: "ReactNode",
+        description: "A drawing above the title, larger than an icon. It wins over icon",
+      },
+      {
         name: "size",
-        type: '"sm" | "md"',
+        type: '"sm" | "md" | "page"',
         default: '"md"',
-        description: "sm for a widget",
+        description:
+          "sm for a widget. page is a screen of its own: centered in the height it gets, an h1 in a bigger serif title",
+      },
+      {
+        name: "headingLevel",
+        type: "1 | 2 | 3 | 4",
+        description:
+          "Makes the title a heading. A page is an h1 unless you say otherwise; set 2 when the page already has one",
+      },
+      {
+        name: "tone",
+        type: '"neutral" | "error"',
+        default: '"neutral"',
+        description: "error for content that could not load",
       },
     ],
   },
