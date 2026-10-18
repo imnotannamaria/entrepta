@@ -80,8 +80,8 @@ export const RULES: Rule[] = [
   },
   {
     topic: "a11y",
-    do: "Hide glyphs such as ◆, $ and // with aria-hidden",
-    dont: "Let a screen reader say black diamond suit before every label",
+    do: "Hide decorative glyphs with aria-hidden",
+    dont: "Let a screen reader read a glyph before every label",
   },
   {
     topic: "a11y",

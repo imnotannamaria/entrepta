@@ -24,7 +24,7 @@ open source library (MIT).
 The difference from shadcn is how it looks. entrepta is dark-first, with
 near black surfaces that carry a finish, mono for UI and serif italic for titles.
 Since 4.0 it carries no mark of its own: no ◆, no `//`, no editor metaphor in
-the components. A project that wants the old look passes it in (`icon={<Diamond />}`).
+the components.
 
 ### Positioning
 
@@ -128,10 +128,10 @@ entrepta/
 │       ├── charts/           # chart (ChartContainer and presets on Recharts)
 │       ├── layout/           # top-nav, theme-switcher, mode-toggle,
 │       │                     # sidebar, mobile-nav, bento-grid
-│       ├── content/          # code-block, diamond, chat-thread
+│       ├── content/          # code-block, chat-thread
 │       ├── feedback/         # toast, skeleton, command-palette, page-loading,
 │       │                     # empty-state, alert
-│       ├── motion/           # reveal, type-in, rolling-number, spotlight, spotlight-card,
+│       ├── motion/           # reveal, type-in, rolling-number,
 │       │                     # arrow-link
 │       ├── hooks/            # use-theme, use-mode, use-command-palette, use-url-filter,
 │       │                     # use-copy, use-format, use-redact
@@ -169,7 +169,7 @@ entrepta/
    states. Status colors only for status. Everything else is black, white and
    cool gray.
 5. **High density, clear hierarchy.** 12 column grid, 24px gutters, 1280px max.
-6. **Motion with a job.** Entrances, counters and light that follows the cursor,
+6. **Motion with a job.** Entrances and counters,
    each one earning its place. UI feedback stays at 120 to 320ms, ease-out.
    Every animation has a reduced-motion path, including the ones driven by JS,
    which the global CSS reset cannot reach.
@@ -266,7 +266,7 @@ Source of truth is `packages/registry/styles/globals.css`. Short version:
 
   /* brand accents, color-mix of --fg-brand, so they follow every theme */
   --border-brand: 35%;  --border-brand-strong: 60%;
-  --shadow-brand: 20%;  --fg-brand-glow: 50%;  --bg-spotlight: 15% (26% light);
+  --shadow-brand: 20%;  --fg-brand-glow: 50%;
 
   /* shadows */
   --shadow-card-hover, --shadow-lift-brand, --shadow-overlay
@@ -390,7 +390,7 @@ Vite. Aliases are relative to it, and `add` writes each file under it.
 | Dropdown  | `@radix-ui/react-dropdown-menu` | on the overlay surface, highlighted row in the brand tint |
 | Tooltip   | `@radix-ui/react-tooltip`       | hover info on the overlay surface, a Kbd for shortcuts |
 | Kbd       | no                              | every keyboard hint, chip or plain, brand in a highlighted row |
-| Tabs      | `@radix-ui/react-tabs`          | in place (Tabs) or routes (TabNav), travelling underline, × on the active tab, icons that grow on hover, an optional `indicator` |
+| Tabs      | `@radix-ui/react-tabs`          | in place (Tabs) or routes (TabNav), travelling underline, icons that grow on hover, an optional `indicator` |
 | Checkbox  | no                              | native checkbox, drawn check, description, indeterminate |
 | Switch    | no                              | native checkbox with `role="switch"`     |
 | Textarea  | no                              | sans prose, mono placeholder, error state |
@@ -406,7 +406,7 @@ Vite. Aliases are relative to it, and `add` writes each file under it.
 | IconTile  | no                              | tinted square in the palette, brand or a status, corner badge; the Toast's tile |
 | Progress  | no                              | bar, steps or ring, fills once on screen with a lit head; `progressbar` with its value in words; a status only through `tone` |
 | Accordion | `@radix-ui/react-accordion`     | heading plus button, `trailing` in the name, `actions` outside it, height in CSS |
-| Stepper   | no                              | ordered list, `aria-current="step"`, state in words, an `indicator` (a dot) in the current marker; server safe |
+| Stepper   | no                              | ordered list, `aria-current="step"`, an icon or a number in each marker, a check when done, state in words; the vertical one draws its lines too; server safe |
 | ChoiceCard | no                             | cards that are labels of native radios or checkboxes, strong brand border and a drawn check, disabled with a reason |
 | SecretField | no                            | masked read-only secret, reveal toggle, copy through `use-copy` announced politely, expired with an action |
 | SwatchPicker | no                           | native radios over palette keys, each named after the hue it shows in the theme |
@@ -446,16 +446,15 @@ Vite. Aliases are relative to it, and `add` writes each file under it.
 | MobileNav     | bottom bar, four destinations and More as a grid of IconTiles in a bottom Sheet, safe-area padding |
 | BentoGrid     | 1, 6 and 12 columns, each tile a `@container`, markup order, Reveal entrance |
 
-### Content (3)
+### Content (2)
 
 | Component | Notes                                                    |
 | --------- | -------------------------------------------------------- |
 | CodeBlock | code with filename header, copy button, visible failure  |
-| Diamond   | the `◆`, `aria-hidden`. Nothing draws it: you pass it as an `icon` or an `indicator` |
 | ChatThread | messages by role, tool results in a Card, follows the bottom only when you are there, a reply announced once when done |
 
-CardLabel, DialogLabel, FieldLabel and Metric draw nothing before their text unless they get an `icon`; `icon={<Diamond />}` is the ◆. Sidebar, MobileNav, Stepper and Tabs take an `indicator`: a dot by default (Tabs: none), any node, or `null`. The CLI rewrites
-an import between categories (`../content/diamond`) to a sibling (`./diamond`),
+CardLabel, DialogLabel, FieldLabel and Metric draw nothing before their text unless they get an `icon`. Sidebar and MobileNav take an `indicator`: a dot by default, any node, or `null`. Tabs and Stepper take one too, with none by default. The CLI rewrites
+an import between categories (`../content/code-block`) to a sibling (`./code-block`),
 and `registryDeps` makes sure the file is copied. A manifest test checks that
 every such import is covered.
 
@@ -470,7 +469,7 @@ every such import is covered.
 | EmptyState     | no      | what is missing and one action; `size="page"` is a 404 or an error screen, with an `illustration` and a `headingLevel`; server safe |
 | Alert          | no      | stays until dealt with; status in a tile and the glow; server safe |
 
-### Motion (6)
+### Motion (4)
 
 `motion` is a dependency of the items that animate through JS. The
 rest of the system does not need it, and ArrowLink is CSS only.
@@ -480,8 +479,6 @@ rest of the system does not need it, and ArrowLink is CSS only.
 | Reveal        | rise and fade in once on screen, `useReveal` for motion elements |
 | TypeIn        | text assembling piece by piece, full sentence always in the DOM |
 | RollingNumber | odometer digits, `useRollOnHover` spends the entrance delay once |
-| Spotlight     | brand glow trailing the cursor on a spring, moved by transform  |
-| SpotlightCard | a Card with the Spotlight, holds the hook so a server page can use it |
 | ArrowLink     | arrow that travels, brand rule that wipes in, `asChild` for routers |
 
 Rules they follow: `whileInView` with `once`, never `animate`; every one calls
@@ -661,7 +658,7 @@ pnpm dlx file:"$(pwd)/../entrepta/packages/cli" init
 - The README's component table is generated from the docs index, and a test
   (`apps/docs/lib/readme.test.ts`) fails when a component or the count is
   missing from it
-- Docs pages share their parts: `DocNote` for the `//` aside under a subhead,
+- Docs pages share their parts: `DocNote` for the aside under a subhead,
   `NewComponentsGrid` for a release's new components, next to `DocPageHeader`
   and `DocSubhead`
 - A scroll box that scrolls sideways holds only its own axis
@@ -776,11 +773,10 @@ pnpm dlx file:"$(pwd)/../entrepta/packages/cli" init
 - 4.0 takes the mark out of the defaults. The ◆ is not drawn by a label unless
   it gets an `icon`; the current item of a nav is an `indicator`, a dot
   (`NavIndicator` in `lib/nav.tsx`) unless you pass a node; the `//` is gone from
-  FieldError, CardNote and the palette. `Diamond` stays, with its page, for the
-  projects that want it
+  FieldError, CardNote and the palette. The `Diamond` component is gone; a project that
+  wants a mark passes its own as an `icon`
 - The editor look left the registry: StatusBar and ChromeMessage live in
-  `apps/docs/components/editor/` with the docs' CardLabel (with the ◆), CardComment
-  (with the `//`) and WindowBar, and SectHead, doc-parts, PageOutline, the Card
+  `apps/docs/components/editor/` with WindowBar, and SectHead, doc-parts, PageOutline, the Card
   `terminal` variant and the Tabs `window` variant are gone. `add` names each
   removed item (`REMOVED` in the CLI) and links the migration guide
 - `lib/format.ts` is `lib/entrepta-format.ts`: the old name collided with files

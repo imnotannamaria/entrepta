@@ -1,7 +1,5 @@
 import { OpenAgentsButton } from "@/components/agents-configurator";
 import { CommandPaletteTrigger } from "@/components/command-palette-trigger";
-import { CardComment } from "@/components/editor/card-comment";
-import { CardLabel } from "@/components/editor/card-label";
 import { CopyInit, HeroStats, HomeShowcase, ThemeRow } from "@/components/home-hero";
 import { HomeInstall } from "@/components/home-install";
 import { HomeSection, SectionHead, SpecList } from "@/components/home-section";
@@ -15,11 +13,9 @@ import { THEMES } from "@/lib/theme";
 import { cn } from "@/lib/utils";
 import { NEWS, VERSION } from "@/lib/version";
 import { CodeBlock } from "@entrepta/registry/content/code-block";
-import { Diamond } from "@entrepta/registry/content/diamond";
 import { Amount } from "@entrepta/registry/data/amount";
 import { Reveal } from "@entrepta/registry/motion/reveal";
 import { RollingNumber } from "@entrepta/registry/motion/rolling-number";
-import { SpotlightCard } from "@entrepta/registry/motion/spotlight-card";
 import { Badge } from "@entrepta/registry/primitives/badge";
 import { buttonVariants } from "@entrepta/registry/primitives/button-variants";
 import {
@@ -28,7 +24,9 @@ import {
   CardDescription,
   CardFooter,
   CardHeader,
+  CardLabel,
   CardMeta,
+  CardNote,
   CardTitle,
 } from "@entrepta/registry/primitives/card";
 import { Kbd } from "@entrepta/registry/primitives/kbd";
@@ -111,7 +109,8 @@ const SECTION_PREVIEWS: Record<(typeof SECTIONS)[number], React.ReactNode> = {
   Forms: (
     <div className="flex flex-col gap-2">
       <span className="inline-flex items-center gap-1.5 font-mono text-mono-xs uppercase tracking-[0.08em] text-[var(--fg-muted)]">
-        <Diamond /> email <span className="text-[var(--fg-brand)]">*</span>
+        {" "}
+        email <span className="text-[var(--fg-brand)]">*</span>
       </span>
       <Switch label="send me a copy" defaultChecked />
     </div>
@@ -156,7 +155,6 @@ const SECTION_PREVIEWS: Record<(typeof SECTIONS)[number], React.ReactNode> = {
         where did it go?
       </span>
       <span className="flex items-baseline gap-1.5 text-[var(--fg-secondary)]">
-        <Diamond size={9} />
         mostly rent
         <span aria-hidden className="type-caret ml-0.5" />
       </span>
@@ -410,7 +408,7 @@ export default function Home() {
                 ))}
               </CardContent>
               <CardFooter>
-                <CardComment>mit · open source</CardComment>
+                <CardNote>mit · open source</CardNote>
                 <Link
                   href="/docs"
                   className="text-[var(--fg-brand-text)] hover:opacity-80 transition-opacity"
@@ -449,7 +447,7 @@ export default function Home() {
                   <CardTitle className="text-heading-md">{p.title}</CardTitle>
                   <CardDescription>{p.desc}</CardDescription>
                   <CardFooter>
-                    <CardComment>{p.tag}</CardComment>
+                    <CardNote>{p.tag}</CardNote>
                   </CardFooter>
                 </Card>
               </Reveal>
@@ -617,7 +615,7 @@ export default function Home() {
                     <CardDescription>{items.map((c) => c.title).join(", ")}.</CardDescription>
                     <CardContent className="relative z-10">{SECTION_PREVIEWS[section]}</CardContent>
                     <CardFooter>
-                      <CardComment>{`${section.toLowerCase()}/`}</CardComment>
+                      <CardNote>{`${section.toLowerCase()}/`}</CardNote>
                       <span
                         aria-hidden
                         className="text-[var(--fg-brand)] transition-transform group-hover:translate-x-0.5"
@@ -661,7 +659,7 @@ export default function Home() {
                   </div>
                 </CardContent>
                 <CardFooter>
-                  <CardComment>--themes=all</CardComment>
+                  <CardNote>--themes=all</CardNote>
                   <span
                     aria-hidden
                     className="text-[var(--fg-brand)] transition-transform group-hover:translate-x-0.5"
@@ -704,7 +702,7 @@ export default function Home() {
                 live and which token goes where.
               </CardDescription>
               <CardFooter>
-                <CardComment>header · AGENTS.md</CardComment>
+                <CardNote>header · AGENTS.md</CardNote>
                 <OpenAgentsButton className="cursor-pointer text-[var(--fg-brand-text)] hover:underline underline-offset-4">
                   build yours →
                 </OpenAgentsButton>
@@ -721,7 +719,7 @@ export default function Home() {
                 migration guide copies whole.
               </CardDescription>
               <CardFooter>
-                <CardComment>/docs/components/button.md</CardComment>
+                <CardNote>/docs/components/button.md</CardNote>
                 <a
                   href="/docs/components/button.md"
                   target="_blank"
@@ -743,7 +741,7 @@ export default function Home() {
                 one file, ready to paste.
               </CardDescription>
               <CardFooter>
-                <CardComment>/llms-full.txt</CardComment>
+                <CardNote>/llms-full.txt</CardNote>
                 <a
                   href="/llms.txt"
                   target="_blank"
@@ -759,7 +757,7 @@ export default function Home() {
 
         {/* ── CTA STRIP ── */}
         <HomeSection>
-          <SpotlightCard variant="featured" className="p-12 sm:p-16 text-center">
+          <Card variant="featured" className="p-12 sm:p-16 text-center">
             <div className="flex flex-col items-center gap-6">
               <div className="font-mono text-mono-sm uppercase tracking-[0.08em] text-[var(--fg-brand-text)]">
                 · ready to ship
@@ -780,7 +778,7 @@ export default function Home() {
                 </OpenAgentsButton>
               </div>
             </div>
-          </SpotlightCard>
+          </Card>
         </HomeSection>
 
         <SiteFooter />

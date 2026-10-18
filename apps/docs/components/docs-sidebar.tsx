@@ -1,7 +1,6 @@
 "use client";
 
 import { DOCS_NAV } from "@/lib/component-index";
-import { Diamond } from "@entrepta/registry/content/diamond";
 import { Sidebar } from "@entrepta/registry/layout/sidebar";
 import { Input } from "@entrepta/registry/primitives/input";
 import { Kbd } from "@entrepta/registry/primitives/kbd";
@@ -53,7 +52,6 @@ export function DocsSidebar() {
       groups={groups}
       active={pathname ?? undefined}
       linkComponent={Link}
-      indicator={<Diamond size={10} />}
       className="sticky top-14 hidden h-[calc(100dvh-3.5rem)] md:flex"
       search={
         <div className="flex flex-col gap-2">

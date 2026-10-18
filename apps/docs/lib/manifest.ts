@@ -40,7 +40,7 @@ export function depsFor(name: string): string[] {
 
 /**
  * Components with no page of their own. They arrive as a dependency of the ones
- * that use them, and are described there. None today: Diamond has its page.
+ * that use them, and are described there. None today.
  */
 export const NO_PAGE = new Set<string>();
 

@@ -1,6 +1,6 @@
 import { CheckIcon, WarningIcon } from "@phosphor-icons/react/dist/ssr";
 import * as React from "react";
-import { NavIndicator } from "../lib/nav";
+import { type IconProp, IconSlot } from "../lib/icon";
 import { cn } from "../lib/utils";
 
 export interface StepperStep {
@@ -8,6 +8,11 @@ export interface StepperStep {
   label: React.ReactNode;
   /** A line under the label: what the step asks for. */
   description?: React.ReactNode;
+  /**
+   * What the step's marker shows until it is done: a Phosphor icon, or an icon element. Without
+   * one it shows the step's number. A done step shows a check, a step that needs attention a warning.
+   */
+  icon?: IconProp;
 }
 
 type StepState = "complete" | "current" | "error" | "upcoming";
@@ -30,7 +35,7 @@ interface StepperProps extends Omit<React.OlHTMLAttributes<HTMLOListElement>, "c
   orientation?: "horizontal" | "vertical";
   /** The state words screen readers hear after each label. */
   labels?: Partial<typeof LABELS>;
-  /** Inside the current step's marker, in place of its number. A dot by default; `null` keeps the number. */
+  /** Inside the current step's marker, in place of its icon or number. */
   indicator?: React.ReactNode;
 }
 
@@ -87,19 +92,20 @@ const Stepper = React.forwardRef<HTMLOListElement, StepperProps>(
               data-state={state}
               className={cn(
                 "relative flex min-w-0",
-                vertical ? "gap-3 pb-6 last:pb-0" : "flex-1 flex-col gap-2 last:flex-none"
+                vertical ? "gap-3" : "flex-1 flex-col gap-2 last:flex-none"
               )}
             >
               <div
                 className={cn("flex items-center", vertical ? "flex-col self-stretch" : "w-full")}
               >
-                <Marker state={state} index={index} indicator={indicator} />
+                <Marker state={state} index={index} icon={step.icon} indicator={indicator} />
                 {last ? null : (
                   <span
                     aria-hidden
+                    data-step-line
                     className={cn(
                       "rounded-full bg-[var(--border-subtle)]",
-                      vertical ? "mt-2 w-px flex-1" : "mx-2 h-px flex-1",
+                      vertical ? "my-2 min-h-4 w-px flex-1" : "mx-2 h-px flex-1",
                       filled && "bg-[var(--border-brand-strong)]",
                       "transition-colors duration-[var(--motion-slow)]"
                     )}
@@ -112,7 +118,8 @@ const Stepper = React.forwardRef<HTMLOListElement, StepperProps>(
                   !vertical && "pr-3",
                   // a phone keeps the current label only; the rest stay for screen readers
                   !vertical && state !== "current" && "max-sm:sr-only",
-                  vertical && "pt-1"
+                  // the room between steps is the text's, so the line beside it can fill it
+                  vertical && (last ? "pt-1.5" : "pt-1.5 pb-6")
                 )}
               >
                 <span
@@ -141,17 +148,20 @@ Stepper.displayName = "Stepper";
 function Marker({
   state,
   index,
+  icon,
   indicator,
 }: {
   state: StepState;
   index: number;
+  icon: IconProp | undefined;
   indicator: React.ReactNode;
 }) {
+  const own = icon ? <IconSlot icon={icon} size={14} /> : index + 1;
   return (
     <span
       aria-hidden
       className={cn(
-        "grid size-7 shrink-0 place-items-center rounded-full border font-mono text-mono-xs tabular-nums",
+        "grid size-8 shrink-0 place-items-center rounded-full border font-mono text-mono-xs tabular-nums",
         "transition-[background-color,border-color,box-shadow] duration-[var(--motion-slow)]",
         state === "complete" &&
           "border-[var(--fg-brand)] bg-[var(--fg-brand)] text-[var(--fg-on-brand)]",
@@ -164,17 +174,13 @@ function Marker({
       )}
     >
       {state === "complete" ? (
-        <CheckIcon size={12} weight="bold" />
+        <CheckIcon size={14} weight="bold" />
       ) : state === "error" ? (
-        <WarningIcon size={12} weight="bold" />
-      ) : state === "current" ? (
-        indicator === null ? (
-          index + 1
-        ) : (
-          (indicator ?? <NavIndicator />)
-        )
+        <WarningIcon size={14} weight="bold" />
+      ) : state === "current" && indicator != null ? (
+        indicator
       ) : (
-        index + 1
+        own
       )}
     </span>
   );

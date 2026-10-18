@@ -18,7 +18,16 @@ describe("removed items", () => {
   });
 
   it("names every item the editor look took with it", () => {
-    for (const name of ["status-bar", "chrome-message", "sect-head", "page-outline", "doc-parts"]) {
+    for (const name of [
+      "status-bar",
+      "chrome-message",
+      "sect-head",
+      "page-outline",
+      "doc-parts",
+      "diamond",
+      "spotlight",
+      "spotlight-card",
+    ]) {
       expect(removedMessage(name)).toContain(`"${name}" was removed in 4.0.0`);
     }
   });

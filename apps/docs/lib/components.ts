@@ -256,8 +256,7 @@ import { RobotIcon } from "@phosphor-icons/react"
       {
         name: "icon",
         type: "Icon | ReactElement",
-        description:
-          "A Phosphor icon, or an icon element, in front of the label. icon={<Diamond />} is the ◆ (CardLabel only)",
+        description: "A Phosphor icon, or an icon element, in front of the label (CardLabel only)",
       },
     ],
   },
@@ -608,24 +607,6 @@ import { GearIcon, UserIcon } from "@phosphor-icons/react"
       },
     ],
   },
-  diamond: {
-    description:
-      "The ◆, the mark entrepta used to put before every label. No component draws it on its own now. Pass it where you want it: as an icon of a label, or as the indicator of a nav, a tab strip or a stepper. It is hidden from screen readers.",
-    usage: `import { Diamond } from "@/components/entrepta/diamond"
-
-<CardLabel icon={<Diamond size={10} />}>layout</CardLabel>
-<Field id="email" label="email" icon={<Diamond />} />
-<Sidebar items={items} indicator={<Diamond size={10} />} />
-<Stepper steps={steps} current="bank" indicator={<Diamond size={10} />} />`,
-    props: [
-      {
-        name: "size",
-        type: "9 | 10",
-        default: "9",
-        description: "The glyph's size in px: 9 beside text-mono-xs, 10 beside text-mono-sm",
-      },
-    ],
-  },
   kbd: {
     description:
       "One look for every keyboard hint: a key cap chip, or plain text for rows that already have a surface. Inside a highlighted menu or palette row it takes the brand ink. Dropdown, CommandPalette, Tooltip and Input all use it.",
@@ -648,23 +629,22 @@ import { GearIcon, UserIcon } from "@phosphor-icons/react"
   },
   tabs: {
     description:
-      'Editor file tabs. Tabs switches a panel in place; TabNav is a row of route links. One brand underline travels to the active tab, a Phosphor icon fills when active and grows on hover, and the active tab can show a close button. variant="window" makes either row the editor\'s title bar.',
+      "File tabs. Tabs switches a panel in place; TabNav is a row of route links. One brand underline travels to the active tab, a Phosphor icon fills when active and grows on hover.",
     usage: `import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/entrepta/tabs"
 import { FileTsxIcon, FileMdIcon, BracketsCurlyIcon } from "@phosphor-icons/react"
 
 <Tabs defaultValue="home">
   <TabsList>
-    <TabsTrigger value="home" icon={FileTsxIcon} onClose={() => {}}>home.tsx</TabsTrigger>
-    <TabsTrigger value="about" icon={FileMdIcon} onClose={() => {}}>about.md</TabsTrigger>
-    <TabsTrigger value="stack" icon={BracketsCurlyIcon} onClose={() => {}}>stack.json</TabsTrigger>
+    <TabsTrigger value="home" icon={FileTsxIcon}>home.tsx</TabsTrigger>
+    <TabsTrigger value="about" icon={FileMdIcon}>about.md</TabsTrigger>
+    <TabsTrigger value="stack" icon={BracketsCurlyIcon}>stack.json</TabsTrigger>
   </TabsList>
   <TabsContent value="home" className="p-5">…</TabsContent>
   <TabsContent value="about" className="p-5">…</TabsContent>
   <TabsContent value="stack" className="p-5">…</TabsContent>
 </Tabs>
 
-// Without an icon, a tab has nothing in front of its label.
-// Pass indicator={<Diamond />} to Tabs or TabNav for a mark on the active one
+// A tab with no icon has nothing in front of its label
 <TabsTrigger value="home">home.tsx</TabsTrigger>
 
 // Tabs that are routes, as the editor's title bar:
@@ -702,26 +682,14 @@ import { TabNav, TabNavLink } from "@/components/entrepta/tabs"
         description: "Callback when active tab changes",
       },
       {
-        name: "variant",
-        type: '"strip" | "window"',
-        default: '"strip"',
-        description: "window adds the window dots and shows end as meta (TabsList, TabNav)",
-      },
-      {
         name: "end",
         type: "ReactNode",
-        description:
-          "Pinned right, outside the scroller. Meta from 768px in a window (TabsList, TabNav)",
+        description: "Pinned right, outside the scroller, as muted meta (TabsList, TabNav)",
       },
       {
         name: "icon",
         type: "ReactNode | Icon",
         description: "An element, or a Phosphor icon that fills when active and grows on hover",
-      },
-      {
-        name: "onClose",
-        type: "() => void",
-        description: "Shows a close button on the active tab",
       },
       {
         name: "active",
@@ -1131,26 +1099,29 @@ import { Delta } from "@/components/entrepta/delta"
   },
   stepper: {
     description:
-      "Where someone is in a flow of a few steps: onboarding, a setup, an import. An ordered list; the current step is marked for screen readers and takes an indicator, a dot you can swap, done steps a check, a step that needs attention a warning, and each step's state is read in words. The line to the next step fills when one is done. Below 640px a horizontal stepper keeps only the current label in view. Server safe.",
+      "Where someone is in a flow of a few steps: onboarding, a setup, an import. An ordered list; each marker shows the step's icon, or its number when it has none. The current step is marked for screen readers and gets the brand ring, done steps a check, a step that needs attention a warning, and each step's state is read in words. The line to the next step fills when one is done. Below 640px a horizontal stepper keeps only the current label in view. Server safe.",
     usage: `import { Stepper } from "@/components/entrepta/stepper"
 
 <Stepper
   steps={[
-    { id: "account", label: "Account" },
-    { id: "bank", label: "Connect a bank", description: "Read only" },
-    { id: "budget", label: "First budget" },
+    { id: "account", label: "Account", icon: <UserIcon /> },
+    { id: "bank", label: "Connect a bank", description: "Read only", icon: <BankIcon /> },
+    { id: "budget", label: "First budget", icon: <WalletIcon /> },
   ]}
   current="bank"
 />`,
     props: [
       {
         name: "indicator",
-        type: "ReactNode | null",
-        default: "a dot",
-        description:
-          "Inside the current step's marker, in place of its number. null keeps the number",
+        type: "ReactNode",
+        description: "Inside the current step's marker, in place of its icon or number",
       },
-      { name: "steps", type: "{ id, label, description? }[]", description: "In order" },
+      {
+        name: "steps",
+        type: "{ id, label, description?, icon? }[]",
+        description:
+          "In order. icon is a Phosphor icon or an icon element for the marker, until the step is done",
+      },
       { name: "current", type: "string", description: "The id of the step in progress" },
       {
         name: "completed",
@@ -2096,7 +2067,7 @@ export function MyPalette() {
       "A multi-line field for prose. Sans for what you type, mono for the placeholder, and an error state.",
     usage: `import { Textarea } from "@/components/entrepta/textarea"
 
-<Textarea placeholder="// what are you building?" />
+<Textarea placeholder="what are you building?" />
 <Textarea state="error" rows={6} />`,
     props: [
       {
@@ -2707,14 +2678,14 @@ import Link from "next/link"
     description:
       "A dashboard of tiles on the 12 column grid: one column on a phone, 6 from 640px, 12 from 1024px. Each tile is a size container, so what is inside responds to the tile's width, not the window's. The tiles keep the order of the markup, which is the order they are read in, and enter one after another, the stagger capped.",
     usage: `import { BentoGrid, BentoItem } from "@/components/entrepta/bento-grid"
-import { SpotlightCard } from "@/components/entrepta/spotlight-card"
+import { Card } from "@/components/entrepta/card"
 
 <BentoGrid>
   <BentoItem colSpan={{ sm: 6, lg: 8 }} rowSpan={{ lg: 2 }}>
-    <SpotlightCard>…</SpotlightCard>
+    <Card>…</Card>
   </BentoItem>
   <BentoItem colSpan={{ sm: 3, lg: 4 }}>
-    <SpotlightCard><Metric … /></SpotlightCard>
+    <Card><Metric … /></Card>
   </BentoItem>
 </BentoGrid>`,
     props: [
@@ -2845,49 +2816,6 @@ function Stat() {
         description: "Entrance delay. 0 after interaction",
       },
       { name: "height", type: "number", default: "34", description: "Height of one digit in px" },
-    ],
-  },
-  spotlight: {
-    description:
-      "A brand glow that trails the cursor across a card on a spring. It moves by transform, so it never repaints the card.",
-    usage: `import { Spotlight, useSpotlight } from "@/components/entrepta/spotlight"
-
-function GlowCard() {
-  const { onMouseMove, spotlight } = useSpotlight(560)
-  return (
-    <Card onMouseMove={onMouseMove}>
-      <Spotlight {...spotlight} />
-      …
-    </Card>
-  )
-}`,
-    props: [
-      {
-        name: "useSpotlight(size?)",
-        type: "{ onMouseMove, spotlight }",
-        description: "Size is the glow diameter in px, 560 by default",
-      },
-    ],
-  },
-  "spotlight-card": {
-    description:
-      "A Card with the brand glow trailing the cursor, on a spring. It takes everything a Card takes and holds the hook itself, so a server page can use it as is. Its children keep the Card's layout and gap, over the glow. For tiles that should feel alive: a dashboard's numbers, a call to action.",
-    usage: `import { SpotlightCard } from "@/components/entrepta/spotlight-card"
-
-<SpotlightCard>
-  <Metric label="balance" value={<Amount value={balance} />} />
-</SpotlightCard>
-
-<SpotlightCard variant="featured" size="xl" glow={800}>
-  <CardTitle>Start <em>building.</em></CardTitle>
-</SpotlightCard>`,
-    props: [
-      { name: "glow", type: "number", default: "640", description: "Diameter of the glow in px" },
-      {
-        name: "variant, size",
-        type: "Card's",
-        description: "default, featured, terminal or data; sm, md or xl",
-      },
     ],
   },
   "arrow-link": {

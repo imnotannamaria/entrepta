@@ -1,12 +1,12 @@
-import { CardComment } from "@/components/editor/card-comment";
-import { CardLabel } from "@/components/editor/card-label";
 import { LINKS, PACKAGES } from "@/lib/links";
 import {
   Card,
   CardDescription,
   CardFooter,
   CardHeader,
+  CardLabel,
   CardMeta,
+  CardNote,
   CardTitle,
 } from "@entrepta/registry/primitives/card";
 import { PackageIcon } from "@phosphor-icons/react/dist/ssr";
@@ -31,7 +31,7 @@ export function NpmPackages() {
             <CardTitle className="font-mono text-mono-md">{p.name}</CardTitle>
             <CardDescription>{p.what}</CardDescription>
             <CardFooter>
-              <CardComment>{p.run}</CardComment>
+              <CardNote>{p.run}</CardNote>
               <span className="text-[var(--fg-brand-text)] transition-transform group-hover:translate-x-0.5">
                 npmjs ↗
               </span>
@@ -40,9 +40,6 @@ export function NpmPackages() {
         </a>
       ))}
       <p className="m-0 font-mono text-mono-sm text-[var(--fg-muted)] md:col-span-2">
-        <span aria-hidden className="text-[var(--fg-brand)]">
-          {"// "}
-        </span>
         What changed in each release:{" "}
         <a
           href={LINKS.changelog}

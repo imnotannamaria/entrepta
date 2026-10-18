@@ -1,6 +1,4 @@
 import { DocPageHeader } from "@/components/doc-page-header";
-import { CardComment } from "@/components/editor/card-comment";
-import { CardLabel } from "@/components/editor/card-label";
 import { DATA_FOUNDATION } from "@/lib/docs-data";
 import {
   FOUNDATIONS_INTRO,
@@ -17,7 +15,9 @@ import {
   CardDescription,
   CardFooter,
   CardHeader,
+  CardLabel,
   CardMeta,
+  CardNote,
   CardTitle,
 } from "@entrepta/registry/primitives/card";
 import type { Metadata } from "next";
@@ -69,7 +69,7 @@ export default function FoundationsIndex() {
               <CardTitle>{p.title}</CardTitle>
               <CardDescription>{p.summary}</CardDescription>
               <CardFooter>
-                <CardComment>{COUNTS[p.slug]}</CardComment>
+                <CardNote>{COUNTS[p.slug]}</CardNote>
                 <span className="text-[var(--fg-brand)] transition-transform group-hover:translate-x-0.5">
                   →
                 </span>

@@ -12,7 +12,6 @@ import {
 import { COMPONENT_INDEX, SECTIONS } from "@/lib/component-index";
 import { THEMES, type ThemeId } from "@/lib/theme";
 import { CodeBlock } from "@entrepta/registry/content/code-block";
-import { Diamond } from "@entrepta/registry/content/diamond";
 import { useUrlFilter } from "@entrepta/registry/hooks/use-url-filter";
 import type { IconProp } from "@entrepta/registry/lib/icon";
 import { Button } from "@entrepta/registry/primitives/button";
@@ -136,7 +135,6 @@ function Segmented<T extends string>({
     <div className="flex min-w-0 flex-col gap-2">
       {/* a form's label, like Field's and the SwatchPicker's legend above */}
       <span id={labelId} className={fieldLabelClass}>
-        <Diamond />
         {legend}
       </span>
       <SegmentedControl

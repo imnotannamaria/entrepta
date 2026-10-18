@@ -60,7 +60,7 @@ pnpm dlx @entrepta/cli@latest add button card field
 - Do: Size text with the ten scale steps, such as text-mono-sm. Don't: Write text-[13px] or Tailwind's text-sm. A test fails on both.
 - Do: Pick the family at the call site: font-serif, font-sans or font-mono. Don't: Expect a scale step to set the font. It sets size and leading only.
 - Do: Let a row of two halves wrap, and keep each half on one line. Don't: Assume it fits. A card clips with no ellipsis, so overflow looks like missing data.
-- Do: Hide glyphs such as ◆, $ and // with aria-hidden. Don't: Let a screen reader say black diamond suit before every label.
+- Do: Hide decorative glyphs with aria-hidden. Don't: Let a screen reader read a glyph before every label.
 - Do: Give bare buttons the .focus-ring class. Don't: Rely on outline. The reset removes it from every button.
 - Do: Import Phosphor from @phosphor-icons/react/dist/ssr in files without use client. Don't: Import the package root there. next build fails with an error that names no file.
 - Do: Pass your router's link with asChild or linkComponent, and mark the current item with active. Don't: Import next/link in a copied component. It stops working outside Next.js.
@@ -68,7 +68,7 @@ pnpm dlx @entrepta/cli@latest add button card field
 ## Accessibility
 
 - Every ink clears WCAG AA on what it sits on, in every theme and mode. Keep each token on the surface it was measured for.
-- Glyphs such as ◆, $ and // carry \`aria-hidden\`.
+- Decorative glyphs carry \`aria-hidden\`.
 - Links get a brand outline on focus. A bare button with no focus style of its own takes the \`.focus-ring\` class.
 - Put \`<a href="#main" class="skip-link">skip to content</a>\` first in \`<body>\`.
 - Wrap each form control in \`Field\`: it wires the label, \`aria-describedby\` and \`aria-invalid\`.
@@ -188,7 +188,7 @@ pnpm dlx @entrepta/cli@latest add button card field
 - Do: Size text with the ten scale steps, such as text-mono-sm. Don't: Write text-[13px] or Tailwind's text-sm. A test fails on both.
 - Do: Pick the family at the call site: font-serif, font-sans or font-mono. Don't: Expect a scale step to set the font. It sets size and leading only.
 - Do: Let a row of two halves wrap, and keep each half on one line. Don't: Assume it fits. A card clips with no ellipsis, so overflow looks like missing data.
-- Do: Hide glyphs such as ◆, $ and // with aria-hidden. Don't: Let a screen reader say black diamond suit before every label.
+- Do: Hide decorative glyphs with aria-hidden. Don't: Let a screen reader read a glyph before every label.
 - Do: Give bare buttons the .focus-ring class. Don't: Rely on outline. The reset removes it from every button.
 - Do: Import Phosphor from @phosphor-icons/react/dist/ssr in files without use client. Don't: Import the package root there. next build fails with an error that names no file.
 - Do: Pass your router's link with asChild or linkComponent, and mark the current item with active. Don't: Import next/link in a copied component. It stops working outside Next.js.
@@ -196,7 +196,7 @@ pnpm dlx @entrepta/cli@latest add button card field
 ## Accessibility
 
 - Every ink clears WCAG AA on what it sits on, in every theme and mode. Keep each token on the surface it was measured for.
-- Glyphs such as ◆, $ and // carry \`aria-hidden\`.
+- Decorative glyphs carry \`aria-hidden\`.
 - Links get a brand outline on focus. A bare button with no focus style of its own takes the \`.focus-ring\` class.
 - Put \`<a href="#main" class="skip-link">skip to content</a>\` first in \`<body>\`.
 - Wrap each form control in \`Field\`: it wires the label, \`aria-describedby\` and \`aria-invalid\`.
@@ -316,7 +316,7 @@ pnpm dlx @entrepta/cli@latest add button card field
 - Do: Size text with the ten scale steps, such as text-mono-sm. Don't: Write text-[13px] or Tailwind's text-sm. A test fails on both.
 - Do: Pick the family at the call site: font-serif, font-sans or font-mono. Don't: Expect a scale step to set the font. It sets size and leading only.
 - Do: Let a row of two halves wrap, and keep each half on one line. Don't: Assume it fits. A card clips with no ellipsis, so overflow looks like missing data.
-- Do: Hide glyphs such as ◆, $ and // with aria-hidden. Don't: Let a screen reader say black diamond suit before every label.
+- Do: Hide decorative glyphs with aria-hidden. Don't: Let a screen reader read a glyph before every label.
 - Do: Give bare buttons the .focus-ring class. Don't: Rely on outline. The reset removes it from every button.
 - Do: Import Phosphor from @phosphor-icons/react/dist/ssr in files without use client. Don't: Import the package root there. next build fails with an error that names no file.
 - Do: Pass your router's link with asChild or linkComponent, and mark the current item with active. Don't: Import next/link in a copied component. It stops working outside Next.js.
@@ -324,7 +324,7 @@ pnpm dlx @entrepta/cli@latest add button card field
 ## Accessibility
 
 - Every ink clears WCAG AA on what it sits on, in every theme and mode. Keep each token on the surface it was measured for.
-- Glyphs such as ◆, $ and // carry \`aria-hidden\`.
+- Decorative glyphs carry \`aria-hidden\`.
 - Links get a brand outline on focus. A bare button with no focus style of its own takes the \`.focus-ring\` class.
 - Put \`<a href="#main" class="skip-link">skip to content</a>\` first in \`<body>\`.
 - Wrap each form control in \`Field\`: it wires the label, \`aria-describedby\` and \`aria-invalid\`.

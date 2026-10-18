@@ -19,6 +19,12 @@ export const REMOVED: Record<string, Removal> = {
   "sect-head": { version: "4.0.0", note: "It left with the editor look." },
   "page-outline": { version: "4.0.0", note: "It left with the editor look." },
   "doc-parts": { version: "4.0.0", note: "It left with the editor look." },
+  diamond: { version: "4.0.0", note: "No component draws the ◆ anymore. Pass an icon instead." },
+  spotlight: { version: "4.0.0", note: "The glow that follows the cursor is gone." },
+  "spotlight-card": {
+    version: "4.0.0",
+    note: "Use Card. The glow that follows the cursor is gone.",
+  },
 };
 
 export function removedMessage(

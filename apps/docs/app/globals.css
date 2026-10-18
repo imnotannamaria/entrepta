@@ -123,7 +123,6 @@
   --border-brand-strong: color-mix(in srgb, var(--fg-brand) 60%, transparent);
   --shadow-brand: color-mix(in srgb, var(--fg-brand) calc(20% * var(--finish-glow)), transparent);
   --fg-brand-glow: color-mix(in srgb, var(--fg-brand) 50%, transparent);
-  --bg-spotlight: color-mix(in srgb, var(--fg-brand) 15%, transparent);
 
   /* shadows. The brand lift signals emphasis; the overlay shadow is depth
      for what covers the page, so it stays black. */
@@ -849,8 +848,6 @@ select:autofill {
   --status-error-fg: #be123c;
   --status-info-fg: #4338ca;
 
-  /* a wash that reads on a dark card vanishes on white, so light mixes more */
-  --bg-spotlight: color-mix(in srgb, var(--fg-brand) 26%, transparent);
   --shadow-card-hover: 0 8px 24px rgba(0, 0, 0, 0.1);
   --sheen-tint: color-mix(in srgb, var(--fg-brand) calc(4% * var(--finish-glow)), transparent);
   --edge-light: inset 0 1px 0 rgba(255, 255, 255, 0.9);
@@ -891,7 +888,6 @@ select:autofill {
   --bg-hover-strong: rgba(255, 255, 255, 0.08);
   --bg-chrome: rgba(0, 0, 0, 0.3);
 
-  --bg-spotlight: color-mix(in srgb, var(--fg-brand) 15%, transparent);
   --shadow-card-hover: 0 8px 24px rgba(0, 0, 0, 0.3);
   --sheen-tint: color-mix(in srgb, var(--fg-brand) calc(9% * var(--finish-glow)), transparent);
   --edge-light: inset 0 1px 0 rgba(255, 255, 255, 0.05);

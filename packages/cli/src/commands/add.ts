@@ -183,7 +183,7 @@ export function resolveComponents(names: string[]): string[] {
   return [...resolved];
 }
 
-// An import from one component folder to another: `../content/diamond`.
+// An import from one component folder to another: `../content/code-block`.
 const SIBLING_IMPORT = new RegExp(
   `from\\s+["']\\.\\.[/\\\\](?:${COMPONENT_FOLDERS.join("|")})[/\\\\]([A-Za-z0-9_-]+)["']`,
   "g"
@@ -191,7 +191,7 @@ const SIBLING_IMPORT = new RegExp(
 
 /**
  * Registry files import across folders (`../lib/utils`, `../hooks/use-mode`,
- * `../content/diamond`). In a user project every component lands in one
+ * `../content/code-block`). In a user project every component lands in one
  * folder, so those paths are rewritten to the configured aliases, and imports
  * between component categories become siblings.
  */

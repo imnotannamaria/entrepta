@@ -65,40 +65,16 @@ describe("Tabs", () => {
     expect(onChange).toHaveBeenCalledWith("b");
   });
 
-  it("shows a real close button on the active tab only", () => {
+  it("has no close button: a tab is picked, not closed", () => {
     render(
       <Tabs defaultValue="a">
         <TabsList>
-          <TabsTrigger value="a" onClose={() => {}}>
-            Closable
-          </TabsTrigger>
-          <TabsTrigger value="b" onClose={() => {}}>
-            Other
-          </TabsTrigger>
+          <TabsTrigger value="a">Only</TabsTrigger>
         </TabsList>
         <TabsContent value="a">A</TabsContent>
       </Tabs>
     );
-    expect(screen.getByRole("button", { name: "Close Closable" })).toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: "Close Other" })).toBeNull();
-    // a sibling of the tab, not nested inside it
-    expect(screen.getByRole("tab", { name: /Closable/ }).querySelector("button")).toBeNull();
-  });
-
-  it("invokes onClose when the close button is clicked", async () => {
-    const onClose = vi.fn();
-    render(
-      <Tabs defaultValue="a">
-        <TabsList>
-          <TabsTrigger value="a" onClose={onClose}>
-            Closable
-          </TabsTrigger>
-        </TabsList>
-        <TabsContent value="a">A</TabsContent>
-      </Tabs>
-    );
-    await userEvent.click(screen.getByRole("button", { name: "Close Closable" }));
-    expect(onClose).toHaveBeenCalled();
+    expect(screen.queryByRole("button")).toBeNull();
   });
 
   it("draws nothing before a tab with no icon, unless the strip has an indicator", () => {
@@ -161,19 +137,6 @@ describe("TabNav", () => {
     expect(link).toHaveAttribute("data-router-link");
     expect(link).toHaveAttribute("aria-current", "page");
     expect(link.textContent).toBe("blog/");
-  });
-
-  it("closes the active route tab from a sibling button", async () => {
-    const onClose = vi.fn();
-    render(
-      <TabNav aria-label="Pages">
-        <TabNavLink href="/blog/post" active onClose={onClose}>
-          post.mdx
-        </TabNavLink>
-      </TabNav>
-    );
-    await userEvent.click(screen.getByRole("button", { name: "Close post.mdx" }));
-    expect(onClose).toHaveBeenCalled();
   });
 });
 

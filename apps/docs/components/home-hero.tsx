@@ -1,7 +1,5 @@
 "use client";
 
-import { CardComment } from "@/components/editor/card-comment";
-import { CardLabel } from "@/components/editor/card-label";
 import { StatusBar, StatusBarItem, StatusBarSeparator } from "@/components/editor/status-bar";
 import { WindowBar } from "@/components/editor/window-bar";
 import { buildAgentsMd } from "@/lib/agents-md";
@@ -11,11 +9,17 @@ import { cn } from "@/lib/utils";
 import { useCopy } from "@entrepta/registry/hooks/use-copy";
 import { useTheme } from "@entrepta/registry/hooks/use-theme";
 import { RollingNumber, useRollOnHover } from "@entrepta/registry/motion/rolling-number";
-import { Spotlight, useSpotlight } from "@entrepta/registry/motion/spotlight";
 import { Avatar, AvatarGroup } from "@entrepta/registry/primitives/avatar";
 import { Badge } from "@entrepta/registry/primitives/badge";
 import { Button } from "@entrepta/registry/primitives/button";
-import { Card, CardFooter, CardHeader, CardTitle } from "@entrepta/registry/primitives/card";
+import {
+  Card,
+  CardFooter,
+  CardHeader,
+  CardLabel,
+  CardNote,
+  CardTitle,
+} from "@entrepta/registry/primitives/card";
 import { Checkbox } from "@entrepta/registry/primitives/checkbox";
 import { Progress } from "@entrepta/registry/primitives/progress";
 import { Switch } from "@entrepta/registry/primitives/switch";
@@ -336,13 +340,13 @@ function LivePreview() {
               {live ? "redeploy" : "deploy"}
             </Button>
           </CardFooter>
-          <CardComment className="font-mono text-mono-xs text-[var(--fg-muted)]">
+          <CardNote className="font-mono text-mono-xs text-[var(--fg-muted)]">
             {live
               ? "live. change a box to ship again"
               : left > 0
                 ? `check ${left} more to deploy`
                 : "it is a real button"}
-          </CardComment>
+          </CardNote>
         </Card>
       </div>
     </div>
@@ -425,7 +429,6 @@ const RAIL = [
 export function HomeShowcase() {
   const { current } = useSiteTheme();
   const [tab, setTab] = useState("page");
-  const { onMouseMove, spotlight } = useSpotlight(720);
 
   return (
     <div className="relative">
@@ -434,11 +437,7 @@ export function HomeShowcase() {
         aria-hidden
         className="hero-glow pointer-events-none absolute inset-x-[8%] -top-10 bottom-[20%] rounded-full bg-[var(--fg-brand)] blur-[120px]"
       />
-      <div
-        onMouseMove={onMouseMove}
-        className="relative overflow-hidden rounded-[var(--radius-lg)] border border-[var(--border-strong)] bg-[var(--bg-canvas)] shadow-[var(--shadow-overlay)]"
-      >
-        <Spotlight {...spotlight} />
+      <div className="relative overflow-hidden rounded-[var(--radius-lg)] border border-[var(--border-strong)] bg-[var(--bg-canvas)] shadow-[var(--shadow-overlay)]">
         <Tabs value={tab} onValueChange={setTab} className="relative flex flex-col">
           <WindowBar
             end={

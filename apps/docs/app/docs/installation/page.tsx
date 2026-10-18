@@ -1,16 +1,15 @@
 import { DocPageHeader, DocSubhead } from "@/components/doc-page-header";
-import { CardComment } from "@/components/editor/card-comment";
-import { CardLabel } from "@/components/editor/card-label";
 import { NpmPackages } from "@/components/npm-packages";
 import { INIT_FILES, REQUIREMENTS } from "@/lib/docs-data";
 import { CodeBlock } from "@entrepta/registry/content/code-block";
-import { Diamond } from "@entrepta/registry/content/diamond";
 import { Button } from "@entrepta/registry/primitives/button";
 import {
   Card,
   CardFooter,
   CardHeader,
+  CardLabel,
   CardMeta,
+  CardNote,
   CardTitle,
 } from "@entrepta/registry/primitives/card";
 import type { Metadata } from "next";
@@ -53,7 +52,6 @@ export default function InstallationPage() {
                 }`}
               >
                 <span className="text-[var(--fg-primary)] inline-flex items-center gap-1.5">
-                  <Diamond />
                   {r.label}
                 </span>
                 <span className="text-[var(--fg-muted)]">{r.value}</span>
@@ -78,9 +76,7 @@ npx @entrepta/cli@latest init --theme=ivy`}
               <span className="text-[var(--fg-muted)] text-mono-sm mr-3">01</span>
               <span className="text-[var(--fg-brand)]">$</span>{" "}
               <span className="text-[var(--fg-primary)]">npx @entrepta/cli@latest init</span>
-              <span className="text-[var(--fg-muted)] text-mono-sm ml-3">
-                {"// prompts for a theme"}
-              </span>
+              <span className="text-[var(--fg-muted)] text-mono-sm ml-3">prompts for a theme</span>
             </div>
             <div>
               <span className="text-[var(--fg-muted)] text-mono-sm mr-3">02</span>
@@ -88,9 +84,7 @@ npx @entrepta/cli@latest init --theme=ivy`}
               <span className="text-[var(--fg-primary)]">
                 npx @entrepta/cli@latest init --theme=ivy
               </span>
-              <span className="text-[var(--fg-muted)] text-mono-sm ml-3">
-                {"// skip the prompt"}
-              </span>
+              <span className="text-[var(--fg-muted)] text-mono-sm ml-3">skip the prompt</span>
             </div>
           </div>
         </CodeBlock>
@@ -135,7 +129,7 @@ npx @entrepta/cli@latest init --theme=ivy`}
             them like any other file in your repo.
           </p>
           <CardFooter>
-            <CardComment>no SDK, no runtime telemetry, no wrapper</CardComment>
+            <CardNote>no SDK, no runtime telemetry, no wrapper</CardNote>
           </CardFooter>
         </Card>
       </section>

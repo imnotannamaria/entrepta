@@ -59,7 +59,6 @@ export const COMPONENT_INDEX: ComponentEntry[] = [
   { slug: "mobile-nav", title: "MobileNav", section: "Layout" },
   { slug: "bento-grid", title: "BentoGrid", section: "Layout" },
   { slug: "code-block", title: "CodeBlock", section: "Content" },
-  { slug: "diamond", title: "Diamond", section: "Content" },
   { slug: "amount", title: "Amount", section: "Data" },
   { slug: "metric", title: "Metric", section: "Data" },
   { slug: "delta", title: "Delta", section: "Data" },
@@ -83,8 +82,6 @@ export const COMPONENT_INDEX: ComponentEntry[] = [
   { slug: "reveal", title: "Reveal", section: "Motion" },
   { slug: "type-in", title: "TypeIn", section: "Motion" },
   { slug: "rolling-number", title: "RollingNumber", section: "Motion" },
-  { slug: "spotlight", title: "Spotlight", section: "Motion" },
-  { slug: "spotlight-card", title: "SpotlightCard", section: "Motion" },
   { slug: "arrow-link", title: "ArrowLink", section: "Motion" },
 ];
 

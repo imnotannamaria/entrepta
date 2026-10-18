@@ -236,7 +236,7 @@ ${bullets([
 
 ${bullets([
   "Every ink clears WCAG AA on what it sits on, in every theme and mode. Keep each token on the surface it was measured for.",
-  "Glyphs such as ◆, $ and // carry `aria-hidden`.",
+  "Decorative glyphs carry `aria-hidden`.",
   "Links get a brand outline on focus. A bare button with no focus style of its own takes the `.focus-ring` class.",
   'Put `<a href="#main" class="skip-link">skip to content</a>` first in `<body>`.',
   ...(names.includes("field")

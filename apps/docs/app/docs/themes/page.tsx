@@ -1,6 +1,4 @@
 import { DocPageHeader, DocSubhead } from "@/components/doc-page-header";
-import { CardComment } from "@/components/editor/card-comment";
-import { CardLabel } from "@/components/editor/card-label";
 import { THEME_NOTES, THEME_SWITCH, THEME_TAYLOR } from "@/lib/docs-data";
 import { THEMES as THEME_LIST } from "@/lib/theme";
 import { CodeBlock } from "@entrepta/registry/content/code-block";
@@ -9,7 +7,9 @@ import {
   CardContent,
   CardFooter,
   CardHeader,
+  CardLabel,
   CardMeta,
+  CardNote,
 } from "@entrepta/registry/primitives/card";
 import type { Metadata } from "next";
 
@@ -72,7 +72,7 @@ export default function ThemesPage() {
                 <code className="font-mono text-mono-sm text-[var(--fg-muted)]">
                   --theme={t.name}
                 </code>
-                <CardComment>{t.brand}</CardComment>
+                <CardNote>{t.brand}</CardNote>
               </CardFooter>
             </Card>
           ))}
@@ -95,7 +95,6 @@ export default function ThemesPage() {
 }`}
         />
         <p className="mt-4 font-mono text-mono-sm text-[var(--fg-muted)] leading-relaxed">
-          <span className="text-[var(--fg-brand)]">{"// "}</span>
           Each preset is one block of CSS variables per mode. The two inks are set per theme because
           no single one reads on all seven brands. Every pair clears WCAG AA in both modes.
         </p>
@@ -127,7 +126,6 @@ npx @entrepta/cli@latest init --theme=ivy
 npx @entrepta/cli@latest init --theme=ivy --themes=all`}
         />
         <p className="mt-4 font-mono text-mono-sm text-[var(--fg-muted)] leading-relaxed">
-          <span className="text-[var(--fg-brand)]">{"// "}</span>
           With <code className="text-[var(--fg-primary)]">--themes=all</code>, each theme lives
           under <code className="text-[var(--fg-primary)]">data-theme</code> on{" "}
           <code className="text-[var(--fg-primary)]">&lt;html&gt;</code>, and the one you picked is
@@ -158,7 +156,6 @@ npx @entrepta/cli@latest init --theme=ivy --themes=all`}
 </html>`}
         />
         <p className="mt-4 font-mono text-mono-sm text-[var(--fg-muted)] leading-relaxed">
-          <span className="text-[var(--fg-brand)]">{"// "}</span>
           To let people toggle it, add the{" "}
           <code className="text-[var(--fg-primary)]">mode-toggle</code> component. It stores the
           choice, and its <code className="text-[var(--fg-primary)]">ModeScript</code> sets the

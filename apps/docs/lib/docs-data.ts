@@ -134,7 +134,6 @@ export const V2_COMPONENTS = [
   "reveal",
   "type-in",
   "rolling-number",
-  "spotlight",
   "arrow-link",
 ];
 
@@ -160,7 +159,6 @@ export const REPLACES: Record<string, string> = {
   reveal: "fade-in-on-scroll wrappers",
   "type-in": "a typewriter heading",
   "rolling-number": "an odometer counter",
-  spotlight: "a glow that follows the cursor",
   "arrow-link": "a link with a moving arrow",
 };
 
@@ -224,17 +222,14 @@ npx @entrepta/cli@latest add button card dialog --overwrite`,
     "The ThemeSwitcher needs every theme in your CSS: run init with --themes=all. Light mode brands moved slightly (entrepta light is now #6656FF) so every ink clears AA, and light --fg-muted is #68686F. Add suppressHydrationWarning to your <html> if you use ThemeScript or ModeScript.",
   card: "The parts are the same. The look is new: near black with a glow in the corner, a border that lights up on hover, and a header that wraps. New: size (sm, md, xl), and as and icon on CardLabel. The terminal variant sets its own text color, so it reads in light mode.",
   components: [
-    [
-      "Tabs",
-      "The × is a real button next to the tab, on the active tab only. Route tabs use TabNav and TabNavLink. Tabs depend on motion.",
-    ],
+    ["Tabs", "Route tabs use TabNav and TabNavLink. Tabs depend on motion."],
     [
       "Dropdown, Toast, Tooltip, CommandPalette",
       "All sit on the overlay surface. A highlighted row takes the brand tint instead of an edge bar, keyboard hints are Kbd, and a toast shows its status as an icon tile. The Toaster adds a close button.",
     ],
     ["CodeBlock", "A failed copy says copy failed instead of claiming it copied."],
     [
-      "RollingNumber, Reveal, TypeIn, Spotlight",
+      "RollingNumber, Reveal, TypeIn",
       "Bring the motion package when you add them. Nothing else needs it.",
     ],
   ] as [string, string][],
@@ -386,19 +381,17 @@ export const V4_BREAKS: { name: string; before: string; after: string; back?: st
       "CardLabel, FieldLabel, DialogLabel, Metric, ChoiceCard, SwatchPicker and ChatThread put a ◆ in front of their text.",
     after:
       "They draw nothing in front. Pass an icon for something there, a Phosphor icon or an element.",
-    back: "<CardLabel icon={<Diamond size={10} />}>layout</CardLabel>",
   },
   {
     name: "The current marker",
     before: "Sidebar, MobileNav, Stepper and Tabs marked the current item with a ◆.",
     after:
-      "Sidebar, MobileNav and Stepper take an indicator, a dot by default. Tabs have none by default, since the underline already says it. null hides it.",
-    back: "<Sidebar items={items} indicator={<Diamond size={10} />} />",
+      "Sidebar and MobileNav take an indicator, a dot by default. Tabs and Stepper have none by default: the underline and the marker already say it. null hides it.",
   },
   {
     name: "Menu titles",
     before: "DropdownMenuLabel and a command palette group had a ◆ before the title.",
-    after: "They are text. Put a Diamond in the label's children if you want it.",
+    after: "They are text.",
   },
   {
     name: "The //",
@@ -409,7 +402,6 @@ export const V4_BREAKS: { name: string; before: string; after: string; back?: st
     name: "CardComment",
     before: "CardComment drew a // in front of a footer note.",
     after: "It is CardNote now, the text alone in the footer's ink.",
-    back: "<CardNote>{`// ${text}`}</CardNote>",
   },
   {
     name: "lib/format.ts",
@@ -435,9 +427,14 @@ export const V4_REMOVED: [string, string][] = [
   ],
   ["PageOutline", "Removed. Nothing used it."],
   [
+    "Spotlight, SpotlightCard",
+    "Removed, with the --bg-spotlight token. The glow that follows the cursor is gone. SpotlightCard is Card.",
+  ],
+  [
     "Card variant terminal, CardTerminalBar, CardTerminalBody",
     'Removed. A block of shell commands is CodeBlock variant="terminal". Anything else is a Card.',
   ],
+  ["Tabs onClose", "Removed. A tab is picked, not closed. The × button is gone."],
   [
     'Tabs variant="window"',
     "Removed. The title bar with the three dots is WindowBar in the docs app (apps/docs/components/editor/window-bar.tsx), around a plain TabsList.",
@@ -464,13 +461,16 @@ export const V4_NEW: [string, string][] = [
   ],
   ["ChatThread", "An avatar for each role, or for one message."],
   [
+    "Stepper",
+    "Each step takes an icon for its marker, a number when it has none. The vertical one draws its lines.",
+  ],
+  [
     "Tooltip",
     'It follows the mode of the page, light on a light page. surface="dark" keeps it near black.',
   ],
   ["SegmentedControl", 'shape="pill", and truncate={false} so a segment grows to its word.'],
   ["Sidebar", "The rail's tooltip clears the rail's border, and an indicator replaces the dot."],
   ["Field", "The star of a required label is drawn by CSS, so a test finds the label by its name."],
-  ["Diamond", "Has its own page. It is what you pass where you want the ◆."],
   [
     "The CLI",
     "add says when an item was removed and where to look, and the init prompt offers taylor.",

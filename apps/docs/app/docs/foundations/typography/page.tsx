@@ -1,6 +1,4 @@
 import { DocPageHeader, DocSubhead } from "@/components/doc-page-header";
-import { CardComment } from "@/components/editor/card-comment";
-import { CardLabel } from "@/components/editor/card-label";
 import {
   TYPE_FAMILIES,
   TYPE_RULES,
@@ -9,7 +7,14 @@ import {
   foundationPage,
 } from "@/lib/foundations";
 import { CodeBlock } from "@entrepta/registry/content/code-block";
-import { Card, CardFooter, CardHeader, CardMeta } from "@entrepta/registry/primitives/card";
+import {
+  Card,
+  CardFooter,
+  CardHeader,
+  CardLabel,
+  CardMeta,
+  CardNote,
+} from "@entrepta/registry/primitives/card";
 import type { Metadata } from "next";
 
 const PAGE = foundationPage("typography");
@@ -64,7 +69,7 @@ const SAMPLES: Record<(typeof TYPE_SCALE)[number]["token"], React.ReactNode> = {
   ),
   "text-mono-sm": (
     <span className="font-mono text-mono-sm text-[var(--fg-secondary)]">
-      {"// strength day · low cardio"}
+      strength day · low cardio
     </span>
   ),
   "text-mono-xs": (
@@ -116,7 +121,7 @@ export default function TypographyPage() {
                 {FAMILY_SAMPLES[f.name]}
               </div>
               <CardFooter>
-                <CardComment>{f.use}</CardComment>
+                <CardNote>{f.use}</CardNote>
               </CardFooter>
             </Card>
           ))}

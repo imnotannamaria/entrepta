@@ -89,18 +89,15 @@ describe("source rules", () => {
   });
 
   // The ◆ and the // are the old brand mark. A component draws neither on its
-  // own: Diamond is the one place the glyph lives, and an app passes it as an icon.
+  // own. An app passes whatever mark it wants as an icon.
   it("draws no ◆ and no // glyph by default", () => {
     const registry = FILES.filter(
-      ({ file }) =>
-        file.startsWith("packages/registry/") &&
-        !/content\/diamond\.tsx$/.test(file) &&
-        !/registry\/manifest\.ts$/.test(file)
+      ({ file }) => file.startsWith("packages/registry/") && !/registry\/manifest\.ts$/.test(file)
     );
     const code = (source: string) =>
       source.replace(/\/\*[\s\S]*?\*\//g, "").replace(/^\s*\/\/.*$/gm, "");
     const offenders = registry
-      .filter(({ source }) => /◆|<Diamond\b|["'`]\/\/ ["'`]/.test(code(source)))
+      .filter(({ source }) => /◆|["'`]\/\/ /.test(code(source)))
       .map(({ file }) => file);
     expect(offenders).toEqual([]);
   });

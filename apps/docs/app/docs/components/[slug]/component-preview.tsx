@@ -18,7 +18,6 @@ import {
 } from "@entrepta/registry/charts/chart";
 import { type ChatMessage, ChatThread } from "@entrepta/registry/content/chat-thread";
 import { CodeBlock } from "@entrepta/registry/content/code-block";
-import { Diamond } from "@entrepta/registry/content/diamond";
 import { Amount } from "@entrepta/registry/data/amount";
 import { BarList } from "@entrepta/registry/data/bar-list";
 import { type ContributionDay, ContributionGrid } from "@entrepta/registry/data/contribution-grid";
@@ -75,8 +74,6 @@ import type { PaletteKey } from "@entrepta/registry/lib/palette";
 import { ArrowLink } from "@entrepta/registry/motion/arrow-link";
 import { Reveal } from "@entrepta/registry/motion/reveal";
 import { RollingNumber, useRollOnHover } from "@entrepta/registry/motion/rolling-number";
-import { Spotlight, useSpotlight } from "@entrepta/registry/motion/spotlight";
-import { SpotlightCard } from "@entrepta/registry/motion/spotlight-card";
 import { TypeIn } from "@entrepta/registry/motion/type-in";
 import {
   Accordion,
@@ -167,6 +164,7 @@ import {
   ArrowClockwiseIcon,
   ArrowCounterClockwiseIcon,
   ArrowRightIcon,
+  BankIcon,
   BooksIcon,
   BracketsCurlyIcon,
   BriefcaseIcon,
@@ -184,6 +182,7 @@ import {
   FileMdIcon,
   FileTsxIcon,
   FilmStripIcon,
+  FlagCheckeredIcon,
   ForkKnifeIcon,
   FunnelIcon,
   FunnelSimpleXIcon,
@@ -1056,7 +1055,7 @@ function MetricPreview() {
   return (
     <div className="flex w-full max-w-2xl flex-col gap-4">
       <div className="grid gap-4 sm:grid-cols-2">
-        <SpotlightCard>
+        <Card>
           <Metric
             icon={ShoppingCartIcon}
             label="spent this month"
@@ -1069,8 +1068,8 @@ function MetricPreview() {
             hint="2 accounts not synced"
             loading={loading}
           />
-        </SpotlightCard>
-        <SpotlightCard>
+        </Card>
+        <Card>
           <Metric
             icon={PiggyBankIcon}
             label="saved"
@@ -1080,7 +1079,7 @@ function MetricPreview() {
             trend={<Sparkline data={SAVED_TREND} tone="success" />}
             loading={loading}
           />
-        </SpotlightCard>
+        </Card>
       </div>
       <Button
         variant="secondary"
@@ -1162,7 +1161,7 @@ function ChartPreview() {
           { value: "donut", label: "donut" },
         ]}
       />
-      <SpotlightCard variant="data">
+      <Card variant="data">
         <CardHeader>
           <CardLabel>{head[0]}</CardLabel>
           <CardMeta>{head[1]}</CardMeta>
@@ -1339,7 +1338,7 @@ function ChartPreview() {
             </PieChart>
           </ChartContainer>
         )}
-      </SpotlightCard>
+      </Card>
     </div>
   );
 }
@@ -1347,7 +1346,7 @@ function ChartPreview() {
 function BarListPreview() {
   return (
     <div className="grid w-full max-w-2xl gap-4 sm:grid-cols-2">
-      <SpotlightCard>
+      <Card>
         <CardHeader>
           <CardLabel>where it went</CardLabel>
           <CardMeta>september</CardMeta>
@@ -1359,8 +1358,8 @@ function BarListPreview() {
           format="money"
           currency="USD"
         />
-      </SpotlightCard>
-      <SpotlightCard>
+      </Card>
+      <Card>
         <CardHeader>
           <CardLabel>most read</CardLabel>
           <CardMeta>7 days</CardMeta>
@@ -1373,25 +1372,25 @@ function BarListPreview() {
             { label: "/docs/themes", value: 640, href: "#themes" },
           ]}
         />
-      </SpotlightCard>
+      </Card>
     </div>
   );
 }
 
 const ONBOARDING = [
-  { id: "account", label: "Account", description: "Name and email" },
-  { id: "bank", label: "Connect a bank", description: "Read only" },
-  { id: "budget", label: "First budget", description: "Two minutes" },
-  { id: "done", label: "Done" },
+  { id: "account", label: "Account", description: "Name and email", icon: UserIcon },
+  { id: "bank", label: "Connect a bank", description: "Read only", icon: BankIcon },
+  { id: "budget", label: "First budget", description: "Two minutes", icon: WalletIcon },
+  { id: "done", label: "Done", icon: FlagCheckeredIcon },
 ];
 
 function StepperPreview() {
   const [at, setAt] = useState(1);
   return (
     <div className="flex w-full max-w-2xl flex-col gap-6">
-      <SpotlightCard>
+      <Card>
         <Stepper steps={ONBOARDING} current={ONBOARDING[at].id} />
-        <div className="flex gap-2">
+        <div className="flex justify-between gap-2">
           <Button variant="secondary" size="sm" disabled={at === 0} onClick={() => setAt(at - 1)}>
             back
           </Button>
@@ -1399,7 +1398,7 @@ function StepperPreview() {
             next
           </Button>
         </div>
-      </SpotlightCard>
+      </Card>
       <Demo label="vertical, a step that needs attention">
         <Stepper
           steps={ONBOARDING.slice(0, 3)}
@@ -1500,7 +1499,7 @@ function RedactPreview() {
           {hidden ? "show values" : "hide values"}
         </Button>
         <div className="grid gap-4 sm:grid-cols-2">
-          <SpotlightCard>
+          <Card>
             <Metric
               icon={WalletIcon}
               label="balance"
@@ -1508,8 +1507,8 @@ function RedactPreview() {
               delta={<Delta current={1204580} previous={1122000} variant="pill" />}
               comparison="vs August"
             />
-          </SpotlightCard>
-          <SpotlightCard>
+          </Card>
+          <Card>
             <CardHeader>
               <CardLabel>account</CardLabel>
             </CardHeader>
@@ -1521,7 +1520,7 @@ function RedactPreview() {
                 last paid <Amount value={-180000} currency="USD" />
               </span>
             </div>
-          </SpotlightCard>
+          </Card>
         </div>
       </div>
     </RedactProvider>
@@ -1558,7 +1557,7 @@ function ContributionGridPreview() {
   const [day, setDay] = useState<string | undefined>("2026-09-20");
   const chosen = YEAR.find((d) => d.date === day);
   return (
-    <SpotlightCard className="w-full max-w-3xl">
+    <Card className="w-full max-w-3xl">
       <CardHeader>
         <CardLabel>workouts · last 12 months</CardLabel>
         <CardMeta>
@@ -1571,7 +1570,7 @@ function ContributionGridPreview() {
         selected={day}
         onSelect={setDay}
       />
-    </SpotlightCard>
+    </Card>
   );
 }
 
@@ -1731,14 +1730,14 @@ function SparklinePreview() {
   ] as const;
   return (
     <div className="flex w-full max-w-lg flex-col gap-6">
-      <SpotlightCard>
+      <Card>
         <div className="flex flex-col gap-4">
           <CardHeader>
             <CardLabel>last 30 days</CardLabel>
           </CardHeader>
           <Sparkline data={BALANCE_TREND} className="h-24" />
         </div>
-      </SpotlightCard>
+      </Card>
       <div className="flex flex-col">
         {rows.map((row) => (
           <div
@@ -1826,7 +1825,7 @@ function BudgetList() {
 function ProgressPreview() {
   return (
     <div className="flex w-full max-w-xl flex-col gap-4">
-      <SpotlightCard>
+      <Card>
         <div className="flex flex-col gap-5">
           <CardHeader>
             <CardLabel>budgets · september</CardLabel>
@@ -1834,9 +1833,9 @@ function ProgressPreview() {
           </CardHeader>
           <BudgetList />
         </div>
-      </SpotlightCard>
+      </Card>
       <div className="grid gap-4 sm:grid-cols-2">
-        <SpotlightCard>
+        <Card>
           <div className="flex items-center gap-4">
             <Progress variant="ring" size="xl" aria-label="emergency fund" value={62} showValue />
             <div className="flex min-w-0 flex-col gap-1 font-mono">
@@ -1846,13 +1845,13 @@ function ProgressPreview() {
               <span className="text-mono-sm text-[var(--fg-muted)]">$6,200 of $10,000</span>
             </div>
           </div>
-        </SpotlightCard>
-        <SpotlightCard>
+        </Card>
+        <Card>
           <div className="flex flex-col gap-4">
             <Progress label="months saved" value={9} max={12} segments={12} showValue size="lg" />
             <Progress label="syncing accounts" indeterminate size="sm" />
           </div>
-        </SpotlightCard>
+        </Card>
       </div>
     </div>
   );
@@ -1906,7 +1905,7 @@ function BentoGridPreview() {
   return (
     <BentoGrid className="w-full [--bento-row:92px]">
       <BentoItem colSpan={{ sm: 6, lg: 8 }} rowSpan={{ lg: 3 }}>
-        <SpotlightCard variant="data">
+        <Card variant="data">
           <div className="flex h-full flex-col gap-5">
             <div className="flex items-start justify-between gap-3">
               <Metric
@@ -1921,10 +1920,10 @@ function BentoGridPreview() {
             </div>
             <Sparkline data={BALANCE_TREND} className="mt-auto h-28" />
           </div>
-        </SpotlightCard>
+        </Card>
       </BentoItem>
       <BentoItem colSpan={{ sm: 3, lg: 4 }} rowSpan={{ lg: 2 }}>
-        <SpotlightCard>
+        <Card>
           <div className="flex h-full flex-col items-center justify-center gap-3 text-center">
             <Progress variant="ring" size="xl" aria-label="emergency fund" value={62} showValue />
             <span className="font-mono text-mono-sm uppercase tracking-[0.08em] text-[var(--fg-secondary)]">
@@ -1932,10 +1931,10 @@ function BentoGridPreview() {
             </span>
             <span className="font-mono text-mono-sm text-[var(--fg-muted)]">$6,200 of $10,000</span>
           </div>
-        </SpotlightCard>
+        </Card>
       </BentoItem>
       <BentoItem colSpan={{ sm: 3, lg: 4 }}>
-        <SpotlightCard>
+        <Card>
           <div className="flex items-center gap-3">
             <IconTile icon={ShieldCheckIcon} color="success" />
             <div className="flex min-w-0 flex-col font-mono">
@@ -1943,10 +1942,10 @@ function BentoGridPreview() {
               <span className="text-mono-xs text-[var(--fg-muted)]">4 banks · 2 min ago</span>
             </div>
           </div>
-        </SpotlightCard>
+        </Card>
       </BentoItem>
       <BentoItem colSpan={{ sm: 6, lg: 6 }} rowSpan={{ lg: 2 }}>
-        <SpotlightCard>
+        <Card>
           <div className="flex flex-col gap-5">
             <CardHeader>
               <CardLabel>budgets</CardLabel>
@@ -1954,10 +1953,10 @@ function BentoGridPreview() {
             </CardHeader>
             <BudgetList />
           </div>
-        </SpotlightCard>
+        </Card>
       </BentoItem>
       <BentoItem colSpan={{ sm: 6, lg: 6 }} rowSpan={{ lg: 2 }}>
-        <SpotlightCard>
+        <Card>
           <div className="flex flex-col gap-3">
             <CardHeader>
               <CardLabel>recent</CardLabel>
@@ -1984,7 +1983,7 @@ function BentoGridPreview() {
               ))}
             </ul>
           </div>
-        </SpotlightCard>
+        </Card>
       </BentoItem>
     </BentoGrid>
   );
@@ -2220,7 +2219,7 @@ function SheetPreview() {
             <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Q4 notes" />
           </Field>
           <Field id="sheet-note" label="note" hint="optional">
-            <Textarea placeholder="// what it is about" />
+            <Textarea placeholder="what it is about" />
           </Field>
         </div>
       </SheetContent>
@@ -2352,13 +2351,13 @@ function TabsPreview() {
         <div className="w-full overflow-hidden rounded-[var(--radius-md)] border border-[var(--border-subtle)]">
           <Tabs defaultValue="home">
             <TabsList>
-              <TabsTrigger value="home" icon={FileTsxIcon} onClose={() => {}}>
+              <TabsTrigger value="home" icon={FileTsxIcon}>
                 home.tsx
               </TabsTrigger>
-              <TabsTrigger value="about" icon={FileMdIcon} onClose={() => {}}>
+              <TabsTrigger value="about" icon={FileMdIcon}>
                 about.md
               </TabsTrigger>
-              <TabsTrigger value="stack" icon={BracketsCurlyIcon} onClose={() => {}}>
+              <TabsTrigger value="stack" icon={BracketsCurlyIcon}>
                 stack.json
               </TabsTrigger>
             </TabsList>
@@ -2385,19 +2384,10 @@ function TabsPreview() {
         </div>
       </Demo>
 
-      <Demo label="route tabs · after and end">
+      <Demo label="route tabs · with end">
         <div className="w-full overflow-hidden rounded-[var(--radius-md)] border border-[var(--border-subtle)]">
           <TabNav
             aria-label="Preview pages"
-            after={
-              <button
-                type="button"
-                aria-label="Open command palette"
-                className="focus-ring flex shrink-0 cursor-pointer items-center px-3 font-mono text-mono-md text-[var(--fg-muted)] transition-colors hover:text-[var(--fg-primary)]"
-              >
-                +
-              </button>
-            }
             end={
               <span className="flex items-center gap-1.5">
                 <span className="size-1.5 rounded-full bg-[var(--fg-brand)]" />
@@ -2415,7 +2405,6 @@ function TabsPreview() {
                   e.preventDefault();
                   setRoute(r.id);
                 }}
-                onClose={r.id !== "home" ? () => setRoute("home") : undefined}
               >
                 {r.name}
               </TabNavLink>
@@ -2425,7 +2414,7 @@ function TabsPreview() {
         </div>
       </Demo>
 
-      <Demo label="without icons · the ◆ marks the active tab">
+      <Demo label="without icons">
         <div className="w-full overflow-hidden rounded-[var(--radius-md)] border border-[var(--border-subtle)]">
           <Tabs defaultValue="home">
             <TabsList>
@@ -2650,27 +2639,6 @@ function ModeTogglePreview() {
   );
 }
 
-function DiamondPreview() {
-  return (
-    <div className="flex w-full max-w-md flex-col gap-7">
-      <Demo label="alone, 9 and 10px">
-        <Diamond />
-        <Diamond size={10} />
-      </Demo>
-      <Demo label="as an icon">
-        <Card className="w-full">
-          <CardHeader>
-            <CardLabel icon={<Diamond size={10} />}>layout</CardLabel>
-          </CardHeader>
-        </Card>
-      </Demo>
-      <Demo label="as an indicator">
-        <Stepper steps={ONBOARDING} current={ONBOARDING[1].id} indicator={<Diamond size={10} />} />
-      </Demo>
-    </div>
-  );
-}
-
 function KbdPreview() {
   return (
     <div className="flex w-full max-w-md flex-col gap-7">
@@ -2738,7 +2706,7 @@ function SwitchPreview() {
 function TextareaPreview() {
   return (
     <div className="flex w-full max-w-md flex-col gap-4">
-      <Textarea placeholder="// what are you building?" />
+      <Textarea placeholder="what are you building?" />
       <Textarea state="error" defaultValue="too short" rows={2} />
     </div>
   );
@@ -2843,7 +2811,9 @@ function SidebarPreview() {
             label="Preview"
             logo={({ collapsed }) =>
               collapsed ? (
-                <Diamond size={10} />
+                <span aria-hidden className="font-serif italic text-heading-md">
+                  l
+                </span>
               ) : (
                 <span className="font-serif text-heading-md italic text-[var(--fg-primary)]">
                   ledger
@@ -3067,49 +3037,6 @@ function RollingNumberPreview() {
   );
 }
 
-function SpotlightPreview() {
-  const { onMouseMove, spotlight } = useSpotlight(420);
-  return (
-    <Card className="w-full max-w-md" onMouseMove={onMouseMove}>
-      <Spotlight {...spotlight} />
-      <CardHeader>
-        <CardLabel>spotlight</CardLabel>
-        <CardMeta>move the cursor</CardMeta>
-      </CardHeader>
-      <CardTitle>
-        Light that <em>follows</em>.
-      </CardTitle>
-    </Card>
-  );
-}
-
-function SpotlightCardPreview() {
-  return (
-    <div className="grid w-full max-w-2xl gap-4 sm:grid-cols-2">
-      <SpotlightCard>
-        <CardHeader>
-          <CardLabel icon={WalletIcon}>balance</CardLabel>
-          <CardMeta>move the cursor</CardMeta>
-        </CardHeader>
-        <Metric
-          label="this month"
-          value={<Amount value={1204580} currency="USD" />}
-          delta={<Delta current={1204580} previous={1122000} variant="pill" />}
-          trend={<Sparkline data={BALANCE_TREND} />}
-        />
-      </SpotlightCard>
-      <SpotlightCard variant="featured" className="justify-center text-center">
-        <CardTitle>
-          Start <em>building.</em>
-        </CardTitle>
-        <CardDescription>
-          The glow follows the cursor a beat late, so it reads as light.
-        </CardDescription>
-      </SpotlightCard>
-    </div>
-  );
-}
-
 function ArrowLinkPreview() {
   return (
     <div className="flex flex-col items-start gap-3">
@@ -3154,7 +3081,6 @@ const PREVIEWS: Record<string, React.ReactNode> = {
   skeleton: <SkeletonPreview />,
   "command-palette": <CommandPalettePreview />,
   "code-block": <CodeBlockPreview />,
-  diamond: <DiamondPreview />,
   kbd: <KbdPreview />,
   checkbox: <CheckboxPreview />,
   switch: <SwitchPreview />,
@@ -3185,8 +3111,6 @@ const PREVIEWS: Record<string, React.ReactNode> = {
   reveal: <RevealPreview />,
   "type-in": <TypeInPreview />,
   "rolling-number": <RollingNumberPreview />,
-  spotlight: <SpotlightPreview />,
-  "spotlight-card": <SpotlightCardPreview />,
   "arrow-link": <ArrowLinkPreview />,
 };
 

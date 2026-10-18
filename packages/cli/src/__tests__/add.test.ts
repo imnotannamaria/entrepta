@@ -364,8 +364,8 @@ describe("rewriteImports", () => {
   });
 
   it("turns an import from another component category into a sibling", () => {
-    expect(rewrite(`import { Diamond } from "../content/diamond";`)).toBe(
-      `import { Diamond } from "./diamond";`
+    expect(rewrite(`import { CodeBlock } from "../content/code-block";`)).toBe(
+      `import { CodeBlock } from "./code-block";`
     );
     expect(rewrite(`import { Card } from '../primitives/card';`)).toBe(
       `import { Card } from "./card";`

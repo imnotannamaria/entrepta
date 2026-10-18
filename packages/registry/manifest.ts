@@ -471,11 +471,11 @@ export const COMPONENTS: RegistryComponent[] = [
   {
     name: "stepper",
     description:
-      "Where someone is in a flow: an ordered list, the current step marked with an indicator",
+      "Where someone is in a flow: an ordered list, an icon or a number in each marker, the state in words",
     category: "primitives",
     files: ["primitives/stepper.tsx"],
     deps: ["@phosphor-icons/react"],
-    registryDeps: ["nav-lib"],
+    registryDeps: ["icon-lib"],
     usage: '<Stepper steps={STEPS} current="bank" />',
     exports: ["Stepper"],
   },
@@ -715,17 +715,6 @@ export const COMPONENTS: RegistryComponent[] = [
     ],
   },
   {
-    name: "diamond",
-    description:
-      "The ◆ mark, for when you want it: pass it as an icon or an indicator. Hidden from screen readers",
-    category: "content",
-    files: ["content/diamond.tsx"],
-    deps: [],
-    registryDeps: [],
-    usage: "<Diamond size={10} />",
-    exports: ["Diamond"],
-  },
-  {
     name: "chat-thread",
     description: "A conversation by role, tool results in cards, streaming that keeps your place",
     category: "content",
@@ -840,27 +829,6 @@ export const COMPONENTS: RegistryComponent[] = [
     exports: ["RollingNumber", "useRollOnHover"],
   },
   {
-    name: "spotlight",
-    description: "Brand glow that trails the cursor across a card on a spring",
-    category: "motion",
-    files: ["motion/spotlight.tsx"],
-    deps: ["motion"],
-    registryDeps: [],
-    usage:
-      "const { onMouseMove, spotlight } = useSpotlight(); <Card onMouseMove={onMouseMove}><Spotlight {...spotlight} />…</Card>",
-    exports: ["Spotlight", "useSpotlight"],
-  },
-  {
-    name: "spotlight-card",
-    description: "A Card with the brand glow trailing the cursor, usable from a server page",
-    category: "motion",
-    files: ["motion/spotlight-card.tsx"],
-    deps: ["motion"],
-    registryDeps: ["card", "spotlight"],
-    usage: '<SpotlightCard variant="featured"><CardTitle>…</CardTitle></SpotlightCard>',
-    exports: ["SpotlightCard"],
-  },
-  {
     name: "arrow-link",
     description: "Text link with a traveling arrow and a brand rule that wipes in",
     category: "motion",
@@ -907,7 +875,7 @@ export const COMPONENTS: RegistryComponent[] = [
     files: ["primitives/textarea.tsx"],
     deps: ["class-variance-authority"],
     registryDeps: [],
-    usage: `<Textarea placeholder="// your message" />`,
+    usage: `<Textarea placeholder="your message" />`,
     exports: ["Textarea", "textareaVariants"],
   },
   {

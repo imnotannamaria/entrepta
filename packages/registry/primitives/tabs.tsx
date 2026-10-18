@@ -18,7 +18,7 @@ import { cn } from "../lib/utils";
  *
  * Both share the scroller that fades only the edge with hidden tabs, one brand
  * underline that travels to the active tab, an icon that fills when active and
- * grows on hover, and a × on the active tab when closing it leads somewhere.
+ * grows on hover.
  */
 
 type TabIcon = React.ReactNode | Icon;
@@ -85,7 +85,11 @@ function Row({
     <div className={cn(rowClass, className)}>
       {children}
       {after}
-      {end && <div className="ml-auto flex shrink-0 items-stretch">{end}</div>}
+      {end && (
+        <div className="ml-auto flex shrink-0 items-center gap-2 px-4 font-mono text-mono-sm text-[var(--fg-muted)]">
+          {end}
+        </div>
+      )}
     </div>
   );
 }
@@ -95,10 +99,9 @@ const scrollerClass = cn(
   "[-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
 );
 
-function tabLabelClass(active: boolean, closable: boolean) {
+function tabLabelClass(active: boolean) {
   return cn(
-    "inline-flex h-full items-center gap-2 pl-3 sm:pl-4 font-mono text-mono-sm",
-    closable ? "pr-1.5" : "pr-3 sm:pr-4",
+    "inline-flex h-full items-center gap-2 px-3 sm:px-4 font-mono text-mono-sm",
     "transition-colors duration-[var(--motion-fast)]",
     // the tab fills the row, so the ring goes inside it
     "focus-visible:outline-none focus-visible:shadow-[inset_0_0_0_2px_var(--fg-brand)]",
@@ -145,21 +148,10 @@ function TabGlyph({ icon, active }: { icon?: TabIcon; active: boolean }) {
   );
 }
 
-/** The per-tab box: hover, divider, active surface, the travelling underline and the ×. */
-function TabShell({
-  active,
-  onClose,
-  closeLabel,
-  children,
-}: {
-  active: boolean;
-  onClose?: () => void;
-  closeLabel: string;
-  children: React.ReactNode;
-}) {
+/** The per-tab box: hover, divider, active surface and the travelling underline. */
+function TabShell({ active, children }: { active: boolean; children: React.ReactNode }) {
   const { layoutId } = useStrip();
   const reduce = useReducedMotion() ?? false;
-  const closable = active && Boolean(onClose);
 
   return (
     <div
@@ -183,26 +175,8 @@ function TabShell({
         />
       )}
       {children}
-      {closable && (
-        <button
-          type="button"
-          onClick={onClose}
-          aria-label={closeLabel}
-          className={cn(
-            "focus-ring mr-1.5 inline-grid h-6 w-6 shrink-0 cursor-pointer place-items-center",
-            "rounded-[var(--radius-sm)] font-mono text-mono-sm text-[var(--fg-muted)] opacity-60",
-            "transition-[opacity,background-color] hover:bg-[var(--bg-hover-strong)] hover:opacity-100"
-          )}
-        >
-          <span aria-hidden>×</span>
-        </button>
-      )}
     </div>
   );
-}
-
-function closeLabelFor(children: React.ReactNode) {
-  return typeof children === "string" ? `Close ${children}` : "Close tab";
 }
 
 /* ------------------------------------------------------------------ */
@@ -266,25 +240,21 @@ TabsList.displayName = "TabsList";
 interface TabsTriggerProps extends React.ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger> {
   /** An element, or a Phosphor icon component, which fills when active. Without one, the strip's `indicator`, if it has one. */
   icon?: TabIcon;
-  /** Shows a × on the active tab. */
-  onClose?: () => void;
-  /** Accessible name for the ×. Defaults to "Close {label}". */
-  closeLabel?: string;
 }
 
 const TabsTrigger = React.forwardRef<
   React.ComponentRef<typeof TabsPrimitive.Trigger>,
   TabsTriggerProps
->(({ className, value, icon, onClose, closeLabel, children, ...props }, ref) => {
+>(({ className, value, icon, children, ...props }, ref) => {
   const { value: current } = useStrip();
   const active = current === value;
 
   return (
-    <TabShell active={active} onClose={onClose} closeLabel={closeLabel ?? closeLabelFor(children)}>
+    <TabShell active={active}>
       <TabsPrimitive.Trigger
         ref={ref}
         value={value}
-        className={cn(tabLabelClass(active, active && Boolean(onClose)), className)}
+        className={cn(tabLabelClass(active), className)}
         {...props}
       >
         <TabGlyph icon={icon} active={active} />
@@ -349,18 +319,13 @@ TabNav.displayName = "TabNav";
 interface TabNavLinkProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
   active?: boolean;
   icon?: TabIcon;
-  onClose?: () => void;
-  closeLabel?: string;
   /** Render your router's link: `<TabNavLink asChild active><Link href="/">home.tsx</Link></TabNavLink>`. */
   asChild?: boolean;
 }
 
 /** One route tab. Marked `aria-current="page"` when active. */
 const TabNavLink = React.forwardRef<HTMLAnchorElement, TabNavLinkProps>(
-  (
-    { className, active = false, icon, onClose, closeLabel, asChild = false, children, ...props },
-    ref
-  ) => {
+  ({ className, active = false, icon, asChild = false, children, ...props }, ref) => {
     const label =
       asChild && React.isValidElement<{ children?: React.ReactNode }>(children)
         ? children.props.children
@@ -373,11 +338,11 @@ const TabNavLink = React.forwardRef<HTMLAnchorElement, TabNavLinkProps>(
     );
     const shared = {
       "aria-current": active ? ("page" as const) : undefined,
-      className: cn(tabLabelClass(active, active && Boolean(onClose)), className),
+      className: cn(tabLabelClass(active), className),
     };
 
     return (
-      <TabShell active={active} onClose={onClose} closeLabel={closeLabel ?? closeLabelFor(label)}>
+      <TabShell active={active}>
         {asChild && React.isValidElement(children) ? (
           <Slot ref={ref} {...shared} {...props}>
             {React.cloneElement(children, undefined, inner)}

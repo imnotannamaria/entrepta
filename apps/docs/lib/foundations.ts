@@ -156,7 +156,6 @@ export const BRAND: Swatch[] = [
   { token: "--border-brand", note: "35% of the brand" },
   { token: "--border-brand-strong", note: "60%, a featured card on hover" },
   { token: "--fg-brand-glow", note: "50%, pulses and glows" },
-  { token: "--bg-spotlight", note: "the cursor glow, stronger in light mode" },
 ];
 
 export const CHART: Swatch[] = [
@@ -407,7 +406,7 @@ export const A11Y_SECTIONS: {
     points: [
       {
         lead: "Glyphs are hidden.",
-        text: "◆, $, // and the window dots carry aria-hidden, so a label is read as its words.",
+        text: "Decorative glyphs carry aria-hidden, so a label is read as its words.",
       },
       {
         lead: "Animated text keeps a real copy.",

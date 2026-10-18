@@ -22,7 +22,7 @@ export const MENU_ROW = cn(
   "transition-colors duration-[var(--motion-fast)]"
 );
 
-/** A group heading above rows. Put a Diamond or an icon first. */
+/** A group heading above rows. Put an icon first if it names a kind of thing. */
 export const MENU_LABEL = cn(
   "flex items-center gap-1.5 px-2.5 pt-2.5 pb-1.5",
   "font-mono text-mono-xs uppercase tracking-[0.08em] text-[var(--fg-muted)]"
