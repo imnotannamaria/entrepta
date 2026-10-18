@@ -1,6 +1,6 @@
 import { CheckIcon, WarningIcon } from "@phosphor-icons/react/dist/ssr";
 import * as React from "react";
-import { Diamond } from "../content/diamond";
+import { NavIndicator } from "../lib/nav";
 import { cn } from "../lib/utils";
 
 export interface StepperStep {
@@ -30,12 +30,14 @@ interface StepperProps extends Omit<React.OlHTMLAttributes<HTMLOListElement>, "c
   orientation?: "horizontal" | "vertical";
   /** The state words screen readers hear after each label. */
   labels?: Partial<typeof LABELS>;
+  /** Inside the current step's marker, in place of its number. A dot by default; `null` keeps the number. */
+  indicator?: React.ReactNode;
 }
 
 /**
  * Where someone is in a flow of a few steps: onboarding, a setup, an import.
  * An ordered list, the current step marked for screen readers and with the
- * ◆, each step's state in words. Below 640px a horizontal stepper keeps only
+ * marker, each step's state in words. Below 640px a horizontal stepper keeps only
  * the current step's label in view; the others stay for screen readers.
  */
 const Stepper = React.forwardRef<HTMLOListElement, StepperProps>(
@@ -47,6 +49,7 @@ const Stepper = React.forwardRef<HTMLOListElement, StepperProps>(
       errored = [],
       orientation = "horizontal",
       labels: labelsProp,
+      indicator,
       className,
       ...props
     },
@@ -90,7 +93,7 @@ const Stepper = React.forwardRef<HTMLOListElement, StepperProps>(
               <div
                 className={cn("flex items-center", vertical ? "flex-col self-stretch" : "w-full")}
               >
-                <Marker state={state} index={index} />
+                <Marker state={state} index={index} indicator={indicator} />
                 {last ? null : (
                   <span
                     aria-hidden
@@ -135,7 +138,15 @@ const Stepper = React.forwardRef<HTMLOListElement, StepperProps>(
 );
 Stepper.displayName = "Stepper";
 
-function Marker({ state, index }: { state: StepState; index: number }) {
+function Marker({
+  state,
+  index,
+  indicator,
+}: {
+  state: StepState;
+  index: number;
+  indicator: React.ReactNode;
+}) {
   return (
     <span
       aria-hidden
@@ -157,7 +168,11 @@ function Marker({ state, index }: { state: StepState; index: number }) {
       ) : state === "error" ? (
         <WarningIcon size={12} weight="bold" />
       ) : state === "current" ? (
-        <Diamond size={10} />
+        indicator === null ? (
+          index + 1
+        ) : (
+          (indicator ?? <NavIndicator />)
+        )
       ) : (
         index + 1
       )}

@@ -1,4 +1,6 @@
 import { DocPageHeader, DocSubhead } from "@/components/doc-page-header";
+import { CardComment } from "@/components/editor/card-comment";
+import { CardLabel } from "@/components/editor/card-label";
 import {
   TYPE_FAMILIES,
   TYPE_RULES,
@@ -7,14 +9,7 @@ import {
   foundationPage,
 } from "@/lib/foundations";
 import { CodeBlock } from "@entrepta/registry/content/code-block";
-import {
-  Card,
-  CardComment,
-  CardFooter,
-  CardHeader,
-  CardLabel,
-  CardMeta,
-} from "@entrepta/registry/primitives/card";
+import { Card, CardFooter, CardHeader, CardMeta } from "@entrepta/registry/primitives/card";
 import type { Metadata } from "next";
 
 const PAGE = foundationPage("typography");

@@ -185,22 +185,22 @@ describe("add", () => {
       expect(hookDest).toContain("hooks/");
     });
 
-    it("copies diamond next to card and points card's import at it", async () => {
+    it("copies skeleton next to metric and points metric's import at it", async () => {
       mockReadFile.mockImplementation(async (p) =>
-        String(p).endsWith("card.tsx")
-          ? (`import { Diamond } from "../content/diamond";\n` as never)
+        String(p).endsWith("metric.tsx")
+          ? (`import { Skeleton } from "../primitives/skeleton";\n` as never)
           : (BUTTON_SOURCE as never)
       );
-      await add(["card"], { overwrite: false });
+      await add(["metric"], { overwrite: false });
       const written = mockWriteFile.mock.calls.map(([p, content]) => [String(p), String(content)]);
       expect(written.map(([p]) => p)).toEqual(
         expect.arrayContaining([
-          expect.stringContaining("components/entrepta/diamond.tsx"),
-          expect.stringContaining("components/entrepta/card.tsx"),
+          expect.stringContaining("components/entrepta/skeleton.tsx"),
+          expect.stringContaining("components/entrepta/metric.tsx"),
         ])
       );
-      const card = written.find(([p]) => p.endsWith("card.tsx"))?.[1];
-      expect(card).toContain('from "./diamond"');
+      const metric = written.find(([p]) => p.endsWith("metric.tsx"))?.[1];
+      expect(metric).toContain('from "./skeleton"');
     });
 
     it("puts lib/motion.ts in the lib alias and points reveal's import at it", async () => {

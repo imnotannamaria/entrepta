@@ -2,7 +2,6 @@
 
 import { CheckIcon } from "@phosphor-icons/react";
 import * as React from "react";
-import { Diamond } from "../content/diamond";
 import { type PaletteKey, colorHue, hueName, paletteColor } from "../lib/palette";
 import { cn } from "../lib/utils";
 import { fieldLabelClass } from "./field";
@@ -125,7 +124,6 @@ const SwatchPicker = React.forwardRef<HTMLFieldSetElement, SwatchPickerProps>((p
   return (
     <fieldset ref={ref} className={cn("m-0 min-w-0 border-0 p-0", className)} {...rest}>
       <legend className={cn(hideLegend ? "sr-only" : cn(fieldLabelClass, "mb-3 p-0"))}>
-        {hideLegend ? null : <Diamond />}
         {legend}
       </legend>
       {/* equal columns, as many as fit: rows break evenly, never five and one */}

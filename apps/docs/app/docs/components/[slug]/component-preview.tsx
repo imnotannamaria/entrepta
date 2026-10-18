@@ -102,13 +102,13 @@ import { Button } from "@entrepta/registry/primitives/button";
 import { Calendar, type DateRange } from "@entrepta/registry/primitives/calendar";
 import {
   Card,
-  CardComment,
   CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
   CardLabel,
   CardMeta,
+  CardNote,
   CardTerminalBar,
   CardTerminalBody,
   CardTitle,
@@ -2093,7 +2093,7 @@ function CardPreview() {
         </CardDescription>
         <CardFooter>
           <span>read →</span>
-          <CardComment>draft</CardComment>
+          <CardNote>draft</CardNote>
         </CardFooter>
       </Card>
 
@@ -2111,7 +2111,7 @@ function CardPreview() {
           A dark-first kit of typed primitives. Copy-paste, own the source, ship faster.
         </CardDescription>
         <CardFooter>
-          <CardComment>shipped 2025-11</CardComment>
+          <CardNote>shipped 2025-11</CardNote>
           <span>github ↗</span>
         </CardFooter>
       </Card>
@@ -2148,7 +2148,7 @@ function CardPreview() {
           <div className="font-mono text-mono-sm text-[var(--fg-muted)] mt-1">repos shipped</div>
         </CardContent>
         <CardFooter>
-          <CardComment>consistent</CardComment>
+          <CardNote>consistent</CardNote>
           <span>updated 21:14</span>
         </CardFooter>
       </Card>
@@ -2680,6 +2680,27 @@ function ModeTogglePreview() {
       <Demo label="labeled">
         <ModeToggle storageKey={STORAGE_KEY_PREFIX} variant="labeled" />
         <ModeToggle storageKey={STORAGE_KEY_PREFIX} variant="labeled" size="sm" />
+      </Demo>
+    </div>
+  );
+}
+
+function DiamondPreview() {
+  return (
+    <div className="flex w-full max-w-md flex-col gap-7">
+      <Demo label="alone, 9 and 10px">
+        <Diamond />
+        <Diamond size={10} />
+      </Demo>
+      <Demo label="as an icon">
+        <Card className="w-full">
+          <CardHeader>
+            <CardLabel icon={<Diamond size={10} />}>layout</CardLabel>
+          </CardHeader>
+        </Card>
+      </Demo>
+      <Demo label="as an indicator">
+        <Stepper steps={ONBOARDING} current={ONBOARDING[1].id} indicator={<Diamond size={10} />} />
       </Demo>
     </div>
   );
@@ -3227,6 +3248,7 @@ const PREVIEWS: Record<string, React.ReactNode> = {
   skeleton: <SkeletonPreview />,
   "command-palette": <CommandPalettePreview />,
   "code-block": <CodeBlockPreview />,
+  diamond: <DiamondPreview />,
   kbd: <KbdPreview />,
   checkbox: <CheckboxPreview />,
   switch: <SwitchPreview />,

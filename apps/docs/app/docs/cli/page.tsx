@@ -1,13 +1,13 @@
 import { DocPageHeader, DocSubhead } from "@/components/doc-page-header";
+import { CardComment } from "@/components/editor/card-comment";
+import { CardLabel } from "@/components/editor/card-label";
 import { NpmPackages } from "@/components/npm-packages";
 import { CLI_COMMANDS } from "@/lib/docs-data";
 import { CodeBlock } from "@entrepta/registry/content/code-block";
 import {
   Card,
-  CardComment,
   CardFooter,
   CardHeader,
-  CardLabel,
   CardMeta,
   CardTitle,
 } from "@entrepta/registry/primitives/card";

@@ -1,6 +1,5 @@
 import { type VariantProps, cva } from "class-variance-authority";
 import * as React from "react";
-import { Diamond } from "../content/diamond";
 import { type IconProp, IconSlot } from "../lib/icon";
 import { cn } from "../lib/utils";
 
@@ -98,7 +97,7 @@ interface CardLabelProps extends React.HTMLAttributes<HTMLElement> {
   icon?: IconProp;
 }
 
-/** Editor-style label with the ◆ prefix, or an icon. Use inside CardHeader. */
+/** A small mono label, with an icon in front when you pass one. Use inside CardHeader. */
 const CardLabel = React.forwardRef<HTMLElement, CardLabelProps>(
   ({ className, children, as: Tag = "span", icon: LabelIcon, ...props }, ref) => (
     <Tag
@@ -112,9 +111,7 @@ const CardLabel = React.forwardRef<HTMLElement, CardLabelProps>(
     >
       {LabelIcon ? (
         <IconSlot icon={LabelIcon} size={12} className="text-[var(--fg-brand)]" />
-      ) : (
-        <Diamond size={10} />
-      )}
+      ) : null}
       {children}
     </Tag>
   )
@@ -183,18 +180,11 @@ const CardFooter = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDiv
 );
 CardFooter.displayName = "CardFooter";
 
-/** Inline code comment with a dimmed // prefix. Use inside CardFooter. */
-const CardComment = React.forwardRef<HTMLSpanElement, React.HTMLAttributes<HTMLSpanElement>>(
-  ({ className, children, ...props }, ref) => (
-    <span ref={ref} className={cn(className)} {...props}>
-      <span aria-hidden className="opacity-60">
-        {"// "}
-      </span>
-      {children}
-    </span>
-  )
+/** A short note at the end of a card, in the footer's own ink. Use inside CardFooter. */
+const CardNote = React.forwardRef<HTMLSpanElement, React.HTMLAttributes<HTMLSpanElement>>(
+  ({ className, ...props }, ref) => <span ref={ref} className={cn(className)} {...props} />
 );
-CardComment.displayName = "CardComment";
+CardNote.displayName = "CardNote";
 
 /** Terminal-style header bar with bg + border-bottom. Use as first child of Card variant="terminal". */
 const CardTerminalBar = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
@@ -236,7 +226,7 @@ export {
   CardDescription,
   CardContent,
   CardFooter,
-  CardComment,
+  CardNote,
   CardTerminalBar,
   CardTerminalBody,
 };

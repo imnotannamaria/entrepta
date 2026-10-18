@@ -1,5 +1,7 @@
 "use client";
 
+import { CardComment } from "@/components/editor/card-comment";
+import { CardLabel } from "@/components/editor/card-label";
 import { buildAgentsMd } from "@/lib/agents-md";
 import { COMPONENT_INDEX } from "@/lib/component-index";
 import { DEFAULT_MODE, DEFAULT_THEME, STORAGE_KEY_PREFIX, THEMES } from "@/lib/theme";
@@ -12,14 +14,7 @@ import { Spotlight, useSpotlight } from "@entrepta/registry/motion/spotlight";
 import { Avatar, AvatarGroup } from "@entrepta/registry/primitives/avatar";
 import { Badge } from "@entrepta/registry/primitives/badge";
 import { Button } from "@entrepta/registry/primitives/button";
-import {
-  Card,
-  CardComment,
-  CardFooter,
-  CardHeader,
-  CardLabel,
-  CardTitle,
-} from "@entrepta/registry/primitives/card";
+import { Card, CardFooter, CardHeader, CardTitle } from "@entrepta/registry/primitives/card";
 import { Checkbox } from "@entrepta/registry/primitives/checkbox";
 import { Progress } from "@entrepta/registry/primitives/progress";
 import { Switch } from "@entrepta/registry/primitives/switch";

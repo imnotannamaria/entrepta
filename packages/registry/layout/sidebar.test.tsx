@@ -26,6 +26,16 @@ describe("Sidebar", () => {
     expect(marks[0]).toHaveAttribute("aria-hidden", "true");
   });
 
+  it("travels a dot by default, takes any node as the indicator, and null hides it", () => {
+    const { container, rerender } = render(<Sidebar items={ITEMS} active="blog" />);
+    expect(container.querySelector("[data-sidebar-mark] [data-nav-indicator]")).not.toBeNull();
+    rerender(<Sidebar items={ITEMS} active="blog" indicator={<b data-mine>◆</b>} />);
+    expect(container.querySelector("[data-sidebar-mark] [data-mine]")).not.toBeNull();
+    expect(container.querySelector("[data-nav-indicator]")).toBeNull();
+    rerender(<Sidebar items={ITEMS} active="blog" indicator={null} />);
+    expect(container.querySelector("[data-sidebar-mark]")).toBeNull();
+  });
+
   it("renders through your router's link component", () => {
     const RouterLink = React.forwardRef<
       HTMLAnchorElement,

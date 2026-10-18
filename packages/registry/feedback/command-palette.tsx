@@ -132,9 +132,6 @@ const CommandGroup = React.forwardRef<
       "[&_[cmdk-group-heading]]:font-mono [&_[cmdk-group-heading]]:text-mono-xs",
       "[&_[cmdk-group-heading]]:uppercase [&_[cmdk-group-heading]]:tracking-[0.08em]",
       "[&_[cmdk-group-heading]]:text-[var(--fg-muted)]",
-      // cmdk renders the heading, so the ◆ comes in through ::before
-      "[&_[cmdk-group-heading]]:before:content-['◆'] [&_[cmdk-group-heading]]:before:[font-size:9px]",
-      "[&_[cmdk-group-heading]]:before:text-[var(--fg-brand)]",
       className
     )}
     {...props}
@@ -197,12 +194,7 @@ const CommandFoot = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDi
     >
       {children ?? (
         <>
-          <span className="whitespace-nowrap">
-            <span aria-hidden className="opacity-60">
-              {"// "}
-            </span>
-            palette
-          </span>
+          <span className="whitespace-nowrap">palette</span>
           <span className="flex items-center gap-3 whitespace-nowrap">
             <span className="flex items-center gap-1.5">
               <Kbd>↑↓</Kbd> navigate

@@ -101,10 +101,20 @@ describe("Tabs", () => {
     expect(onClose).toHaveBeenCalled();
   });
 
-  it("renders diamond marker on active tab when no icon", () => {
-    render(<TestTabs />);
-    const activeTab = screen.getByRole("tab", { name: /Tab A/ });
-    expect(activeTab.textContent).toContain("◆");
+  it("draws nothing before a tab with no icon, unless the strip has an indicator", () => {
+    const { rerender } = render(<TestTabs />);
+    expect(screen.getByRole("tab", { name: /Tab A/ }).textContent).toBe("Tab A");
+    rerender(
+      <Tabs defaultValue="a" indicator={<b data-mine>◆</b>}>
+        <TabsList>
+          <TabsTrigger value="a">Tab A</TabsTrigger>
+          <TabsTrigger value="b">Tab B</TabsTrigger>
+        </TabsList>
+      </Tabs>
+    );
+    const [mineA, mineB] = [...document.querySelectorAll("[data-mine]")];
+    expect(mineA.parentElement).not.toHaveClass("invisible");
+    expect(mineB.parentElement).toHaveClass("invisible");
   });
 
   it("draws one brand underline, under the active tab, and moves it on switch", async () => {
@@ -150,7 +160,7 @@ describe("TabNav", () => {
     const link = screen.getByRole("link", { name: /blog\// });
     expect(link).toHaveAttribute("data-router-link");
     expect(link).toHaveAttribute("aria-current", "page");
-    expect(link.textContent).toContain("◆");
+    expect(link.textContent).toBe("blog/");
   });
 
   it("closes the active route tab from a sibling button", async () => {

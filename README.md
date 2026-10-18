@@ -28,14 +28,14 @@ npx @entrepta/cli@latest add button card command-palette
 
 ## What you get
 
-70 components across 8 sections, in React 19, Tailwind v4 and CSS variables.
+71 components across 8 sections, in React 19, Tailwind v4 and CSS variables.
 
 | Section    | Components |
 | ---------- | ---------- |
 | Primitives | Button, Badge, Avatar, IconTile, Card, Dialog, Sheet, Popover, Accordion, Dropdown, Tooltip, Kbd, Tabs, Progress, Stepper |
 | Forms      | Input, Textarea, Checkbox, Switch, Field, MoneyInput, Select, Combobox, SegmentedControl, ChoiceCard, SwatchPicker, SecretField, FileDropzone, Calendar, DatePicker, DateNavigator, FilterPill |
 | Layout     | StatusBar, TopNav, ThemeSwitcher, ModeToggle, Sidebar, MobileNav, BentoGrid, PageOutline |
-| Content    | CodeBlock, SectHead, Doc parts |
+| Content    | CodeBlock, Diamond, SectHead, Doc parts |
 | Data       | Amount, Metric, Delta, Sparkline, Chart, BarList, ContributionGrid, Redact, ListRow, Table, DataTable, FilterBuilder |
 | Chat       | PromptInput, ChatThread |
 | Feedback   | Alert, EmptyState, Toast, Skeleton, CommandPalette, ChromeMessage, PageLoading |

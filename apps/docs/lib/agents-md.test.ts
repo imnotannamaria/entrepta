@@ -42,9 +42,9 @@ describe("buildAgentsMd", () => {
   });
 
   it("lists what comes along as a dependency", () => {
-    expect(buildAgentsMd({ ...BASE, components: ["card"] })).toContain(
-      "Also installed as dependencies: `diamond`"
-    );
+    const md = buildAgentsMd({ ...BASE, components: ["choice-card"] });
+    expect(md).toContain("Also installed as dependencies:");
+    expect(md).toContain("`icon-tile`");
   });
 
   it("never contains a hex color", () => {

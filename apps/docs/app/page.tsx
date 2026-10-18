@@ -1,5 +1,7 @@
 import { OpenAgentsButton } from "@/components/agents-configurator";
 import { CommandPaletteTrigger } from "@/components/command-palette-trigger";
+import { CardComment } from "@/components/editor/card-comment";
+import { CardLabel } from "@/components/editor/card-label";
 import { CopyInit, HeroStats, HomeShowcase, ThemeRow } from "@/components/home-hero";
 import { HomeInstall } from "@/components/home-install";
 import { HomeSection, SectionHead, SpecList } from "@/components/home-section";
@@ -22,12 +24,10 @@ import { Badge } from "@entrepta/registry/primitives/badge";
 import { buttonVariants } from "@entrepta/registry/primitives/button-variants";
 import {
   Card,
-  CardComment,
   CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
-  CardLabel,
   CardMeta,
   CardTitle,
 } from "@entrepta/registry/primitives/card";

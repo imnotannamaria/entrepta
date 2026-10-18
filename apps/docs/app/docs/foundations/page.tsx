@@ -1,4 +1,6 @@
 import { DocPageHeader } from "@/components/doc-page-header";
+import { CardComment } from "@/components/editor/card-comment";
+import { CardLabel } from "@/components/editor/card-label";
 import { DATA_FOUNDATION } from "@/lib/docs-data";
 import {
   FOUNDATIONS_INTRO,
@@ -12,11 +14,9 @@ import { RULES } from "@/lib/rules";
 import { buttonVariants } from "@entrepta/registry/primitives/button-variants";
 import {
   Card,
-  CardComment,
   CardDescription,
   CardFooter,
   CardHeader,
-  CardLabel,
   CardMeta,
   CardTitle,
 } from "@entrepta/registry/primitives/card";

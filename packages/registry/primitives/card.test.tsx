@@ -2,13 +2,13 @@ import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import {
   Card,
-  CardComment,
   CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
   CardLabel,
   CardMeta,
+  CardNote,
   CardTerminalBar,
   CardTerminalBody,
   CardTitle,
@@ -124,10 +124,10 @@ describe("Card sub-components", () => {
     expect(screen.getByText("june 8, 2026 · 3 min")).toHaveClass("whitespace-nowrap");
   });
 
-  it("CardLabel renders a hidden diamond before children", () => {
+  it("CardLabel renders its children and no glyph of its own", () => {
     render(<CardLabel>resend-ecommerce</CardLabel>);
     expect(screen.getByText("resend-ecommerce")).toBeInTheDocument();
-    expect(screen.getByText("◆")).toHaveAttribute("aria-hidden", "true");
+    expect(screen.queryByText("◆")).not.toBeInTheDocument();
   });
 
   it("CardLabel can be a heading without heading styles", () => {
@@ -171,12 +171,11 @@ describe("Card sub-components", () => {
     expect(container.firstChild).toHaveClass("mt-auto", "flex-wrap");
   });
 
-  it("CardComment renders // prefix before children", () => {
-    const { container } = render(<CardComment>shipped 2025-11</CardComment>);
+  it("CardNote is the text alone, with no prefix of its own", () => {
+    const { container } = render(<CardNote>shipped 2025-11</CardNote>);
     expect(screen.getByText("shipped 2025-11")).toBeInTheDocument();
-    const prefix = container.querySelector("[aria-hidden]");
-    expect(prefix?.textContent).toBe("// ");
-    expect(prefix).toHaveClass("opacity-60");
+    expect(container.textContent).toBe("shipped 2025-11");
+    expect(container.querySelector("[aria-hidden]")).toBeNull();
   });
 
   it("CardTerminalBar has a bottom border and no band over the card's glow", () => {

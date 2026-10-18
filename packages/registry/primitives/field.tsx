@@ -1,12 +1,11 @@
 import * as React from "react";
-import { Diamond } from "../content/diamond";
 import { type IconProp, IconSlot } from "../lib/icon";
 import { cn } from "../lib/utils";
 
 interface FieldLabelProps extends React.LabelHTMLAttributes<HTMLLabelElement> {
   /** Adds a brand `*`. Put `required` on the control too; the star is only visual. */
   required?: boolean;
-  /** A Phosphor icon in place of the ◆. */
+  /** A Phosphor icon, or an icon element, in front of the label. */
   icon?: IconProp;
 }
 
@@ -20,9 +19,7 @@ const FieldLabel = React.forwardRef<HTMLLabelElement, FieldLabelProps>(
     <label ref={ref} className={cn(fieldLabelClass, className)} {...props}>
       {LabelIcon ? (
         <IconSlot icon={LabelIcon} size={11} className="text-[var(--fg-brand)]" />
-      ) : (
-        <Diamond />
-      )}
+      ) : null}
       {children}
       {required && (
         // drawn by CSS, so it is neither in the label's text nor in its accessible name
@@ -38,7 +35,7 @@ interface FieldErrorProps extends React.HTMLAttributes<HTMLSpanElement> {
   message?: React.ReactNode;
 }
 
-/** Announced as soon as it appears, with a dimmed `//` in front. */
+/** Announced as soon as it appears. */
 const FieldError = React.forwardRef<HTMLSpanElement, FieldErrorProps>(
   ({ className, message, ...props }, ref) => {
     if (!message) return null;
@@ -52,9 +49,6 @@ const FieldError = React.forwardRef<HTMLSpanElement, FieldErrorProps>(
         )}
         {...props}
       >
-        <span aria-hidden className="opacity-70">
-          {"// "}
-        </span>
         {message}
       </span>
     );
@@ -67,7 +61,7 @@ interface FieldProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "childre
   id: string;
   label: React.ReactNode;
   required?: boolean;
-  /** A Phosphor icon in place of the label's ◆. */
+  /** A Phosphor icon, or an icon element, in front of the label. */
   icon?: IconProp;
   error?: React.ReactNode;
   hint?: React.ReactNode;

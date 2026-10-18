@@ -97,7 +97,7 @@ Docs: https://entrepta.vercel.app/docs/components/button.md
 ### Card
 
 \`\`\`tsx
-import { Card, cardVariants, CardHeader, CardLabel, CardMeta, CardTitle, CardDescription, CardContent, CardFooter, CardComment, CardTerminalBar, CardTerminalBody } from "@/app/components/entrepta/card"
+import { Card, cardVariants, CardHeader, CardLabel, CardMeta, CardTitle, CardDescription, CardContent, CardFooter, CardNote, CardTerminalBar, CardTerminalBody } from "@/app/components/entrepta/card"
 
 <Card><CardHeader><CardLabel>post</CardLabel><CardMeta>2026</CardMeta></CardHeader><CardTitle>Title</CardTitle></Card>
 \`\`\`
@@ -113,8 +113,6 @@ import { Field, FieldError, FieldLabel, fieldLabelClass } from "@/app/components
 \`\`\`
 
 Docs: https://entrepta.vercel.app/docs/components/field.md
-
-Also installed as dependencies: \`diamond\`.
 
 ## Reading the docs
 
@@ -227,7 +225,7 @@ Docs: https://entrepta.vercel.app/docs/components/button.md
 ### Card
 
 \`\`\`tsx
-import { Card, cardVariants, CardHeader, CardLabel, CardMeta, CardTitle, CardDescription, CardContent, CardFooter, CardComment, CardTerminalBar, CardTerminalBody } from "@/components/entrepta/card"
+import { Card, cardVariants, CardHeader, CardLabel, CardMeta, CardTitle, CardDescription, CardContent, CardFooter, CardNote, CardTerminalBar, CardTerminalBody } from "@/components/entrepta/card"
 
 <Card><CardHeader><CardLabel>post</CardLabel><CardMeta>2026</CardMeta></CardHeader><CardTitle>Title</CardTitle></Card>
 \`\`\`
@@ -243,8 +241,6 @@ import { Field, FieldError, FieldLabel, fieldLabelClass } from "@/components/ent
 \`\`\`
 
 Docs: https://entrepta.vercel.app/docs/components/field.md
-
-Also installed as dependencies: \`diamond\`.
 
 ## Reading the docs
 
@@ -357,7 +353,7 @@ Docs: https://entrepta.vercel.app/docs/components/button.md
 ### Card
 
 \`\`\`tsx
-import { Card, cardVariants, CardHeader, CardLabel, CardMeta, CardTitle, CardDescription, CardContent, CardFooter, CardComment, CardTerminalBar, CardTerminalBody } from "@/components/entrepta/card"
+import { Card, cardVariants, CardHeader, CardLabel, CardMeta, CardTitle, CardDescription, CardContent, CardFooter, CardNote, CardTerminalBar, CardTerminalBody } from "@/components/entrepta/card"
 
 <Card><CardHeader><CardLabel>post</CardLabel><CardMeta>2026</CardMeta></CardHeader><CardTitle>Title</CardTitle></Card>
 \`\`\`
@@ -373,8 +369,6 @@ import { Field, FieldError, FieldLabel, fieldLabelClass } from "@/components/ent
 \`\`\`
 
 Docs: https://entrepta.vercel.app/docs/components/field.md
-
-Also installed as dependencies: \`diamond\`.
 
 ## Reading the docs
 

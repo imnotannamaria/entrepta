@@ -61,6 +61,7 @@ export const COMPONENT_INDEX: ComponentEntry[] = [
   { slug: "bento-grid", title: "BentoGrid", section: "Layout" },
   { slug: "page-outline", title: "PageOutline", section: "Layout" },
   { slug: "code-block", title: "CodeBlock", section: "Content" },
+  { slug: "diamond", title: "Diamond", section: "Content" },
   { slug: "sect-head", title: "SectHead", section: "Content" },
   { slug: "doc-parts", title: "Doc parts", section: "Content" },
   { slug: "amount", title: "Amount", section: "Data" },

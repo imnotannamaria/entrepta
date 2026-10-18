@@ -1,14 +1,14 @@
 import { DocPageHeader, DocSubhead } from "@/components/doc-page-header";
+import { CardComment } from "@/components/editor/card-comment";
+import { CardLabel } from "@/components/editor/card-label";
 import { THEME_NOTES, THEME_SWITCH, THEME_TAYLOR } from "@/lib/docs-data";
 import { THEMES as THEME_LIST } from "@/lib/theme";
 import { CodeBlock } from "@entrepta/registry/content/code-block";
 import {
   Card,
-  CardComment,
   CardContent,
   CardFooter,
   CardHeader,
-  CardLabel,
   CardMeta,
 } from "@entrepta/registry/primitives/card";
 import type { Metadata } from "next";

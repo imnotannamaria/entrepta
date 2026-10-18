@@ -5,7 +5,6 @@ import { Slot } from "@radix-ui/react-slot";
 import * as TabsPrimitive from "@radix-ui/react-tabs";
 import { motion, useReducedMotion } from "motion/react";
 import * as React from "react";
-import { Diamond } from "../content/diamond";
 import { EASE_OUT } from "../lib/motion";
 import { cn } from "../lib/utils";
 
@@ -27,7 +26,11 @@ import { cn } from "../lib/utils";
 
 type TabIcon = React.ReactNode | Icon;
 
-const StripContext = React.createContext<{ value?: string; layoutId: string } | null>(null);
+const StripContext = React.createContext<{
+  value?: string;
+  layoutId: string;
+  indicator?: React.ReactNode;
+} | null>(null);
 
 function useStrip() {
   const ctx = React.useContext(StripContext);
@@ -143,8 +146,14 @@ function tabLabelClass(active: boolean, closable: boolean) {
 }
 
 function TabGlyph({ icon, active }: { icon?: TabIcon; active: boolean }) {
+  const { indicator } = useStrip();
   if (!icon) {
-    return <Diamond className={cn("transition-colors", !active && "text-transparent")} />;
+    // the room stays on the inactive tabs, so the labels do not shift when one is picked
+    return indicator == null ? null : (
+      <span aria-hidden className={cn("inline-flex shrink-0", !active && "invisible")}>
+        {indicator}
+      </span>
+    );
   }
   if (React.isValidElement(icon)) {
     return (
@@ -238,8 +247,11 @@ function closeLabelFor(children: React.ReactNode) {
 
 const Tabs = React.forwardRef<
   React.ComponentRef<typeof TabsPrimitive.Root>,
-  React.ComponentPropsWithoutRef<typeof TabsPrimitive.Root>
->(({ value: valueProp, defaultValue, onValueChange, ...props }, ref) => {
+  React.ComponentPropsWithoutRef<typeof TabsPrimitive.Root> & {
+    /** A glyph before the label of the active tab, for tabs with no icon. None by default. */
+    indicator?: React.ReactNode;
+  }
+>(({ value: valueProp, defaultValue, onValueChange, indicator, ...props }, ref) => {
   const [uncontrolled, setUncontrolled] = React.useState(defaultValue);
   const value = valueProp ?? uncontrolled;
   const layoutId = React.useId();
@@ -250,7 +262,7 @@ const Tabs = React.forwardRef<
   };
 
   return (
-    <StripContext.Provider value={{ value, layoutId }}>
+    <StripContext.Provider value={{ value, layoutId, indicator }}>
       <TabsPrimitive.Root ref={ref} value={value} onValueChange={handleChange} {...props} />
     </StripContext.Provider>
   );
@@ -290,7 +302,7 @@ const TabsList = React.forwardRef<React.ComponentRef<typeof TabsPrimitive.List>,
 TabsList.displayName = "TabsList";
 
 interface TabsTriggerProps extends React.ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger> {
-  /** An element, or a Phosphor icon component, which fills when active. Defaults to a ◆. */
+  /** An element, or a Phosphor icon component, which fills when active. Without one, the strip's `indicator`, if it has one. */
   icon?: TabIcon;
   /** Shows a × on the active tab. */
   onClose?: () => void;
@@ -348,11 +360,13 @@ interface TabNavProps extends React.HTMLAttributes<HTMLElement> {
   variant?: RowVariant;
   after?: React.ReactNode;
   end?: React.ReactNode;
+  /** A glyph before the label of the active tab, for tabs with no icon. None by default. */
+  indicator?: React.ReactNode;
 }
 
 /** A `<nav>` of route tabs. With `variant="window"`, the editor's title bar. */
 const TabNav = React.forwardRef<HTMLElement, TabNavProps>(
-  ({ className, style, variant = "strip", after, end, children, ...props }, ref) => {
+  ({ className, style, variant = "strip", after, end, indicator, children, ...props }, ref) => {
     const innerRef = React.useRef<HTMLElement>(null);
     React.useImperativeHandle(ref, () => innerRef.current as HTMLElement);
     const layoutId = React.useId();
@@ -360,7 +374,7 @@ const TabNav = React.forwardRef<HTMLElement, TabNavProps>(
     const mask = useFadeMask(innerRef, [count]);
 
     return (
-      <StripContext.Provider value={{ layoutId }}>
+      <StripContext.Provider value={{ layoutId, indicator }}>
         <Row variant={variant} className={className} after={after} end={end}>
           <nav ref={innerRef} className={scrollerClass} style={{ ...mask, ...style }} {...props}>
             {children}

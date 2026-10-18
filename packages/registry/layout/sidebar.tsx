@@ -5,7 +5,7 @@ import { motion, useReducedMotion } from "motion/react";
 import * as React from "react";
 import { type IconProp, IconSlot } from "../lib/icon";
 import { EASE_OUT } from "../lib/motion";
-import { NAV_ROW_CURRENT, NAV_ROW_IDLE } from "../lib/nav";
+import { NAV_ROW_CURRENT, NAV_ROW_IDLE, NavIndicator } from "../lib/nav";
 import { cn } from "../lib/utils";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../primitives/tooltip";
 
@@ -56,6 +56,8 @@ export interface SidebarProps extends React.HTMLAttributes<HTMLElement> {
   storageKey?: string | null;
   /** Your router's link, such as next/link. Defaults to `<a>`. */
   linkComponent?: LinkComponent;
+  /** What travels to the current item, outside its left edge. A dot by default; `null` hides it. */
+  indicator?: React.ReactNode;
   /** Names the nav landmark. */
   label?: string;
   labels?: { collapse?: string; expand?: string };
@@ -93,7 +95,7 @@ function renderSlot(slot: SidebarSlot, collapsed: boolean) {
  * The app's main navigation. As a rail it is 56px of icons, each with its
  * Tooltip; labeled it is 240px with group titles, a search slot and a footer,
  * and `collapsible` folds it back to the rail. The current item sits on a
- * raised row, its icon filled, and a ◆ travels to it from the last one. Icons
+ * raised row, its icon filled, and an indicator travels to it from the last one. Icons
  * grow on hover; the hit area does not.
  */
 const Sidebar = React.forwardRef<HTMLElement, SidebarProps>(
@@ -115,6 +117,7 @@ const Sidebar = React.forwardRef<HTMLElement, SidebarProps>(
       linkComponent: LinkComp = "a",
       label = "Primary",
       labels,
+      indicator,
       ...props
     },
     ref
@@ -173,18 +176,19 @@ const Sidebar = React.forwardRef<HTMLElement, SidebarProps>(
       ? (labels?.expand ?? "Expand sidebar")
       : (labels?.collapse ?? "Collapse sidebar");
 
-    const mark = (
-      <motion.span
-        layoutId={layoutId}
-        aria-hidden
-        data-sidebar-mark
-        transition={reduce ? { duration: 0 } : { duration: 0.32, ease: EASE_OUT }}
-        className="pointer-events-none absolute top-1/2 -left-2 -translate-y-1/2 leading-none text-[var(--fg-brand)]"
-        style={{ fontSize: 10 }}
-      >
-        ◆
-      </motion.span>
-    );
+    const mark =
+      indicator === null ? null : (
+        <motion.span
+          layoutId={layoutId}
+          aria-hidden
+          data-sidebar-mark
+          transition={reduce ? { duration: 0 } : { duration: 0.32, ease: EASE_OUT }}
+          className="pointer-events-none absolute top-1/2 -left-2 flex -translate-y-1/2 px-0.5 leading-none text-[var(--fg-brand)]"
+          style={{ fontSize: 10 }}
+        >
+          {indicator ?? <NavIndicator />}
+        </motion.span>
+      );
 
     return (
       <TooltipProvider delayDuration={300}>
@@ -217,7 +221,7 @@ const Sidebar = React.forwardRef<HTMLElement, SidebarProps>(
             aria-label={label}
             className={cn(
               // It scrolls, which clips: it spans the sidebar's full width, so the
-              // ◆ outside each link and the focus ring stay inside it.
+              // indicator outside each link and the focus ring stay inside it.
               "flex min-h-0 flex-1 flex-col overflow-y-auto py-1",
               collapsed ? "w-full items-center gap-1" : "-mx-3 gap-5 px-3"
             )}

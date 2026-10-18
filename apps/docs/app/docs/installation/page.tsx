@@ -1,4 +1,6 @@
 import { DocPageHeader, DocSubhead } from "@/components/doc-page-header";
+import { CardComment } from "@/components/editor/card-comment";
+import { CardLabel } from "@/components/editor/card-label";
 import { NpmPackages } from "@/components/npm-packages";
 import { INIT_FILES, REQUIREMENTS } from "@/lib/docs-data";
 import { CodeBlock } from "@entrepta/registry/content/code-block";
@@ -6,10 +8,8 @@ import { Diamond } from "@entrepta/registry/content/diamond";
 import { Button } from "@entrepta/registry/primitives/button";
 import {
   Card,
-  CardComment,
   CardFooter,
   CardHeader,
-  CardLabel,
   CardMeta,
   CardTitle,
 } from "@entrepta/registry/primitives/card";

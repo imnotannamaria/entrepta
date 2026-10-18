@@ -217,7 +217,7 @@ import { RobotIcon } from "@phosphor-icons/react"
       "Surface container in 4 variants and 3 sizes. Near black with a border that lights up on hover. The header wraps instead of clipping.",
     usage: `import {
   Card, CardHeader, CardLabel, CardMeta, CardTitle,
-  CardDescription, CardFooter, CardComment,
+  CardDescription, CardFooter, CardNote,
   CardTerminalBar, CardTerminalBody,
 } from "@/components/entrepta/card"
 
@@ -232,7 +232,7 @@ import { RobotIcon } from "@phosphor-icons/react"
   <CardDescription>Two years of notes, back in plain text.</CardDescription>
   <CardFooter>
     <span>read →</span>
-    <CardComment>draft</CardComment>
+    <CardNote>draft</CardNote>
   </CardFooter>
 </Card>
 
@@ -265,7 +265,8 @@ import { RobotIcon } from "@phosphor-icons/react"
       {
         name: "icon",
         type: "Icon | ReactElement",
-        description: "A Phosphor icon, or an icon element, in place of the ◆ (CardLabel only)",
+        description:
+          "A Phosphor icon, or an icon element, in front of the label. icon={<Diamond />} is the ◆ (CardLabel only)",
       },
     ],
   },
@@ -302,7 +303,7 @@ import { Button } from "@/components/entrepta/button"
         name: "icon",
         type: "Icon | ReactElement",
         description:
-          "In place of the ◆ (DialogLabel). From a server file, pass an element: icon={<RobotIcon />}",
+          "In front of the label (DialogLabel). From a server file, pass an element: icon={<RobotIcon />}",
       },
       {
         name: "open",
@@ -616,6 +617,24 @@ import { GearIcon, UserIcon } from "@phosphor-icons/react"
       },
     ],
   },
+  diamond: {
+    description:
+      "The ◆, the mark entrepta used to put before every label. No component draws it on its own now. Pass it where you want it: as an icon of a label, or as the indicator of a nav, a tab strip or a stepper. It is hidden from screen readers.",
+    usage: `import { Diamond } from "@/components/entrepta/diamond"
+
+<CardLabel icon={<Diamond size={10} />}>layout</CardLabel>
+<Field id="email" label="email" icon={<Diamond />} />
+<Sidebar items={items} indicator={<Diamond size={10} />} />
+<Stepper steps={steps} current="bank" indicator={<Diamond size={10} />} />`,
+    props: [
+      {
+        name: "size",
+        type: "9 | 10",
+        default: "9",
+        description: "The glyph's size in px: 9 beside text-mono-xs, 10 beside text-mono-sm",
+      },
+    ],
+  },
   kbd: {
     description:
       "One look for every keyboard hint: a key cap chip, or plain text for rows that already have a surface. Inside a highlighted menu or palette row it takes the brand ink. Dropdown, CommandPalette, Tooltip and Input all use it.",
@@ -653,7 +672,8 @@ import { FileTsxIcon, FileMdIcon, BracketsCurlyIcon } from "@phosphor-icons/reac
   <TabsContent value="stack" className="p-5">…</TabsContent>
 </Tabs>
 
-// Without an icon, the active tab gets a ◆
+// Without an icon, a tab has nothing in front of its label.
+// Pass indicator={<Diamond />} to Tabs or TabNav for a mark on the active one
 <TabsTrigger value="home">home.tsx</TabsTrigger>
 
 // Tabs that are routes, as the editor's title bar:
@@ -669,6 +689,12 @@ import { TabNav, TabNavLink } from "@/components/entrepta/tabs"
   </TabNavLink>
 </TabNav>`,
     props: [
+      {
+        name: "indicator",
+        type: "ReactNode",
+        description:
+          "A glyph before the label of the active tab, for tabs with no icon. None by default (Tabs, TabNav)",
+      },
       {
         name: "defaultValue",
         type: "string",
@@ -699,8 +725,7 @@ import { TabNav, TabNavLink } from "@/components/entrepta/tabs"
       {
         name: "icon",
         type: "ReactNode | Icon",
-        description:
-          "An element, or a Phosphor icon that fills when active and grows on hover. Defaults to ◆",
+        description: "An element, or a Phosphor icon that fills when active and grows on hover",
       },
       {
         name: "onClose",
@@ -1050,7 +1075,7 @@ import { Delta } from "@/components/entrepta/delta"
       { name: "comparison", type: "ReactNode", description: "Against what: vs August" },
       { name: "hint", type: "ReactNode", description: "A short note in the muted ink" },
       { name: "trend", type: "ReactNode", description: "A small chart under the value, 40px tall" },
-      { name: "icon", type: "Icon | ReactElement", description: "In place of the ◆" },
+      { name: "icon", type: "Icon | ReactElement", description: "In front of the label" },
       { name: "size", type: '"md" | "lg"', default: '"md"', description: "24px or 40px value" },
       {
         name: "loading",
@@ -1163,7 +1188,7 @@ import { Delta } from "@/components/entrepta/delta"
   },
   stepper: {
     description:
-      "Where someone is in a flow of a few steps: onboarding, a setup, an import. An ordered list; the current step is marked for screen readers and takes the ◆, done steps a check, a step that needs attention a warning, and each step's state is read in words. The line to the next step fills when one is done. Below 640px a horizontal stepper keeps only the current label in view. Server safe.",
+      "Where someone is in a flow of a few steps: onboarding, a setup, an import. An ordered list; the current step is marked for screen readers and takes an indicator, a dot you can swap, done steps a check, a step that needs attention a warning, and each step's state is read in words. The line to the next step fills when one is done. Below 640px a horizontal stepper keeps only the current label in view. Server safe.",
     usage: `import { Stepper } from "@/components/entrepta/stepper"
 
 <Stepper
@@ -1175,6 +1200,13 @@ import { Delta } from "@/components/entrepta/delta"
   current="bank"
 />`,
     props: [
+      {
+        name: "indicator",
+        type: "ReactNode | null",
+        default: "a dot",
+        description:
+          "Inside the current step's marker, in place of its number. null keeps the number",
+      },
       { name: "steps", type: "{ id, label, description? }[]", description: "In order" },
       { name: "current", type: "string", description: "The id of the step in progress" },
       {
@@ -1426,7 +1458,7 @@ const [hidden, setHidden] = useState(false)
   },
   "chat-thread": {
     description:
-      "A conversation, drawn: your messages on the right on the brand tint, replies in full width with a ◆, tool results in a card, a caret while text streams. It follows the bottom only if you are there; scrolled up to read, you stay put and a button offers the latest. Screen readers hear each reply once, when it is done, and never the history. No model and no network: messages in, the thread out.",
+      "A conversation, drawn: your messages on the right on the brand tint, replies in full width, tool results in a card, a caret while text streams. It follows the bottom only if you are there; scrolled up to read, you stay put and a button offers the latest. Screen readers hear each reply once, when it is done, and never the history. No model and no network: messages in, the thread out.",
     usage: `import { ChatThread } from "@/components/entrepta/chat-thread"
 
 <ChatThread
@@ -1924,7 +1956,7 @@ toast("New update available", {
   },
   "command-palette": {
     description:
-      "⌘K command palette built on cmdk, on the overlay surface. Rows highlight like a dropdown: the brand tint, and the icon and shortcut turn brand. A ◆ on each group, and Kbd chips for esc and the footer hints. Use Command alone for an inline list, or inside CommandDialog. Wire the shortcut with useCommandPalette.",
+      "⌘K command palette built on cmdk, on the overlay surface. Rows highlight like a dropdown: the brand tint, and the icon and shortcut turn brand. Kbd chips for esc and the footer hints. Use Command alone for an inline list, or inside CommandDialog. Wire the shortcut with useCommandPalette.",
     usage: `import {
   Command, CommandDialog, CommandInput,
   CommandList, CommandGroup, CommandItem, CommandEmpty,
@@ -2132,11 +2164,11 @@ const schema = z.object({ email: z.string().email("enter a valid email") })
         type: "string",
         description: "The control's id. Error and hint ids derive from it",
       },
-      { name: "label", type: "ReactNode", description: "Mono label with a ◆" },
+      { name: "label", type: "ReactNode", description: "Mono label" },
       {
         name: "icon",
         type: "Icon | ReactElement",
-        description: "A Phosphor icon, or an icon element, in place of the label's ◆",
+        description: "A Phosphor icon, or an icon element, in front of the label",
       },
       {
         name: "required",
@@ -2552,7 +2584,7 @@ const [type, setType] = useUrlFilter("type", TYPES)
   },
   sidebar: {
     description:
-      "The app's main navigation. As a rail it is 56px of icons, each with a Tooltip. Labeled it is 240px, with group titles, a search slot and a footer, and collapsible folds it back to the rail and remembers the choice. The current item sits on a raised row with its icon filled, and a ◆ travels to it. It keeps the current item in view: centered when the page loads, brought in when it changes, scrolling the list and never the page. A labeled sidebar can be text only; the rail shows a letter for an item with no icon. These docs are built on it, search field included. Routing stays yours: pass active and your link component. Below 768px, use MobileNav.",
+      "The app's main navigation. As a rail it is 56px of icons, each with a Tooltip. Labeled it is 240px, with group titles, a search slot and a footer, and collapsible folds it back to the rail and remembers the choice. The current item sits on a raised row with its icon filled, and an indicator, a dot you can swap, travels to it. It keeps the current item in view: centered when the page loads, brought in when it changes, scrolling the list and never the page. A labeled sidebar can be text only; the rail shows a letter for an item with no icon. These docs are built on it, search field included. Routing stays yours: pass active and your link component. Below 768px, use MobileNav.",
     usage: `import { Sidebar } from "@/components/entrepta/sidebar"
 import { ChartBarIcon, HouseLineIcon, KeyIcon } from "@phosphor-icons/react"
 import Link from "next/link"
@@ -2583,6 +2615,12 @@ const GROUPS = [
 // the rail: icons only
 <Sidebar items={ITEMS} active={current} linkComponent={Link} />`,
     props: [
+      {
+        name: "indicator",
+        type: "ReactNode | null",
+        default: "a dot",
+        description: "What travels to the current item, outside its left edge. null hides it",
+      },
       {
         name: "variant",
         type: '"rail" | "labeled"',
@@ -2640,7 +2678,7 @@ const GROUPS = [
   },
   "mobile-nav": {
     description:
-      "The app's navigation below 768px, where a Sidebar does not fit. Up to four destinations sit in reach of the thumb; the rest, and anything else you pass, go in a More sheet from the bottom, as a grid of icon tiles. The current one fills its icon and a ◆ travels along the top edge, to More when the page is inside it. It clears the home indicator on phones that have one. Name each destination in one short word: five share the width of a phone.",
+      "The app's navigation below 768px, where a Sidebar does not fit. Up to four destinations sit in reach of the thumb; the rest, and anything else you pass, go in a More sheet from the bottom, as a grid of icon tiles. The current one fills its icon and an indicator, a dot you can swap, travels along the top edge, to More when the page is inside it. It clears the home indicator on phones that have one. Name each destination in one short word: five share the width of a phone.",
     usage: `import { MobileNav } from "@/components/entrepta/mobile-nav"
 import Link from "next/link"
 
@@ -2655,6 +2693,12 @@ import Link from "next/link"
 // leave room for it at the bottom of the page
 <main className="pb-[calc(56px+env(safe-area-inset-bottom))] md:pb-0">`,
     props: [
+      {
+        name: "indicator",
+        type: "ReactNode | null",
+        default: "a dot",
+        description: "What travels along the top edge to the current item. null hides it",
+      },
       {
         name: "items",
         type: "{ id, label, href, icon }[]",

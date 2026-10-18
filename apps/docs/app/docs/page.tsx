@@ -1,15 +1,15 @@
 import { DocPageHeader, DocSubhead } from "@/components/doc-page-header";
+import { CardComment } from "@/components/editor/card-comment";
+import { CardLabel } from "@/components/editor/card-label";
 import { COMPONENT_INDEX, SECTIONS } from "@/lib/component-index";
 import { DOCS_INTRO, INIT_FILES } from "@/lib/docs-data";
 import { CodeBlock } from "@entrepta/registry/content/code-block";
 import { buttonVariants } from "@entrepta/registry/primitives/button-variants";
 import {
   Card,
-  CardComment,
   CardDescription,
   CardFooter,
   CardHeader,
-  CardLabel,
   CardMeta,
   CardTitle,
 } from "@entrepta/registry/primitives/card";

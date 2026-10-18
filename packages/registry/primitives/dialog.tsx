@@ -3,7 +3,6 @@
 import { XIcon } from "@phosphor-icons/react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import * as React from "react";
-import { Diamond } from "../content/diamond";
 import { type IconProp, IconSlot } from "../lib/icon";
 import { OVERLAY_SURFACE } from "../lib/overlay";
 import { cn } from "../lib/utils";
@@ -125,7 +124,7 @@ const DialogDescription = React.forwardRef<
 DialogDescription.displayName = DialogPrimitive.Description.displayName;
 
 interface DialogLabelProps extends React.HTMLAttributes<HTMLDivElement> {
-  /** A Phosphor icon in place of the ◆. */
+  /** A Phosphor icon, or an icon element, in front of the label. */
   icon?: IconProp;
 }
 
@@ -143,9 +142,7 @@ const DialogLabel = React.forwardRef<HTMLDivElement, DialogLabelProps>(
     >
       {LabelIcon ? (
         <IconSlot icon={LabelIcon} size={12} className="text-[var(--fg-brand)]" />
-      ) : (
-        <Diamond size={10} />
-      )}
+      ) : null}
       {children}
     </div>
   )

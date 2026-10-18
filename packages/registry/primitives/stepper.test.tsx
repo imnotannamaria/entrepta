@@ -19,13 +19,22 @@ describe("Stepper", () => {
     expect(items[2]).toHaveTextContent("First budget, not started");
   });
 
-  it("puts the diamond on the current step only", () => {
+  it("puts the indicator, a dot, on the current step only", () => {
     const { container } = render(<Stepper steps={STEPS} current="bank" />);
-    const diamonds = [...container.querySelectorAll("span")].filter(
-      (s) => s.textContent === "◆" && s.children.length === 0
+    const dots = container.querySelectorAll("[data-nav-indicator]");
+    expect(dots).toHaveLength(1);
+    expect(screen.getAllByRole("listitem")[1]).toContainElement(dots[0] as HTMLElement);
+  });
+
+  it("takes any node as the indicator, and null keeps the number", () => {
+    const { container, rerender } = render(
+      <Stepper steps={STEPS} current="bank" indicator={<b data-mine>◆</b>} />
     );
-    expect(diamonds).toHaveLength(1);
-    expect(screen.getAllByRole("listitem")[1]).toContainElement(diamonds[0]);
+    expect(container.querySelectorAll("[data-mine]")).toHaveLength(1);
+    expect(container.querySelector("[data-nav-indicator]")).toBeNull();
+    rerender(<Stepper steps={STEPS} current="bank" indicator={null} />);
+    expect(container.querySelector("[data-nav-indicator]")).toBeNull();
+    expect(screen.getAllByRole("listitem")[1]).toHaveTextContent("2");
   });
 
   it("takes completed and errored steps as given, errors first", () => {

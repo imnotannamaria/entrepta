@@ -6,7 +6,6 @@ import { OVERLAY_SURFACE } from "../lib/overlay";
 import { cn } from "../lib/utils";
 import { Button } from "../primitives/button";
 import { Card, CardHeader, CardLabel } from "../primitives/card";
-import { Diamond } from "./diamond";
 
 export interface ChatMessage {
   id: string;
@@ -47,7 +46,7 @@ const NEAR = 32;
 
 /**
  * A conversation, drawn: your messages on the right on the brand tint, the
- * replies in full width with a ◆, tool results in a card. Text that streams
+ * replies in full width, tool results in a card. Text that streams
  * in follows the bottom only if you are there; scrolled up to read, you stay
  * put and a button offers the latest. Screen readers hear each reply once,
  * when it is done, not every word as it arrives. No model and no network.
@@ -183,8 +182,6 @@ function Message({
         <span aria-hidden className="inline-flex shrink-0">
           {own}
         </span>
-      ) : message.role === "assistant" ? (
-        <Diamond size={9} />
       ) : null}
       <span className="uppercase tracking-[0.08em]">{name}</span>
       {message.time ? <span>· {message.time}</span> : null}

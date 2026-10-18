@@ -1,11 +1,11 @@
+import { CardComment } from "@/components/editor/card-comment";
+import { CardLabel } from "@/components/editor/card-label";
 import { LINKS, PACKAGES } from "@/lib/links";
 import {
   Card,
-  CardComment,
   CardDescription,
   CardFooter,
   CardHeader,
-  CardLabel,
   CardMeta,
   CardTitle,
 } from "@entrepta/registry/primitives/card";

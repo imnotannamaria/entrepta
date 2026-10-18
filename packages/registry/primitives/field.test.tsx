@@ -48,13 +48,13 @@ describe("Field", () => {
 });
 
 describe("FieldLabel", () => {
-  it("shows a hidden diamond and, when required, a hidden star", () => {
+  it("draws no glyph before the text and, when required, a hidden star", () => {
     render(
       <FieldLabel htmlFor="x" required>
         name
       </FieldLabel>
     );
-    expect(screen.getByText("◆")).toHaveAttribute("aria-hidden", "true");
+    expect(screen.queryByText("◆")).not.toBeInTheDocument();
     expect(document.querySelector("[data-required]")).toHaveAttribute("aria-hidden");
   });
 
@@ -78,11 +78,12 @@ describe("FieldError", () => {
     expect(container).toBeEmptyDOMElement();
   });
 
-  it("prefixes a hidden // in the error color", () => {
+  it("says the message alone, in the error color", () => {
     render(<FieldError message="Too short" />);
     const alert = screen.getByRole("alert");
     expect(alert).toHaveClass("text-[var(--status-error-fg)]");
-    expect(alert.querySelector("[aria-hidden]")?.textContent).toBe("// ");
+    expect(alert.textContent).toBe("Too short");
+    expect(alert.querySelector("[aria-hidden]")).toBeNull();
   });
 });
 
