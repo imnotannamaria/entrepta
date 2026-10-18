@@ -107,4 +107,11 @@ describe("ChatThread", () => {
       "Assistant: Rent is 62%."
     );
   });
+
+  it("lets the wheel reach the page when the thread has nothing to scroll", () => {
+    const { container } = render(<ChatThread messages={BASE} />);
+    const scroller = container.querySelector(".overflow-y-auto");
+    expect(scroller).not.toBeNull();
+    expect(scroller?.className).not.toMatch(/overscroll-(y-)?contain/);
+  });
 });

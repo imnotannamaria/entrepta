@@ -123,7 +123,7 @@ const ChatThread = React.forwardRef<HTMLElement, ChatThreadProps>(
             atBottom.current = box.scrollHeight - box.scrollTop - box.clientHeight < NEAR;
             if (atBottom.current) setBelow(false);
           }}
-          className="min-h-0 flex-1 overflow-y-auto overscroll-y-contain px-1"
+          className="min-h-0 flex-1 overflow-y-auto px-1"
         >
           {messages.length === 0 && empty ? (
             <div className="grid h-full place-items-center p-6">{empty}</div>
