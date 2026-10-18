@@ -184,7 +184,7 @@ import { RobotIcon } from "@phosphor-icons/react"
   },
   input: {
     description:
-      "Text field in 3 variants: plain, search (magnifier icon), and command ($ prefix + ⌘K hint). Supports error state and 3 sizes.",
+      "Text field in 3 variants: plain, search (magnifier icon), and command (a ⌘K hint). Supports error state and 3 sizes.",
     usage: `import { Input } from "@/components/entrepta/input"
 
 <Input placeholder="project-name" />
@@ -601,10 +601,10 @@ import { GearIcon, UserIcon } from "@phosphor-icons/react"
       },
       {
         name: "surface",
-        type: '"dark" | "page"',
-        default: '"dark"',
+        type: '"page" | "dark"',
+        default: '"page"',
         description:
-          "dark stays near black in both modes. page follows the mode of the page it opens over (TooltipContent)",
+          "page follows the mode of the page it opens over. dark stays near black in both modes (TooltipContent)",
       },
     ],
   },

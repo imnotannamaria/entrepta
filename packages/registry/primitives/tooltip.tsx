@@ -20,8 +20,8 @@ const TooltipTrigger = TooltipPrimitive.Trigger;
 interface TooltipContentProps
   extends React.ComponentPropsWithoutRef<typeof TooltipPrimitive.Content> {
   /**
-   * `dark` stays near black in both modes, like every overlay. `page` follows
-   * the mode of the page it opens over.
+   * `page`, the default, follows the mode of the page it opens over, like every
+   * overlay. `dark` stays near black in both modes.
    */
   surface?: "dark" | "page";
 }
@@ -29,7 +29,7 @@ interface TooltipContentProps
 const TooltipContent = React.forwardRef<
   React.ComponentRef<typeof TooltipPrimitive.Content>,
   TooltipContentProps
->(({ className, sideOffset = 8, surface = "dark", ...props }, ref) => (
+>(({ className, sideOffset = 8, surface = "page", ...props }, ref) => (
   <TooltipPrimitive.Portal>
     <TooltipPrimitive.Content
       ref={ref}

@@ -866,7 +866,7 @@ select:autofill {
   color-scheme: light;
 }
 
-/* Scoped "always dark" surface, for terminal cards, code blocks, tooltips
+/* Scoped "always dark" surface, for code blocks
    and any element that should feel like IDE chrome regardless of page mode.
    Apply data-surface="dark" on the element root.
    Every token that differs between modes is redeclared here. A custom

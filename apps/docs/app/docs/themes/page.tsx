@@ -144,8 +144,8 @@ npx @entrepta/cli@latest init --theme=ivy --themes=all`}
           <code className="font-mono text-[var(--fg-primary)]">data-mode="light"</code> on{" "}
           <code className="font-mono text-[var(--fg-primary)]">&lt;html&gt;</code>. Surface,
           foreground and border tokens flip; the brand color shifts slightly darker to keep AA
-          contrast on white. Dark surfaces (the CodeBlock terminal variant, Tooltip) stay dark in
-          both modes by carrying{" "}
+          contrast on white. Dark surfaces (the CodeBlock terminal variant) stay dark in both modes
+          by carrying{" "}
           <code className="font-mono text-[var(--fg-primary)]">data-surface="dark"</code>{" "}
           internally.
         </p>

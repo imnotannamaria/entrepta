@@ -42,12 +42,12 @@ function surfaceOf(surface?: "dark" | "page") {
 }
 
 describe("Tooltip", () => {
-  it("stays on a dark surface by default", () => {
-    expect(surfaceOf()).toHaveAttribute("data-surface", "dark");
+  it("follows the page by default, so it is light on a light page", () => {
+    expect(surfaceOf()).not.toHaveAttribute("data-surface");
   });
 
-  it('follows the page with surface="page"', () => {
-    expect(surfaceOf("page")).not.toHaveAttribute("data-surface");
+  it('stays near black in both modes with surface="dark"', () => {
+    expect(surfaceOf("dark")).toHaveAttribute("data-surface", "dark");
   });
 
   it("renders the trigger element", () => {

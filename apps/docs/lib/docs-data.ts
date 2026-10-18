@@ -463,7 +463,10 @@ export const V4_NEW: [string, string][] = [
     'size="page" is a whole screen, such as a 404 or an error. It takes an illustration and a headingLevel.',
   ],
   ["ChatThread", "An avatar for each role, or for one message."],
-  ["Tooltip", 'surface="page" follows the mode of the page instead of staying near black.'],
+  [
+    "Tooltip",
+    'It follows the mode of the page, light on a light page. surface="dark" keeps it near black.',
+  ],
   ["SegmentedControl", 'shape="pill", and truncate={false} so a segment grows to its word.'],
   ["Sidebar", "The rail's tooltip clears the rail's border, and an indicator replaces the dot."],
   ["Field", "The star of a required label is drawn by CSS, so a test finds the label by its name."],

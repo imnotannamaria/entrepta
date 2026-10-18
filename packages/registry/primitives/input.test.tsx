@@ -33,9 +33,9 @@ describe("Input", () => {
     expect(container.querySelector("svg")).toBeInTheDocument();
   });
 
-  it("renders $ prefix and ⌘K kbd hint when variant=command", () => {
+  it("renders a ⌘K kbd hint and no $ prefix when variant=command", () => {
     render(<Input variant="command" placeholder="cmd" />);
-    expect(screen.getByText("$")).toBeInTheDocument();
+    expect(screen.queryByText("$")).not.toBeInTheDocument();
     expect(screen.getByText("⌘K").tagName).toBe("KBD");
   });
 

@@ -75,7 +75,6 @@ function PageLoading({ command, crumb, steps = [], label, className }: PageLoadi
         </div>
 
         <div className="text-mono-md">
-          <span className="text-[var(--fg-brand)]">$ </span>
           <Typed text={command} delay={0.15} />
           <span
             className="type-caret ml-0.5"
@@ -91,7 +90,6 @@ function PageLoading({ command, crumb, steps = [], label, className }: PageLoadi
                 className="type-late flex items-center gap-2.5 text-mono-sm"
                 style={{ "--type-delay": secs(SLOW_AT + i * STEP_GAP) } as React.CSSProperties}
               >
-                <span className="text-[var(--fg-brand)]">→</span>
                 <span className="text-[var(--fg-secondary)]">{step}</span>
               </div>
             ))}

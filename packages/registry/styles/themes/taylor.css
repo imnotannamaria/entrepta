@@ -34,7 +34,7 @@
   --ring: rgba(9, 9, 11, 0.4);
 }
 
-/* A tooltip or a code block stays near black in a light page, and a black brand
+/* A code block stays near black in a light page, and a black brand
    would vanish on it. The dark values come back inside it. */
 :root[data-mode="light"] [data-surface="dark"] {
   --fg-brand: #fafafa;
