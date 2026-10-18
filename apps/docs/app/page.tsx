@@ -124,15 +124,6 @@ export default function Home() {
           />
           <div className="relative mx-auto grid max-w-[1280px] items-center gap-12 px-4 pt-16 pb-16 sm:px-12 sm:pt-24 grid-cols-[minmax(0,1fr)] lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)] lg:gap-16">
             <div className="flex flex-col items-start">
-              <img
-                src="/brand/mascot-256.png"
-                width={72}
-                height={72}
-                alt=""
-                aria-hidden="true"
-                style={heroDelay(HERO_AT.news)}
-                className="hero-in mb-6 size-[72px] drop-shadow-[0_12px_32px_var(--shadow-brand)]"
-              />
               <Link
                 href={NEWS.href}
                 style={heroDelay(HERO_AT.news)}
@@ -535,14 +526,9 @@ export default function Home() {
         <HomeSection>
           <Card variant="featured" className="p-12 sm:p-16 text-center">
             <div className="flex flex-col items-center gap-6">
-              <img
-                src="/brand/mascot-256.png"
-                width={96}
-                height={96}
-                alt=""
-                aria-hidden="true"
-                className="size-24 drop-shadow-[0_16px_40px_var(--shadow-brand)]"
-              />
+              <div className="font-mono text-mono-sm uppercase tracking-[0.08em] text-[var(--fg-brand-text)]">
+                · ready to ship
+              </div>
               <h2 className="m-0 font-serif text-display-lg font-normal text-[var(--fg-primary)] lg:text-display-xl">
                 Start <em className="italic text-[var(--fg-brand)]">building.</em>
               </h2>

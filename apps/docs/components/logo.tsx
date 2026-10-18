@@ -6,19 +6,20 @@ interface LogoMarkProps {
   size?: number;
 }
 
-/** The mascot, the entrepta mark. Decorative: the name always sits next to it. */
 export function LogoMark({ className, size = 24 }: LogoMarkProps) {
   return (
-    <img
-      src={size > 64 ? "/brand/mascot-256.png" : "/brand/mascot-128.png"}
-      width={size}
-      height={size}
-      alt=""
+    <svg
+      viewBox="0 0 32 32"
+      xmlns="http://www.w3.org/2000/svg"
       aria-hidden="true"
-      decoding="async"
-      className={className}
       style={{ width: size, height: size }}
-    />
+      className={className}
+    >
+      <rect x="3" y="6" width="22" height="3" rx="1" fill="currentColor" />
+      <rect x="3" y="13" width="14" height="3" rx="1" fill="currentColor" opacity="0.85" />
+      <rect x="3" y="20" width="22" height="3" rx="1" fill="currentColor" opacity="0.55" />
+      <circle cx="27" cy="14.5" r="2.2" fill="var(--fg-brand)" />
+    </svg>
   );
 }
 
@@ -30,7 +31,7 @@ interface LogoProps {
 export function Logo({ className, showTag = false }: LogoProps) {
   return (
     <div className={cn("flex items-center gap-2", className)}>
-      <LogoMark size={26} />
+      <LogoMark className="text-[var(--fg-primary)]" size={22} />
       <span className="font-serif text-[var(--fg-primary)] text-body-lg leading-none">
         entrepta<em className="text-[var(--fg-brand)] not-italic">.</em>
       </span>

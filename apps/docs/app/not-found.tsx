@@ -1,6 +1,7 @@
 import { SiteNav } from "@/components/site-nav";
 import { EmptyState } from "@entrepta/registry/feedback/empty-state";
 import { buttonVariants } from "@entrepta/registry/primitives/button-variants";
+import { FileDashedIcon } from "@phosphor-icons/react/dist/ssr";
 import type { Metadata } from "next";
 import Link from "next/link";
 
@@ -16,9 +17,7 @@ export default function NotFound() {
       <main id="main-content" tabIndex={-1} className="flex min-h-dvh flex-col px-4 pt-14 sm:px-8">
         <EmptyState
           size="page"
-          illustration={
-            <img src="/brand/mascot-256.png" width={128} height={128} alt="" aria-hidden="true" />
-          }
+          icon={<FileDashedIcon />}
           title="Page not found."
           description="It moved, or it never existed."
           action={

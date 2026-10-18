@@ -93,7 +93,7 @@ entrepta/
 │       │   ├── md/           # the .md twin of each page (rewritten from /docs/*.md)
 │       │   ├── llms.txt/, llms-full.txt/  # the agent index and the whole site
 │       │   ├── opengraph-image.tsx, twitter-image.tsx
-│       │   ├── not-found.tsx, error.tsx   # on EmptyState, with the mascot
+│       │   ├── not-found.tsx, error.tsx   # on EmptyState
 │       │   ├── globals.css   # copy of the registry tokens
 │       │   ├── sitemap.ts
 │       │   └── robots.ts

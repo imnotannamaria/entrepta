@@ -2,6 +2,7 @@
 
 import { EmptyState } from "@entrepta/registry/feedback/empty-state";
 import { Button } from "@entrepta/registry/primitives/button";
+import { WarningIcon } from "@phosphor-icons/react";
 
 /** Any page that throws while rendering lands here, with a way to try again. */
 export default function ErrorPage({
@@ -16,9 +17,7 @@ export default function ErrorPage({
       <EmptyState
         size="page"
         tone="error"
-        illustration={
-          <img src="/brand/mascot-256.png" width={128} height={128} alt="" aria-hidden="true" />
-        }
+        icon={<WarningIcon />}
         title="Something broke."
         description={
           error.digest ? `Reload, or try again. Digest ${error.digest}.` : "Reload, or try again."
