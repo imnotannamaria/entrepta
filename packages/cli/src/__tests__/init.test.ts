@@ -161,7 +161,7 @@ describe("init", () => {
       );
     });
 
-    it("writes all six themes under data-theme with --themes=all", async () => {
+    it("writes every theme under data-theme with --themes=all", async () => {
       await init({ theme: "bosco", themes: "all", overwrite: false });
       expect(mockWriteConfig).toHaveBeenCalledWith(
         expect.any(String),
@@ -169,13 +169,13 @@ describe("init", () => {
       );
       const css = written("globals.css");
       expect(css).toContain(GLOBALS_CSS);
-      for (const id of ["entrepta", "blossom", "marmalade", "julia", "ivy", "bosco"]) {
+      for (const id of ["entrepta", "blossom", "marmalade", "julia", "ivy", "bosco", "taylor"]) {
         expect(css).toContain(`:root[data-theme="${id}"] {\n  --fg-brand: ${id};`);
         expect(css).toContain(
           `:root[data-theme="${id}"][data-mode="light"] {\n  --fg-brand: ${id}-light;`
         );
       }
-      // the default keeps bare :root, and comes before the other five
+      // the default keeps bare :root, and comes before the others
       const defaultAt = css.indexOf(':root,\n:root[data-theme="bosco"] {');
       expect(defaultAt).toBeGreaterThan(-1);
       expect(defaultAt).toBeLessThan(css.indexOf(':root[data-theme="entrepta"] {'));

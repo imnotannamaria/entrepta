@@ -13,7 +13,7 @@ export const CLI_COMMANDS = [
     desc: "Bootstraps a project. Writes the global CSS, lib/utils.ts and entrepta.json. Prompts for a theme, and for one fixed theme or all six.",
     flags: [
       { flag: "--theme=<preset>", desc: "Skip the prompts. Writes one fixed theme" },
-      { flag: "--themes=all", desc: "Write all six themes, switchable with data-theme" },
+      { flag: "--themes=all", desc: "Write every theme, switchable with data-theme" },
       { flag: "--overwrite", desc: "Overwrite existing files without asking" },
     ],
   },
@@ -71,6 +71,21 @@ export const THEME_NOTES: Record<string, { hover: string; vibe: string }> = {
   julia: { hover: "#F178A0", vibe: "Warm pink. Soft and expressive." },
   ivy: { hover: "#4CBA7C", vibe: "Forest green. Calm and grounded." },
   bosco: { hover: "#4F86F3", vibe: "Deep blue. Technical and steady." },
+  taylor: { hover: "#D4D4D8", vibe: "Monochrome and flat. White on dark, black on light." },
+};
+
+/** taylor, the monochrome theme, and the two knobs any theme can use. On the Themes page and in its Markdown. */
+export const THEME_TAYLOR = {
+  text: "taylor has no hue. Its brand is white on dark and black on light, so there is no brand glow: a card and an overlay lose the light in their top-left corner. That light is one number, --finish-glow, from 0 to 1. Any theme can set it, and a project can set it once for all of them. The charts keep their color. White has nothing to turn, so --chart-from names the hue they start from. In taylor the brand ink is the primary ink, so a state is never shown by brand color alone.",
+  code: `:root {
+  --fg-brand: #fafafa;
+  --fg-brand-text: #fafafa;
+  --finish-glow: 0;          /* 0 is flat, 1 is the full finish */
+  --chart-from: #3b82f6;     /* where the chart colors start turning */
+}
+
+/* keep the glow, drop the hue: */
+:root { --finish-glow: 0.5; }`,
 };
 
 /** How a theme or mode switch lands, on the Themes page and in its Markdown. */

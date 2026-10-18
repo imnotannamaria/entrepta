@@ -31,7 +31,7 @@ export function paletteColor(color: PaletteKey | (string & {})): string {
 // Where each hue name starts, in OKLCH degrees. The palette is the brand's
 // hue turned in steps of 45°, and a brand shifts a few degrees between dark
 // and light, so no boundary sits between a theme's two shades: a swatch keeps
-// its name when the mode changes. The six themes are checked in the tests;
+// its name when the mode changes. The themes are checked in the tests;
 // a new brand may want these nudged. Every range is under 45°, so no two
 // swatches of one theme share a name.
 const HUE_STARTS: readonly [number, string][] = [

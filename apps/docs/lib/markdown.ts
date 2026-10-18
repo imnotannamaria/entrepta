@@ -13,6 +13,7 @@ import {
   REQUIREMENTS,
   THEME_NOTES,
   THEME_SWITCH,
+  THEME_TAYLOR,
   V3_CHANGES,
   V3_UPDATE,
 } from "./docs-data";
@@ -279,23 +280,26 @@ export function cliMd(): string {
         .join("\n\n")
     ),
     "## entrepta.json",
-    "Read from the project root. It records the theme, whether one theme or all six are installed, the CSS file, the aliases, and `srcDir` when `@/` points at a folder such as `src` in Vite.",
+    "Read from the project root. It records the theme, whether one theme or all seven are installed, the CSS file, the aliases, and `srcDir` when `@/` points at a folder such as `src` in Vite.",
   ].join("\n\n");
 }
 
 export function themesMd(): string {
   return [
     "# Themes",
-    "> Six presets. Each sets only the brand tokens; neutrals, status colors, spacing and type are shared. Dark and light work in every preset.",
+    "> Seven presets. Each sets only the brand tokens; neutrals, status colors, spacing and type are shared. Dark and light work in every preset.",
     table(
       ["Preset", "Brand", "Light brand", "Vibe"],
       THEMES.map((t) => [`\`${t.id}\``, t.color, t.lightColor, THEME_NOTES[t.id]?.vibe ?? ""])
     ),
     "## Pick one",
     code("bash", "npx @entrepta/cli@latest init --theme=ivy"),
-    "## Or install all six",
+    "## Or install all seven",
     code("bash", "npx @entrepta/cli@latest init --theme=ivy --themes=all"),
-    'All six land under `:root[data-theme="<id>"]`, the chosen one also on bare `:root`. Switch with `data-theme` on `<html>`, or the ThemeSwitcher. Light mode is `data-mode="light"` on `<html>`.',
+    'All seven land under `:root[data-theme="<id>"]`, the chosen one also on bare `:root`. Switch with `data-theme` on `<html>`, or the ThemeSwitcher. Light mode is `data-mode="light"` on `<html>`.',
+    "## taylor, flat and monochrome",
+    THEME_TAYLOR.text,
+    code("css", THEME_TAYLOR.code),
     "## Switching",
     THEME_SWITCH.text,
     code("ts", THEME_SWITCH.code),
@@ -490,7 +494,7 @@ export const MD_PAGES: MdPage[] = [
   {
     path: "/docs/themes",
     title: "Themes",
-    summary: "The six presets and runtime switching",
+    summary: "The seven presets and runtime switching",
     render: themesMd,
   },
   {
@@ -540,7 +544,7 @@ export function llmsTxt(): string {
   const components = MD_PAGES.filter((p) => p.path.startsWith("/docs/components/"));
   return `${[
     "# entrepta",
-    "> A dark-first React design system you copy into your repo with a CLI, in the shadcn model: tabs, a command palette, a status bar, serif italic next to mono. Tailwind v4, Radix, six themes, every ink measured for WCAG AA.",
+    "> A dark-first React design system you copy into your repo with a CLI, in the shadcn model: tabs, a command palette, a status bar, serif italic next to mono. Tailwind v4, Radix, seven themes, every ink measured for WCAG AA.",
     `Every page below is Markdown. Add \`.md\` to any docs URL for the same. For a guide fitted to one project, build an AGENTS.md at ${SITE_URL}/?agents=open.`,
     "## Docs",
     docs.map((p) => `- [${p.title}](${mdUrl(p.path)}): ${p.summary}`).join("\n"),

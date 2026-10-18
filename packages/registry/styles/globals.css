@@ -111,10 +111,16 @@
   /* focus ring */
   --ring: rgba(124, 107, 255, 0.5); /* overridden by theme */
 
+  /* How much brand light the finish carries: the corner glow of a card and an
+     overlay, and the lift of a hovered card. 1 is the full finish, 0 is flat.
+     Declared once and inherited, so a theme or a project sets it in one place
+     instead of overriding the glow in the light block and on a dark surface. */
+  --finish-glow: 1;
+
   /* brand accents, derived from --fg-brand so they follow every theme */
   --border-brand: color-mix(in srgb, var(--fg-brand) 35%, transparent);
   --border-brand-strong: color-mix(in srgb, var(--fg-brand) 60%, transparent);
-  --shadow-brand: color-mix(in srgb, var(--fg-brand) 20%, transparent);
+  --shadow-brand: color-mix(in srgb, var(--fg-brand) calc(20% * var(--finish-glow)), transparent);
   --fg-brand-glow: color-mix(in srgb, var(--fg-brand) 50%, transparent);
   --bg-spotlight: color-mix(in srgb, var(--fg-brand) 15%, transparent);
 
@@ -127,7 +133,7 @@
   /* The toast's finish, for every surface. A brand glow from the top-left
      corner (the .sheen class) and a line of light on the top edge, like glass
      catching it. Near black underneath, never zinc-900 across an area. */
-  --sheen-tint: color-mix(in srgb, var(--fg-brand) 9%, transparent);
+  --sheen-tint: color-mix(in srgb, var(--fg-brand) calc(9% * var(--finish-glow)), transparent);
   --edge-light: inset 0 1px 0 rgba(255, 255, 255, 0.05);
   --shadow-card: var(--edge-light);
   --bg-field: var(--bg-overlay);
@@ -163,17 +169,20 @@
      inside sRGB for every hue of all six brands (the blues and yellows set
      it). A result above or below zero takes the status colors and a sign,
      never this palette. From four series on, add a label or a dash pattern:
-     color alone does not tell them apart. */
+     color alone does not tell them apart.
+     --chart-from is where the turning starts. It is the brand, unless a theme
+     with no hue of its own (taylor) names one. */
+  --chart-from: var(--fg-brand);
   --chart-l: 0.72;
   --chart-c: 0.12;
-  --chart-1: oklch(from var(--fg-brand) var(--chart-l) var(--chart-c) calc(h + 0));
-  --chart-2: oklch(from var(--fg-brand) var(--chart-l) var(--chart-c) calc(h + 45));
-  --chart-3: oklch(from var(--fg-brand) var(--chart-l) var(--chart-c) calc(h + 90));
-  --chart-4: oklch(from var(--fg-brand) var(--chart-l) var(--chart-c) calc(h + 135));
-  --chart-5: oklch(from var(--fg-brand) var(--chart-l) var(--chart-c) calc(h + 180));
-  --chart-6: oklch(from var(--fg-brand) var(--chart-l) var(--chart-c) calc(h + 225));
-  --chart-7: oklch(from var(--fg-brand) var(--chart-l) var(--chart-c) calc(h + 270));
-  --chart-8: oklch(from var(--fg-brand) var(--chart-l) var(--chart-c) calc(h + 315));
+  --chart-1: oklch(from var(--chart-from) var(--chart-l) var(--chart-c) calc(h + 0));
+  --chart-2: oklch(from var(--chart-from) var(--chart-l) var(--chart-c) calc(h + 45));
+  --chart-3: oklch(from var(--chart-from) var(--chart-l) var(--chart-c) calc(h + 90));
+  --chart-4: oklch(from var(--chart-from) var(--chart-l) var(--chart-c) calc(h + 135));
+  --chart-5: oklch(from var(--chart-from) var(--chart-l) var(--chart-c) calc(h + 180));
+  --chart-6: oklch(from var(--chart-from) var(--chart-l) var(--chart-c) calc(h + 225));
+  --chart-7: oklch(from var(--chart-from) var(--chart-l) var(--chart-c) calc(h + 270));
+  --chart-8: oklch(from var(--chart-from) var(--chart-l) var(--chart-c) calc(h + 315));
 
   --chart-grid: color-mix(in srgb, var(--border-subtle) 60%, transparent);
   --chart-axis: var(--fg-muted);
@@ -842,7 +851,7 @@ select:autofill {
   /* a wash that reads on a dark card vanishes on white, so light mixes more */
   --bg-spotlight: color-mix(in srgb, var(--fg-brand) 26%, transparent);
   --shadow-card-hover: 0 8px 24px rgba(0, 0, 0, 0.1);
-  --sheen-tint: color-mix(in srgb, var(--fg-brand) 4%, transparent);
+  --sheen-tint: color-mix(in srgb, var(--fg-brand) calc(4% * var(--finish-glow)), transparent);
   --edge-light: inset 0 1px 0 rgba(255, 255, 255, 0.9);
   --shadow-card: var(--edge-light), 0 1px 2px rgba(0, 0, 0, 0.04);
   --shadow-overlay: var(--edge-light), 0 24px 48px rgba(0, 0, 0, 0.12);
@@ -883,7 +892,7 @@ select:autofill {
 
   --bg-spotlight: color-mix(in srgb, var(--fg-brand) 15%, transparent);
   --shadow-card-hover: 0 8px 24px rgba(0, 0, 0, 0.3);
-  --sheen-tint: color-mix(in srgb, var(--fg-brand) 9%, transparent);
+  --sheen-tint: color-mix(in srgb, var(--fg-brand) calc(9% * var(--finish-glow)), transparent);
   --edge-light: inset 0 1px 0 rgba(255, 255, 255, 0.05);
   --shadow-card: var(--edge-light);
   --shadow-overlay: var(--edge-light), 0 24px 48px rgba(0, 0, 0, 0.6);
@@ -900,14 +909,14 @@ select:autofill {
      Redeclaring them runs the substitution again in this scope. */
   --chart-l: 0.72;
   --chart-c: 0.12;
-  --chart-1: oklch(from var(--fg-brand) var(--chart-l) var(--chart-c) calc(h + 0));
-  --chart-2: oklch(from var(--fg-brand) var(--chart-l) var(--chart-c) calc(h + 45));
-  --chart-3: oklch(from var(--fg-brand) var(--chart-l) var(--chart-c) calc(h + 90));
-  --chart-4: oklch(from var(--fg-brand) var(--chart-l) var(--chart-c) calc(h + 135));
-  --chart-5: oklch(from var(--fg-brand) var(--chart-l) var(--chart-c) calc(h + 180));
-  --chart-6: oklch(from var(--fg-brand) var(--chart-l) var(--chart-c) calc(h + 225));
-  --chart-7: oklch(from var(--fg-brand) var(--chart-l) var(--chart-c) calc(h + 270));
-  --chart-8: oklch(from var(--fg-brand) var(--chart-l) var(--chart-c) calc(h + 315));
+  --chart-1: oklch(from var(--chart-from) var(--chart-l) var(--chart-c) calc(h + 0));
+  --chart-2: oklch(from var(--chart-from) var(--chart-l) var(--chart-c) calc(h + 45));
+  --chart-3: oklch(from var(--chart-from) var(--chart-l) var(--chart-c) calc(h + 90));
+  --chart-4: oklch(from var(--chart-from) var(--chart-l) var(--chart-c) calc(h + 135));
+  --chart-5: oklch(from var(--chart-from) var(--chart-l) var(--chart-c) calc(h + 180));
+  --chart-6: oklch(from var(--chart-from) var(--chart-l) var(--chart-c) calc(h + 225));
+  --chart-7: oklch(from var(--chart-from) var(--chart-l) var(--chart-c) calc(h + 270));
+  --chart-8: oklch(from var(--chart-from) var(--chart-l) var(--chart-c) calc(h + 315));
   --chart-grid: color-mix(in srgb, var(--border-subtle) 60%, transparent);
   --chart-axis: var(--fg-muted);
   --chart-cursor: var(--bg-surface-brand);

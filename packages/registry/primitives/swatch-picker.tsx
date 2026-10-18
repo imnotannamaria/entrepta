@@ -88,7 +88,7 @@ function useHueNames(ref: React.RefObject<HTMLElement | null>, keys: readonly Pa
  * A color for something the person owns: a category, an account, a tag. One
  * native radio per color. With palette keys the value is the key ("chart-3")
  * and never a hex, the color follows every theme, and each swatch is named
- * after the hue it shows. With options of your own, such as the six themes,
+ * after the hue it shows. With options of your own, such as the themes,
  * the value is your id. The chosen one carries a check.
  */
 const SwatchPicker = React.forwardRef<HTMLFieldSetElement, SwatchPickerProps>((props, ref) => {

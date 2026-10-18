@@ -11,7 +11,7 @@
 
 <p align="center">
   <a href="https://www.npmjs.com/package/@entrepta/cli"><img src="https://img.shields.io/npm/v/@entrepta/cli?color=7c6bff&label=%40entrepta%2Fcli" alt="npm version" /></a>
-  <img src="https://img.shields.io/badge/WCAG-AA%20in%2012%20themes%20%C3%97%20modes-7c6bff" alt="WCAG AA in 12 theme and mode combinations" />
+  <img src="https://img.shields.io/badge/WCAG-AA%20in%2014%20themes%20%C3%97%20modes-7c6bff" alt="WCAG AA in 14 theme and mode combinations" />
   <img src="https://img.shields.io/badge/license-MIT-7c6bff" alt="MIT license" />
 </p>
 
@@ -41,7 +41,7 @@ npx @entrepta/cli@latest add button card command-palette
 | Feedback   | Alert, EmptyState, Toast, Skeleton, CommandPalette, ChromeMessage, PageLoading |
 | Motion     | Reveal, TypeIn, RollingNumber, Spotlight, SpotlightCard, ArrowLink |
 
-Six theme presets: `entrepta`, `blossom`, `marmalade`, `julia`, `ivy` and `bosco`. Pick one, or install all six and switch at runtime. Every text color clears WCAG AA in all 12 theme and mode combinations, and a test measures it on every change.
+Seven theme presets: `entrepta`, `blossom`, `marmalade`, `julia`, `ivy`, `bosco` and `taylor`, a flat monochrome one. Pick one, or install all seven and switch at runtime. Every text color clears WCAG AA in all 14 theme and mode combinations, and a test measures it on every change.
 
 New in 3: components for products, from money and dates to tables, filters, charts and chat, with nothing in 2.x broken. [What's new in v3](https://entrepta.vercel.app/docs/whats-new-in-v3) lists them and the one command to update. Upgrading from 1.x? The [migration guide](https://entrepta.vercel.app/docs/migrating-to-v2) lists every change, and copies as one Markdown file for your agent.
 
@@ -60,7 +60,7 @@ entrepta is meant to be installed and used by Claude Code, Cursor or Codex as mu
 ```bash
 npx @entrepta/cli@latest init --theme=ivy
 
-# all six themes, switchable at runtime
+# all seven themes, switchable at runtime
 npx @entrepta/cli@latest init --theme=ivy --themes=all
 
 npx @entrepta/cli@latest add button card field

@@ -30,12 +30,12 @@ export const RULES: Rule[] = [
   {
     topic: "color",
     do: "Put --fg-on-brand on a brand fill",
-    dont: "Reach for a fixed near-white. It fails contrast in 7 of the 12 theme and mode pairs",
+    dont: "Reach for a fixed near-white. It fails contrast in 8 of the 14 theme and mode pairs",
   },
   {
     topic: "color",
     do: "Color brand text below 24px with --fg-brand-text",
-    dont: "Use --fg-brand for small text. It fails AA in 4 of the 12 pairs",
+    dont: "Use --fg-brand for small text. It fails AA in 4 of the 14 pairs",
   },
   {
     topic: "color",

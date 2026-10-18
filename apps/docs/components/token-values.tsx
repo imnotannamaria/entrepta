@@ -88,7 +88,7 @@ export function SwatchGrid({ swatches }: { swatches: Swatch[] }) {
 
 /**
  * Each ink on what it actually sits on, with the ratio measured right now. The
- * floors are the ones `styles/themes.contrast.test.ts` enforces in all twelve
+ * floors are the ones `styles/themes.contrast.test.ts` enforces in all fourteen
  * theme and mode combinations.
  */
 export function InkTable({ pairs }: { pairs: InkPair[] }) {

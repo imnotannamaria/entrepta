@@ -5,7 +5,7 @@ import { writeProjectFile } from "./project-path.js";
 export interface EntryptaConfig {
   $schema?: string;
   theme: string;
-  /** "all" writes the six themes, switchable through data-theme on <html>. */
+  /** "all" writes every theme, switchable through data-theme on <html>. */
   themes?: "single" | "all";
   /** Where `@/` points, such as "src" for Vite. Aliases resolve relative to it. */
   srcDir?: string;

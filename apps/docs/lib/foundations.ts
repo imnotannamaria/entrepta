@@ -71,7 +71,7 @@ export const FOUNDATION_PAGES = [
     summary:
       "Inks measured in every theme, focus, the skip link, reduced motion, screen reader patterns.",
     description:
-      "Six themes, two modes, and one rule: every ink clears WCAG AA on what it sits on. A test measures it on every change, and this page measures it live.",
+      "Seven themes, two modes, and one rule: every ink clears WCAG AA on what it sits on. A test measures it on every change, and this page measures it live.",
   },
   {
     slug: "rules",
@@ -364,9 +364,9 @@ export const A11Y_SECTIONS: {
   {
     id: "inks",
     title: "Inks",
-    count: "12 combinations",
+    count: "14 combinations",
     inks: true,
-    note: "No single ink reads on all six brands, so each theme sets two: --fg-on-brand for text on a brand fill, and --fg-brand-text for brand-colored text. The contrast test in the registry checks every pair below in all twelve theme and mode combinations. Switch the theme to see the numbers move.",
+    note: "No single ink reads on all seven brands, so each theme sets two: --fg-on-brand for text on a brand fill, and --fg-brand-text for brand-colored text. The contrast test in the registry checks every pair below in all twelve theme and mode combinations. Switch the theme to see the numbers move.",
   },
   {
     id: "focus",

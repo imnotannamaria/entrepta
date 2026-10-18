@@ -1,0 +1,50 @@
+/* ============================================================
+   taylor theme, monochrome, flat and customizable
+   ============================================================ */
+
+/* The brand is the page's own ink: white on dark, black on light. There is no
+   hue, so --finish-glow is 0 (a card and an overlay carry no brand light) and
+   --chart-from names the one color the charts start from. These are the
+   knobs to change for a project's own look: set --fg-brand and its inks for a
+   color, --finish-glow between 0 and 1 for the glow, --chart-from for the
+   charts. Measure again after changing any value here.
+
+   Text on a brand fill reads --fg-on-brand, brand-colored text reads
+   --fg-brand-text. In this theme --fg-brand-text is the primary ink, so a
+   state must never be shown by brand color alone: pair it with weight, an
+   underline, a tint or an indicator. */
+
+:root {
+  --fg-brand: #fafafa;
+  --fg-brand-hover: #d4d4d8;
+  --fg-on-brand: #09090b;
+  --fg-brand-text: #fafafa;
+  --bg-surface-brand: rgba(250, 250, 250, 0.08);
+  --ring: rgba(250, 250, 250, 0.45);
+  --finish-glow: 0;
+  --chart-from: #3b82f6;
+}
+
+:root[data-mode="light"] {
+  --fg-brand: #09090b;
+  --fg-brand-hover: #3f3f46;
+  --fg-on-brand: #fafafa;
+  --fg-brand-text: #09090b;
+  --bg-surface-brand: rgba(9, 9, 11, 0.06);
+  --ring: rgba(9, 9, 11, 0.4);
+}
+
+/* A tooltip or a code block stays near black in a light page, and a black brand
+   would vanish on it. The dark values come back inside it. */
+:root[data-mode="light"] [data-surface="dark"] {
+  --fg-brand: #fafafa;
+  --fg-brand-hover: #d4d4d8;
+  --fg-on-brand: #09090b;
+  --fg-brand-text: #fafafa;
+  --bg-surface-brand: rgba(250, 250, 250, 0.08);
+  --ring: rgba(250, 250, 250, 0.45);
+  --border-brand: color-mix(in srgb, var(--fg-brand) 35%, transparent);
+  --border-brand-strong: color-mix(in srgb, var(--fg-brand) 60%, transparent);
+  --shadow-brand: color-mix(in srgb, var(--fg-brand) calc(20% * var(--finish-glow)), transparent);
+  --fg-brand-glow: color-mix(in srgb, var(--fg-brand) 50%, transparent);
+}

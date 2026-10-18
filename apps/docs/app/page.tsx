@@ -308,7 +308,7 @@ export default function Home() {
               >
                 <strong className="font-medium text-[var(--fg-primary)]">entrepta</strong> is a
                 dark-first React library you copy into your repo: tabs, a command palette, a status
-                bar, serif italic next to mono. Every ink is measured in six themes.
+                bar, serif italic next to mono. Every ink is measured in seven themes.
               </p>
 
               <div
@@ -506,7 +506,7 @@ export default function Home() {
                 },
                 {
                   k: "contrast",
-                  v: "every ink measured against AA in all 12 theme and mode pairs, by a test",
+                  v: "every ink measured against AA in all 14 theme and mode pairs, by a test",
                 },
                 {
                   k: "dark + light",
@@ -644,7 +644,7 @@ export default function Home() {
                   </Link>
                 </CardTitle>
                 <CardDescription>
-                  One brand per theme, two measured inks each. Fixed, or all six at runtime.
+                  One brand per theme, two measured inks each. Fixed, or all seven at runtime.
                 </CardDescription>
                 <CardContent>
                   <div className="flex gap-2">

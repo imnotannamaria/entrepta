@@ -35,7 +35,7 @@ export async function init(options: { theme?: string; themes?: string; overwrite
       message: "How should themes work?",
       choices: [
         { title: "One fixed theme", value: "single" },
-        { title: "All six, switchable at runtime", value: "all" },
+        { title: "All seven, switchable at runtime", value: "all" },
       ],
       initial: 0,
     });
@@ -65,6 +65,7 @@ export async function init(options: { theme?: string; themes?: string; overwrite
         { title: "julia      warm pink, soft and expressive", value: "julia" },
         { title: "ivy        forest green, calm and grounded", value: "ivy" },
         { title: "bosco      deep blue, technical and steady", value: "bosco" },
+        { title: "taylor     monochrome, flat and customizable", value: "taylor" },
       ],
       initial: 0,
     });
@@ -181,7 +182,7 @@ export async function init(options: { theme?: string; themes?: string; overwrite
   }
 
   if (themesMode === "all") {
-    log.success(`\nentrepta initialized with all six themes. Default: ${theme}`);
+    log.success(`\nentrepta initialized with all seven themes. Default: ${theme}`);
     log.info('Switch with data-theme on <html>, or add the switcher: "add theme-switcher".');
   } else {
     log.success(`\nentrepta initialized with theme: ${theme}`);

@@ -15,6 +15,8 @@
   --fg-brand-text: #ff9d45;
   --bg-surface-brand: rgba(255, 130, 19, 0.14);
   --ring: rgba(255, 130, 19, 0.45);
+  --finish-glow: 1;
+  --chart-from: var(--fg-brand);
 }
 
 :root[data-mode="light"] {

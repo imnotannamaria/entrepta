@@ -11,13 +11,13 @@ import {
 } from "../lib/color-contrast";
 
 /**
- * Every ink the themes promise, measured in all 12 theme and mode combinations
+ * Every ink the themes promise, measured in all 14 theme and mode combinations
  * straight from the CSS. This replaces a hand-measured table: change a hex and
  * this recomputes, instead of a copied number quietly going stale.
  */
 
 const STYLES = __dirname;
-const THEMES = ["entrepta", "blossom", "marmalade", "julia", "ivy", "bosco"] as const;
+const THEMES = ["entrepta", "blossom", "marmalade", "julia", "ivy", "bosco", "taylor"] as const;
 const MODES = ["dark", "light"] as const;
 
 const read = (file: string) => fs.readFileSync(path.join(STYLES, file), "utf8");
@@ -39,6 +39,16 @@ function escapeRegExp(text: string) {
 }
 
 const LIGHT = ':root[data-mode="light"]';
+const DARK_SURFACE_IN_LIGHT = ':root[data-mode="light"] [data-surface="dark"]';
+
+/** A theme's own block for a dark surface in a light page, if it has one. */
+function darkSurfaceBlock(theme: string): Record<string, string> | null {
+  try {
+    return declarations(read(`themes/${theme}.css`), DARK_SURFACE_IN_LIGHT);
+  } catch {
+    return null;
+  }
+}
 
 /** The tokens in effect for one theme and mode, cascade order preserved. */
 function tokens(theme: string, mode: (typeof MODES)[number]): Record<string, string> {
@@ -142,8 +152,12 @@ describe("theme contrast", () => {
     const failures = THEMES.flatMap((theme) =>
       MODES.flatMap((mode) => {
         const set = tokens(theme, mode);
-        const pct = Number(/(\d+)%/.exec(set["--sheen-tint"] ?? "")?.[1]);
-        expect(pct).toBeGreaterThan(0);
+        const base = Number(
+          /calc\((\d+)% \* var\(--finish-glow\)\)/.exec(set["--sheen-tint"] ?? "")?.[1]
+        );
+        expect(base).toBeGreaterThan(0);
+        // --finish-glow scales the glow: a flat theme measures the inks on no glow at all
+        const pct = base * number(set, "var(--finish-glow)");
         const glow = { ...color(set, "--fg-brand"), a: pct / 100 };
         // a hovered card and an active nav item carry the sheen too
         return (["--bg-card", "--bg-card-hover", "--bg-overlay"] as const).flatMap((on) => {
@@ -191,6 +205,26 @@ describe("theme contrast", () => {
     expect(Math.min(...muted)).toBeGreaterThanOrEqual(4.5);
   });
 
+  // A theme whose brand is the page's ink brings the dark values back inside a
+  // dark surface in a light page. Every ink is measured there too.
+  it("keeps every ink readable on a dark surface in a light page, where a theme sets one", () => {
+    const themes = THEMES.filter((theme) => darkSurfaceBlock(theme));
+    expect(themes).toContain("taylor");
+    const failures = themes.flatMap((theme) => {
+      const set = {
+        ...tokens(theme, "light"),
+        ...declarations(GLOBALS, '[data-surface="dark"]'),
+        ...darkSurfaceBlock(theme),
+      };
+      return CHECKS.map((check) => ({ check, ratio: measure(set, check) }))
+        .filter(({ check, ratio }) => ratio < check.min)
+        .map(
+          ({ check, ratio }) => `${theme}: ${check.ink} on ${label(check)}: ${ratio.toFixed(2)}`
+        );
+    });
+    expect(failures).toEqual([]);
+  });
+
   // Series, bars and IconTile glyphs are graphics: 3:1 against what they sit
   // on. An IconTile draws the color over 15% of itself on the card.
   const PALETTE = Array.from({ length: 8 }, (_, i) => `--chart-${i + 1}`);
@@ -227,9 +261,30 @@ describe("theme contrast", () => {
     const set = tokens("entrepta", "dark");
     const brandHue = toOklch(color(set, "--fg-brand")).h;
     expect(toOklch(color(set, "--chart-1")).h).toBeCloseTo(brandHue, 0);
+    expect(set["--chart-from"]).toBe("var(--fg-brand)");
     for (const name of PALETTE) expect(set[name]).toMatch(RELATIVE_OKLCH);
     const hues = PALETTE.map((name) => Math.round(toOklch(color(set, name)).h));
     expect(new Set(hues).size).toBe(8);
+  });
+
+  // The monochrome theme has no hue to turn, so it names where the charts start.
+  it("starts taylor's charts from a hue of their own and eight apart", () => {
+    const set = tokens("taylor", "dark");
+    expect(set["--chart-from"]).not.toContain("var(");
+    const hues = PALETTE.map((name) => Math.round(toOklch(color(set, name)).h));
+    expect(new Set(hues).size).toBe(8);
+    expect(toOklch(color(set, "--chart-1")).h).toBeCloseTo(
+      toOklch(color(set, "--chart-from")).h,
+      0
+    );
+  });
+
+  // The theme files hold every knob a project is told to change.
+  it("keeps the finish knob in every theme, and flat only in taylor", () => {
+    for (const theme of THEMES) {
+      const glow = declarations(read(`themes/${theme}.css`), ":root")["--finish-glow"];
+      expect(glow, theme).toBe(theme === "taylor" ? "0" : "1");
+    }
   });
 
   // The brand itself is only for fills, borders, glyphs and large text.

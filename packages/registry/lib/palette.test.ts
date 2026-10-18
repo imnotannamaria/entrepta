@@ -37,13 +37,17 @@ describe("hue names", () => {
   });
 });
 
-describe("hue names across the six themes", () => {
+describe("hue names across the themes", () => {
   const dir = path.join(__dirname, "..", "styles", "themes");
   const themes = fs.readdirSync(dir).filter((file) => file.endsWith(".css"));
 
   it.each(themes)("%s keeps each swatch's name in both modes, eight different names", (file) => {
     const css = fs.readFileSync(path.join(dir, file), "utf8");
-    const [dark, light] = [...css.matchAll(/--fg-brand:\s*(#[0-9a-fA-F]{6})/g)].map((m) => m[1]);
+    // a theme with no hue of its own names the color its charts start from
+    const own = /--chart-from:\s*(#[0-9a-fA-F]{6})/.exec(css)?.[1];
+    const [dark, light] = own
+      ? [own, own]
+      : [...css.matchAll(/--fg-brand:\s*(#[0-9a-fA-F]{6})/g)].map((m) => m[1]);
     const names = (hex: string) => {
       const base = toOklch(parseHex(hex) as NonNullable<ReturnType<typeof parseHex>>).h;
       return [0, 45, 90, 135, 180, 225, 270, 315].map((turn) => hueName(base + turn));

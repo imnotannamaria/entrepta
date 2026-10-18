@@ -1,5 +1,5 @@
 import { DocPageHeader, DocSubhead } from "@/components/doc-page-header";
-import { THEME_NOTES, THEME_SWITCH } from "@/lib/docs-data";
+import { THEME_NOTES, THEME_SWITCH, THEME_TAYLOR } from "@/lib/docs-data";
 import { THEMES as THEME_LIST } from "@/lib/theme";
 import { CodeBlock } from "@entrepta/registry/content/code-block";
 import {
@@ -23,7 +23,7 @@ const THEMES = THEME_LIST.map((t) => ({
 export const metadata: Metadata = {
   title: "Themes",
   description:
-    "Six entrepta theme presets: entrepta, blossom, marmalade, julia, ivy, bosco. Swap brand color with one CLI flag, same tokens.",
+    "Seven entrepta theme presets: entrepta, blossom, marmalade, julia, ivy, bosco, taylor. Swap brand color with one CLI flag, same tokens.",
   alternates: { canonical: "/docs/themes", types: { "text/markdown": "/docs/themes.md" } },
 };
 
@@ -35,7 +35,7 @@ export default function ThemesPage() {
         eyebrow="customization"
         title={
           <>
-            Six <em>themes.</em> One brand token.
+            Seven <em>themes.</em> One brand token.
           </>
         }
         description={
@@ -45,11 +45,11 @@ export default function ThemesPage() {
             spacing, type) is shared.
           </>
         }
-        meta="6 presets"
+        meta="7 presets"
       />
 
       <section className="mb-12">
-        <DocSubhead count="6 presets">Available themes</DocSubhead>
+        <DocSubhead count="7 presets">Available themes</DocSubhead>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {THEMES.map((t) => (
             <Card key={t.name}>
@@ -97,12 +97,25 @@ export default function ThemesPage() {
         <p className="mt-4 font-mono text-mono-sm text-[var(--fg-muted)] leading-relaxed">
           <span className="text-[var(--fg-brand)]">{"// "}</span>
           Each preset is one block of CSS variables per mode. The two inks are set per theme because
-          no single one reads on all six brands. Every pair clears WCAG AA in both modes.
+          no single one reads on all seven brands. Every pair clears WCAG AA in both modes.
         </p>
       </section>
 
       <section className="mb-12">
-        <DocSubhead count="2 ways">One theme or all six</DocSubhead>
+        <DocSubhead count="2 knobs">taylor, flat and monochrome</DocSubhead>
+        <p className="font-sans text-body-md leading-relaxed text-[var(--fg-secondary)] mb-4 max-w-2xl">
+          {THEME_TAYLOR.text}
+        </p>
+        <CodeBlock
+          variant="terminal"
+          filename="styles/themes/taylor.css"
+          language="css"
+          code={THEME_TAYLOR.code}
+        />
+      </section>
+
+      <section className="mb-12">
+        <DocSubhead count="2 ways">One theme or all seven</DocSubhead>
         <CodeBlock
           variant="terminal"
           filename="terminal"
@@ -110,7 +123,7 @@ export default function ThemesPage() {
           code={`# one fixed theme
 npx @entrepta/cli@latest init --theme=ivy
 
-# all six, switchable at runtime
+# all seven, switchable at runtime
 npx @entrepta/cli@latest init --theme=ivy --themes=all`}
         />
         <p className="mt-4 font-mono text-mono-sm text-[var(--fg-muted)] leading-relaxed">
