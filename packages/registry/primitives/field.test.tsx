@@ -55,7 +55,20 @@ describe("FieldLabel", () => {
       </FieldLabel>
     );
     expect(screen.getByText("◆")).toHaveAttribute("aria-hidden", "true");
-    expect(screen.getByText("*")).toHaveAttribute("aria-hidden");
+    expect(document.querySelector("[data-required]")).toHaveAttribute("aria-hidden");
+  });
+
+  it("keeps the star out of the label's text, so a test finds it by its name", () => {
+    render(
+      <>
+        <FieldLabel htmlFor="x" required icon={(() => null) as never}>
+          name
+        </FieldLabel>
+        <input id="x" />
+      </>
+    );
+    expect(screen.getByLabelText("name", { exact: true })).toBeInTheDocument();
+    expect(document.querySelector("label")?.textContent).toBe("name");
   });
 });
 

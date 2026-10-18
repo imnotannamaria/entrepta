@@ -62,6 +62,8 @@ export interface SidebarProps extends React.HTMLAttributes<HTMLElement> {
 }
 
 const STORAGE_EVENT = "entrepta:sidebar";
+/** The rail's items sit 8px inside its edge, so the tooltip starts past the border, not on it. */
+const RAIL_TOOLTIP_OFFSET = 18;
 
 function readStored(key: string): boolean | null {
   try {
@@ -293,7 +295,9 @@ const Sidebar = React.forwardRef<HTMLElement, SidebarProps>(
                           {collapsed ? (
                             <Tooltip>
                               <TooltipTrigger asChild>{link}</TooltipTrigger>
-                              <TooltipContent side="right">{item.label}</TooltipContent>
+                              <TooltipContent side="right" sideOffset={RAIL_TOOLTIP_OFFSET}>
+                                {item.label}
+                              </TooltipContent>
                             </Tooltip>
                           ) : (
                             link
@@ -376,7 +380,9 @@ function CollapseButton({
   return (
     <Tooltip>
       <TooltipTrigger asChild>{button}</TooltipTrigger>
-      <TooltipContent side="right">{label}</TooltipContent>
+      <TooltipContent side="right" sideOffset={RAIL_TOOLTIP_OFFSET}>
+        {label}
+      </TooltipContent>
     </Tooltip>
   );
 }

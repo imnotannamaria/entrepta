@@ -607,6 +607,13 @@ import { GearIcon, UserIcon } from "@phosphor-icons/react"
         default: "8",
         description: "Gap in px from trigger (TooltipContent)",
       },
+      {
+        name: "surface",
+        type: '"dark" | "page"',
+        default: '"dark"',
+        description:
+          "dark stays near black in both modes. page follows the mode of the page it opens over (TooltipContent)",
+      },
     ],
   },
   kbd: {
@@ -1434,9 +1441,15 @@ const [hidden, setHidden] = useState(false)
     props: [
       {
         name: "messages",
-        type: "{ id, role, content, name?, time?, status?, error? }[]",
+        type: "{ id, role, content, name?, time?, status?, error?, avatar? }[]",
         description:
           'role is "user", "assistant", "tool" or "system"; status "streaming" or "error"',
+      },
+      {
+        name: "avatars",
+        type: "{ user?, assistant? }",
+        description:
+          "A node drawn before the name of each role, such as an Avatar. A message's own avatar wins",
       },
       { name: "empty", type: "ReactNode", description: "Before the first message" },
       {
@@ -2092,7 +2105,7 @@ export function MyPalette() {
   },
   field: {
     description:
-      "Label, control, and error or hint in one column. It wires the control for screen readers: id, aria-describedby and aria-invalid.",
+      "Label, control, and error or hint in one column. It wires the control for screen readers: id, aria-describedby and aria-invalid. It does not validate. Check the values with a schema such as zod, put noValidate on the form, and pass the message as error. The star from required is only visual, so the control carries required, or the schema does.",
     usage: `import { Field } from "@/components/entrepta/field"
 import { Input } from "@/components/entrepta/input"
 import { Textarea } from "@/components/entrepta/textarea"
@@ -2103,7 +2116,16 @@ import { Textarea } from "@/components/entrepta/textarea"
 
 <Field id="message" label="message" error={errors.message}>
   <Textarea />
-</Field>`,
+</Field>
+
+// validate with a schema, not the browser
+const schema = z.object({ email: z.string().email("enter a valid email") })
+
+<form noValidate onSubmit={onSubmit}>
+  <Field id="email" label="email" required error={errors.email}>
+    <Input type="email" name="email" required />
+  </Field>
+</form>`,
     props: [
       {
         name: "id",
@@ -2321,6 +2343,19 @@ const [price, setPrice] = useState<number | null>(null)
         type: '"sm" | "md"',
         default: '"md"',
         description: "28 or 36px tall",
+      },
+      {
+        name: "shape",
+        type: '"default" | "pill"',
+        default: '"default"',
+        description: "pill rounds the track and the indicator all the way",
+      },
+      {
+        name: "truncate",
+        type: "boolean",
+        default: "true",
+        description:
+          "A long label is cut with an ellipsis. Off, every segment grows to the longest word",
       },
       {
         name: "aria-label",

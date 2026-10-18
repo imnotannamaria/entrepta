@@ -25,9 +25,8 @@ const FieldLabel = React.forwardRef<HTMLLabelElement, FieldLabelProps>(
       )}
       {children}
       {required && (
-        <span aria-hidden className="text-[var(--fg-brand)]">
-          *
-        </span>
+        // drawn by CSS, so it is neither in the label's text nor in its accessible name
+        <span aria-hidden data-required className="text-[var(--fg-brand)] before:content-['*']" />
       )}
     </label>
   )

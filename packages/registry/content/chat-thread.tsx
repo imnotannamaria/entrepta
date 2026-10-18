@@ -21,6 +21,8 @@ export interface ChatMessage {
   status?: "streaming" | "error";
   /** What to say under a failed message, and a retry. */
   error?: React.ReactNode;
+  /** Drawn before the name, in place of the thread's avatar for this role. */
+  avatar?: React.ReactNode;
 }
 
 const LABELS = {
@@ -33,6 +35,8 @@ const LABELS = {
 
 interface ChatThreadProps extends React.HTMLAttributes<HTMLElement> {
   messages: readonly ChatMessage[];
+  /** What is drawn before the name of each role, such as an Avatar. */
+  avatars?: Partial<Record<"user" | "assistant", React.ReactNode>>;
   /** Shown when there are no messages yet. */
   empty?: React.ReactNode;
   labels?: Partial<typeof LABELS>;
@@ -49,7 +53,7 @@ const NEAR = 32;
  * when it is done, not every word as it arrives. No model and no network.
  */
 const ChatThread = React.forwardRef<HTMLElement, ChatThreadProps>(
-  ({ messages, empty, labels: labelsProp, className, ...props }, ref) => {
+  ({ messages, avatars, empty, labels: labelsProp, className, ...props }, ref) => {
     const labels = { ...LABELS, ...labelsProp };
     const scroller = React.useRef<HTMLDivElement>(null);
     const list = React.useRef<HTMLOListElement>(null);
@@ -128,7 +132,7 @@ const ChatThread = React.forwardRef<HTMLElement, ChatThreadProps>(
             <ol ref={list} className="m-0 flex list-none flex-col gap-5 p-0 py-2">
               {messages.map((message) => (
                 <li key={message.id} data-message={message.id} className="min-w-0">
-                  <Message message={message} labels={labels} />
+                  <Message message={message} labels={labels} avatars={avatars} />
                 </li>
               ))}
             </ol>
@@ -161,10 +165,27 @@ const ChatThread = React.forwardRef<HTMLElement, ChatThreadProps>(
 );
 ChatThread.displayName = "ChatThread";
 
-function Message({ message, labels }: { message: ChatMessage; labels: typeof LABELS }) {
+function Message({
+  message,
+  labels,
+  avatars,
+}: {
+  message: ChatMessage;
+  labels: typeof LABELS;
+  avatars: ChatThreadProps["avatars"];
+}) {
+  const own =
+    message.avatar ??
+    (message.role === "user" || message.role === "assistant" ? avatars?.[message.role] : undefined);
   const meta = (name: string) => (
     <span className="flex items-center gap-1.5 font-mono text-mono-xs text-[var(--fg-muted)]">
-      {message.role === "assistant" ? <Diamond size={9} /> : null}
+      {own != null ? (
+        <span aria-hidden className="inline-flex shrink-0">
+          {own}
+        </span>
+      ) : message.role === "assistant" ? (
+        <Diamond size={9} />
+      ) : null}
       <span className="uppercase tracking-[0.08em]">{name}</span>
       {message.time ? <span>· {message.time}</span> : null}
     </span>

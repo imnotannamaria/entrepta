@@ -16,6 +16,24 @@ describe("ChatThread", () => {
     expect(items[1]).toHaveTextContent("AssistantMostly home");
   });
 
+  it("draws the thread's avatar for a role, and a message's own over it", () => {
+    render(
+      <ChatThread
+        messages={[
+          { id: "1", role: "user", content: "Hi" },
+          { id: "2", role: "assistant", content: "Hello" },
+          { id: "3", role: "assistant", content: "Again", avatar: <i data-testid="own" /> },
+        ]}
+        avatars={{ assistant: <b data-testid="bot" />, user: <u data-testid="me" /> }}
+      />
+    );
+    expect(screen.getAllByTestId("bot")).toHaveLength(1);
+    expect(screen.getAllByTestId("me")).toHaveLength(1);
+    expect(screen.getByTestId("own")).toBeInTheDocument();
+    expect(screen.getByTestId("own").parentElement).toHaveAttribute("aria-hidden", "true");
+    expect(screen.getByRole("region").textContent).not.toContain("◆");
+  });
+
   it("puts a tool's result in a card with its name", () => {
     render(
       <ChatThread
