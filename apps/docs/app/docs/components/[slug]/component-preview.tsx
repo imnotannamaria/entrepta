@@ -19,15 +19,6 @@ import {
 import { type ChatMessage, ChatThread } from "@entrepta/registry/content/chat-thread";
 import { CodeBlock } from "@entrepta/registry/content/code-block";
 import { Diamond } from "@entrepta/registry/content/diamond";
-import {
-  DisplayH2,
-  DocLabel,
-  Em,
-  Prose,
-  Section,
-  Strong,
-} from "@entrepta/registry/content/doc-parts";
-import { SectHead } from "@entrepta/registry/content/sect-head";
 import { Amount } from "@entrepta/registry/data/amount";
 import { BarList } from "@entrepta/registry/data/bar-list";
 import { type ContributionDay, ContributionGrid } from "@entrepta/registry/data/contribution-grid";
@@ -49,7 +40,6 @@ import {
   TableRow,
 } from "@entrepta/registry/data/table";
 import { Alert } from "@entrepta/registry/feedback/alert";
-import { ChromeMessage } from "@entrepta/registry/feedback/chrome-message";
 import {
   Command,
   CommandDialog,
@@ -68,9 +58,7 @@ import { RedactProvider } from "@entrepta/registry/hooks/use-redact";
 import { BentoGrid, BentoItem } from "@entrepta/registry/layout/bento-grid";
 import { MobileNav } from "@entrepta/registry/layout/mobile-nav";
 import { ModeToggle } from "@entrepta/registry/layout/mode-toggle";
-import { PageOutline } from "@entrepta/registry/layout/page-outline";
 import { Sidebar } from "@entrepta/registry/layout/sidebar";
-import { StatusBar, StatusBarItem, StatusBarSeparator } from "@entrepta/registry/layout/status-bar";
 import { ThemeSwitcher } from "@entrepta/registry/layout/theme-switcher";
 import {
   TopNav,
@@ -109,8 +97,6 @@ import {
   CardLabel,
   CardMeta,
   CardNote,
-  CardTerminalBar,
-  CardTerminalBody,
   CardTitle,
 } from "@entrepta/registry/primitives/card";
 import { Checkbox } from "@entrepta/registry/primitives/checkbox";
@@ -2147,24 +2133,6 @@ function CardPreview() {
         </CardFooter>
       </Card>
 
-      <Card variant="terminal">
-        <CardTerminalBar>
-          <CardLabel>install</CardLabel>
-          <CardMeta>v2.0.0</CardMeta>
-        </CardTerminalBar>
-        <CardTerminalBody>
-          <div>
-            <span className="text-[var(--fg-muted)]">$</span> npx{" "}
-            <span className="text-[var(--fg-brand-text)]">@entrepta/cli@latest</span> init
-          </div>
-          <div>
-            <span className="text-[var(--fg-muted)]">$</span> npx @entrepta/cli@latest add{" "}
-            <span className="text-[var(--status-success-fg)]">button</span>
-          </div>
-          <div className="text-[var(--fg-muted)] mt-2">{"// 1 component installed"}</div>
-        </CardTerminalBody>
-      </Card>
-
       <Card variant="data">
         <CardHeader>
           <CardLabel>oss '26</CardLabel>
@@ -2417,11 +2385,10 @@ function TabsPreview() {
         </div>
       </Demo>
 
-      <Demo label="variant window · the title bar">
+      <Demo label="route tabs · after and end">
         <div className="w-full overflow-hidden rounded-[var(--radius-md)] border border-[var(--border-subtle)]">
           <TabNav
             aria-label="Preview pages"
-            variant="window"
             after={
               <button
                 type="button"
@@ -2469,39 +2436,6 @@ function TabsPreview() {
           </Tabs>
         </div>
       </Demo>
-    </div>
-  );
-}
-
-function StatusBarPreview() {
-  return (
-    <div className="w-full max-w-2xl border border-[var(--border-subtle)] rounded-[var(--radius-md)] overflow-hidden">
-      <div className="sheen flex h-20 items-center justify-center bg-[var(--bg-card)]">
-        <p className="font-mono text-mono-sm text-[var(--fg-muted)]">page content</p>
-      </div>
-      {/* flex overrides the bar's own hidden-below-640px, so the preview shows at every width */}
-      <StatusBar
-        position="static"
-        className="flex"
-        left={
-          <>
-            <StatusBarItem icon={<GitBranchIcon size={10} />}>main</StatusBarItem>
-            <StatusBarSeparator />
-            <StatusBarItem>0 errors</StatusBarItem>
-            <StatusBarSeparator />
-            <StatusBarItem>2 warnings</StatusBarItem>
-          </>
-        }
-        right={
-          <>
-            <StatusBarItem>TypeScript</StatusBarItem>
-            <StatusBarSeparator />
-            <StatusBarItem>UTF-8</StatusBarItem>
-            <StatusBarSeparator />
-            <StatusBarItem>Ln 1, Col 1</StatusBarItem>
-          </>
-        }
-      />
     </div>
   );
 }
@@ -3056,64 +2990,6 @@ function FilterBuilderPreview() {
   );
 }
 
-function PageOutlinePreview() {
-  return (
-    <div className="flex w-full max-w-md justify-center overflow-hidden rounded-[var(--radius-md)] border border-[var(--border-subtle)]">
-      <PageOutline
-        className="!block !static w-64"
-        file="about.md"
-        items={[
-          { id: "outline-intro", label: "intro", level: 1 },
-          { id: "outline-career", label: "career", level: 2, count: 4 },
-          { id: "outline-education", label: "education", level: 3 },
-        ]}
-        footer={<span>3 sections</span>}
-      />
-    </div>
-  );
-}
-
-function SectHeadPreview() {
-  return (
-    <div className="w-full max-w-xl">
-      <SectHead cmd="ls ./work --featured" meta="4 projects" as="span" />
-      <SectHead cmd="cat ./off-the-clock" meta="updated today" as="span" />
-    </div>
-  );
-}
-
-function DocPartsPreview() {
-  return (
-    <div className="w-full max-w-xl">
-      <Section variant="first" className="pb-0">
-        <DocLabel>about</DocLabel>
-        <DisplayH2>
-          Engineer, <em>mostly</em>.
-        </DisplayH2>
-        <Prose className="mt-4 mb-0">
-          I build <Strong>design systems</Strong> and ship them as <Em>copy-paste</Em> code.
-        </Prose>
-      </Section>
-    </div>
-  );
-}
-
-function ChromeMessagePreview() {
-  return (
-    <div className="w-full overflow-hidden rounded-[var(--radius-md)] border border-[var(--border-subtle)]">
-      <ChromeMessage
-        className="min-h-0 py-8"
-        command="cat ./this-page"
-        output="cat: ./this-page: No such file or directory"
-        title="Page not found."
-        headingLevel={2}
-        note="it moved, or it never existed"
-        action={<ArrowLink href="#">go home</ArrowLink>}
-      />
-    </div>
-  );
-}
-
 function PageLoadingPreview() {
   const [run, setRun] = useState(0);
   return (
@@ -3271,7 +3147,6 @@ const PREVIEWS: Record<string, React.ReactNode> = {
   dropdown: <DropdownPreview />,
   tooltip: <TooltipPreview />,
   tabs: <TabsPreview />,
-  "status-bar": <StatusBarPreview />,
   "top-nav": <TopNavPreview />,
   "theme-switcher": <ThemeSwitcherPreview />,
   "mode-toggle": <ModeTogglePreview />,
@@ -3306,10 +3181,6 @@ const PREVIEWS: Record<string, React.ReactNode> = {
   "bento-grid": <BentoGridPreview />,
   "mobile-nav": <MobileNavPreview />,
   "filter-builder": <FilterBuilderPreview />,
-  "page-outline": <PageOutlinePreview />,
-  "sect-head": <SectHeadPreview />,
-  "doc-parts": <DocPartsPreview />,
-  "chrome-message": <ChromeMessagePreview />,
   "page-loading": <PageLoadingPreview />,
   reveal: <RevealPreview />,
   "type-in": <TypeInPreview />,

@@ -9,8 +9,6 @@ import {
   CardLabel,
   CardMeta,
   CardNote,
-  CardTerminalBar,
-  CardTerminalBody,
   CardTitle,
 } from "./card";
 
@@ -48,24 +46,6 @@ describe("Card", () => {
       "hover:-translate-y-0.5",
       "hover:shadow-[var(--shadow-lift-brand)]"
     );
-  });
-
-  it("terminal stays dark, sets its own ink and drops the padding", () => {
-    const { container } = render(<Card variant="terminal">terminal</Card>);
-    const card = container.firstChild as HTMLElement;
-    expect(card).toHaveAttribute("data-surface", "dark");
-    expect(card).toHaveClass("p-0", "max-sm:p-0", "text-[var(--fg-primary)]");
-    expect(card).not.toHaveClass("p-6");
-  });
-
-  it("terminal drops the padding at every size", () => {
-    const { container } = render(
-      <Card variant="terminal" size="xl">
-        terminal
-      </Card>
-    );
-    expect(container.firstChild).toHaveClass("p-0");
-    expect(container.firstChild).not.toHaveClass("pt-14");
   });
 
   it("uses md by default: 24px padding, 20px below 640px", () => {
@@ -176,19 +156,5 @@ describe("Card sub-components", () => {
     expect(screen.getByText("shipped 2025-11")).toBeInTheDocument();
     expect(container.textContent).toBe("shipped 2025-11");
     expect(container.querySelector("[aria-hidden]")).toBeNull();
-  });
-
-  it("CardTerminalBar has a bottom border and no band over the card's glow", () => {
-    const { container } = render(<CardTerminalBar>~/project</CardTerminalBar>);
-    expect(screen.getByText("~/project")).toBeInTheDocument();
-    expect(container.firstChild).toHaveClass("border-b");
-    expect((container.firstChild as HTMLElement).className).not.toMatch(/bg-\[/);
-  });
-
-  it("CardTerminalBody applies padding and mono font", () => {
-    const { container } = render(<CardTerminalBody>$ pnpm dev</CardTerminalBody>);
-    expect(screen.getByText("$ pnpm dev")).toBeInTheDocument();
-    expect(container.firstChild).toHaveClass("font-mono");
-    expect(container.firstChild).toHaveClass("p-4");
   });
 });

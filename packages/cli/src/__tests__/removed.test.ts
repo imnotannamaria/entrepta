@@ -17,6 +17,12 @@ describe("removed items", () => {
     expect(removedMessage("constructor", TABLE)).toBeUndefined();
   });
 
+  it("names every item the editor look took with it", () => {
+    for (const name of ["status-bar", "chrome-message", "sect-head", "page-outline", "doc-parts"]) {
+      expect(removedMessage(name)).toContain(`"${name}" was removed in 4.0.0`);
+    }
+  });
+
   it("never lists an item the registry still ships", () => {
     const shipped = new Set(COMPONENTS.map((c) => c.name));
     expect(Object.keys(REMOVED).filter((name) => shipped.has(name))).toEqual([]);

@@ -97,7 +97,7 @@ Docs: https://entrepta.vercel.app/docs/components/button.md
 ### Card
 
 \`\`\`tsx
-import { Card, cardVariants, CardHeader, CardLabel, CardMeta, CardTitle, CardDescription, CardContent, CardFooter, CardNote, CardTerminalBar, CardTerminalBody } from "@/app/components/entrepta/card"
+import { Card, cardVariants, CardHeader, CardLabel, CardMeta, CardTitle, CardDescription, CardContent, CardFooter, CardNote } from "@/app/components/entrepta/card"
 
 <Card><CardHeader><CardLabel>post</CardLabel><CardMeta>2026</CardMeta></CardHeader><CardTitle>Title</CardTitle></Card>
 \`\`\`
@@ -225,7 +225,7 @@ Docs: https://entrepta.vercel.app/docs/components/button.md
 ### Card
 
 \`\`\`tsx
-import { Card, cardVariants, CardHeader, CardLabel, CardMeta, CardTitle, CardDescription, CardContent, CardFooter, CardNote, CardTerminalBar, CardTerminalBody } from "@/components/entrepta/card"
+import { Card, cardVariants, CardHeader, CardLabel, CardMeta, CardTitle, CardDescription, CardContent, CardFooter, CardNote } from "@/components/entrepta/card"
 
 <Card><CardHeader><CardLabel>post</CardLabel><CardMeta>2026</CardMeta></CardHeader><CardTitle>Title</CardTitle></Card>
 \`\`\`
@@ -353,7 +353,7 @@ Docs: https://entrepta.vercel.app/docs/components/button.md
 ### Card
 
 \`\`\`tsx
-import { Card, cardVariants, CardHeader, CardLabel, CardMeta, CardTitle, CardDescription, CardContent, CardFooter, CardNote, CardTerminalBar, CardTerminalBody } from "@/components/entrepta/card"
+import { Card, cardVariants, CardHeader, CardLabel, CardMeta, CardTitle, CardDescription, CardContent, CardFooter, CardNote } from "@/components/entrepta/card"
 
 <Card><CardHeader><CardLabel>post</CardLabel><CardMeta>2026</CardMeta></CardHeader><CardTitle>Title</CardTitle></Card>
 \`\`\`

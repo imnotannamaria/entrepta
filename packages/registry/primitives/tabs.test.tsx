@@ -198,38 +198,17 @@ describe("tab names on phones", () => {
   });
 });
 
-describe("variant window", () => {
-  it("adds decorative window dots hidden from screen readers, with no buttons", () => {
-    const { container } = render(
-      <TabNav aria-label="Pages" variant="window">
-        <TabNavLink href="/" active>
-          home.tsx
-        </TabNavLink>
-      </TabNav>
-    );
-    const dots = container.querySelector("[data-window-dots]");
-    expect(dots).toHaveAttribute("aria-hidden");
-    expect(dots?.querySelectorAll("button")).toHaveLength(0);
-    expect(screen.getByRole("navigation", { name: "Pages" })).toBeInTheDocument();
-  });
-
-  it("shows end as meta from 768px, and a strip has no dots", () => {
-    const { container } = render(
+describe("the row", () => {
+  it("pins `end` to the far end and keeps `after` next to the last tab", () => {
+    render(
       <Tabs defaultValue="a">
-        <TabsList variant="window" end={<span>main</span>}>
+        <TabsList after={<button type="button">+</button>} end={<span>main</span>}>
           <TabsTrigger value="a">a.tsx</TabsTrigger>
         </TabsList>
       </Tabs>
     );
-    expect(screen.getByText("main").parentElement).toHaveClass("hidden", "md:flex");
-    render(
-      <Tabs defaultValue="a">
-        <TabsList>
-          <TabsTrigger value="a">b.tsx</TabsTrigger>
-        </TabsList>
-      </Tabs>
-    );
-    expect(container.ownerDocument.querySelectorAll("[data-window-dots]")).toHaveLength(1);
+    expect(screen.getByText("main").parentElement).toHaveClass("ml-auto", "shrink-0");
+    expect(screen.getByRole("button", { name: "+" })).toBeInTheDocument();
   });
 
   it("grows a Phosphor icon on hover and fills it when active", () => {

@@ -112,7 +112,6 @@ export const V1_COMPONENTS = [
   "dropdown",
   "tooltip",
   "tabs",
-  "status-bar",
   "top-nav",
   "skeleton",
   "toast",
@@ -131,10 +130,6 @@ export const V2_COMPONENTS = [
   "field",
   "filter-pill",
   "sidebar",
-  "page-outline",
-  "sect-head",
-  "doc-parts",
-  "chrome-message",
   "page-loading",
   "reveal",
   "type-in",
@@ -161,10 +156,6 @@ export const REPLACES: Record<string, string> = {
   field: "label, hint and error markup wired to aria-describedby by hand",
   "filter-pill": "filter buttons that keep their state in the URL",
   sidebar: "an icon rail with its own active indicator",
-  "page-outline": "a table of contents with a scrollspy",
-  "sect-head": "a $ command rule above a section",
-  "doc-parts": "the eyebrow, section and display heading pieces of a long page",
-  "chrome-message": "404 and error screens",
   "page-loading": "a loading.tsx with dots or lines",
   reveal: "fade-in-on-scroll wrappers",
   "type-in": "a typewriter heading",
@@ -235,13 +226,12 @@ npx @entrepta/cli@latest add button card dialog --overwrite`,
   components: [
     [
       "Tabs",
-      'The × is a real button next to the tab, on the active tab only. Route tabs use TabNav and TabNavLink, and variant="window" draws the title bar. Tabs depend on motion.',
+      "The × is a real button next to the tab, on the active tab only. Route tabs use TabNav and TabNavLink. Tabs depend on motion.",
     ],
     [
       "Dropdown, Toast, Tooltip, CommandPalette",
       "All sit on the overlay surface. A highlighted row takes the brand tint instead of an edge bar, keyboard hints are Kbd, and a toast shows its status as an icon tile. The Toaster adds a close button.",
     ],
-    ["StatusBar", 'position="static" puts it in your layout instead of five override classes.'],
     ["CodeBlock", "A failed copy says copy failed instead of claiming it copied."],
     [
       "RollingNumber, Reveal, TypeIn, Spotlight",
@@ -352,14 +342,10 @@ export const V3_CHANGES: [string, string][] = [
   ],
   ["FilterPill", "With onRemove it is an applied filter, with a × named after what it removes."],
   ["Amount, Metric, RollingNumber", "They hide behind a mask when a RedactProvider asks."],
-  [
-    "Button",
-    "asChild works again, and Button, Input, Textarea, StatusBar and TopNav render on the server.",
-  ],
+  ["Button", "asChild works again, and Button, Input, Textarea and TopNav render on the server."],
   ["Sheet", "container renders it inside a frame of your own."],
   ["Tabs", "An icon tab keeps its name for screen readers on a phone."],
   ["CodeBlock", "Scrolling the page over a block works again: it only holds sideways scrolls."],
-  ["ChromeMessage", "Takes headingLevel, for an error inside a layout that has its own h1."],
   ["Form fields", "No code ligatures, which drew some typed slashes blank."],
   [
     "The CLI",
@@ -373,4 +359,4 @@ npx @entrepta/cli@latest init --theme=entrepta --overwrite
 # the 2.x components that changed; keep the ones your project has
 npx @entrepta/cli@latest add button input textarea card dialog tabs toast \\
   command-palette code-block sidebar filter-pill rolling-number \\
-  mode-toggle theme-switcher status-bar top-nav use-mode use-theme --overwrite`;
+  mode-toggle theme-switcher top-nav use-mode use-theme --overwrite`;

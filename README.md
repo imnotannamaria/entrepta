@@ -28,17 +28,17 @@ npx @entrepta/cli@latest add button card command-palette
 
 ## What you get
 
-71 components across 8 sections, in React 19, Tailwind v4 and CSS variables.
+66 components across 8 sections, in React 19, Tailwind v4 and CSS variables.
 
 | Section    | Components |
 | ---------- | ---------- |
 | Primitives | Button, Badge, Avatar, IconTile, Card, Dialog, Sheet, Popover, Accordion, Dropdown, Tooltip, Kbd, Tabs, Progress, Stepper |
 | Forms      | Input, Textarea, Checkbox, Switch, Field, MoneyInput, Select, Combobox, SegmentedControl, ChoiceCard, SwatchPicker, SecretField, FileDropzone, Calendar, DatePicker, DateNavigator, FilterPill |
-| Layout     | StatusBar, TopNav, ThemeSwitcher, ModeToggle, Sidebar, MobileNav, BentoGrid, PageOutline |
-| Content    | CodeBlock, Diamond, SectHead, Doc parts |
+| Layout     | TopNav, ThemeSwitcher, ModeToggle, Sidebar, MobileNav, BentoGrid |
+| Content    | CodeBlock, Diamond, ChatThread |
 | Data       | Amount, Metric, Delta, Sparkline, Chart, BarList, ContributionGrid, Redact, ListRow, Table, DataTable, FilterBuilder |
 | Chat       | PromptInput, ChatThread |
-| Feedback   | Alert, EmptyState, Toast, Skeleton, CommandPalette, ChromeMessage, PageLoading |
+| Feedback   | Alert, EmptyState, Toast, Skeleton, CommandPalette, PageLoading |
 | Motion     | Reveal, TypeIn, RollingNumber, Spotlight, SpotlightCard, ArrowLink |
 
 Seven theme presets: `entrepta`, `blossom`, `marmalade`, `julia`, `ivy`, `bosco` and `taylor`, a flat monochrome one. Pick one, or install all seven and switch at runtime. Every text color clears WCAG AA in all 14 theme and mode combinations, and a test measures it on every change.

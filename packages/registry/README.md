@@ -24,9 +24,9 @@ Or open the [docs](https://entrepta.vercel.app/docs/components) and copy any com
 ├── lib/             cn, motion constants, color contrast
 ├── primitives/      button, badge, card, dialog, dropdown, tooltip, kbd, tabs,
 │                    input, textarea, checkbox, switch, field, filter-pill
-├── layout/          status-bar, top-nav, theme-switcher, mode-toggle, sidebar, page-outline
-├── content/         code-block, diamond, sect-head, doc-parts
-├── feedback/        toast, skeleton, command-palette, chrome-message, page-loading
+├── layout/          top-nav, theme-switcher, mode-toggle, sidebar, mobile-nav, bento-grid
+├── content/         code-block, diamond, chat-thread
+├── feedback/        toast, skeleton, command-palette, page-loading, empty-state, alert
 ├── motion/          reveal, type-in, rolling-number, spotlight, arrow-link
 └── hooks/           use-theme, use-mode, use-command-palette, use-url-filter
 ```

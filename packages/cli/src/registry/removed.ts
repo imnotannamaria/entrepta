@@ -10,7 +10,16 @@ interface Removal {
  * Items that left the registry. `add` names them and points at the guide, so
  * a removed item does not read like a typo.
  */
-export const REMOVED: Record<string, Removal> = {};
+export const REMOVED: Record<string, Removal> = {
+  "status-bar": {
+    version: "4.0.0",
+    note: "It moved into the docs app, with the rest of the editor look.",
+  },
+  "chrome-message": { version: "4.0.0", note: 'Use EmptyState with size="page".' },
+  "sect-head": { version: "4.0.0", note: "It left with the editor look." },
+  "page-outline": { version: "4.0.0", note: "It left with the editor look." },
+  "doc-parts": { version: "4.0.0", note: "It left with the editor look." },
+};
 
 export function removedMessage(
   name: string,

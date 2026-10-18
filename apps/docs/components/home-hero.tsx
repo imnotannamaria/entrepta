@@ -2,13 +2,14 @@
 
 import { CardComment } from "@/components/editor/card-comment";
 import { CardLabel } from "@/components/editor/card-label";
+import { StatusBar, StatusBarItem, StatusBarSeparator } from "@/components/editor/status-bar";
+import { WindowBar } from "@/components/editor/window-bar";
 import { buildAgentsMd } from "@/lib/agents-md";
 import { COMPONENT_INDEX } from "@/lib/component-index";
 import { DEFAULT_MODE, DEFAULT_THEME, STORAGE_KEY_PREFIX, THEMES } from "@/lib/theme";
 import { cn } from "@/lib/utils";
 import { useCopy } from "@entrepta/registry/hooks/use-copy";
 import { useTheme } from "@entrepta/registry/hooks/use-theme";
-import { StatusBar, StatusBarItem, StatusBarSeparator } from "@entrepta/registry/layout/status-bar";
 import { RollingNumber, useRollOnHover } from "@entrepta/registry/motion/rolling-number";
 import { Spotlight, useSpotlight } from "@entrepta/registry/motion/spotlight";
 import { Avatar, AvatarGroup } from "@entrepta/registry/primitives/avatar";
@@ -439,9 +440,7 @@ export function HomeShowcase() {
       >
         <Spotlight {...spotlight} />
         <Tabs value={tab} onValueChange={setTab} className="relative flex flex-col">
-          <TabsList
-            variant="window"
-            aria-label="Showcase files"
+          <WindowBar
             end={
               <span className="flex items-center gap-1.5">
                 <GitBranchIcon aria-hidden size={12} />
@@ -449,16 +448,18 @@ export function HomeShowcase() {
               </span>
             }
           >
-            <TabsTrigger value="page" icon={FileTsxIcon}>
-              launch.tsx
-            </TabsTrigger>
-            <TabsTrigger value="tokens" icon={PaletteIcon}>
-              tokens.css
-            </TabsTrigger>
-            <TabsTrigger value="agents" icon={FileMdIcon}>
-              AGENTS.md
-            </TabsTrigger>
-          </TabsList>
+            <TabsList aria-label="Showcase files" className="min-w-0 flex-1 border-b-0">
+              <TabsTrigger value="page" icon={FileTsxIcon}>
+                launch.tsx
+              </TabsTrigger>
+              <TabsTrigger value="tokens" icon={PaletteIcon}>
+                tokens.css
+              </TabsTrigger>
+              <TabsTrigger value="agents" icon={FileMdIcon}>
+                AGENTS.md
+              </TabsTrigger>
+            </TabsList>
+          </WindowBar>
 
           <div className="flex min-h-[460px]">
             <nav

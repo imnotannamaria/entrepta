@@ -1,6 +1,6 @@
 "use client";
 
-import { ChromeMessage } from "@entrepta/registry/feedback/chrome-message";
+import { ChromeMessage } from "@/components/editor/chrome-message";
 import { Button } from "@entrepta/registry/primitives/button";
 
 /** Any page that throws while rendering lands here, with a way to try again. */

@@ -132,6 +132,20 @@ describe("add", () => {
       expect(cva.length).toBe(1);
     });
 
+    it("says a removed item was removed, names the guide, and writes nothing", async () => {
+      await expect(add(["status-bar"], { overwrite: false })).rejects.toThrow("exit:1");
+      expect(log.error).toHaveBeenCalledWith(expect.stringContaining("removed in 4.0.0"));
+      expect(log.error).toHaveBeenCalledWith(expect.stringContaining("/docs/migrating-to-v4"));
+      expect(mockWriteFile).not.toHaveBeenCalled();
+    });
+
+    it("does not install the rest when one name was removed", async () => {
+      await expect(add(["button", "chrome-message"], { overwrite: false })).rejects.toThrow(
+        "exit:1"
+      );
+      expect(mockWriteFile).not.toHaveBeenCalled();
+    });
+
     it("exits with code 1 and lists available components on unknown name", async () => {
       await expect(add(["nonexistent"], { overwrite: false })).rejects.toThrow("exit:1");
       expect(log.error).toHaveBeenCalledWith(expect.stringContaining("nonexistent"));

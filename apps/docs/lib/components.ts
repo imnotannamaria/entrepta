@@ -214,11 +214,10 @@ import { RobotIcon } from "@phosphor-icons/react"
   },
   card: {
     description:
-      "Surface container in 4 variants and 3 sizes. Near black with a border that lights up on hover. The header wraps instead of clipping.",
+      "Surface container in 3 variants and 3 sizes. Near black with a border that lights up on hover. The header wraps instead of clipping.",
     usage: `import {
   Card, CardHeader, CardLabel, CardMeta, CardTitle,
   CardDescription, CardFooter, CardNote,
-  CardTerminalBar, CardTerminalBody,
 } from "@/components/entrepta/card"
 
 <Card>
@@ -234,19 +233,11 @@ import { RobotIcon } from "@phosphor-icons/react"
     <span>read →</span>
     <CardNote>draft</CardNote>
   </CardFooter>
-</Card>
-
-<Card variant="terminal">
-  <CardTerminalBar>
-    <CardLabel>install</CardLabel>
-    <CardMeta>v2.0.0</CardMeta>
-  </CardTerminalBar>
-  <CardTerminalBody>$ npx @entrepta/cli@latest init</CardTerminalBody>
 </Card>`,
     props: [
       {
         name: "variant",
-        type: '"default" | "featured" | "terminal" | "data"',
+        type: '"default" | "featured" | "data"',
         default: '"default"',
         description: "Background and border style",
       },
@@ -743,54 +734,6 @@ import { TabNav, TabNavLink } from "@/components/entrepta/tabs"
         type: "boolean",
         default: "false",
         description: "Renders your router's link (TabNavLink)",
-      },
-    ],
-  },
-  "status-bar": {
-    description:
-      "Bottom bar on the brand color, pinned to the viewport or placed in your layout. Left and right slots for status items. Hidden below 640px.",
-    usage: `import {
-  StatusBar, StatusBarItem, StatusBarSeparator,
-} from "@/components/entrepta/status-bar"
-
-// In root layout:
-<StatusBar
-  left={
-    <>
-      <StatusBarItem icon={<GitBranchIcon />}>main</StatusBarItem>
-      <StatusBarSeparator />
-      <StatusBarItem>0 errors</StatusBarItem>
-    </>
-  }
-  right={
-    <>
-      <StatusBarItem>TypeScript</StatusBarItem>
-      <StatusBarSeparator />
-      <StatusBarItem>UTF-8</StatusBarItem>
-    </>
-  }
-/>`,
-    props: [
-      {
-        name: "position",
-        type: '"fixed" | "static"',
-        default: '"fixed"',
-        description: "Pinned to the viewport, or a row in your own layout",
-      },
-      {
-        name: "left",
-        type: "ReactNode",
-        description: "Content for the left slot",
-      },
-      {
-        name: "right",
-        type: "ReactNode",
-        description: "Content for the right slot",
-      },
-      {
-        name: "icon",
-        type: "ReactNode",
-        description: "Optional icon prefix (StatusBarItem)",
       },
     ],
   },
@@ -2798,135 +2741,6 @@ import { SpotlightCard } from "@/components/entrepta/spotlight-card"
         default: "120px",
         description: "The shortest row",
       },
-    ],
-  },
-  "page-outline": {
-    description:
-      "A sticky outline of the page's sections that follows the scroll. Shown from 1100px up. Works with the window or your own scroll container.",
-    usage: `import { PageOutline } from "@/components/entrepta/page-outline"
-
-<PageOutline
-  file="about.md"
-  items={[
-    { id: "intro", label: "intro", level: 1 },
-    { id: "career", label: "career", level: 2, count: 4 },
-  ]}
-  scrollContainer={() => document.querySelector("main")}
-/>`,
-    props: [
-      {
-        name: "items",
-        type: "{ id, label, level, count? }[]",
-        description: "One per section id on the page",
-      },
-      { name: "file", type: "string", description: "Name in the chip at the top" },
-      { name: "footer", type: "ReactNode", description: "Lines under the list" },
-      {
-        name: "scrollContainer",
-        type: "() => HTMLElement | null",
-        description: "What scrolls, when it is not the window",
-      },
-      {
-        name: "offset",
-        type: "number",
-        default: "24",
-        description: "Space above a heading after a jump",
-      },
-    ],
-  },
-  "sect-head": {
-    description:
-      "The $ command rule that opens a section, over a dashed line with meta on the right. The row wraps and each half stays whole.",
-    usage: `import { SectHead } from "@/components/entrepta/sect-head"
-
-<SectHead id="work" cmd="ls ./work --featured" meta="4 projects" />`,
-    props: [
-      { name: "cmd", type: "string", description: "The command after the $" },
-      { name: "meta", type: "ReactNode", description: "Right side" },
-      { name: "id", type: "string", description: "Put on the heading, for anchors" },
-      { name: "as", type: '"h2" | "h3" | "span"', default: '"h2"', description: "Heading level" },
-    ],
-  },
-  "doc-parts": {
-    description:
-      "The pieces a long-form page is written in: DocLabel, Section, DisplayH2, Prose, Em and Strong. No entrance built in, so they never pull in motion.",
-    usage: `import { DisplayH2, DocLabel, Em, Prose, Section, Strong } from "@/components/entrepta/doc-parts"
-
-<Section id="about" variant="first">
-  <DocLabel>about</DocLabel>
-  <DisplayH2>Engineer, <em>mostly</em>.</DisplayH2>
-  <Prose>
-    I build <Strong>design systems</Strong> and ship them as <Em>copy-paste</Em> code.
-  </Prose>
-</Section>`,
-    props: [
-      {
-        name: "level",
-        type: '"#" | "##"',
-        default: '"#"',
-        description: "Markdown prefix (DocLabel)",
-      },
-      {
-        name: "variant",
-        type: '"default" | "first"',
-        default: '"default"',
-        description: "The first section has no rule above it (Section)",
-      },
-    ],
-  },
-  "chrome-message": {
-    description:
-      "The surface for 404 and error screens: a $ command, an output line, a serif title, a note and an action. No hooks, so a server component can render it.",
-    usage: `import { ChromeMessage } from "@/components/entrepta/chrome-message"
-
-// app/not-found.tsx
-export default function NotFound() {
-  return (
-    <ChromeMessage
-      command="cat ./this-page"
-      output="cat: ./this-page: No such file or directory"
-      title="Page not found."
-      note="it moved, or it never existed"
-      action={<Link href="/">go home</Link>}
-    />
-  )
-}
-
-// app/error.tsx: an error boundary is a client component
-"use client"
-
-export default function Error({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
-  return (
-    <ChromeMessage
-      accent="error"
-      command="npm run page"
-      title="Something broke."
-      note="the error was logged"
-      action={<Button onClick={reset}>try again</Button>}
-    >
-      {error.digest && <p className="font-mono text-mono-sm">digest: {error.digest}</p>}
-    </ChromeMessage>
-  )
-}`,
-    props: [
-      { name: "command", type: "string", description: "The command after the $" },
-      {
-        name: "accent",
-        type: '"brand" | "error"',
-        default: '"brand"',
-        description: "Color of the $",
-      },
-      { name: "output", type: "string", description: "A terminal output line" },
-      { name: "title", type: "ReactNode", description: "The serif heading" },
-      {
-        name: "headingLevel",
-        type: "1 | 2 | 3",
-        default: "1",
-        description:
-          "2 when the page around it already has an h1, such as an error inside a layout",
-      },
-      { name: "note", type: "ReactNode", description: "Mono line under the title" },
-      { name: "action", type: "ReactNode", description: "A way back" },
     ],
   },
   "page-loading": {

@@ -95,9 +95,7 @@ describe("source rules", () => {
       ({ file }) =>
         file.startsWith("packages/registry/") &&
         !/content\/diamond\.tsx$/.test(file) &&
-        !/registry\/manifest\.ts$/.test(file) &&
-        // the editor pieces leave the registry in phase 6
-        !/layout\/page-outline\.tsx$/.test(file)
+        !/registry\/manifest\.ts$/.test(file)
     );
     const code = (source: string) =>
       source.replace(/\/\*[\s\S]*?\*\//g, "").replace(/^\s*\/\/.*$/gm, "");

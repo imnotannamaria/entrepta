@@ -77,7 +77,7 @@ export const COMPONENTS: RegistryComponent[] = [
   },
   {
     name: "card",
-    description: "Content card, default/featured/terminal/data variants in three sizes",
+    description: "Content card, default/featured/data variants in three sizes",
     category: "primitives",
     files: ["primitives/card.tsx"],
     deps: ["class-variance-authority", "@phosphor-icons/react"],
@@ -95,8 +95,6 @@ export const COMPONENTS: RegistryComponent[] = [
       "CardContent",
       "CardFooter",
       "CardNote",
-      "CardTerminalBar",
-      "CardTerminalBody",
     ],
   },
   {
@@ -589,17 +587,6 @@ export const COMPONENTS: RegistryComponent[] = [
     exports: ["TabNav", "TabNavLink", "Tabs", "TabsContent", "TabsList", "TabsTrigger"],
   },
   {
-    name: "status-bar",
-    description: "Bottom status bar in the brand color, fixed or in your layout",
-    category: "layout",
-    files: ["layout/status-bar.tsx"],
-    deps: ["class-variance-authority"],
-    registryDeps: [],
-    usage:
-      "<StatusBar left={<StatusBarItem>main</StatusBarItem>} right={<StatusBarItem>UTF-8</StatusBarItem>} />",
-    exports: ["StatusBar", "StatusBarItem", "StatusBarSeparator", "statusBarVariants"],
-  },
-  {
     name: "top-nav",
     description: "Horizontal nav bar with logo, breadcrumb, and actions slots",
     category: "layout",
@@ -952,16 +939,6 @@ export const COMPONENTS: RegistryComponent[] = [
     registryDeps: [],
   },
   {
-    name: "chrome-message",
-    description: "Full-page status screen for 404s and errors, as a terminal command",
-    category: "feedback",
-    files: ["feedback/chrome-message.tsx"],
-    deps: ["class-variance-authority"],
-    registryDeps: [],
-    usage: `<ChromeMessage command="cat ./page" title="Page not found." note="it moved" action={…} />`,
-    exports: ["ChromeMessage"],
-  },
-  {
     name: "page-loading",
     description: "Loading screen in CSS alone, that says more only when the wait runs long",
     category: "feedback",
@@ -970,26 +947,6 @@ export const COMPONENTS: RegistryComponent[] = [
     registryDeps: [],
     usage: `<PageLoading command="ls ./log" label="the log" steps={["reading entries"]} />`,
     exports: ["PageLoading"],
-  },
-  {
-    name: "sect-head",
-    description: "The $ command rule that opens a section, with meta on the right",
-    category: "content",
-    files: ["content/sect-head.tsx"],
-    deps: [],
-    registryDeps: [],
-    usage: `<SectHead cmd="ls ./work" meta="4 items" />`,
-    exports: ["SectHead"],
-  },
-  {
-    name: "doc-parts",
-    description: "Long-form page pieces: doc labels, sections, serif heading, prose, Em, Strong",
-    category: "content",
-    files: ["content/doc-parts.tsx"],
-    deps: ["class-variance-authority"],
-    registryDeps: [],
-    usage: `<Section id="about"><DocLabel>about</DocLabel><DisplayH2>Title</DisplayH2><Prose>…</Prose></Section>`,
-    exports: ["DisplayH2", "DocLabel", "Em", "Prose", "Section", "Strong"],
   },
   {
     name: "sidebar",
@@ -1023,15 +980,5 @@ export const COMPONENTS: RegistryComponent[] = [
     usage:
       "<BentoGrid><BentoItem colSpan={{ sm: 6, lg: 8 }}><Card>…</Card></BentoItem></BentoGrid>",
     exports: ["BentoGrid", "BentoItem"],
-  },
-  {
-    name: "page-outline",
-    description: "Sticky outline of the page's sections with a scrollspy, from 1100px up",
-    category: "layout",
-    files: ["layout/page-outline.tsx"],
-    deps: ["motion"],
-    registryDeps: ["diamond", "motion-lib"],
-    usage: `<PageOutline items={SECTIONS} file="about.md" />`,
-    exports: ["PageOutline"],
   },
 ];

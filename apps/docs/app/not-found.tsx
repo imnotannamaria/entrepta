@@ -1,6 +1,6 @@
+import { ChromeMessage } from "@/components/editor/chrome-message";
 import { SiteNav } from "@/components/site-nav";
 import { SiteStatusBar } from "@/components/site-status-bar";
-import { ChromeMessage } from "@entrepta/registry/feedback/chrome-message";
 import { buttonVariants } from "@entrepta/registry/primitives/button-variants";
 import type { Metadata } from "next";
 import Link from "next/link";

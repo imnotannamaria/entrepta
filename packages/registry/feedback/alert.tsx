@@ -45,7 +45,7 @@ interface AlertProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "title">
 /**
  * A notice that stays on the page until it is dealt with: partial data, a
  * connection that needs attention, rows that could not be read. A Toast
- * leaves on its own and a ChromeMessage takes the page. An error that needs
+ * leaves on its own and an EmptyState with size="page" takes the page. An error that needs
  * action is announced at once; the rest waits its turn. No colored edge: the
  * status is in the icon tile.
  */
