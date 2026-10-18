@@ -129,7 +129,7 @@ entrepta/
 │       ├── layout/           # top-nav, theme-switcher, mode-toggle,
 │       │                     # sidebar, mobile-nav, bento-grid
 │       ├── content/          # code-block, chat-thread
-│       ├── feedback/         # toast, skeleton, command-palette, page-loading,
+│       ├── feedback/         # toast, skeleton, command-palette,
 │       │                     # empty-state, alert
 │       ├── motion/           # reveal, type-in, rolling-number,
 │       │                     # arrow-link
@@ -458,14 +458,13 @@ an import between categories (`../content/code-block`) to a sibling (`./code-blo
 and `registryDeps` makes sure the file is copied. A manifest test checks that
 every such import is covered.
 
-### Feedback (6)
+### Feedback (5)
 
 | Component      | Lib     | Notes                              |
 | -------------- | ------- | ---------------------------------- |
 | Toast          | `sonner`| unstyled sonner, status as an icon tile and a corner glow |
 | Skeleton       | no      | shimmer, respects reduced motion    |
 | CommandPalette | `cmdk`  | ⌘K, rows highlight like a dropdown, Kbd hints |
-| PageLoading    | no      | CSS only, extra lines only on a long wait |
 | EmptyState     | no      | what is missing and one action; `size="page"` is a 404 or an error screen, with an `illustration` and a `headingLevel`; server safe |
 | Alert          | no      | stays until dealt with; status in a tile and the glow; server safe |
 

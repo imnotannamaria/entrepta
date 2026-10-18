@@ -19,6 +19,7 @@ export const REMOVED: Record<string, Removal> = {
   "sect-head": { version: "4.0.0", note: "It left with the editor look." },
   "page-outline": { version: "4.0.0", note: "It left with the editor look." },
   "doc-parts": { version: "4.0.0", note: "It left with the editor look." },
+  "page-loading": { version: "4.0.0", note: "Use Skeleton for a loading shape, or EmptyState." },
   diamond: { version: "4.0.0", note: "No component draws the ◆ anymore. Pass an icon instead." },
   spotlight: { version: "4.0.0", note: "The glow that follows the cursor is gone." },
   "spotlight-card": {

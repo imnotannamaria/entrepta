@@ -907,16 +907,6 @@ export const COMPONENTS: RegistryComponent[] = [
     registryDeps: [],
   },
   {
-    name: "page-loading",
-    description: "Loading screen in CSS alone, that says more only when the wait runs long",
-    category: "feedback",
-    files: ["feedback/page-loading.tsx"],
-    deps: [],
-    registryDeps: [],
-    usage: `<PageLoading command="ls ./log" label="the log" steps={["reading entries"]} />`,
-    exports: ["PageLoading"],
-  },
-  {
     name: "sidebar",
     description:
       "App navigation: a 56px icon rail, or labeled with groups, search and footer that folds back to the rail",

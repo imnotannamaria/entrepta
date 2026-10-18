@@ -764,34 +764,6 @@ select:autofill {
   }
 }
 
-/* An ellipsis: three dots with the load-dot-1/2/3 delays. */
-@keyframes load-dot {
-  0%,
-  70%,
-  100% {
-    opacity: 0;
-  }
-  35% {
-    opacity: 1;
-  }
-}
-
-.load-dot {
-  animation: load-dot 0.9s ease-in-out infinite backwards;
-}
-
-.load-dot-1 {
-  animation-delay: 0.52s;
-}
-
-.load-dot-2 {
-  animation-delay: 0.64s;
-}
-
-.load-dot-3 {
-  animation-delay: 0.76s;
-}
-
 /* A status dot that breathes, and one that glows in the brand. */
 @keyframes live-pulse {
   0%,

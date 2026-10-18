@@ -130,7 +130,6 @@ export const V2_COMPONENTS = [
   "field",
   "filter-pill",
   "sidebar",
-  "page-loading",
   "reveal",
   "type-in",
   "rolling-number",
@@ -155,7 +154,6 @@ export const REPLACES: Record<string, string> = {
   field: "label, hint and error markup wired to aria-describedby by hand",
   "filter-pill": "filter buttons that keep their state in the URL",
   sidebar: "an icon rail with its own active indicator",
-  "page-loading": "a loading.tsx with dots or lines",
   reveal: "fade-in-on-scroll wrappers",
   "type-in": "a typewriter heading",
   "rolling-number": "an odometer counter",
@@ -426,6 +424,7 @@ export const V4_REMOVED: [string, string][] = [
     "Removed. Nothing used them. They were the $ command rule and the heading pieces.",
   ],
   ["PageOutline", "Removed. Nothing used it."],
+  ["PageLoading", "Removed, with the load-dot classes. Use Skeleton for a loading shape."],
   [
     "Spotlight, SpotlightCard",
     "Removed, with the --bg-spotlight token. The glow that follows the cursor is gone. SpotlightCard is Card.",

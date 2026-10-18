@@ -51,7 +51,6 @@ import {
   CommandSeparator,
 } from "@entrepta/registry/feedback/command-palette";
 import { EmptyState } from "@entrepta/registry/feedback/empty-state";
-import { PageLoading } from "@entrepta/registry/feedback/page-loading";
 import { Skeleton, SkeletonText } from "@entrepta/registry/feedback/skeleton";
 import { RedactProvider } from "@entrepta/registry/hooks/use-redact";
 import { BentoGrid, BentoItem } from "@entrepta/registry/layout/bento-grid";
@@ -2960,27 +2959,6 @@ function FilterBuilderPreview() {
   );
 }
 
-function PageLoadingPreview() {
-  const [run, setRun] = useState(0);
-  return (
-    <div className="flex w-full flex-col items-center gap-4">
-      <div className="w-full overflow-hidden rounded-[var(--radius-md)] border border-[var(--border-subtle)]">
-        <PageLoading
-          key={run}
-          className="min-h-0 py-10"
-          command="ls ./log"
-          crumb="log"
-          label="the log"
-          steps={["reading entries", "reading covers"]}
-        />
-      </div>
-      <Button size="sm" variant="secondary" onClick={() => setRun((r) => r + 1)}>
-        replay
-      </Button>
-    </div>
-  );
-}
-
 function RevealPreview() {
   const [run, setRun] = useState(0);
   return (
@@ -3107,7 +3085,6 @@ const PREVIEWS: Record<string, React.ReactNode> = {
   "bento-grid": <BentoGridPreview />,
   "mobile-nav": <MobileNavPreview />,
   "filter-builder": <FilterBuilderPreview />,
-  "page-loading": <PageLoadingPreview />,
   reveal: <RevealPreview />,
   "type-in": <TypeInPreview />,
   "rolling-number": <RollingNumberPreview />,

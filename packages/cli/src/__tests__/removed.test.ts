@@ -25,6 +25,7 @@ describe("removed items", () => {
       "page-outline",
       "doc-parts",
       "diamond",
+      "page-loading",
       "spotlight",
       "spotlight-card",
     ]) {

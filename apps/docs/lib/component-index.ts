@@ -78,7 +78,6 @@ export const COMPONENT_INDEX: ComponentEntry[] = [
   { slug: "toast", title: "Toast", section: "Feedback" },
   { slug: "skeleton", title: "Skeleton", section: "Feedback" },
   { slug: "command-palette", title: "CommandPalette", section: "Feedback" },
-  { slug: "page-loading", title: "PageLoading", section: "Feedback" },
   { slug: "reveal", title: "Reveal", section: "Motion" },
   { slug: "type-in", title: "TypeIn", section: "Motion" },
   { slug: "rolling-number", title: "RollingNumber", section: "Motion" },

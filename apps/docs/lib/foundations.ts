@@ -324,7 +324,6 @@ export const MOTION_CSS: Swatch[] = [
   { token: ".type-fade", note: "a line that fades up after --type-delay" },
   { token: ".type-caret", note: "a blinking block caret" },
   { token: ".type-late", note: "a line that only shows when a wait runs long" },
-  { token: ".load-dot-1 to 3", note: "an ellipsis" },
   { token: ".skeleton-sweep", note: "one band of light over a grid of skeletons" },
   {
     token: ".motion-fade, .motion-pop, .motion-sheet",

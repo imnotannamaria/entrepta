@@ -26,7 +26,7 @@ Or open the [docs](https://entrepta.vercel.app/docs/components) and copy any com
 │                    input, textarea, checkbox, switch, field, filter-pill
 ├── layout/          top-nav, theme-switcher, mode-toggle, sidebar, mobile-nav, bento-grid
 ├── content/         code-block, chat-thread
-├── feedback/        toast, skeleton, command-palette, page-loading, empty-state, alert
+├── feedback/        toast, skeleton, command-palette, empty-state, alert
 ├── motion/          reveal, type-in, rolling-number, arrow-link
 └── hooks/           use-theme, use-mode, use-command-palette, use-url-filter
 ```

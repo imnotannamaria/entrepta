@@ -28,7 +28,7 @@ npx @entrepta/cli@latest add button card command-palette
 
 ## What you get
 
-63 components across 8 sections, in React 19, Tailwind v4 and CSS variables.
+62 components across 8 sections, in React 19, Tailwind v4 and CSS variables.
 
 | Section    | Components |
 | ---------- | ---------- |
@@ -38,7 +38,7 @@ npx @entrepta/cli@latest add button card command-palette
 | Content    | CodeBlock, ChatThread |
 | Data       | Amount, Metric, Delta, Sparkline, Chart, BarList, ContributionGrid, Redact, ListRow, Table, DataTable, FilterBuilder |
 | Chat       | PromptInput, ChatThread |
-| Feedback   | Alert, EmptyState, Toast, Skeleton, CommandPalette, PageLoading |
+| Feedback   | Alert, EmptyState, Toast, Skeleton, CommandPalette |
 | Motion     | Reveal, TypeIn, RollingNumber, ArrowLink |
 
 Seven theme presets: `entrepta`, `blossom`, `marmalade`, `julia`, `ivy`, `bosco` and `taylor`, a flat monochrome one. Pick one, or install all seven and switch at runtime. Every text color clears WCAG AA in all 14 theme and mode combinations, and a test measures it on every change.

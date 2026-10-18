@@ -2714,29 +2714,6 @@ import { Card } from "@/components/entrepta/card"
       },
     ],
   },
-  "page-loading": {
-    description:
-      "A loading screen in CSS alone, so it moves before JavaScript runs. The command types itself, and the list of what is loading appears only if the wait passes 2.2s.",
-    usage: `import { PageLoading } from "@/components/entrepta/page-loading"
-
-// app/log/loading.tsx
-export default function Loading() {
-  return (
-    <PageLoading
-      command="ls ./log"
-      crumb="log"
-      label="the log"
-      steps={["reading entries", "reading covers"]}
-    />
-  )
-}`,
-    props: [
-      { name: "command", type: "string", description: "The command the loaded page prints" },
-      { name: "crumb", type: "string", description: "Breadcrumb after ~" },
-      { name: "steps", type: "string[]", description: "Shown only on a long wait" },
-      { name: "label", type: "string", description: "Announced once: Loading {label}" },
-    ],
-  },
   reveal: {
     description:
       "The entrance every card shares: it rises 14px and fades in once on screen. Staggers lists by index, capped at six.",
