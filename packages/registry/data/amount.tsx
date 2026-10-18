@@ -3,7 +3,7 @@
 import { cva } from "class-variance-authority";
 import * as React from "react";
 import { useFormat } from "../hooks/use-format";
-import { formatMoney, moneyParts } from "../lib/format";
+import { formatMoney, moneyParts } from "../lib/entrepta-format";
 import { cn } from "../lib/utils";
 import { Redact } from "./redact";
 

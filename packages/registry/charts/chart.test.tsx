@@ -15,7 +15,7 @@ import {
   YAxis,
 } from "recharts";
 import { describe, expect, it } from "vitest";
-import { MINUS } from "../lib/format";
+import { MINUS } from "../lib/entrepta-format";
 import {
   type ChartConfig,
   ChartContainer,

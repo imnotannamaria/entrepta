@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react";
 import * as React from "react";
 import { describe, expect, it } from "vitest";
 import { FormatProvider } from "../hooks/use-format";
-import { MINUS } from "../lib/format";
+import { MINUS } from "../lib/entrepta-format";
 import { Amount } from "./amount";
 
 const text = (el: Element | null) => el?.textContent?.replace(/[  ]/g, " ");

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { formatNumber } from "../lib/format";
+import { formatNumber } from "../lib/entrepta-format";
 import { type PaletteKey, paletteColor } from "../lib/palette";
 import { cn } from "../lib/utils";
 import { Amount } from "./amount";

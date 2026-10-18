@@ -21,7 +21,7 @@ import {
   toMinor,
   today,
   weekStart,
-} from "./format";
+} from "./entrepta-format";
 
 // Intl puts narrow no-break spaces in some locales; compare on plain spaces.
 const plain = (text: string) => text.replace(/[\u00a0\u202f\u2009]/g, " ");

@@ -808,7 +808,7 @@ export const COMPONENTS: RegistryComponent[] = [
     name: "format-lib",
     description: "Money in minor units, numbers and plain dates, formatted and parsed with Intl",
     category: "lib",
-    files: ["lib/format.ts"],
+    files: ["lib/entrepta-format.ts"],
     deps: [],
     registryDeps: [],
   },

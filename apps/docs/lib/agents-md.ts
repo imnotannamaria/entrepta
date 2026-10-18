@@ -250,7 +250,7 @@ ${bullets([
 
 ${bullets([
   "Money is an integer of minor units (123456 is 1,234.56), shown with Amount and typed with MoneyInput. Never a float.",
-  "A day is a plain `YYYY-MM-DD` string, never a Date. Set the locale, currency and time zone once with `FormatProvider`; `lib/format` has the helpers.",
+  "A day is a plain `YYYY-MM-DD` string, never a Date. Set the locale, currency and time zone once with `FormatProvider`; `lib/entrepta-format` has the helpers.",
   "A change is a Delta: an arrow, a sign and words. No percentage from a base of zero or below; a missing value is a dash with its reason, never a zero.",
   "Series colors are palette keys, `chart-1` to `chart-8`, stored as the key, never a hex. The status colors appear in a chart only for results above and below zero, with a sign.",
   "A data component takes `loading` and draws its skeleton in its final shape. Empty and error are composed where the words are known: EmptyState, Alert, a Badge for stale data. A failed load is never an empty list.",

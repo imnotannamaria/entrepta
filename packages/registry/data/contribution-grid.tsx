@@ -4,7 +4,7 @@ import * as React from "react";
 import { createPortal } from "react-dom";
 import { Skeleton } from "../feedback/skeleton";
 import { useFormat } from "../hooks/use-format";
-import { addDays, compareDates, formatDate, weekStart } from "../lib/format";
+import { addDays, compareDates, formatDate, weekStart } from "../lib/entrepta-format";
 import { OVERLAY_SURFACE } from "../lib/overlay";
 import { cn } from "../lib/utils";
 

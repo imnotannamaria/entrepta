@@ -272,7 +272,7 @@ export const DATA_FOUNDATION: {
     notes: [
       "A day is a plain string, 2026-09-28, never a Date: a Date carries an instant, and a time zone can move it to the day before.",
       "Today is today in the account's time zone, from FormatProvider. Words and the first day of the week come from the locale.",
-      "lib/format holds the helpers: today, addDays, addMonths, compareDates, formatDate, formatDateRange.",
+      "lib/entrepta-format holds the helpers: today, addDays, addMonths, compareDates, formatDate, formatDateRange.",
     ],
   },
   {

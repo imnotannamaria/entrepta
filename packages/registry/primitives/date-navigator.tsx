@@ -3,7 +3,7 @@
 import { CaretLeftIcon, CaretRightIcon } from "@phosphor-icons/react";
 import * as React from "react";
 import { useFormat } from "../hooks/use-format";
-import { addDays, addMonths, today as todayIn } from "../lib/format";
+import { addDays, addMonths, today as todayIn } from "../lib/entrepta-format";
 import { cn } from "../lib/utils";
 import { Button } from "./button";
 import { DatePicker, type Granularity } from "./date-picker";

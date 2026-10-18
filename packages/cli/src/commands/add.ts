@@ -2,6 +2,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import prompts from "prompts";
 import { COMPONENTS, COMPONENT_FOLDERS } from "../registry/components.js";
+import { removedMessage } from "../registry/removed.js";
 import { ConfigError, aliasToPath, readConfig } from "../utils/config.js";
 import { log } from "../utils/logger.js";
 import { detectPackageManager, installDeps } from "../utils/package-manager.js";
@@ -56,8 +57,12 @@ export async function add(components: string[], options: { overwrite: boolean })
 
   const known = new Set(COMPONENTS.map((c) => c.name));
   const unknown = selected.filter((name) => !known.has(name));
-  if (unknown.length > 0) {
-    log.error(`Unknown component(s): ${unknown.join(", ")}`);
+  const removed = unknown.filter((name) => removedMessage(name));
+  for (const name of removed) log.error(removedMessage(name) as string);
+  const typos = unknown.filter((name) => !removed.includes(name));
+  if (removed.length > 0 && typos.length === 0) process.exit(1);
+  if (typos.length > 0) {
+    log.error(`Unknown component(s): ${typos.join(", ")}`);
     const available = COMPONENTS.filter((c) => c.category !== "hooks" && c.category !== "lib")
       .map((c) => c.name)
       .join(", ");

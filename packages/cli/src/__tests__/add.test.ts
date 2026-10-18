@@ -138,6 +138,20 @@ describe("add", () => {
       expect(mockWriteFile).not.toHaveBeenCalled();
     });
 
+    it("copies the renamed format file to lib/entrepta-format.ts and leaves lib/format.ts alone", async () => {
+      mockReadFile.mockImplementation(async (p) =>
+        String(p).endsWith("amount.tsx")
+          ? (`import { formatMoney } from "../lib/entrepta-format";\n` as never)
+          : (BUTTON_SOURCE as never)
+      );
+      await add(["amount"], { overwrite: false });
+      const written = mockWriteFile.mock.calls.map(([file]) => String(file));
+      expect(written.some((file) => file.endsWith("lib/entrepta-format.ts"))).toBe(true);
+      expect(written.some((file) => file.endsWith("lib/format.ts"))).toBe(false);
+      const amount = mockWriteFile.mock.calls.find(([file]) => String(file).endsWith("amount.tsx"));
+      expect(String(amount?.[1])).toContain('from "@/lib/entrepta-format"');
+    });
+
     it("refuses an alias that climbs out of the project, before asking anything", async () => {
       mockReadConfig.mockResolvedValue({
         ...MOCK_CONFIG,

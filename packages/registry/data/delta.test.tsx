@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
 import { FormatProvider } from "../hooks/use-format";
-import { MINUS } from "../lib/format";
+import { MINUS } from "../lib/entrepta-format";
 import { Delta, compareValues } from "./delta";
 
 const text = (el: Element | null) => el?.textContent?.replace(/[\u00a0\u202f]/g, " ");

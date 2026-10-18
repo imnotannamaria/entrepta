@@ -3,6 +3,7 @@
 import { ArrowLeftIcon, CheckIcon, PlusIcon } from "@phosphor-icons/react";
 import * as React from "react";
 import { useFormat } from "../hooks/use-format";
+import { formatDate, formatMoney } from "../lib/entrepta-format";
 import {
   FILTER_OPS,
   type Filter,
@@ -13,7 +14,6 @@ import {
   MAX_TEXT,
   isValidFilter,
 } from "../lib/filters";
-import { formatDate, formatMoney } from "../lib/format";
 import { type IconProp, IconSlot } from "../lib/icon";
 import { MENU_LABEL, MENU_ROW } from "../lib/overlay";
 import { cn } from "../lib/utils";

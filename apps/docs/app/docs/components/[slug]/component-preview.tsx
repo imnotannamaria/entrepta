@@ -81,8 +81,8 @@ import {
   TopNavMenu,
   TopNavSeparator,
 } from "@entrepta/registry/layout/top-nav";
+import { formatMoney } from "@entrepta/registry/lib/entrepta-format";
 import { type Filter, matchesFilter, serializeFilters } from "@entrepta/registry/lib/filters";
-import { formatMoney } from "@entrepta/registry/lib/format";
 import type { PaletteKey } from "@entrepta/registry/lib/palette";
 import { ArrowLink } from "@entrepta/registry/motion/arrow-link";
 import { Reveal } from "@entrepta/registry/motion/reveal";
