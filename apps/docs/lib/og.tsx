@@ -4,8 +4,8 @@ import { VERSION_LABEL } from "@/lib/version";
 import { ImageResponse } from "next/og";
 
 /**
- * The share image every page gets, 1200 by 630: the logo, an eyebrow, a serif
- * title with an italic brand phrase, a line of text and the status bar. The
+ * The share image every page gets, 1200 by 630: the mascot, an eyebrow, a serif
+ * title with an italic brand phrase, a line of text and a footer line. The
  * fonts are vendored TTFs (satori reads neither woff2 nor Google's CSS), so the
  * images build with no network.
  */
@@ -21,10 +21,16 @@ const INK = {
   border: "#27272A",
   brand: "#7C6BFF",
   brandText: "#9B8EFF",
-  onBrand: "#09090B",
 };
 
 const FONT_DIR = path.join(process.cwd(), "assets", "fonts");
+const MASCOT = path.join(process.cwd(), "assets", "brand", "mascot.png");
+
+/** The mascot as a data URL: satori draws an img from one with no network. */
+async function mascotUrl() {
+  const data = await fs.readFile(MASCOT);
+  return `data:image/png;base64,${data.toString("base64")}`;
+}
 
 async function fonts() {
   const read = (file: string) => fs.readFile(path.join(FONT_DIR, file));
@@ -54,7 +60,8 @@ export type OgContent = {
 };
 
 export async function ogImage({ eyebrow, title, emphasis, description, command }: OgContent) {
-  const long = title.length + (emphasis?.length ?? 0) > 34;
+  const long = title.length + (emphasis?.length ?? 0) > 26;
+  const mascot = await mascotUrl();
   return new ImageResponse(
     <div
       style={{
@@ -69,39 +76,19 @@ export async function ogImage({ eyebrow, title, emphasis, description, command }
         color: INK.primary,
       }}
     >
+      {/* the mascot, large, on the right */}
+      {/* biome-ignore lint/a11y/useAltText: satori renders a picture, not a page */}
+      <img
+        src={mascot}
+        width={340}
+        height={340}
+        style={{ position: "absolute", right: 64, top: 96, opacity: 0.95 }}
+      />
       <div style={{ display: "flex", flexDirection: "column", flex: 1, padding: "64px 72px 0" }}>
         {/* logo */}
         <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-          <div style={{ display: "flex", flexDirection: "column", gap: 6, position: "relative" }}>
-            <div style={{ width: 34, height: 5, borderRadius: 2, background: INK.primary }} />
-            <div
-              style={{
-                width: 22,
-                height: 5,
-                borderRadius: 2,
-                background: INK.primary,
-                opacity: 0.85,
-              }}
-            />
-            <div
-              style={{
-                width: 34,
-                height: 5,
-                borderRadius: 2,
-                background: INK.primary,
-                opacity: 0.55,
-              }}
-            />
-          </div>
-          <div
-            style={{
-              width: 8,
-              height: 8,
-              borderRadius: 999,
-              background: INK.brand,
-              marginLeft: -4,
-            }}
-          />
+          {/* biome-ignore lint/a11y/useAltText: satori renders a picture, not a page */}
+          <img src={mascot} width={56} height={56} />
           <div style={{ display: "flex", fontFamily: "Newsreader", fontSize: 40, marginLeft: 6 }}>
             entrepta<span style={{ color: INK.brand }}>.</span>
           </div>
@@ -140,6 +127,7 @@ export async function ogImage({ eyebrow, title, emphasis, description, command }
             style={{
               display: "flex",
               flexDirection: "column",
+              maxWidth: 740,
               fontFamily: "Newsreader",
               fontSize: long ? 72 : 96,
               lineHeight: 1,
@@ -153,7 +141,7 @@ export async function ogImage({ eyebrow, title, emphasis, description, command }
             style={{
               display: "flex",
               marginTop: 24,
-              maxWidth: 980,
+              maxWidth: 700,
               fontSize: 26,
               lineHeight: 1.45,
               color: INK.secondary,
@@ -164,7 +152,7 @@ export async function ogImage({ eyebrow, title, emphasis, description, command }
         </div>
       </div>
 
-      {/* status bar */}
+      {/* footer: the command and the address */}
       <div
         style={{
           display: "flex",
@@ -172,13 +160,12 @@ export async function ogImage({ eyebrow, title, emphasis, description, command }
           justifyContent: "space-between",
           height: 56,
           padding: "0 72px",
-          background: INK.brand,
-          color: INK.onBrand,
+          borderTop: `1px solid ${INK.border}`,
+          color: INK.muted,
           fontSize: 20,
-          fontWeight: 500,
         }}
       >
-        <span>{command}</span>
+        <span>{command.replace(/^\$ /, "")}</span>
         <span>entrepta.vercel.app</span>
       </div>
     </div>,

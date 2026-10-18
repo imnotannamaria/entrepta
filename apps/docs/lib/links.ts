@@ -30,6 +30,6 @@ export const PACKAGES = [
 
 /** Projects built on entrepta, the first ones and its real test cases. */
 export const USED_BY = [
-  { name: "annamaria.app", href: LINKS.author, what: "a personal site posed as an IDE" },
+  { name: "annamaria.app", href: LINKS.author, what: "a personal site" },
   { name: "wristkit", href: LINKS.wristkit, what: "Apple Health components for Next.js" },
 ] as const;

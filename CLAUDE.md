@@ -93,7 +93,7 @@ entrepta/
 │       │   ├── md/           # the .md twin of each page (rewritten from /docs/*.md)
 │       │   ├── llms.txt/, llms-full.txt/  # the agent index and the whole site
 │       │   ├── opengraph-image.tsx, twitter-image.tsx
-│       │   ├── not-found.tsx, error.tsx   # on the docs' own ChromeMessage
+│       │   ├── not-found.tsx, error.tsx   # on EmptyState, with the mascot
 │       │   ├── globals.css   # copy of the registry tokens
 │       │   ├── sitemap.ts
 │       │   └── robots.ts
@@ -662,7 +662,8 @@ pnpm dlx file:"$(pwd)/../entrepta/packages/cli" init
   and `DocSubhead`
 - A scroll box that scrolls sideways holds only its own axis
   (`overscroll-x-contain`). `overscroll-contain` on both axes swallowed the
-  wheel over a CodeBlock that had nothing to scroll down, and the page stopped
+  wheel over a CodeBlock that had nothing to scroll down, and the page stopped. ChatThread holds neither axis: a short thread
+  had nothing to scroll and still stopped the page
 - The docs sidebar is the registry's labeled Sidebar with a filter field, not
   a docs-only list. The Sidebar keeps the current item in view on its own, so
   a reload deep in a long list still shows where you are
@@ -678,8 +679,8 @@ pnpm dlx file:"$(pwd)/../entrepta/packages/cli" init
   treats the URL as input: a field id is letters, digits, `-` and `_`, the
   operator must belong to the field's type, the value must be one the field
   takes, and past twenty the rest is dropped
-- The title bar is the docs' `WindowBar`, around a plain TabsList. It was a
-  variant of the tabs until 4.0, when the editor look left the registry
+- The title bar with the window dots is gone. It was a variant of the tabs until
+  4.0, when the editor look left the registry
 - Overlays animate with plain CSS (`motion-fade`, `motion-pop` in
   `globals.css`), not an animation plugin, so a copied component needs nothing
   else. `:root` declares `color-scheme: dark` for native controls and autofill
@@ -774,8 +775,8 @@ pnpm dlx file:"$(pwd)/../entrepta/packages/cli" init
   (`NavIndicator` in `lib/nav.tsx`) unless you pass a node; the `//` is gone from
   FieldError, CardNote and the palette. The `Diamond` component is gone; a project that
   wants a mark passes its own as an `icon`
-- The editor look left the registry: StatusBar and ChromeMessage live in
-  `apps/docs/components/editor/` with WindowBar, and SectHead, doc-parts, PageOutline, the Card
+- The editor look left the registry: StatusBar lives in
+  `apps/docs/components/editor/` and SectHead, doc-parts, PageOutline, the Card
   `terminal` variant and the Tabs `window` variant are gone. `add` names each
   removed item (`REMOVED` in the CLI) and links the migration guide
 - `lib/format.ts` is `lib/entrepta-format.ts`: the old name collided with files

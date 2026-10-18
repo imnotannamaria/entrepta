@@ -1793,7 +1793,7 @@ const rows = entries.filter((row) => filters.every((f) => matchesFilter(row[f.fi
   },
   alert: {
     description:
-      "A notice that stays on the page until it is dealt with: partial data, a connection that needs attention, rows that could not be read. A Toast leaves on its own and a ChromeMessage takes the page. The status is in an icon tile and the corner glow, never a colored edge, and each has its own shape. An error is announced at once; the rest waits its turn.",
+      "A notice that stays on the page until it is dealt with: partial data, a connection that needs attention, rows that could not be read. A Toast leaves on its own and an EmptyState at page size takes the page. The status is in an icon tile and the corner glow, never a colored edge, and each has its own shape. An error is announced at once; the rest waits its turn.",
     usage: `import { Alert } from "@/components/entrepta/alert"
 
 <Alert tone="warning" title="Partial data" action={<ArrowLink href="/sync">sync now</ArrowLink>}>

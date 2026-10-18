@@ -1,5 +1,5 @@
 <p align="center">
-  <img src=".github/assets/entrepta.png" alt="entrepta: a design system posed as an IDE" width="100%" />
+  <img src=".github/assets/entrepta.png" alt="entrepta: the design system you copy and own" width="100%" />
 </p>
 
 <p align="center">

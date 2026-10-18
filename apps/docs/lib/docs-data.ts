@@ -436,7 +436,7 @@ export const V4_REMOVED: [string, string][] = [
   ["Tabs onClose", "Removed. A tab is picked, not closed. The × button is gone."],
   [
     'Tabs variant="window"',
-    "Removed. The title bar with the three dots is WindowBar in the docs app (apps/docs/components/editor/window-bar.tsx), around a plain TabsList.",
+    "Removed. The title bar with the three dots is gone from the docs site too. A plain TabsList is the tabs.",
   ],
 ];
 

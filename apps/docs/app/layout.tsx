@@ -8,7 +8,7 @@ import "./globals.css";
 
 const SITE_URL = "https://entrepta.vercel.app";
 const SITE_NAME = "entrepta";
-const SITE_TAGLINE = "a personal design system, posed as an IDE";
+const SITE_TAGLINE = "the design system you copy and own";
 const SITE_DESCRIPTION =
   "Dark-first React component library. Copy-paste components, CSS tokens, CLI. Near black surfaces, mono for UI, serif italic for titles, seven themes.";
 
