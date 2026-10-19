@@ -449,7 +449,7 @@ select:autofill {
 }
 
 /* ============================================================
-   SCROLLBARS, themed to match the IDE chrome
+   SCROLLBARS, thin and in the surface's own grays
    ============================================================ */
 
 @layer base {
@@ -834,8 +834,8 @@ select:autofill {
   color-scheme: light;
 }
 
-/* Scoped "always dark" surface, for code blocks
-   and any element that should feel like IDE chrome regardless of page mode.
+/* Scoped "always dark" surface, for a code block and any element that must
+   stay near black whatever the page's mode.
    Apply data-surface="dark" on the element root.
    Every token that differs between modes is redeclared here. A custom
    property resolves on the element that declares it and inherits as a

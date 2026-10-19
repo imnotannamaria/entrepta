@@ -78,4 +78,12 @@ describe("ContributionGrid", () => {
     expect(container.firstChild).toHaveAttribute("aria-busy", "true");
     expect(screen.queryByRole("group")).not.toBeInTheDocument();
   });
+
+  it("scrolls sideways only, so a classic scrollbar cannot make it scroll up and down", () => {
+    const { container } = render(
+      <ContributionGrid label="Workouts" days={[{ date: "2026-01-05", level: 2 }]} />
+    );
+    const scroller = container.querySelector(".overflow-x-auto");
+    expect(scroller).toHaveClass("overflow-y-hidden", "overscroll-x-contain");
+  });
 });

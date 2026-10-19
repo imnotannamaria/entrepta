@@ -1,10 +1,8 @@
 "use client";
 
 import { type Icon, SidebarSimpleIcon } from "@phosphor-icons/react";
-import { motion, useReducedMotion } from "motion/react";
 import * as React from "react";
 import { type IconProp, IconSlot } from "../lib/icon";
-import { EASE_OUT } from "../lib/motion";
 import { NAV_ROW_CURRENT, NAV_ROW_IDLE, NavIndicator } from "../lib/nav";
 import { cn } from "../lib/utils";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../primitives/tooltip";
@@ -122,8 +120,6 @@ const Sidebar = React.forwardRef<HTMLElement, SidebarProps>(
     },
     ref
   ) => {
-    const reduce = useReducedMotion() ?? false;
-    const layoutId = React.useId();
     const navId = React.useId();
     const navRef = React.useRef<HTMLElement>(null);
     const placed = React.useRef(false);
@@ -146,8 +142,9 @@ const Sidebar = React.forwardRef<HTMLElement, SidebarProps>(
         : item.top < box.top
           ? item.top - box.top - 8
           : item.bottom - box.bottom + 8;
+      const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
       nav.scrollTo({ top: nav.scrollTop + offset, behavior: first || reduce ? "auto" : "smooth" });
-    }, [active, reduce]);
+    }, [active]);
 
     const key = collapsible ? storageKey : null;
     const readKey = React.useCallback(() => (key ? readStored(key) : null), [key]);
@@ -176,18 +173,54 @@ const Sidebar = React.forwardRef<HTMLElement, SidebarProps>(
       ? (labels?.expand ?? "Expand sidebar")
       : (labels?.collapse ?? "Collapse sidebar");
 
+    // One indicator, placed inside the scrolling list at the current item's spot. It scrolls
+    // with the list, so when the list scrolls the item into view the two never part: a shared
+    // layout animation measures the screen and flew off while the list moved under it.
+    const [spot, setSpot] = React.useState<{ x: number; y: number } | null>(null);
+    const [glide, setGlide] = React.useState(false);
+    // biome-ignore lint/correctness/useExhaustiveDependencies: `active` and `collapsed` change where the item is
+    React.useLayoutEffect(() => {
+      const nav = navRef.current;
+      if (!nav) return;
+      const place = () => {
+        const current = nav.querySelector<HTMLElement>('[aria-current="page"]');
+        if (!current) return setSpot(null);
+        const box = nav.getBoundingClientRect();
+        const item = current.getBoundingClientRect();
+        const x = item.left - box.left - 8;
+        const y = item.top - box.top + nav.scrollTop + item.height / 2;
+        // a parent that passes its items inline runs this on every render: keep the
+        // same object when nothing moved, so it costs a measure and not a render
+        setSpot((prev) => (prev && prev.x === x && prev.y === y ? prev : { x, y }));
+      };
+      place();
+      if (typeof ResizeObserver !== "function") return;
+      // The nav keeps its size when a font swap or a filter moves the rows inside it,
+      // so the groups are watched too.
+      const observer = new ResizeObserver(place);
+      observer.observe(nav);
+      for (const group of nav.children) observer.observe(group);
+      return () => observer.disconnect();
+    }, [active, collapsed, groupsProp, items]);
+    // the first placement is a jump, the next ones glide
+    React.useEffect(() => {
+      if (spot) setGlide(true);
+    }, [spot]);
+
     const mark =
-      indicator === null ? null : (
-        <motion.span
-          layoutId={layoutId}
+      indicator === null || !spot ? null : (
+        <span
           aria-hidden
           data-sidebar-mark
-          transition={reduce ? { duration: 0 } : { duration: 0.32, ease: EASE_OUT }}
-          className="pointer-events-none absolute top-1/2 -left-2 flex -translate-y-1/2 px-0.5 leading-none text-[var(--fg-brand)]"
-          style={{ fontSize: 10 }}
+          className={cn(
+            "pointer-events-none absolute top-0 left-0 flex px-0.5 leading-none text-[var(--fg-brand)]",
+            glide &&
+              "transition-transform duration-[var(--motion-slow)] ease-[var(--ease-out)] motion-reduce:transition-none"
+          )}
+          style={{ transform: `translate(${spot.x}px, calc(${spot.y}px - 50%))` }}
         >
           {indicator ?? <NavIndicator />}
-        </motion.span>
+        </span>
       );
 
     return (
@@ -222,7 +255,7 @@ const Sidebar = React.forwardRef<HTMLElement, SidebarProps>(
             className={cn(
               // It scrolls, which clips: it spans the sidebar's full width, so the
               // indicator outside each link and the focus ring stay inside it.
-              "flex min-h-0 flex-1 flex-col overflow-y-auto py-1",
+              "relative flex min-h-0 flex-1 flex-col overflow-y-auto py-1",
               collapsed ? "w-full items-center gap-1" : "-mx-3 gap-5 px-3"
             )}
           >
@@ -277,7 +310,6 @@ const Sidebar = React.forwardRef<HTMLElement, SidebarProps>(
                                 : NAV_ROW_IDLE
                           )}
                         >
-                          {isActive ? mark : null}
                           {item.icon ? (
                             <ItemIcon
                               icon={item.icon}
@@ -313,6 +345,7 @@ const Sidebar = React.forwardRef<HTMLElement, SidebarProps>(
                 </div>
               );
             })}
+            {mark}
           </nav>
 
           {footer || (collapsible && variant === "labeled") ? (

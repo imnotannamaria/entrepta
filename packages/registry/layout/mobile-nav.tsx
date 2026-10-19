@@ -85,7 +85,6 @@ const MobileNav = React.forwardRef<HTMLElement, MobileNavProps>(
           data-mobile-nav-mark
           transition={reduce ? { duration: 0 } : { duration: 0.32, ease: EASE_OUT }}
           className="pointer-events-none absolute top-[-0.5px] left-1/2 flex -translate-1/2 leading-none text-[var(--fg-brand)]"
-          style={{ fontSize: 8 }}
         >
           {indicator ?? <NavIndicator />}
         </motion.span>

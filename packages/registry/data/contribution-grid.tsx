@@ -189,7 +189,8 @@ const ContributionGrid = React.forwardRef<HTMLDivElement, ContributionGridProps>
 
     return (
       <div ref={ref} className={cn("flex min-w-0 flex-col gap-2", className)} {...props}>
-        <div ref={scroller} className="overflow-x-auto overscroll-x-contain pb-1">
+        {/* sideways only: a classic scrollbar takes height, which would make this scroll up and down by a few pixels too */}
+        <div ref={scroller} className="overflow-x-auto overflow-y-hidden overscroll-x-contain py-1">
           <div className="flex gap-2" style={{ width: width + 32 }}>
             {/* weekday names on alternate rows, like a calendar's margin */}
             <div
