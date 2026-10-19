@@ -10,6 +10,10 @@ concurrency:
   group: release
   cancel-in-progress: false
 
+# Every action is pinned to a commit, with its version beside it. A tag can be
+# moved, and the publish job can mint an npm credential: it must only run code
+# someone looked at. Raise a pin on purpose, to the commit of a release.
+
 jobs:
   # Everything that runs project code, dependencies and build tools lives here,
   # with a read-only token and no way to mint an npm credential. The publish job
@@ -20,11 +24,11 @@ jobs:
     permissions:
       contents: read
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
 
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4.3.0
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: 22
           cache: pnpm
@@ -42,7 +46,7 @@ jobs:
         run: pnpm build
 
       - name: Keep the built CLI for the publish job
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: cli-dist
           path: packages/cli/dist
@@ -61,13 +65,13 @@ jobs:
       # this job has it, and it runs no build or test code.
       id-token: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
           fetch-depth: 0
 
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4.3.0
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: 22
           cache: pnpm
@@ -86,7 +90,7 @@ jobs:
         run: pnpm install --frozen-lockfile --ignore-scripts
 
       - name: Get the built CLI
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
         with:
           name: cli-dist
           path: packages/cli/dist
@@ -101,7 +105,7 @@ jobs:
       # reliably do npm's OIDC trusted-publishing handshake. See the comment
       # at the top of the script for the pnpm issue this is tracked on.
       - name: Create version PR or publish
-        uses: changesets/action@v1
+        uses: changesets/action@a45c4d594aa4e2c509dc14a9f2b3b67ba3780d0d # v1.9.0
         with:
           version: pnpm changeset:version
           publish: bash scripts/npm-publish-ci.sh
