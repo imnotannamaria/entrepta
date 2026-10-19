@@ -6,7 +6,7 @@ import { HomeShowcase } from "@/components/home-showcase";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteNav } from "@/components/site-nav";
 import { COMPONENT_INDEX, SECTIONS } from "@/lib/component-index";
-import { LINKS, USED_BY } from "@/lib/links";
+import { USED_BY } from "@/lib/links";
 import { tokenCount } from "@/lib/stats";
 import { THEMES } from "@/lib/theme";
 import { cn } from "@/lib/utils";
@@ -100,7 +100,9 @@ const heroDelay = (seconds: number) => ({ "--hero-delay": `${seconds}s` }) as CS
 /** A line of the heading, a word at a time. The spaces stay text, so it reads as one line. */
 function HeroWords({ text, at }: { text: string; at: number }) {
   return text.split(" ").map((word, i) => (
-    <Fragment key={word}>
+    // the order never changes, and a word can appear twice
+    // biome-ignore lint/suspicious/noArrayIndexKey: see above
+    <Fragment key={i}>
       {i > 0 && " "}
       <span className="hero-in hero-word" style={heroDelay(at + i * 0.08)}>
         {word}
@@ -170,14 +172,6 @@ export default function Home() {
                   browse components <span aria-hidden>→</span>
                 </Link>
                 <CopyInit />
-                <a
-                  href={LINKS.github}
-                  target="_blank"
-                  rel="noreferrer"
-                  className={buttonVariants({ variant: "ghost", size: "lg" })}
-                >
-                  github ↗
-                </a>
               </div>
             </div>
 
@@ -547,9 +541,9 @@ export default function Home() {
             </div>
           </Card>
         </HomeSection>
-
-        <SiteFooter />
       </main>
+      {/* outside main, so it stays the page's contentinfo landmark */}
+      <SiteFooter />
     </>
   );
 }

@@ -223,7 +223,7 @@ primary ink, so a state is never shown by brand color alone.
 | Token              | Use it for                                                      |
 | ------------------ | --------------------------------------------------------------- |
 | `--fg-brand`       | Fills, borders, glyphs, and text 24px and up                    |
-| `--fg-on-brand`    | Text on a `--fg-brand` fill: primary button, solid badge, status bar |
+| `--fg-on-brand`    | Text on a `--fg-brand` fill: primary button, solid badge, checked box |
 | `--fg-brand-text`  | Brand-colored text below 24px, on the canvas, a card or the tint |
 | `--bg-surface-brand` | The brand tint behind soft badges and selected items          |
 
@@ -664,6 +664,16 @@ pnpm dlx file:"$(pwd)/../entrepta/packages/cli" init
   (`overscroll-x-contain`). `overscroll-contain` on both axes swallowed the
   wheel over a CodeBlock that had nothing to scroll down, and the page stopped. ChatThread holds neither axis: a short thread
   had nothing to scroll and still stopped the page
+  A sideways scroller (ContributionGrid) also sets `overflow-y-hidden`: a classic
+  scrollbar takes height, and the box then scrolled up and down by a few pixels
+- A theme's block for a dark surface in a light page (taylor's) has no rival in
+  the other themes, so `init --themes=all` writes its bare form as
+  `:root:not([data-theme])`. A bare `:root[data-mode="light"] [data-surface="dark"]`
+  for a default of taylor put its white brand into every other theme's code blocks
+- The Sidebar's indicator moves in CSS, so the Sidebar does not need `motion`. A
+  color that needs relative color sits in a variable and is applied under
+  `supports-[color:oklch(from_red_l_c_h)]`: set straight on `color`, a browser
+  without it falls to the inherited color, not to the class's
 - The docs sidebar is the registry's labeled Sidebar with a filter field, not
   a docs-only list. The Sidebar keeps the current item in view on its own, so
   a reload deep in a long list still shows where you are
@@ -852,6 +862,8 @@ before anything else.
   reason in the diff; `upgrade-insecure-requests` and HSTS stay Vercel only.
 - **Releases publish from CI.** Trusted publishing with provenance, no npm token
   in the repo. Renaming `release.yml` breaks it until npmjs.com is updated.
+  Every action in the workflows is pinned to a commit SHA, with its version in a
+  comment: a moved tag must not run in a job that can mint an npm credential.
 
 ### Everything else
 

@@ -8,7 +8,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Migrating to v4",
   description:
-    "What changes from entrepta 3 to 4: the ◆ and the // stop being defaults, the editor look leaves the library, and every change says how to bring the old look back.",
+    "What changes from entrepta 3 to 4: the ◆ and the // stop being defaults, the editor look leaves the library, and each change to the look says how to bring the old one back.",
   alternates: {
     canonical: "/docs/migrating-to-v4",
     types: { "text/markdown": "/docs/migrating-to-v4.md" },
@@ -25,7 +25,7 @@ export default function MigratingV4Page() {
             Migrating to <em>v4.</em>
           </>
         }
-        description="Version 4 takes the mark out of the defaults. Nothing is lost: each change here says how to bring the old look back."
+        description="Version 4 takes the mark out of the defaults. Nothing is lost: each change to the look says how to bring the old one back."
         meta="breaking"
       />
 

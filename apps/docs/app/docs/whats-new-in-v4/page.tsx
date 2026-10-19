@@ -57,7 +57,7 @@ export default function WhatsNewV4Page() {
         <DocSubhead count="breaking">Updating</DocSubhead>
         <DocNote>
           The ◆ and the {"//"} are not drawn by default anymore, and some pieces of the editor look
-          left the registry. Each change says how to bring the old look back.
+          left the registry. Each change to the look says how to bring the old one back.
         </DocNote>
         <Link
           href="/docs/migrating-to-v4"

@@ -7,7 +7,7 @@ import { useTheme } from "@entrepta/registry/hooks/use-theme";
 import { RollingNumber, useRollOnHover } from "@entrepta/registry/motion/rolling-number";
 import { Button } from "@entrepta/registry/primitives/button";
 import { CheckIcon, CopyIcon } from "@phosphor-icons/react";
-import { useLayoutEffect, useRef, useState } from "react";
+import type { CSSProperties } from "react";
 import { toast } from "sonner";
 
 const INIT = "npx @entrepta/cli@latest init";
@@ -48,7 +48,7 @@ function useSiteTheme() {
 
 /** The swatches that recolor the whole site, in step with the floating switcher. */
 export function ThemeRow() {
-  const { theme, setTheme, mode } = useSiteTheme();
+  const { theme, setTheme } = useSiteTheme();
   return (
     <div className="flex flex-wrap items-center justify-center gap-3">
       <span className="font-mono text-mono-xs uppercase tracking-[0.08em] text-[var(--fg-muted)]">
@@ -72,10 +72,11 @@ export function ThemeRow() {
                   "ring-2 ring-[var(--fg-brand)] ring-offset-2 ring-offset-[var(--bg-canvas)]"
               )}
             >
+              {/* the brand of the page's mode, picked in CSS: the mode is known before hydration */}
               <span
                 aria-hidden
-                className="size-5 rounded-full"
-                style={{ background: mode === "light" ? t.lightColor : t.color }}
+                className="size-5 rounded-full bg-[var(--dark)] shadow-[inset_0_0_0_1px_color-mix(in_srgb,var(--fg-primary)_22%,transparent)] [:root[data-mode=light]_&]:bg-[var(--light)]"
+                style={{ "--dark": t.color, "--light": t.lightColor } as CSSProperties}
               />
             </button>
           );
@@ -109,28 +110,12 @@ function Stat({ label, value, delay: entrance }: { label: string; value: string;
   );
 }
 
-/**
- * The counts under the editor, as wide as it. Each cell rolls a beat after the
- * one before. On a screen tall enough to show them at load they also wait
- * `at` seconds, so they roll after the editor above has landed, not before.
- */
-export function HeroStats({ stats, at = 0 }: { stats: { dt: string; dd: string }[]; at?: number }) {
-  const ref = useRef<HTMLDListElement>(null);
-  const [lead, setLead] = useState(0);
-
-  // a layout effect, so the wait is set before the counters see themselves on screen
-  useLayoutEffect(() => {
-    const top = ref.current?.getBoundingClientRect().top;
-    if (top !== undefined && top < window.innerHeight) setLead(at);
-  }, [at]);
-
+/** The counts under the gallery. Each cell rolls a beat after the one before. */
+export function HeroStats({ stats }: { stats: { dt: string; dd: string }[] }) {
   return (
-    <dl
-      ref={ref}
-      className="m-0 grid grid-cols-2 gap-px overflow-hidden rounded-[var(--radius-lg)] border border-[var(--border-strong)] bg-[var(--border-subtle)] sm:grid-cols-4"
-    >
+    <dl className="m-0 grid grid-cols-2 gap-px overflow-hidden rounded-[var(--radius-lg)] border border-[var(--border-strong)] bg-[var(--border-subtle)] sm:grid-cols-4">
       {stats.map((s, i) => (
-        <Stat key={s.dt} label={s.dt} value={s.dd} delay={lead + 0.15 + i * 0.12} />
+        <Stat key={s.dt} label={s.dt} value={s.dd} delay={0.15 + i * 0.12} />
       ))}
     </dl>
   );

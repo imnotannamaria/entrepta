@@ -13,6 +13,6 @@ export default function Image() {
     emphasis: "you copy and own.",
     description:
       "Dark-first React components you copy into your repo. Near black surfaces, mono for UI, serif italic for titles.",
-    command: "$ npx @entrepta/cli@latest init",
+    command: "npx @entrepta/cli@latest init",
   });
 }

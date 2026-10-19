@@ -450,7 +450,7 @@ select:autofill {
 }
 
 /* ============================================================
-   SCROLLBARS, themed to match the IDE chrome
+   SCROLLBARS, thin and in the surface's own grays
    ============================================================ */
 
 @layer base {
@@ -835,8 +835,8 @@ select:autofill {
   color-scheme: light;
 }
 
-/* Scoped "always dark" surface, for code blocks
-   and any element that should feel like IDE chrome regardless of page mode.
+/* Scoped "always dark" surface, for a code block and any element that must
+   stay near black whatever the page's mode.
    Apply data-surface="dark" on the element root.
    Every token that differs between modes is redeclared here. A custom
    property resolves on the element that declares it and inherits as a
@@ -922,7 +922,7 @@ select:autofill {
    ============================================================ */
 
 /* --fg-on-brand is the ink for text on a --fg-brand fill (a primary button,
-   a solid badge, the status bar). --fg-brand-text is the ink for brand-colored
+   a solid badge, a checked box). --fg-brand-text is the ink for brand-colored
    text on the canvas, a card or the --bg-surface-brand tint. Neither can be
    derived from the brand, so each theme sets both. All of them clear WCAG AA
    in both modes. Measure again after changing any value here. */
@@ -954,7 +954,7 @@ select:autofill {
    ============================================================ */
 
 /* --fg-on-brand is the ink for text on a --fg-brand fill (a primary button,
-   a solid badge, the status bar). --fg-brand-text is the ink for brand-colored
+   a solid badge, a checked box). --fg-brand-text is the ink for brand-colored
    text on the canvas, a card or the --bg-surface-brand tint. Neither can be
    derived from the brand, so each theme sets both. All of them clear WCAG AA
    in both modes. Measure again after changing any value here. */
@@ -984,7 +984,7 @@ select:autofill {
    ============================================================ */
 
 /* --fg-on-brand is the ink for text on a --fg-brand fill (a primary button,
-   a solid badge, the status bar). --fg-brand-text is the ink for brand-colored
+   a solid badge, a checked box). --fg-brand-text is the ink for brand-colored
    text on the canvas, a card or the --bg-surface-brand tint. Neither can be
    derived from the brand, so each theme sets both. All of them clear WCAG AA
    in both modes. Measure again after changing any value here. */
@@ -1014,7 +1014,7 @@ select:autofill {
    ============================================================ */
 
 /* --fg-on-brand is the ink for text on a --fg-brand fill (a primary button,
-   a solid badge, the status bar). --fg-brand-text is the ink for brand-colored
+   a solid badge, a checked box). --fg-brand-text is the ink for brand-colored
    text on the canvas, a card or the --bg-surface-brand tint. Neither can be
    derived from the brand, so each theme sets both. All of them clear WCAG AA
    in both modes. Measure again after changing any value here. */
@@ -1044,7 +1044,7 @@ select:autofill {
    ============================================================ */
 
 /* --fg-on-brand is the ink for text on a --fg-brand fill (a primary button,
-   a solid badge, the status bar). --fg-brand-text is the ink for brand-colored
+   a solid badge, a checked box). --fg-brand-text is the ink for brand-colored
    text on the canvas, a card or the --bg-surface-brand tint. Neither can be
    derived from the brand, so each theme sets both. All of them clear WCAG AA
    in both modes. Measure again after changing any value here. */
@@ -1074,7 +1074,7 @@ select:autofill {
    ============================================================ */
 
 /* --fg-on-brand is the ink for text on a --fg-brand fill (a primary button,
-   a solid badge, the status bar). --fg-brand-text is the ink for brand-colored
+   a solid badge, a checked box). --fg-brand-text is the ink for brand-colored
    text on the canvas, a card or the --bg-surface-brand tint. Neither can be
    derived from the brand, so each theme sets both. All of them clear WCAG AA
    in both modes. Measure again after changing any value here. */
@@ -1135,7 +1135,7 @@ select:autofill {
   --ring: rgba(9, 9, 11, 0.4);
 }
 
-/* A tooltip or a code block stays near black in a light page, and a black brand
+/* A code block stays near black in a light page, and a black brand
    would vanish on it. The dark values come back inside it. */
 :root[data-theme="taylor"][data-mode="light"] [data-surface="dark"] {
   --fg-brand: #fafafa;

@@ -15,7 +15,7 @@ import {
   TextboxIcon,
 } from "@phosphor-icons/react/dist/ssr";
 import Link from "next/link";
-import type { ReactElement, ReactNode } from "react";
+import type { CSSProperties, ReactElement, ReactNode } from "react";
 
 type Section = (typeof SECTIONS)[number];
 
@@ -169,8 +169,8 @@ export function HomeCatalog() {
                 >
                   <span
                     aria-hidden
-                    className="size-3 rounded-full ring-1 ring-[var(--border-strong)]"
-                    style={{ background: t.color }}
+                    className="size-3 rounded-full bg-[var(--dark)] ring-1 ring-[var(--border-strong)] [:root[data-mode=light]_&]:bg-[var(--light)]"
+                    style={{ "--dark": t.color, "--light": t.lightColor } as CSSProperties}
                   />
                   {t.label}
                 </Link>

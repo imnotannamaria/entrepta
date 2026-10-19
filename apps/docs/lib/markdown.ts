@@ -202,7 +202,7 @@ export function whatsNewMd(): string {
 export function migrationV4Md(): string {
   return [
     "# Migrating an entrepta project to v4",
-    "> For a coding agent working in a project that uses entrepta 3.x. entrepta 4 takes the mark out of the defaults: the ◆ and the // go, and the editor look leaves the library. Nothing is lost: each change below says how to bring the old look back. Check the app at 375px, in dark and light, after each step.",
+    "> For a coding agent working in a project that uses entrepta 3.x. entrepta 4 takes the mark out of the defaults: the ◆ and the // go, and the editor look leaves the library. Nothing is lost: each change to the look says how to bring the old one back. Check the app at 375px, in dark and light, after each step.",
     "## 1. Update the files",
     "The CLI copies source, so nothing updates on its own. Commit first: `--overwrite` replaces local edits.",
     code("bash", V4_UPDATE),

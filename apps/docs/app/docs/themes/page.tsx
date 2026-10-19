@@ -12,11 +12,14 @@ import {
   CardNote,
 } from "@entrepta/registry/primitives/card";
 import type { Metadata } from "next";
+import type { CSSProperties } from "react";
 
 const THEMES = THEME_LIST.map((t) => ({
   name: t.id,
   brand: t.color,
+  lightBrand: t.lightColor,
   hover: THEME_NOTES[t.id].hover,
+  lightHover: THEME_NOTES[t.id].lightHover,
   vibe: THEME_NOTES[t.id].vibe,
 }));
 
@@ -58,11 +61,21 @@ export default function ThemesPage() {
                 <CardMeta>{t.brand}</CardMeta>
               </CardHeader>
               <CardContent>
+                {/* the brand as it looks in the page's mode, with an edge that reads on either surface */}
                 <div
-                  className="h-20 rounded-[var(--radius-md)] border border-[var(--border-subtle)]"
-                  style={{
-                    background: `linear-gradient(135deg, ${t.brand} 0%, ${t.hover} 100%)`,
-                  }}
+                  className={
+                    "h-20 rounded-[var(--radius-md)] shadow-[inset_0_0_0_1px_color-mix(in_srgb,var(--fg-primary)_22%,transparent)] " +
+                    "bg-[linear-gradient(135deg,var(--dark-a),var(--dark-b))] " +
+                    "[:root[data-mode=light]_&]:bg-[linear-gradient(135deg,var(--light-a),var(--light-b))]"
+                  }
+                  style={
+                    {
+                      "--dark-a": t.brand,
+                      "--dark-b": t.hover,
+                      "--light-a": t.lightBrand,
+                      "--light-b": t.lightHover,
+                    } as CSSProperties
+                  }
                 />
               </CardContent>
               <p className="font-sans text-body-md leading-relaxed text-[var(--fg-secondary)] m-0">

@@ -280,7 +280,7 @@ function Configurator() {
               name="themes"
               options={[
                 { value: "single", label: "one" },
-                { value: "all", label: "all six" },
+                { value: "all", label: "all seven" },
               ]}
               value={options.themes}
               onChange={setThemes}

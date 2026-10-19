@@ -64,14 +64,23 @@ export const DOCS_INTRO = {
 } as const;
 
 /** What each preset is for. Colors come from lib/theme.ts. */
-export const THEME_NOTES: Record<string, { hover: string; vibe: string }> = {
-  entrepta: { hover: "#9B8EFF", vibe: "Default. Violet, playful." },
-  blossom: { hover: "#E04750", vibe: "Cherry red. Bold and confident." },
-  marmalade: { hover: "#FF9D45", vibe: "Warm orange. Editorial and energetic." },
-  julia: { hover: "#F178A0", vibe: "Warm pink. Soft and expressive." },
-  ivy: { hover: "#4CBA7C", vibe: "Forest green. Calm and grounded." },
-  bosco: { hover: "#4F86F3", vibe: "Deep blue. Technical and steady." },
-  taylor: { hover: "#D4D4D8", vibe: "Monochrome and flat. White on dark, black on light." },
+/** `hover` and `lightHover` are the brand's hover in dark and in light mode. */
+export const THEME_NOTES: Record<string, { hover: string; lightHover: string; vibe: string }> = {
+  entrepta: { hover: "#9B8EFF", lightHover: "#5848E0", vibe: "Default. Violet, playful." },
+  blossom: { hover: "#E04750", lightHover: "#CC2E36", vibe: "Cherry red. Bold and confident." },
+  marmalade: {
+    hover: "#FF9D45",
+    lightHover: "#FF8213",
+    vibe: "Warm orange. Editorial and energetic.",
+  },
+  julia: { hover: "#F178A0", lightHover: "#E85A8A", vibe: "Warm pink. Soft and expressive." },
+  ivy: { hover: "#4CBA7C", lightHover: "#35A365", vibe: "Forest green. Calm and grounded." },
+  bosco: { hover: "#4F86F3", lightHover: "#2563EB", vibe: "Deep blue. Technical and steady." },
+  taylor: {
+    hover: "#D4D4D8",
+    lightHover: "#3F3F46",
+    vibe: "Monochrome and flat. White on dark, black on light.",
+  },
 };
 
 /** taylor, the monochrome theme, and the two knobs any theme can use. On the Themes page and in its Markdown. */
@@ -379,27 +388,58 @@ export const V4_BREAKS: { name: string; before: string; after: string; back?: st
       "CardLabel, FieldLabel, DialogLabel, Metric, ChoiceCard, SwatchPicker and ChatThread put a ◆ in front of their text.",
     after:
       "They draw nothing in front. Pass an icon for something there, a Phosphor icon or an element.",
+    back: `const Mark = () => (
+  <span aria-hidden style={{ fontSize: 10 }} className="text-[var(--fg-brand)]">◆</span>
+)
+
+<CardLabel icon={<Mark />}>post</CardLabel>
+<Field id="email" label="email" icon={<Mark />}>…</Field>
+<Metric label="spent" icon={<Mark />} value={…} />`,
   },
   {
     name: "The current marker",
     before: "Sidebar, MobileNav, Stepper and Tabs marked the current item with a ◆.",
     after:
       "Sidebar and MobileNav take an indicator, a dot by default. Tabs and Stepper have none by default: the underline and the marker already say it. null hides it.",
+    back: `const Mark = () => (
+  <span aria-hidden style={{ fontSize: 10 }} className="text-[var(--fg-brand)]">◆</span>
+)
+
+<Sidebar indicator={<Mark />} … />
+<MobileNav indicator={<Mark />} … />
+<Tabs indicator={<Mark />} defaultValue="a">…</Tabs>
+<Stepper indicator={<Mark />} steps={STEPS} current="bank" />`,
   },
   {
     name: "Menu titles",
     before: "DropdownMenuLabel and a command palette group had a ◆ before the title.",
     after: "They are text.",
+    back: `// a class on the label, the way the ◆ came in before
+<DropdownMenuLabel className="before:content-['◆'] before:text-[var(--fg-brand)] before:[font-size:9px]">
+  account
+</DropdownMenuLabel>
+<CommandGroup
+  heading="pages"
+  className="[&_[cmdk-group-heading]]:before:content-['◆'] [&_[cmdk-group-heading]]:before:text-[var(--fg-brand)]"
+/>`,
   },
   {
     name: "The //",
     before: "FieldError and the command palette footer started with a dimmed //.",
     after: "FieldError is the message alone. The palette footer says palette.",
+    back: `const Slashes = () => <span aria-hidden className="opacity-70">{"// "}</span>
+
+<Field id="email" label="email" error={error && <><Slashes />{error}</>}>…</Field>
+<CommandFoot><Slashes />palette</CommandFoot>`,
   },
   {
     name: "CardComment",
     before: "CardComment drew a // in front of a footer note.",
     after: "It is CardNote now, the text alone in the footer's ink.",
+    back: `<CardNote>
+  <span aria-hidden className="opacity-60">{"// "}</span>
+  updated today
+</CardNote>`,
   },
   {
     name: "lib/format.ts",
