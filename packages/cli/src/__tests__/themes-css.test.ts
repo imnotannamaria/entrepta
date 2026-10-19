@@ -39,8 +39,19 @@ describe("scopeTheme", () => {
     expect(selectors(scopeTheme(FILES.taylor, "taylor", true))).toEqual([
       ':root, :root[data-theme="taylor"]',
       ':root[data-mode="light"], :root[data-theme="taylor"][data-mode="light"]',
-      ':root[data-mode="light"] [data-surface="dark"], :root[data-theme="taylor"][data-mode="light"] [data-surface="dark"]',
+      ':root:not([data-theme])[data-mode="light"] [data-surface="dark"], :root[data-theme="taylor"][data-mode="light"] [data-surface="dark"]',
     ]);
+  });
+
+  // No other theme has a dark-surface block, so nothing would outrank a bare one:
+  // with taylor as the default, ivy's code blocks in light mode took taylor's white brand.
+  it("keeps a default's dark-surface block off a page that names another theme", () => {
+    const list = selectors(buildThemesCss(FILES, "taylor"));
+    const surface = list.filter((s) => s.includes('[data-surface="dark"]'));
+    expect(surface).toHaveLength(1);
+    for (const selector of surface[0].split(", ")) {
+      expect(selector).toMatch(/:root(:not\(\[data-theme\]\)|\[data-theme="taylor"\])/);
+    }
   });
 
   it("refuses a theme file without both blocks", () => {

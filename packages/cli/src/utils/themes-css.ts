@@ -27,12 +27,13 @@ export function scopeTheme(css: string, id: Theme, isDefault: boolean): string {
   const dark = `:root[data-theme="${id}"] {`;
   const light = `:root[data-theme="${id}"][data-mode="light"] {`;
   const darkSurface = `:root[data-theme="${id}"][data-mode="light"] [data-surface="dark"] {`;
+  // The bare light and dark blocks lose to the active theme's own, which are
+  // more specific. No other theme has a dark-surface block to win over this
+  // one, so its bare form must not match a page that names another theme.
+  const bareDarkSurface = ':root:not([data-theme])[data-mode="light"] [data-surface="dark"]';
   return css
     .replace(LIGHT, isDefault ? `:root[data-mode="light"],\n${light}` : light)
-    .replace(
-      DARK_SURFACE,
-      isDefault ? `:root[data-mode="light"] [data-surface="dark"],\n${darkSurface}` : darkSurface
-    )
+    .replace(DARK_SURFACE, isDefault ? `${bareDarkSurface},\n${darkSurface}` : darkSurface)
     .replace(DARK, isDefault ? `:root,\n${dark}` : dark);
 }
 
