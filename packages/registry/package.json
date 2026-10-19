@@ -1,10 +1,17 @@
 {
   "name": "@entrepta/registry",
-  "version": "3.0.0",
+  "version": "4.0.0",
   "private": false,
   "description": "The component registry of the entrepta design system",
   "license": "MIT",
-  "keywords": ["entrepta", "design-system", "components", "react", "tailwind", "radix-ui"],
+  "keywords": [
+    "entrepta",
+    "design-system",
+    "components",
+    "react",
+    "tailwind",
+    "radix-ui"
+  ],
   "homepage": "https://github.com/imnotannamaria/entrepta#readme",
   "repository": {
     "type": "git",
