@@ -2,8 +2,23 @@ import fs from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { COMPONENT_INDEX } from "./component-index";
-import { NEW_IN_V2, NEW_IN_V3, REPLACES, V1_COMPONENTS, V2_COMPONENTS } from "./docs-data";
-import { MD_PAGES, SITE_URL, componentMd, llmsFullTxt, llmsTxt, migrationMd } from "./markdown";
+import {
+  NEW_IN_V2,
+  NEW_IN_V3,
+  REPLACES,
+  V1_COMPONENTS,
+  V2_COMPONENTS,
+  V4_BREAKS,
+} from "./docs-data";
+import {
+  MD_PAGES,
+  SITE_URL,
+  componentMd,
+  llmsFullTxt,
+  llmsTxt,
+  migrationMd,
+  migrationV4Md,
+} from "./markdown";
 
 /**
  * The docs an agent reads: every `.md` twin, llms.txt and llms-full.txt. They
@@ -97,5 +112,14 @@ describe("migration guide", () => {
     );
     expect(missing).toEqual([]);
     expect(NEW_IN_V2.filter((c) => !REPLACES[c.slug]).map((c) => c.slug)).toEqual([]);
+  });
+});
+
+describe("migrating to v4", () => {
+  // The guide promises a way back for every change to the look. A rename is not one.
+  it("shows how to bring back every look that changed", () => {
+    const looks = V4_BREAKS.filter((b) => b.name !== "lib/format.ts");
+    expect(looks.filter((b) => !b.back).map((b) => b.name)).toEqual([]);
+    expect(migrationV4Md().match(/To bring the old look back/g)).toHaveLength(looks.length);
   });
 });

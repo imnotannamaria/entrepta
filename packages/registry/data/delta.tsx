@@ -4,7 +4,7 @@ import { ArrowDownRightIcon, ArrowRightIcon, ArrowUpRightIcon } from "@phosphor-
 import { cva } from "class-variance-authority";
 import * as React from "react";
 import { useFormat } from "../hooks/use-format";
-import { formatMoney, formatNumber } from "../lib/format";
+import { formatMoney, formatNumber } from "../lib/entrepta-format";
 import { cn } from "../lib/utils";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../primitives/tooltip";
 

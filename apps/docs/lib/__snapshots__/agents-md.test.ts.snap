@@ -3,7 +3,7 @@
 exports[`buildAgentsMd > matches the snapshot for next-app 1`] = `
 "# entrepta in this project
 
-This project uses [entrepta](https://entrepta.vercel.app), a dark-first design system with an editor metaphor: tabs, a command palette, a status bar, shell prompts, serif italic next to mono. Its components are copied into the repo as source, so they are this project's code: read them, and edit them when a change calls for it.
+This project uses [entrepta](https://entrepta.vercel.app), a dark-first design system: near black surfaces, mono for UI, serif italic for titles, and no mark of its own. Its components are copied into the repo as source, so they are this project's code: read them, and edit them when a change calls for it.
 
 Built for Next.js App Router with the entrepta theme.
 
@@ -54,13 +54,13 @@ pnpm dlx @entrepta/cli@latest add button card field
 
 - Do: Use a CSS variable for every color. Don't: Hardcode a hex in a component. It stops following the theme.
 - Do: Derive brand accents from --fg-brand with color-mix(). Don't: Hardcode the violet. It stops reacting when someone picks another theme.
-- Do: Put --fg-on-brand on a brand fill. Don't: Reach for a fixed near-white. It fails contrast in 7 of the 12 theme and mode pairs.
-- Do: Color brand text below 24px with --fg-brand-text. Don't: Use --fg-brand for small text. It fails AA in 4 of the 12 pairs.
+- Do: Put --fg-on-brand on a brand fill. Don't: Reach for a fixed near-white. It fails contrast in 8 of the 14 theme and mode pairs.
+- Do: Color brand text below 24px with --fg-brand-text. Don't: Use --fg-brand for small text. It fails AA in 4 of the 14 pairs.
 - Do: Put cards on --bg-card, and menus, tooltips, code and dialogs on --bg-overlay. Don't: Paint an area in --bg-surface. It is zinc-900, for small fills, and a field of it reads as gray.
 - Do: Size text with the ten scale steps, such as text-mono-sm. Don't: Write text-[13px] or Tailwind's text-sm. A test fails on both.
 - Do: Pick the family at the call site: font-serif, font-sans or font-mono. Don't: Expect a scale step to set the font. It sets size and leading only.
 - Do: Let a row of two halves wrap, and keep each half on one line. Don't: Assume it fits. A card clips with no ellipsis, so overflow looks like missing data.
-- Do: Hide glyphs such as ◆, $ and // with aria-hidden. Don't: Let a screen reader say black diamond suit before every label.
+- Do: Hide decorative glyphs with aria-hidden. Don't: Let a screen reader read a glyph before every label.
 - Do: Give bare buttons the .focus-ring class. Don't: Rely on outline. The reset removes it from every button.
 - Do: Import Phosphor from @phosphor-icons/react/dist/ssr in files without use client. Don't: Import the package root there. next build fails with an error that names no file.
 - Do: Pass your router's link with asChild or linkComponent, and mark the current item with active. Don't: Import next/link in a copied component. It stops working outside Next.js.
@@ -68,7 +68,7 @@ pnpm dlx @entrepta/cli@latest add button card field
 ## Accessibility
 
 - Every ink clears WCAG AA on what it sits on, in every theme and mode. Keep each token on the surface it was measured for.
-- Glyphs such as ◆, $ and // carry \`aria-hidden\`.
+- Decorative glyphs carry \`aria-hidden\`.
 - Links get a brand outline on focus. A bare button with no focus style of its own takes the \`.focus-ring\` class.
 - Put \`<a href="#main" class="skip-link">skip to content</a>\` first in \`<body>\`.
 - Wrap each form control in \`Field\`: it wires the label, \`aria-describedby\` and \`aria-invalid\`.
@@ -76,7 +76,7 @@ pnpm dlx @entrepta/cli@latest add button card field
 ## Data
 
 - Money is an integer of minor units (123456 is 1,234.56), shown with Amount and typed with MoneyInput. Never a float.
-- A day is a plain \`YYYY-MM-DD\` string, never a Date. Set the locale, currency and time zone once with \`FormatProvider\`; \`lib/format\` has the helpers.
+- A day is a plain \`YYYY-MM-DD\` string, never a Date. Set the locale, currency and time zone once with \`FormatProvider\`; \`lib/entrepta-format\` has the helpers.
 - A change is a Delta: an arrow, a sign and words. No percentage from a base of zero or below; a missing value is a dash with its reason, never a zero.
 - Series colors are palette keys, \`chart-1\` to \`chart-8\`, stored as the key, never a hex. The status colors appear in a chart only for results above and below zero, with a sign.
 - A data component takes \`loading\` and draws its skeleton in its final shape. Empty and error are composed where the words are known: EmptyState, Alert, a Badge for stale data. A failed load is never an empty list.
@@ -97,7 +97,7 @@ Docs: https://entrepta.vercel.app/docs/components/button.md
 ### Card
 
 \`\`\`tsx
-import { Card, cardVariants, CardHeader, CardLabel, CardMeta, CardTitle, CardDescription, CardContent, CardFooter, CardComment, CardTerminalBar, CardTerminalBody } from "@/app/components/entrepta/card"
+import { Card, cardVariants, CardHeader, CardLabel, CardMeta, CardTitle, CardDescription, CardContent, CardFooter, CardNote } from "@/app/components/entrepta/card"
 
 <Card><CardHeader><CardLabel>post</CardLabel><CardMeta>2026</CardMeta></CardHeader><CardTitle>Title</CardTitle></Card>
 \`\`\`
@@ -114,13 +114,11 @@ import { Field, FieldError, FieldLabel, fieldLabelClass } from "@/app/components
 
 Docs: https://entrepta.vercel.app/docs/components/field.md
 
-Also installed as dependencies: \`diamond\`.
-
 ## Reading the docs
 
 - Every docs page has a Markdown version at the same URL plus \`.md\`. Read that instead of the HTML. The component index is https://entrepta.vercel.app/docs/components.md, and each component has its own, such as https://entrepta.vercel.app/docs/components/button.md.
 - https://entrepta.vercel.app/llms.txt lists every page. https://entrepta.vercel.app/llms-full.txt is all of them in one file.
-- Upgrading from 1.x: https://entrepta.vercel.app/docs/migrating-to-v2.md, step by step, with every new component. From 2.x to 3 nothing breaks: https://entrepta.vercel.app/docs/whats-new-in-v3.md.
+- Upgrading from 1.x: https://entrepta.vercel.app/docs/migrating-to-v2.md, step by step, with every new component. From 2.x to 3 nothing breaks: https://entrepta.vercel.app/docs/whats-new-in-v3.md. From 3.x to 4: https://entrepta.vercel.app/docs/migrating-to-v4.md, which says how to bring the old look back.
 - Money, dates, series colors and data states: https://entrepta.vercel.app/docs/foundations/data.md.
 
 ## Before calling a UI change done
@@ -133,7 +131,7 @@ Also installed as dependencies: \`diamond\`.
 exports[`buildAgentsMd > matches the snapshot for next-pages 1`] = `
 "# entrepta in this project
 
-This project uses [entrepta](https://entrepta.vercel.app), a dark-first design system with an editor metaphor: tabs, a command palette, a status bar, shell prompts, serif italic next to mono. Its components are copied into the repo as source, so they are this project's code: read them, and edit them when a change calls for it.
+This project uses [entrepta](https://entrepta.vercel.app), a dark-first design system: near black surfaces, mono for UI, serif italic for titles, and no mark of its own. Its components are copied into the repo as source, so they are this project's code: read them, and edit them when a change calls for it.
 
 Built for Next.js Pages Router with the entrepta theme.
 
@@ -184,13 +182,13 @@ pnpm dlx @entrepta/cli@latest add button card field
 
 - Do: Use a CSS variable for every color. Don't: Hardcode a hex in a component. It stops following the theme.
 - Do: Derive brand accents from --fg-brand with color-mix(). Don't: Hardcode the violet. It stops reacting when someone picks another theme.
-- Do: Put --fg-on-brand on a brand fill. Don't: Reach for a fixed near-white. It fails contrast in 7 of the 12 theme and mode pairs.
-- Do: Color brand text below 24px with --fg-brand-text. Don't: Use --fg-brand for small text. It fails AA in 4 of the 12 pairs.
+- Do: Put --fg-on-brand on a brand fill. Don't: Reach for a fixed near-white. It fails contrast in 8 of the 14 theme and mode pairs.
+- Do: Color brand text below 24px with --fg-brand-text. Don't: Use --fg-brand for small text. It fails AA in 4 of the 14 pairs.
 - Do: Put cards on --bg-card, and menus, tooltips, code and dialogs on --bg-overlay. Don't: Paint an area in --bg-surface. It is zinc-900, for small fills, and a field of it reads as gray.
 - Do: Size text with the ten scale steps, such as text-mono-sm. Don't: Write text-[13px] or Tailwind's text-sm. A test fails on both.
 - Do: Pick the family at the call site: font-serif, font-sans or font-mono. Don't: Expect a scale step to set the font. It sets size and leading only.
 - Do: Let a row of two halves wrap, and keep each half on one line. Don't: Assume it fits. A card clips with no ellipsis, so overflow looks like missing data.
-- Do: Hide glyphs such as ◆, $ and // with aria-hidden. Don't: Let a screen reader say black diamond suit before every label.
+- Do: Hide decorative glyphs with aria-hidden. Don't: Let a screen reader read a glyph before every label.
 - Do: Give bare buttons the .focus-ring class. Don't: Rely on outline. The reset removes it from every button.
 - Do: Import Phosphor from @phosphor-icons/react/dist/ssr in files without use client. Don't: Import the package root there. next build fails with an error that names no file.
 - Do: Pass your router's link with asChild or linkComponent, and mark the current item with active. Don't: Import next/link in a copied component. It stops working outside Next.js.
@@ -198,7 +196,7 @@ pnpm dlx @entrepta/cli@latest add button card field
 ## Accessibility
 
 - Every ink clears WCAG AA on what it sits on, in every theme and mode. Keep each token on the surface it was measured for.
-- Glyphs such as ◆, $ and // carry \`aria-hidden\`.
+- Decorative glyphs carry \`aria-hidden\`.
 - Links get a brand outline on focus. A bare button with no focus style of its own takes the \`.focus-ring\` class.
 - Put \`<a href="#main" class="skip-link">skip to content</a>\` first in \`<body>\`.
 - Wrap each form control in \`Field\`: it wires the label, \`aria-describedby\` and \`aria-invalid\`.
@@ -206,7 +204,7 @@ pnpm dlx @entrepta/cli@latest add button card field
 ## Data
 
 - Money is an integer of minor units (123456 is 1,234.56), shown with Amount and typed with MoneyInput. Never a float.
-- A day is a plain \`YYYY-MM-DD\` string, never a Date. Set the locale, currency and time zone once with \`FormatProvider\`; \`lib/format\` has the helpers.
+- A day is a plain \`YYYY-MM-DD\` string, never a Date. Set the locale, currency and time zone once with \`FormatProvider\`; \`lib/entrepta-format\` has the helpers.
 - A change is a Delta: an arrow, a sign and words. No percentage from a base of zero or below; a missing value is a dash with its reason, never a zero.
 - Series colors are palette keys, \`chart-1\` to \`chart-8\`, stored as the key, never a hex. The status colors appear in a chart only for results above and below zero, with a sign.
 - A data component takes \`loading\` and draws its skeleton in its final shape. Empty and error are composed where the words are known: EmptyState, Alert, a Badge for stale data. A failed load is never an empty list.
@@ -227,7 +225,7 @@ Docs: https://entrepta.vercel.app/docs/components/button.md
 ### Card
 
 \`\`\`tsx
-import { Card, cardVariants, CardHeader, CardLabel, CardMeta, CardTitle, CardDescription, CardContent, CardFooter, CardComment, CardTerminalBar, CardTerminalBody } from "@/components/entrepta/card"
+import { Card, cardVariants, CardHeader, CardLabel, CardMeta, CardTitle, CardDescription, CardContent, CardFooter, CardNote } from "@/components/entrepta/card"
 
 <Card><CardHeader><CardLabel>post</CardLabel><CardMeta>2026</CardMeta></CardHeader><CardTitle>Title</CardTitle></Card>
 \`\`\`
@@ -244,13 +242,11 @@ import { Field, FieldError, FieldLabel, fieldLabelClass } from "@/components/ent
 
 Docs: https://entrepta.vercel.app/docs/components/field.md
 
-Also installed as dependencies: \`diamond\`.
-
 ## Reading the docs
 
 - Every docs page has a Markdown version at the same URL plus \`.md\`. Read that instead of the HTML. The component index is https://entrepta.vercel.app/docs/components.md, and each component has its own, such as https://entrepta.vercel.app/docs/components/button.md.
 - https://entrepta.vercel.app/llms.txt lists every page. https://entrepta.vercel.app/llms-full.txt is all of them in one file.
-- Upgrading from 1.x: https://entrepta.vercel.app/docs/migrating-to-v2.md, step by step, with every new component. From 2.x to 3 nothing breaks: https://entrepta.vercel.app/docs/whats-new-in-v3.md.
+- Upgrading from 1.x: https://entrepta.vercel.app/docs/migrating-to-v2.md, step by step, with every new component. From 2.x to 3 nothing breaks: https://entrepta.vercel.app/docs/whats-new-in-v3.md. From 3.x to 4: https://entrepta.vercel.app/docs/migrating-to-v4.md, which says how to bring the old look back.
 - Money, dates, series colors and data states: https://entrepta.vercel.app/docs/foundations/data.md.
 
 ## Before calling a UI change done
@@ -263,7 +259,7 @@ Also installed as dependencies: \`diamond\`.
 exports[`buildAgentsMd > matches the snapshot for vite 1`] = `
 "# entrepta in this project
 
-This project uses [entrepta](https://entrepta.vercel.app), a dark-first design system with an editor metaphor: tabs, a command palette, a status bar, shell prompts, serif italic next to mono. Its components are copied into the repo as source, so they are this project's code: read them, and edit them when a change calls for it.
+This project uses [entrepta](https://entrepta.vercel.app), a dark-first design system: near black surfaces, mono for UI, serif italic for titles, and no mark of its own. Its components are copied into the repo as source, so they are this project's code: read them, and edit them when a change calls for it.
 
 Built for Vite with the entrepta theme.
 
@@ -314,13 +310,13 @@ pnpm dlx @entrepta/cli@latest add button card field
 
 - Do: Use a CSS variable for every color. Don't: Hardcode a hex in a component. It stops following the theme.
 - Do: Derive brand accents from --fg-brand with color-mix(). Don't: Hardcode the violet. It stops reacting when someone picks another theme.
-- Do: Put --fg-on-brand on a brand fill. Don't: Reach for a fixed near-white. It fails contrast in 7 of the 12 theme and mode pairs.
-- Do: Color brand text below 24px with --fg-brand-text. Don't: Use --fg-brand for small text. It fails AA in 4 of the 12 pairs.
+- Do: Put --fg-on-brand on a brand fill. Don't: Reach for a fixed near-white. It fails contrast in 8 of the 14 theme and mode pairs.
+- Do: Color brand text below 24px with --fg-brand-text. Don't: Use --fg-brand for small text. It fails AA in 4 of the 14 pairs.
 - Do: Put cards on --bg-card, and menus, tooltips, code and dialogs on --bg-overlay. Don't: Paint an area in --bg-surface. It is zinc-900, for small fills, and a field of it reads as gray.
 - Do: Size text with the ten scale steps, such as text-mono-sm. Don't: Write text-[13px] or Tailwind's text-sm. A test fails on both.
 - Do: Pick the family at the call site: font-serif, font-sans or font-mono. Don't: Expect a scale step to set the font. It sets size and leading only.
 - Do: Let a row of two halves wrap, and keep each half on one line. Don't: Assume it fits. A card clips with no ellipsis, so overflow looks like missing data.
-- Do: Hide glyphs such as ◆, $ and // with aria-hidden. Don't: Let a screen reader say black diamond suit before every label.
+- Do: Hide decorative glyphs with aria-hidden. Don't: Let a screen reader read a glyph before every label.
 - Do: Give bare buttons the .focus-ring class. Don't: Rely on outline. The reset removes it from every button.
 - Do: Import Phosphor from @phosphor-icons/react/dist/ssr in files without use client. Don't: Import the package root there. next build fails with an error that names no file.
 - Do: Pass your router's link with asChild or linkComponent, and mark the current item with active. Don't: Import next/link in a copied component. It stops working outside Next.js.
@@ -328,7 +324,7 @@ pnpm dlx @entrepta/cli@latest add button card field
 ## Accessibility
 
 - Every ink clears WCAG AA on what it sits on, in every theme and mode. Keep each token on the surface it was measured for.
-- Glyphs such as ◆, $ and // carry \`aria-hidden\`.
+- Decorative glyphs carry \`aria-hidden\`.
 - Links get a brand outline on focus. A bare button with no focus style of its own takes the \`.focus-ring\` class.
 - Put \`<a href="#main" class="skip-link">skip to content</a>\` first in \`<body>\`.
 - Wrap each form control in \`Field\`: it wires the label, \`aria-describedby\` and \`aria-invalid\`.
@@ -336,7 +332,7 @@ pnpm dlx @entrepta/cli@latest add button card field
 ## Data
 
 - Money is an integer of minor units (123456 is 1,234.56), shown with Amount and typed with MoneyInput. Never a float.
-- A day is a plain \`YYYY-MM-DD\` string, never a Date. Set the locale, currency and time zone once with \`FormatProvider\`; \`lib/format\` has the helpers.
+- A day is a plain \`YYYY-MM-DD\` string, never a Date. Set the locale, currency and time zone once with \`FormatProvider\`; \`lib/entrepta-format\` has the helpers.
 - A change is a Delta: an arrow, a sign and words. No percentage from a base of zero or below; a missing value is a dash with its reason, never a zero.
 - Series colors are palette keys, \`chart-1\` to \`chart-8\`, stored as the key, never a hex. The status colors appear in a chart only for results above and below zero, with a sign.
 - A data component takes \`loading\` and draws its skeleton in its final shape. Empty and error are composed where the words are known: EmptyState, Alert, a Badge for stale data. A failed load is never an empty list.
@@ -357,7 +353,7 @@ Docs: https://entrepta.vercel.app/docs/components/button.md
 ### Card
 
 \`\`\`tsx
-import { Card, cardVariants, CardHeader, CardLabel, CardMeta, CardTitle, CardDescription, CardContent, CardFooter, CardComment, CardTerminalBar, CardTerminalBody } from "@/components/entrepta/card"
+import { Card, cardVariants, CardHeader, CardLabel, CardMeta, CardTitle, CardDescription, CardContent, CardFooter, CardNote } from "@/components/entrepta/card"
 
 <Card><CardHeader><CardLabel>post</CardLabel><CardMeta>2026</CardMeta></CardHeader><CardTitle>Title</CardTitle></Card>
 \`\`\`
@@ -374,13 +370,11 @@ import { Field, FieldError, FieldLabel, fieldLabelClass } from "@/components/ent
 
 Docs: https://entrepta.vercel.app/docs/components/field.md
 
-Also installed as dependencies: \`diamond\`.
-
 ## Reading the docs
 
 - Every docs page has a Markdown version at the same URL plus \`.md\`. Read that instead of the HTML. The component index is https://entrepta.vercel.app/docs/components.md, and each component has its own, such as https://entrepta.vercel.app/docs/components/button.md.
 - https://entrepta.vercel.app/llms.txt lists every page. https://entrepta.vercel.app/llms-full.txt is all of them in one file.
-- Upgrading from 1.x: https://entrepta.vercel.app/docs/migrating-to-v2.md, step by step, with every new component. From 2.x to 3 nothing breaks: https://entrepta.vercel.app/docs/whats-new-in-v3.md.
+- Upgrading from 1.x: https://entrepta.vercel.app/docs/migrating-to-v2.md, step by step, with every new component. From 2.x to 3 nothing breaks: https://entrepta.vercel.app/docs/whats-new-in-v3.md. From 3.x to 4: https://entrepta.vercel.app/docs/migrating-to-v4.md, which says how to bring the old look back.
 - Money, dates, series colors and data states: https://entrepta.vercel.app/docs/foundations/data.md.
 
 ## Before calling a UI change done

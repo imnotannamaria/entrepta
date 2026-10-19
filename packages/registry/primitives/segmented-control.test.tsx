@@ -18,6 +18,25 @@ describe("SegmentedControl", () => {
     expect(screen.getByRole("radio", { name: "expense" })).toBeChecked();
   });
 
+  it("cuts a long label by default and keeps it whole with truncate off", () => {
+    const { rerender } = render(<SegmentedControl aria-label="kind" options={KINDS} />);
+    const labelOf = () => screen.getByText("transfer");
+    expect(labelOf()).toHaveClass("truncate");
+    expect(labelOf().closest("label")).toHaveClass("min-w-0");
+    rerender(<SegmentedControl aria-label="kind" options={KINDS} truncate={false} />);
+    expect(labelOf()).not.toHaveClass("truncate");
+    expect(labelOf().closest("label")).not.toHaveClass("min-w-0");
+  });
+
+  it("rounds the track and the indicator all the way with shape pill", () => {
+    const { rerender } = render(<SegmentedControl aria-label="kind" options={KINDS} />);
+    const track = () => screen.getByRole("radiogroup");
+    expect(track().className).toContain("rounded-[var(--radius-md)]");
+    rerender(<SegmentedControl aria-label="kind" options={KINDS} shape="pill" />);
+    expect(track()).toHaveClass("rounded-full");
+    expect(track().querySelector("[aria-hidden]")).toHaveClass("rounded-full");
+  });
+
   it("picks on click and tells the caller", async () => {
     const user = userEvent.setup();
     const onValueChange = vi.fn();

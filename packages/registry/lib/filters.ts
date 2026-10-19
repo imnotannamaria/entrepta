@@ -1,4 +1,4 @@
-import { isPlainDate } from "./format";
+import { isPlainDate } from "./entrepta-format";
 
 export type FilterFieldType = "enum" | "text" | "amount" | "date" | "boolean";
 

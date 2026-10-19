@@ -65,46 +65,32 @@ describe("Tabs", () => {
     expect(onChange).toHaveBeenCalledWith("b");
   });
 
-  it("shows a real close button on the active tab only", () => {
+  it("has no close button: a tab is picked, not closed", () => {
     render(
       <Tabs defaultValue="a">
         <TabsList>
-          <TabsTrigger value="a" onClose={() => {}}>
-            Closable
-          </TabsTrigger>
-          <TabsTrigger value="b" onClose={() => {}}>
-            Other
-          </TabsTrigger>
+          <TabsTrigger value="a">Only</TabsTrigger>
         </TabsList>
         <TabsContent value="a">A</TabsContent>
       </Tabs>
     );
-    expect(screen.getByRole("button", { name: "Close Closable" })).toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: "Close Other" })).toBeNull();
-    // a sibling of the tab, not nested inside it
-    expect(screen.getByRole("tab", { name: /Closable/ }).querySelector("button")).toBeNull();
+    expect(screen.queryByRole("button")).toBeNull();
   });
 
-  it("invokes onClose when the close button is clicked", async () => {
-    const onClose = vi.fn();
-    render(
-      <Tabs defaultValue="a">
+  it("draws nothing before a tab with no icon, unless the strip has an indicator", () => {
+    const { rerender } = render(<TestTabs />);
+    expect(screen.getByRole("tab", { name: /Tab A/ }).textContent).toBe("Tab A");
+    rerender(
+      <Tabs defaultValue="a" indicator={<b data-mine>◆</b>}>
         <TabsList>
-          <TabsTrigger value="a" onClose={onClose}>
-            Closable
-          </TabsTrigger>
+          <TabsTrigger value="a">Tab A</TabsTrigger>
+          <TabsTrigger value="b">Tab B</TabsTrigger>
         </TabsList>
-        <TabsContent value="a">A</TabsContent>
       </Tabs>
     );
-    await userEvent.click(screen.getByRole("button", { name: "Close Closable" }));
-    expect(onClose).toHaveBeenCalled();
-  });
-
-  it("renders diamond marker on active tab when no icon", () => {
-    render(<TestTabs />);
-    const activeTab = screen.getByRole("tab", { name: /Tab A/ });
-    expect(activeTab.textContent).toContain("◆");
+    const [mineA, mineB] = [...document.querySelectorAll("[data-mine]")];
+    expect(mineA.parentElement).not.toHaveClass("invisible");
+    expect(mineB.parentElement).toHaveClass("invisible");
   });
 
   it("draws one brand underline, under the active tab, and moves it on switch", async () => {
@@ -150,20 +136,7 @@ describe("TabNav", () => {
     const link = screen.getByRole("link", { name: /blog\// });
     expect(link).toHaveAttribute("data-router-link");
     expect(link).toHaveAttribute("aria-current", "page");
-    expect(link.textContent).toContain("◆");
-  });
-
-  it("closes the active route tab from a sibling button", async () => {
-    const onClose = vi.fn();
-    render(
-      <TabNav aria-label="Pages">
-        <TabNavLink href="/blog/post" active onClose={onClose}>
-          post.mdx
-        </TabNavLink>
-      </TabNav>
-    );
-    await userEvent.click(screen.getByRole("button", { name: "Close post.mdx" }));
-    expect(onClose).toHaveBeenCalled();
+    expect(link.textContent).toBe("blog/");
   });
 });
 
@@ -188,38 +161,17 @@ describe("tab names on phones", () => {
   });
 });
 
-describe("variant window", () => {
-  it("adds decorative window dots hidden from screen readers, with no buttons", () => {
-    const { container } = render(
-      <TabNav aria-label="Pages" variant="window">
-        <TabNavLink href="/" active>
-          home.tsx
-        </TabNavLink>
-      </TabNav>
-    );
-    const dots = container.querySelector("[data-window-dots]");
-    expect(dots).toHaveAttribute("aria-hidden");
-    expect(dots?.querySelectorAll("button")).toHaveLength(0);
-    expect(screen.getByRole("navigation", { name: "Pages" })).toBeInTheDocument();
-  });
-
-  it("shows end as meta from 768px, and a strip has no dots", () => {
-    const { container } = render(
+describe("the row", () => {
+  it("pins `end` to the far end and keeps `after` next to the last tab", () => {
+    render(
       <Tabs defaultValue="a">
-        <TabsList variant="window" end={<span>main</span>}>
+        <TabsList after={<button type="button">+</button>} end={<span>main</span>}>
           <TabsTrigger value="a">a.tsx</TabsTrigger>
         </TabsList>
       </Tabs>
     );
-    expect(screen.getByText("main").parentElement).toHaveClass("hidden", "md:flex");
-    render(
-      <Tabs defaultValue="a">
-        <TabsList>
-          <TabsTrigger value="a">b.tsx</TabsTrigger>
-        </TabsList>
-      </Tabs>
-    );
-    expect(container.ownerDocument.querySelectorAll("[data-window-dots]")).toHaveLength(1);
+    expect(screen.getByText("main").parentElement).toHaveClass("ml-auto", "shrink-0");
+    expect(screen.getByRole("button", { name: "+" })).toBeInTheDocument();
   });
 
   it("grows a Phosphor icon on hover and fills it when active", () => {

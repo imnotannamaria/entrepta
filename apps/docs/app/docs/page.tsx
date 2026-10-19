@@ -5,12 +5,12 @@ import { CodeBlock } from "@entrepta/registry/content/code-block";
 import { buttonVariants } from "@entrepta/registry/primitives/button-variants";
 import {
   Card,
-  CardComment,
   CardDescription,
   CardFooter,
   CardHeader,
   CardLabel,
   CardMeta,
+  CardNote,
   CardTitle,
 } from "@entrepta/registry/primitives/card";
 import type { Metadata } from "next";
@@ -72,14 +72,14 @@ export default function DocsIntro() {
         <Card>
           <CardHeader>
             <CardLabel>brief</CardLabel>
-            <CardMeta>{"// section 1.1"}</CardMeta>
+            <CardMeta>section 1.1</CardMeta>
           </CardHeader>
           <CardTitle>
             Dark-first. <em>Editor-shaped.</em> Yours to own.
           </CardTitle>
           <CardDescription>{DOCS_INTRO.philosophy}</CardDescription>
           <CardFooter>
-            <CardComment>opinionated · not framework-of-frameworks</CardComment>
+            <CardNote>opinionated · not framework-of-frameworks</CardNote>
           </CardFooter>
         </Card>
       </section>
@@ -103,7 +103,6 @@ export default function DocsIntro() {
                   <span className="text-[var(--fg-brand)]">$</span> {s.cmd}
                 </span>
                 <span className="hidden shrink-0 text-mono-sm text-[var(--fg-muted)] md:inline">
-                  {"// "}
                   {s.comment}
                 </span>
               </div>

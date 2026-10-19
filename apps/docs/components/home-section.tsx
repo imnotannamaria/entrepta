@@ -1,5 +1,4 @@
 import { cn } from "@/lib/utils";
-import { Diamond } from "@entrepta/registry/content/diamond";
 import type { ReactNode } from "react";
 
 /** One band of the home page: the 1280px column, its gutters and the rule above it. */
@@ -80,7 +79,6 @@ export function SpecList({ rows }: { rows: { k: string; v: string }[] }) {
           className="grid grid-cols-[minmax(0,min(140px,40%))_1fr] items-baseline gap-4 border-b border-[var(--border-subtle)] py-3 font-mono text-mono-sm"
         >
           <span className="inline-flex items-center gap-1.5 text-[var(--fg-brand-text)]">
-            <Diamond />
             {row.k}
           </span>
           <span className="leading-relaxed text-[var(--fg-secondary)]">{row.v}</span>

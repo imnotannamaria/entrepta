@@ -13,8 +13,8 @@ program.name("entrepta").description("entrepta design system CLI").version(versi
 program
   .command("init")
   .description("initialize entrepta in your project")
-  .option("-t, --theme <theme>", "theme preset (entrepta|blossom|marmalade|julia|ivy|bosco)")
-  .option("--themes <mode>", "single: one fixed theme. all: six themes, switchable at runtime")
+  .option("-t, --theme <theme>", "theme preset (entrepta|blossom|marmalade|julia|ivy|bosco|taylor)")
+  .option("--themes <mode>", "single: one fixed theme. all: every theme, switchable at runtime")
   .option("--overwrite", "overwrite existing files", false)
   .action(init);
 

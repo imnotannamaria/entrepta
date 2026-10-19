@@ -13,8 +13,13 @@ import {
   REQUIREMENTS,
   THEME_NOTES,
   THEME_SWITCH,
+  THEME_TAYLOR,
   V3_CHANGES,
   V3_UPDATE,
+  V4_BREAKS,
+  V4_NEW,
+  V4_REMOVED,
+  V4_UPDATE,
 } from "./docs-data";
 import {
   A11Y_SECTIONS,
@@ -194,6 +199,38 @@ export function whatsNewMd(): string {
   ].join("\n\n");
 }
 
+export function migrationV4Md(): string {
+  return [
+    "# Migrating an entrepta project to v4",
+    "> For a coding agent working in a project that uses entrepta 3.x. entrepta 4 takes the mark out of the defaults: the ◆ and the // go, and the editor look leaves the library. Nothing is lost: each change to the look says how to bring the old one back. Check the app at 375px, in dark and light, after each step.",
+    "## 1. Update the files",
+    "The CLI copies source, so nothing updates on its own. Commit first: `--overwrite` replaces local edits.",
+    code("bash", V4_UPDATE),
+    "## 2. What changed",
+    V4_BREAKS.map(
+      (b) =>
+        `### ${b.name}\n\nBefore: ${b.before}\n\nAfter: ${b.after}${b.back ? `\n\nTo bring the old look back:\n\n${code("tsx", b.back)}` : ""}`
+    ).join("\n\n"),
+    "## 3. What was removed",
+    table(
+      ["removed", "instead"],
+      V4_REMOVED.map(([a, b]) => [a, b])
+    ),
+    "`add` says so when asked for one of them, and links this page.",
+    "## 4. What is new",
+    V4_NEW.map(([name, text]) => `- **${name}.** ${text}`).join("\n"),
+  ].join("\n\n");
+}
+
+export function whatsNewV4Md(): string {
+  return [
+    "# What's new in entrepta 4",
+    "> The library without the mark. The ◆ and the // stop being defaults, the editor look leaves, and a seventh theme, taylor, is flat and monochrome. Breaking: see the migration guide.",
+    `## New and changed\n\n${V4_NEW.map(([name, text]) => `- **${name}.** ${text}`).join("\n")}`,
+    `## Breaking\n\nEach change, and how to get the old look back, is on ${mdUrl("/docs/migrating-to-v4")}.`,
+  ].join("\n\n");
+}
+
 export function dataFoundationMd(): string {
   return [
     "# Data",
@@ -279,23 +316,26 @@ export function cliMd(): string {
         .join("\n\n")
     ),
     "## entrepta.json",
-    "Read from the project root. It records the theme, whether one theme or all six are installed, the CSS file, the aliases, and `srcDir` when `@/` points at a folder such as `src` in Vite.",
+    "Read from the project root. It records the theme, whether one theme or all seven are installed, the CSS file, the aliases, and `srcDir` when `@/` points at a folder such as `src` in Vite.",
   ].join("\n\n");
 }
 
 export function themesMd(): string {
   return [
     "# Themes",
-    "> Six presets. Each sets only the brand tokens; neutrals, status colors, spacing and type are shared. Dark and light work in every preset.",
+    "> Seven presets. Each sets only the brand tokens; neutrals, status colors, spacing and type are shared. Dark and light work in every preset.",
     table(
       ["Preset", "Brand", "Light brand", "Vibe"],
       THEMES.map((t) => [`\`${t.id}\``, t.color, t.lightColor, THEME_NOTES[t.id]?.vibe ?? ""])
     ),
     "## Pick one",
     code("bash", "npx @entrepta/cli@latest init --theme=ivy"),
-    "## Or install all six",
+    "## Or install all seven",
     code("bash", "npx @entrepta/cli@latest init --theme=ivy --themes=all"),
-    'All six land under `:root[data-theme="<id>"]`, the chosen one also on bare `:root`. Switch with `data-theme` on `<html>`, or the ThemeSwitcher. Light mode is `data-mode="light"` on `<html>`.',
+    'All seven land under `:root[data-theme="<id>"]`, the chosen one also on bare `:root`. Switch with `data-theme` on `<html>`, or the ThemeSwitcher. Light mode is `data-mode="light"` on `<html>`.',
+    "## taylor, flat and monochrome",
+    THEME_TAYLOR.text,
+    code("css", THEME_TAYLOR.code),
     "## Switching",
     THEME_SWITCH.text,
     code("ts", THEME_SWITCH.code),
@@ -490,7 +530,7 @@ export const MD_PAGES: MdPage[] = [
   {
     path: "/docs/themes",
     title: "Themes",
-    summary: "The six presets and runtime switching",
+    summary: "The seven presets and runtime switching",
     render: themesMd,
   },
   {
@@ -505,6 +545,18 @@ export const MD_PAGES: MdPage[] = [
     summary: p.summary,
     render: FOUNDATION_MD[p.slug],
   })),
+  {
+    path: "/docs/whats-new-in-v4",
+    title: "What's new in v4",
+    summary: "The library without the mark, and taylor, a flat monochrome theme",
+    render: whatsNewV4Md,
+  },
+  {
+    path: "/docs/migrating-to-v4",
+    title: "Migrating to v4",
+    summary: "What changed from 3.x, how to bring the old look back, and what was removed",
+    render: migrationV4Md,
+  },
   {
     path: "/docs/whats-new-in-v3",
     title: "What's new in v3",
@@ -540,7 +592,7 @@ export function llmsTxt(): string {
   const components = MD_PAGES.filter((p) => p.path.startsWith("/docs/components/"));
   return `${[
     "# entrepta",
-    "> A dark-first React design system you copy into your repo with a CLI, in the shadcn model: tabs, a command palette, a status bar, serif italic next to mono. Tailwind v4, Radix, six themes, every ink measured for WCAG AA.",
+    "> A dark-first React design system you copy into your repo with a CLI, in the shadcn model: near black surfaces, mono for UI, serif italic for titles, no mark of its own. Tailwind v4, Radix, seven themes, every ink measured for WCAG AA.",
     `Every page below is Markdown. Add \`.md\` to any docs URL for the same. For a guide fitted to one project, build an AGENTS.md at ${SITE_URL}/?agents=open.`,
     "## Docs",
     docs.map((p) => `- [${p.title}](${mdUrl(p.path)}): ${p.summary}`).join("\n"),

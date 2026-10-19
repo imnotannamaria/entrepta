@@ -1,4 +1,3 @@
-import { Diamond } from "@entrepta/registry/content/diamond";
 import type { ReactNode } from "react";
 import { AgentActions } from "./agent-actions";
 
@@ -55,7 +54,6 @@ export function DocSubhead({ children, count }: DocSubheadProps) {
   return (
     <div className="flex items-baseline justify-between gap-3 mb-4 pb-2 border-b border-[var(--border-subtle)]">
       <div className="font-mono text-mono-sm text-[var(--fg-secondary)] uppercase tracking-[0.06em] inline-flex items-center gap-1.5">
-        <Diamond />
         {children}
       </div>
       {count && (
@@ -67,13 +65,10 @@ export function DocSubhead({ children, count }: DocSubheadProps) {
   );
 }
 
-/** A short aside under a subhead, marked with the brand's `//`, like a code comment. */
+/** A short aside under a subhead, in the muted ink. */
 export function DocNote({ children }: { children: ReactNode }) {
   return (
     <p className="mt-0 mb-4 max-w-2xl font-mono text-mono-sm leading-relaxed text-[var(--fg-muted)]">
-      <span aria-hidden className="text-[var(--fg-brand)]">
-        {"// "}
-      </span>
       {children}
     </p>
   );

@@ -1,29 +1,32 @@
 import { DocPageHeader, DocSubhead } from "@/components/doc-page-header";
-import { THEME_NOTES, THEME_SWITCH } from "@/lib/docs-data";
+import { THEME_NOTES, THEME_SWITCH, THEME_TAYLOR } from "@/lib/docs-data";
 import { THEMES as THEME_LIST } from "@/lib/theme";
 import { CodeBlock } from "@entrepta/registry/content/code-block";
 import {
   Card,
-  CardComment,
   CardContent,
   CardFooter,
   CardHeader,
   CardLabel,
   CardMeta,
+  CardNote,
 } from "@entrepta/registry/primitives/card";
 import type { Metadata } from "next";
+import type { CSSProperties } from "react";
 
 const THEMES = THEME_LIST.map((t) => ({
   name: t.id,
   brand: t.color,
+  lightBrand: t.lightColor,
   hover: THEME_NOTES[t.id].hover,
+  lightHover: THEME_NOTES[t.id].lightHover,
   vibe: THEME_NOTES[t.id].vibe,
 }));
 
 export const metadata: Metadata = {
   title: "Themes",
   description:
-    "Six entrepta theme presets: entrepta, blossom, marmalade, julia, ivy, bosco. Swap brand color with one CLI flag, same tokens.",
+    "Seven entrepta theme presets: entrepta, blossom, marmalade, julia, ivy, bosco, taylor. Swap brand color with one CLI flag, same tokens.",
   alternates: { canonical: "/docs/themes", types: { "text/markdown": "/docs/themes.md" } },
 };
 
@@ -35,7 +38,7 @@ export default function ThemesPage() {
         eyebrow="customization"
         title={
           <>
-            Six <em>themes.</em> One brand token.
+            Seven <em>themes.</em> One brand token.
           </>
         }
         description={
@@ -45,11 +48,11 @@ export default function ThemesPage() {
             spacing, type) is shared.
           </>
         }
-        meta="6 presets"
+        meta="7 presets"
       />
 
       <section className="mb-12">
-        <DocSubhead count="6 presets">Available themes</DocSubhead>
+        <DocSubhead count="7 presets">Available themes</DocSubhead>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {THEMES.map((t) => (
             <Card key={t.name}>
@@ -58,11 +61,21 @@ export default function ThemesPage() {
                 <CardMeta>{t.brand}</CardMeta>
               </CardHeader>
               <CardContent>
+                {/* the brand as it looks in the page's mode, with an edge that reads on either surface */}
                 <div
-                  className="h-20 rounded-[var(--radius-md)] border border-[var(--border-subtle)]"
-                  style={{
-                    background: `linear-gradient(135deg, ${t.brand} 0%, ${t.hover} 100%)`,
-                  }}
+                  className={
+                    "h-20 rounded-[var(--radius-md)] shadow-[inset_0_0_0_1px_color-mix(in_srgb,var(--fg-primary)_22%,transparent)] " +
+                    "bg-[linear-gradient(135deg,var(--dark-a),var(--dark-b))] " +
+                    "[:root[data-mode=light]_&]:bg-[linear-gradient(135deg,var(--light-a),var(--light-b))]"
+                  }
+                  style={
+                    {
+                      "--dark-a": t.brand,
+                      "--dark-b": t.hover,
+                      "--light-a": t.lightBrand,
+                      "--light-b": t.lightHover,
+                    } as CSSProperties
+                  }
                 />
               </CardContent>
               <p className="font-sans text-body-md leading-relaxed text-[var(--fg-secondary)] m-0">
@@ -72,7 +85,7 @@ export default function ThemesPage() {
                 <code className="font-mono text-mono-sm text-[var(--fg-muted)]">
                   --theme={t.name}
                 </code>
-                <CardComment>{t.brand}</CardComment>
+                <CardNote>{t.brand}</CardNote>
               </CardFooter>
             </Card>
           ))}
@@ -95,14 +108,26 @@ export default function ThemesPage() {
 }`}
         />
         <p className="mt-4 font-mono text-mono-sm text-[var(--fg-muted)] leading-relaxed">
-          <span className="text-[var(--fg-brand)]">{"// "}</span>
           Each preset is one block of CSS variables per mode. The two inks are set per theme because
-          no single one reads on all six brands. Every pair clears WCAG AA in both modes.
+          no single one reads on all seven brands. Every pair clears WCAG AA in both modes.
         </p>
       </section>
 
       <section className="mb-12">
-        <DocSubhead count="2 ways">One theme or all six</DocSubhead>
+        <DocSubhead count="2 knobs">taylor, flat and monochrome</DocSubhead>
+        <p className="font-sans text-body-md leading-relaxed text-[var(--fg-secondary)] mb-4 max-w-2xl">
+          {THEME_TAYLOR.text}
+        </p>
+        <CodeBlock
+          variant="terminal"
+          filename="styles/themes/taylor.css"
+          language="css"
+          code={THEME_TAYLOR.code}
+        />
+      </section>
+
+      <section className="mb-12">
+        <DocSubhead count="2 ways">One theme or all seven</DocSubhead>
         <CodeBlock
           variant="terminal"
           filename="terminal"
@@ -110,11 +135,10 @@ export default function ThemesPage() {
           code={`# one fixed theme
 npx @entrepta/cli@latest init --theme=ivy
 
-# all six, switchable at runtime
+# all seven, switchable at runtime
 npx @entrepta/cli@latest init --theme=ivy --themes=all`}
         />
         <p className="mt-4 font-mono text-mono-sm text-[var(--fg-muted)] leading-relaxed">
-          <span className="text-[var(--fg-brand)]">{"// "}</span>
           With <code className="text-[var(--fg-primary)]">--themes=all</code>, each theme lives
           under <code className="text-[var(--fg-primary)]">data-theme</code> on{" "}
           <code className="text-[var(--fg-primary)]">&lt;html&gt;</code>, and the one you picked is
@@ -131,9 +155,9 @@ npx @entrepta/cli@latest init --theme=ivy --themes=all`}
           <code className="font-mono text-[var(--fg-primary)]">data-mode="light"</code> on{" "}
           <code className="font-mono text-[var(--fg-primary)]">&lt;html&gt;</code>. Surface,
           foreground and border tokens flip; the brand color shifts slightly darker to keep AA
-          contrast on white. Terminal-style surfaces (CodeBlock, Card{" "}
-          <code className="font-mono">variant="terminal"</code>, Tooltip) stay dark in both modes by
-          carrying <code className="font-mono text-[var(--fg-primary)]">data-surface="dark"</code>{" "}
+          contrast on white. Dark surfaces (the CodeBlock terminal variant) stay dark in both modes
+          by carrying{" "}
+          <code className="font-mono text-[var(--fg-primary)]">data-surface="dark"</code>{" "}
           internally.
         </p>
         <CodeBlock
@@ -145,7 +169,6 @@ npx @entrepta/cli@latest init --theme=ivy --themes=all`}
 </html>`}
         />
         <p className="mt-4 font-mono text-mono-sm text-[var(--fg-muted)] leading-relaxed">
-          <span className="text-[var(--fg-brand)]">{"// "}</span>
           To let people toggle it, add the{" "}
           <code className="text-[var(--fg-primary)]">mode-toggle</code> component. It stores the
           choice, and its <code className="text-[var(--fg-primary)]">ModeScript</code> sets the

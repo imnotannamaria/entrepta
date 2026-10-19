@@ -11,7 +11,7 @@ const SETUP = `import {
   chartColor, chartCursor, chartGrid, chartProjection, chartXAxis, chartYAxis,
   formatChartValue, useChartMotion,
 } from "@/components/entrepta/chart"
-import { formatMoney } from "@/lib/format"
+import { formatMoney } from "@/lib/entrepta-format"
 import { Area, AreaChart, Bar, BarChart, CartesianGrid, Cell, Label, Pie, PieChart,
   ReferenceLine, XAxis, YAxis } from "recharts"
 

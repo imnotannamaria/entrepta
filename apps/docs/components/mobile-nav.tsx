@@ -13,8 +13,8 @@ import { NavGroups } from "./nav-groups";
 
 const TOP_LINKS = [
   { label: "docs", href: "/docs" },
-  { label: "install", href: "/#install" },
-  { label: "principles", href: "/#principles" },
+  { label: "install", href: "/docs/installation" },
+  { label: "features", href: "/#features" },
   { label: "components", href: "/docs/components" },
   { label: "themes", href: "/docs/themes" },
   { label: "npm ↗", href: LINKS.npmCli, external: true },

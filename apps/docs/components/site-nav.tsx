@@ -21,8 +21,8 @@ export function SiteNav() {
           <>
             <TopNavMenu className="md:hidden lg:flex">
               <TopNavLink href="/docs">docs</TopNavLink>
-              <TopNavLink href="/#install">install</TopNavLink>
-              <TopNavLink href="/#principles">principles</TopNavLink>
+              <TopNavLink href="/docs/installation">install</TopNavLink>
+              <TopNavLink href="/#features">features</TopNavLink>
               <TopNavLink href="/docs/components">components</TopNavLink>
               <TopNavLink href="/docs/themes">themes</TopNavLink>
               <TopNavLink href={LINKS.npmCli} external>

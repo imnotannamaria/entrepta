@@ -13,7 +13,7 @@ export const CLI_COMMANDS = [
     desc: "Bootstraps a project. Writes the global CSS, lib/utils.ts and entrepta.json. Prompts for a theme, and for one fixed theme or all six.",
     flags: [
       { flag: "--theme=<preset>", desc: "Skip the prompts. Writes one fixed theme" },
-      { flag: "--themes=all", desc: "Write all six themes, switchable with data-theme" },
+      { flag: "--themes=all", desc: "Write every theme, switchable with data-theme" },
       { flag: "--overwrite", desc: "Overwrite existing files without asking" },
     ],
   },
@@ -55,7 +55,7 @@ export const DOCS_INTRO = {
   description:
     "A dark-first design system distributed as copy-paste components, not an npm package of pre-built UI. You own the source. Run a command, the component lives in your repo, styled with your tokens, editable without fighting a library.",
   philosophy:
-    "entrepta is opinionated about three things: a deep zinc-950 canvas (light mode is optional, never priority), editor metaphors as personality (tabs, ◆ markers, file paths, shell prompts), and copy-paste distribution (no SDK, no runtime telemetry, no wrapper between you and your components).",
+    "entrepta is opinionated about three things: a deep zinc-950 canvas (light mode is optional, never priority), no mark of its own (no ◆, no //, no editor frame: you pass them in), and copy-paste distribution (no SDK, no runtime telemetry, no wrapper between you and your components).",
   quickStart: [
     { cmd: "npx @entrepta/cli@latest init --theme=entrepta", comment: "tokens and config" },
     { cmd: "npx @entrepta/cli@latest add button badge input", comment: "copy components" },
@@ -64,13 +64,37 @@ export const DOCS_INTRO = {
 } as const;
 
 /** What each preset is for. Colors come from lib/theme.ts. */
-export const THEME_NOTES: Record<string, { hover: string; vibe: string }> = {
-  entrepta: { hover: "#9B8EFF", vibe: "Default. Violet, playful, IDE personality." },
-  blossom: { hover: "#E04750", vibe: "Cherry red. Bold and confident." },
-  marmalade: { hover: "#FF9D45", vibe: "Warm orange. Editorial and energetic." },
-  julia: { hover: "#F178A0", vibe: "Warm pink. Soft and expressive." },
-  ivy: { hover: "#4CBA7C", vibe: "Forest green. Calm and grounded." },
-  bosco: { hover: "#4F86F3", vibe: "Deep blue. Technical and steady." },
+/** `hover` and `lightHover` are the brand's hover in dark and in light mode. */
+export const THEME_NOTES: Record<string, { hover: string; lightHover: string; vibe: string }> = {
+  entrepta: { hover: "#9B8EFF", lightHover: "#5848E0", vibe: "Default. Violet, playful." },
+  blossom: { hover: "#E04750", lightHover: "#CC2E36", vibe: "Cherry red. Bold and confident." },
+  marmalade: {
+    hover: "#FF9D45",
+    lightHover: "#FF8213",
+    vibe: "Warm orange. Editorial and energetic.",
+  },
+  julia: { hover: "#F178A0", lightHover: "#E85A8A", vibe: "Warm pink. Soft and expressive." },
+  ivy: { hover: "#4CBA7C", lightHover: "#35A365", vibe: "Forest green. Calm and grounded." },
+  bosco: { hover: "#4F86F3", lightHover: "#2563EB", vibe: "Deep blue. Technical and steady." },
+  taylor: {
+    hover: "#D4D4D8",
+    lightHover: "#3F3F46",
+    vibe: "Monochrome and flat. White on dark, black on light.",
+  },
+};
+
+/** taylor, the monochrome theme, and the two knobs any theme can use. On the Themes page and in its Markdown. */
+export const THEME_TAYLOR = {
+  text: "taylor has no hue. Its brand is white on dark and black on light, so there is no brand glow: a card and an overlay lose the light in their top-left corner. That light is one number, --finish-glow, from 0 to 1. Any theme can set it, and a project can set it once for all of them. The charts keep their color. White has nothing to turn, so --chart-from names the hue they start from. In taylor the brand ink is the primary ink, so a state is never shown by brand color alone.",
+  code: `:root {
+  --fg-brand: #fafafa;
+  --fg-brand-text: #fafafa;
+  --finish-glow: 0;          /* 0 is flat, 1 is the full finish */
+  --chart-from: #3b82f6;     /* where the chart colors start turning */
+}
+
+/* keep the glow, drop the hue: */
+:root { --finish-glow: 0.5; }`,
 };
 
 /** How a theme or mode switch lands, on the Themes page and in its Markdown. */
@@ -97,7 +121,6 @@ export const V1_COMPONENTS = [
   "dropdown",
   "tooltip",
   "tabs",
-  "status-bar",
   "top-nav",
   "skeleton",
   "toast",
@@ -116,15 +139,9 @@ export const V2_COMPONENTS = [
   "field",
   "filter-pill",
   "sidebar",
-  "page-outline",
-  "sect-head",
-  "doc-parts",
-  "chrome-message",
-  "page-loading",
   "reveal",
   "type-in",
   "rolling-number",
-  "spotlight",
   "arrow-link",
 ];
 
@@ -146,15 +163,9 @@ export const REPLACES: Record<string, string> = {
   field: "label, hint and error markup wired to aria-describedby by hand",
   "filter-pill": "filter buttons that keep their state in the URL",
   sidebar: "an icon rail with its own active indicator",
-  "page-outline": "a table of contents with a scrollspy",
-  "sect-head": "a $ command rule above a section",
-  "doc-parts": "the eyebrow, section and display heading pieces of a long page",
-  "chrome-message": "404 and error screens",
-  "page-loading": "a loading.tsx with dots or lines",
   reveal: "fade-in-on-scroll wrappers",
   "type-in": "a typewriter heading",
   "rolling-number": "an odometer counter",
-  spotlight: "a glow that follows the cursor",
   "arrow-link": "a link with a moving arrow",
 };
 
@@ -218,18 +229,14 @@ npx @entrepta/cli@latest add button card dialog --overwrite`,
     "The ThemeSwitcher needs every theme in your CSS: run init with --themes=all. Light mode brands moved slightly (entrepta light is now #6656FF) so every ink clears AA, and light --fg-muted is #68686F. Add suppressHydrationWarning to your <html> if you use ThemeScript or ModeScript.",
   card: "The parts are the same. The look is new: near black with a glow in the corner, a border that lights up on hover, and a header that wraps. New: size (sm, md, xl), and as and icon on CardLabel. The terminal variant sets its own text color, so it reads in light mode.",
   components: [
-    [
-      "Tabs",
-      'The × is a real button next to the tab, on the active tab only. Route tabs use TabNav and TabNavLink, and variant="window" draws the title bar. Tabs depend on motion.',
-    ],
+    ["Tabs", "Route tabs use TabNav and TabNavLink. Tabs depend on motion."],
     [
       "Dropdown, Toast, Tooltip, CommandPalette",
       "All sit on the overlay surface. A highlighted row takes the brand tint instead of an edge bar, keyboard hints are Kbd, and a toast shows its status as an icon tile. The Toaster adds a close button.",
     ],
-    ["StatusBar", 'position="static" puts it in your layout instead of five override classes.'],
     ["CodeBlock", "A failed copy says copy failed instead of claiming it copied."],
     [
-      "RollingNumber, Reveal, TypeIn, Spotlight",
+      "RollingNumber, Reveal, TypeIn",
       "Bring the motion package when you add them. Nothing else needs it.",
     ],
   ] as [string, string][],
@@ -272,7 +279,7 @@ export const DATA_FOUNDATION: {
     notes: [
       "A day is a plain string, 2026-09-28, never a Date: a Date carries an instant, and a time zone can move it to the day before.",
       "Today is today in the account's time zone, from FormatProvider. Words and the first day of the week come from the locale.",
-      "lib/format holds the helpers: today, addDays, addMonths, compareDates, formatDate, formatDateRange.",
+      "lib/entrepta-format holds the helpers: today, addDays, addMonths, compareDates, formatDate, formatDateRange.",
     ],
   },
   {
@@ -337,14 +344,10 @@ export const V3_CHANGES: [string, string][] = [
   ],
   ["FilterPill", "With onRemove it is an applied filter, with a × named after what it removes."],
   ["Amount, Metric, RollingNumber", "They hide behind a mask when a RedactProvider asks."],
-  [
-    "Button",
-    "asChild works again, and Button, Input, Textarea, StatusBar and TopNav render on the server.",
-  ],
+  ["Button", "asChild works again, and Button, Input, Textarea and TopNav render on the server."],
   ["Sheet", "container renders it inside a frame of your own."],
   ["Tabs", "An icon tab keeps its name for screen readers on a phone."],
   ["CodeBlock", "Scrolling the page over a block works again: it only holds sideways scrolls."],
-  ["ChromeMessage", "Takes headingLevel, for an error inside a layout that has its own h1."],
   ["Form fields", "No code ligatures, which drew some typed slashes blank."],
   [
     "The CLI",
@@ -358,4 +361,157 @@ npx @entrepta/cli@latest init --theme=entrepta --overwrite
 # the 2.x components that changed; keep the ones your project has
 npx @entrepta/cli@latest add button input textarea card dialog tabs toast \\
   command-palette code-block sidebar filter-pill rolling-number \\
-  mode-toggle theme-switcher status-bar top-nav use-mode use-theme --overwrite`;
+  mode-toggle theme-switcher top-nav use-mode use-theme --overwrite`;
+
+/* ------------------------------------------------------------------ */
+/* Migrating to v4                                                     */
+/* ------------------------------------------------------------------ */
+
+export const V4_UPDATE = `# the new tokens: --finish-glow, --chart-from and the taylor theme
+npx @entrepta/cli@latest init --theme=entrepta --overwrite
+
+# the components that changed. Commit first: --overwrite replaces your edits
+npx @entrepta/cli@latest add card dialog field metric choice-card swatch-picker \\
+  chat-thread tabs stepper sidebar mobile-nav dropdown command-palette tooltip \\
+  segmented-control empty-state --overwrite
+
+# the format file has a new name. Reinstall what uses it, then delete lib/format.ts
+# if it was entrepta's
+npx @entrepta/cli@latest add amount delta money-input calendar date-picker \\
+  date-navigator filter-builder bar-list contribution-grid chart --overwrite`;
+
+/** What changed under a name that stays, with the way back to the old look where there is one. */
+export const V4_BREAKS: { name: string; before: string; after: string; back?: string }[] = [
+  {
+    name: "Labels",
+    before:
+      "CardLabel, FieldLabel, DialogLabel, Metric, ChoiceCard, SwatchPicker and ChatThread put a ◆ in front of their text.",
+    after:
+      "They draw nothing in front. Pass an icon for something there, a Phosphor icon or an element.",
+    back: `const Mark = () => (
+  <span aria-hidden style={{ fontSize: 10 }} className="text-[var(--fg-brand)]">◆</span>
+)
+
+<CardLabel icon={<Mark />}>post</CardLabel>
+<Field id="email" label="email" icon={<Mark />}>…</Field>
+<Metric label="spent" icon={<Mark />} value={…} />`,
+  },
+  {
+    name: "The current marker",
+    before: "Sidebar, MobileNav, Stepper and Tabs marked the current item with a ◆.",
+    after:
+      "Sidebar and MobileNav take an indicator, a dot by default. Tabs and Stepper have none by default: the underline and the marker already say it. null hides it.",
+    back: `const Mark = () => (
+  <span aria-hidden style={{ fontSize: 10 }} className="text-[var(--fg-brand)]">◆</span>
+)
+
+<Sidebar indicator={<Mark />} … />
+<MobileNav indicator={<Mark />} … />
+<Tabs indicator={<Mark />} defaultValue="a">…</Tabs>
+<Stepper indicator={<Mark />} steps={STEPS} current="bank" />`,
+  },
+  {
+    name: "Menu titles",
+    before: "DropdownMenuLabel and a command palette group had a ◆ before the title.",
+    after: "They are text.",
+    back: `// a class on the label, the way the ◆ came in before
+<DropdownMenuLabel className="before:content-['◆'] before:text-[var(--fg-brand)] before:[font-size:9px]">
+  account
+</DropdownMenuLabel>
+<CommandGroup
+  heading="pages"
+  className="[&_[cmdk-group-heading]]:before:content-['◆'] [&_[cmdk-group-heading]]:before:text-[var(--fg-brand)]"
+/>`,
+  },
+  {
+    name: "The //",
+    before: "FieldError and the command palette footer started with a dimmed //.",
+    after: "FieldError is the message alone. The palette footer says palette.",
+    back: `const Slashes = () => <span aria-hidden className="opacity-70">{"// "}</span>
+
+<Field id="email" label="email" error={error && <><Slashes />{error}</>}>…</Field>
+<CommandFoot><Slashes />palette</CommandFoot>`,
+  },
+  {
+    name: "CardComment",
+    before: "CardComment drew a // in front of a footer note.",
+    after: "It is CardNote now, the text alone in the footer's ink.",
+    back: `<CardNote>
+  <span aria-hidden className="opacity-60">{"// "}</span>
+  updated today
+</CardNote>`,
+  },
+  {
+    name: "lib/format.ts",
+    before: "The format helpers lived in lib/format.ts, a name many projects already use.",
+    after:
+      "They live in lib/entrepta-format.ts. Reinstall what imports them, then delete lib/format.ts if it was entrepta's. Never delete one that is yours.",
+  },
+];
+
+/** What left the registry, and where to look instead. */
+export const V4_REMOVED: [string, string][] = [
+  [
+    "StatusBar",
+    "Moved to the docs app (apps/docs/components/editor/status-bar.tsx). Copy it from there. It is the bar at the bottom of this site.",
+  ],
+  [
+    "ChromeMessage",
+    'Use EmptyState with size="page". It takes an illustration and a heading level.',
+  ],
+  [
+    "SectHead, doc-parts",
+    "Removed. Nothing used them. They were the $ command rule and the heading pieces.",
+  ],
+  ["PageOutline", "Removed. Nothing used it."],
+  ["PageLoading", "Removed, with the load-dot classes. Use Skeleton for a loading shape."],
+  [
+    "Spotlight, SpotlightCard",
+    "Removed, with the --bg-spotlight token. The glow that follows the cursor is gone. SpotlightCard is Card.",
+  ],
+  [
+    "Card variant terminal, CardTerminalBar, CardTerminalBody",
+    'Removed. A block of shell commands is CodeBlock variant="terminal". Anything else is a Card.',
+  ],
+  ["Tabs onClose", "Removed. A tab is picked, not closed. The × button is gone."],
+  [
+    'Tabs variant="window"',
+    "Removed. The title bar with the three dots is gone from the docs site too. A plain TabsList is the tabs.",
+  ],
+];
+
+/** What is new in 4.0, for "What's new in v4". */
+export const V4_NEW: [string, string][] = [
+  [
+    "taylor",
+    "A seventh theme with no hue: the brand is white on dark and black on light, and cards and overlays carry no brand glow. Every ink is measured like the others.",
+  ],
+  [
+    "--finish-glow",
+    "How much brand light the finish carries, from 0 to 1. It scales the corner glow of cards and overlays and the lift of a hovered card. Any theme or project sets it once.",
+  ],
+  [
+    "--chart-from",
+    "Where the chart colors start turning. It is the brand, unless a theme with no hue names one.",
+  ],
+  [
+    "EmptyState",
+    'size="page" is a whole screen, such as a 404 or an error. It takes an illustration and a headingLevel.',
+  ],
+  ["ChatThread", "An avatar for each role, or for one message."],
+  [
+    "Stepper",
+    "Each step takes an icon for its marker, a number when it has none. The vertical one draws its lines.",
+  ],
+  [
+    "Tooltip",
+    'It follows the mode of the page, light on a light page. surface="dark" keeps it near black.',
+  ],
+  ["SegmentedControl", 'shape="pill", and truncate={false} so a segment grows to its word.'],
+  ["Sidebar", "The rail's tooltip clears the rail's border, and an indicator replaces the dot."],
+  ["Field", "The star of a required label is drawn by CSS, so a test finds the label by its name."],
+  [
+    "The CLI",
+    "add says when an item was removed and where to look, and the init prompt offers taylor.",
+  ],
+];

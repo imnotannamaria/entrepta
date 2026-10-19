@@ -40,10 +40,9 @@ export function depsFor(name: string): string[] {
 
 /**
  * Components with no page of their own. They arrive as a dependency of the ones
- * that use them, and are described there: Diamond is the ◆ inside Card, Dialog,
- * Field and Tabs.
+ * that use them, and are described there. None today.
  */
-export const NO_PAGE = new Set(["diamond"]);
+export const NO_PAGE = new Set<string>();
 
 /** Items a user picks. Hooks, lib files and NO_PAGE items arrive as dependencies. */
 export const PICKABLE = COMPONENTS.filter(

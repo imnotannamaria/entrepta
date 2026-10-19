@@ -21,22 +21,23 @@ entrepta is a design system and copy-paste component library, same model as
 shadcn/ui. It is Anna Maria's personal design system, shipped as a public
 open source library (MIT).
 
-The difference from shadcn is personality. entrepta is dark-first with an IDE
-metaphor: tabs, command palette, status bar, file paths, shell prompts, inline
-comments. Editorial typography (serif italic) mixed with mono is the signature
-contrast.
+The difference from shadcn is how it looks. entrepta is dark-first, with
+near black surfaces that carry a finish, mono for UI and serif italic for titles.
+Since 4.0 it carries no mark of its own: no ◆, no `//`, no editor metaphor in
+the components.
 
 ### Positioning
 
 - Not a corporate or multi-purpose design system.
 - An opinionated library for personal sites, open source landing pages,
-  technical dashboards, and anything that should look like an engineer built it.
-- References: shadcn/ui (distribution model), Linear and Cursor (IDE metaphor),
+  technical dashboards, client projects, and anything that should look like an
+  engineer built it.
+- References: shadcn/ui (distribution model), Linear and Cursor (density),
   Vercel and Resend (editorial type).
 
 ### Who consumes it
 
-- **portfolio** ([annamaria.app](https://annamaria.app)), personal site posed as an IDE.
+- **portfolio** ([annamaria.app](https://annamaria.app)), the personal site. Its v3 was posed as an IDE; its new version is the first to want no mark.
 - **wristkit** ([wristkit-web.vercel.app](https://wristkit-web.vercel.app)), a CLI that
   injects Apple Health React components into Next.js.
 
@@ -92,7 +93,7 @@ entrepta/
 │       │   ├── md/           # the .md twin of each page (rewritten from /docs/*.md)
 │       │   ├── llms.txt/, llms-full.txt/  # the agent index and the whole site
 │       │   ├── opengraph-image.tsx, twitter-image.tsx
-│       │   ├── not-found.tsx, error.tsx   # on ChromeMessage
+│       │   ├── not-found.tsx, error.tsx   # on EmptyState
 │       │   ├── globals.css   # copy of the registry tokens
 │       │   ├── sitemap.ts
 │       │   └── robots.ts
@@ -125,12 +126,12 @@ entrepta/
 │       ├── data/             # amount, metric, delta, sparkline, bar-list, list-row, table,
 │       │                     # data-table, filter-builder, contribution-grid, redact
 │       ├── charts/           # chart (ChartContainer and presets on Recharts)
-│       ├── layout/           # status-bar, top-nav, theme-switcher, mode-toggle,
-│       │                     # sidebar, mobile-nav, bento-grid, page-outline
-│       ├── content/          # code-block, diamond, sect-head, doc-parts, chat-thread
-│       ├── feedback/         # toast, skeleton, command-palette, chrome-message, page-loading,
+│       ├── layout/           # top-nav, theme-switcher, mode-toggle,
+│       │                     # sidebar, mobile-nav, bento-grid
+│       ├── content/          # code-block, chat-thread
+│       ├── feedback/         # toast, skeleton, command-palette,
 │       │                     # empty-state, alert
-│       ├── motion/           # reveal, type-in, rolling-number, spotlight, spotlight-card,
+│       ├── motion/           # reveal, type-in, rolling-number,
 │       │                     # arrow-link
 │       ├── hooks/            # use-theme, use-mode, use-command-palette, use-url-filter,
 │       │                     # use-copy, use-format, use-redact
@@ -159,15 +160,16 @@ entrepta/
 ## 4. Design principles
 
 1. **Dark-first.** Light mode exists but dark is the default and the priority.
-2. **Editor as metaphor.** Tabs, command palette, status bar, file paths, inline
-   comments, shell prompts, mono metadata.
+2. **No mark in the components.** The editor look (status bar, title bar, `$`
+   commands, `//` comments, the ◆) belongs to the docs site, which keeps it in
+   `apps/docs/components/editor/`. A component draws none of it by default.
 3. **Deliberate type contrast.** Serif italic for proper nouns, mono for UI,
    sans only for long prose.
 4. **Color used sparingly.** Brand accent only on CTAs, focus and featured
    states. Status colors only for status. Everything else is black, white and
    cool gray.
 5. **High density, clear hierarchy.** 12 column grid, 24px gutters, 1280px max.
-6. **Motion with a job.** Entrances, counters and light that follows the cursor,
+6. **Motion with a job.** Entrances and counters,
    each one earning its place. UI feedback stays at 120 to 320ms, ease-out.
    Every animation has a reduced-motion path, including the ones driven by JS,
    which the global CSS reset cannot reach.
@@ -178,11 +180,11 @@ entrepta/
 
 ### Model
 
-- The user picks one theme out of 6 presets: `npx entrepta init --theme=entrepta`
+- The user picks one theme out of 7 presets: `npx entrepta init --theme=entrepta`
 - `init` also asks whether the project wants that one theme fixed
-  (`--themes=single`) or all six switchable at runtime (`--themes=all`)
+  (`--themes=single`) or all seven switchable at runtime (`--themes=all`)
 - `single` writes the chosen theme's vars into `app/globals.css`. `all` writes
-  the six under `:root[data-theme="<id>"]`, with the chosen one also on bare
+  the seven under `:root[data-theme="<id>"]`, with the chosen one also on bare
   `:root` as the default. The `ThemeSwitcher` only works with `all`
 - Any later customization is done by editing those vars in the user project.
   There is no runtime theme provider.
@@ -190,36 +192,44 @@ entrepta/
   Light mode is activated by `data-mode="light"` on `<html>`, handled by the
   `use-theme` hook.
 
-### The 6 presets
+### The 7 presets
 
 | Preset    | Brand color  | Hex       | Vibe                            |
 | --------- | ------------ | --------- | ------------------------------- |
-| entrepta  | violet       | `#7C6BFF` | Default, personal, IDE feel     |
+| entrepta  | violet       | `#7C6BFF` | Default, personal              |
 | blossom   | cherry red   | `#CC2E36` | Bold, confident                 |
 | marmalade | warm orange  | `#FF8213` | Editorial, energetic            |
 | julia     | warm pink    | `#E85A8A` | Soft, expressive                |
 | ivy       | forest green | `#35A365` | Calm, grounded                  |
 | bosco     | deep blue    | `#2563EB` | Technical, steady               |
+| taylor    | none         | `#FAFAFA` dark, `#09090B` light | Monochrome, flat, customizable |
 
 Light mode uses a darker shade of each brand (entrepta light is `#6656FF`).
 
 Each preset only overrides the brand tokens (`--fg-brand`, `--fg-brand-hover`,
-`--fg-on-brand`, `--fg-brand-text`, `--bg-surface-brand`, `--ring`). Everything
-else (zinc neutrals, status colors, spacing, type) is shared, which keeps the
-IDE personality in any color.
+`--fg-on-brand`, `--fg-brand-text`, `--bg-surface-brand`, `--ring`) and the two
+knobs `--finish-glow` and `--chart-from`. Everything else (zinc neutrals, status
+colors, spacing, type) is shared, which keeps the look in any color.
+
+taylor's brand is the page's own ink: white on dark, black on light. It sets
+`--finish-glow: 0`, so a card and an overlay carry no brand light, and a fixed
+`--chart-from`, since white has no hue to turn. It also has a third block,
+`:root[data-mode="light"] [data-surface="dark"]`, that puts the white brand back
+inside a dark surface on a light page. In taylor `--fg-brand-text` equals the
+primary ink, so a state is never shown by brand color alone.
 
 ### Which brand token for which job
 
 | Token              | Use it for                                                      |
 | ------------------ | --------------------------------------------------------------- |
-| `--fg-brand`       | Fills, borders, glyphs (`◆`, `$`), and text 24px and up         |
-| `--fg-on-brand`    | Text on a `--fg-brand` fill: primary button, solid badge, status bar |
+| `--fg-brand`       | Fills, borders, glyphs, and text 24px and up                    |
+| `--fg-on-brand`    | Text on a `--fg-brand` fill: primary button, solid badge, checked box |
 | `--fg-brand-text`  | Brand-colored text below 24px, on the canvas, a card or the tint |
 | `--bg-surface-brand` | The brand tint behind soft badges and selected items          |
 
-`--fg-brand` as body text fails AA in 4 of 12 theme and mode combinations. The
+`--fg-brand` as body text fails AA in 4 of 14 theme and mode combinations. The
 inks cannot be derived from the brand, so every theme file sets them.
-`styles/themes.contrast.test.ts` measures every pair in all 12 combinations
+`styles/themes.contrast.test.ts` measures every pair in all 14 combinations
 straight from the CSS: 4.5 for `--fg-on-brand` on the brand, 4.5 for
 `--fg-brand-text` on canvas and card, 5.0 on the tint, and 4.5 for
 `--fg-muted` on canvas, card and overlay and for each `--status-*-fg` on the
@@ -256,7 +266,7 @@ Source of truth is `packages/registry/styles/globals.css`. Short version:
 
   /* brand accents, color-mix of --fg-brand, so they follow every theme */
   --border-brand: 35%;  --border-brand-strong: 60%;
-  --shadow-brand: 20%;  --fg-brand-glow: 50%;  --bg-spotlight: 15% (26% light);
+  --shadow-brand: 20%;  --fg-brand-glow: 50%;
 
   /* shadows */
   --shadow-card-hover, --shadow-lift-brand, --shadow-overlay
@@ -309,7 +319,7 @@ Published as `@entrepta/cli` with the bin `entrepta`.
 | ----------------------------- | ----------------------------------------------------- |
 | `npx entrepta init`           | Sets up the project, prompts for the theme            |
 | `npx entrepta init --theme=X` | Same, skipping the prompts, with one fixed theme      |
-| `--themes=single\|all`         | On `init`: one fixed theme, or all six at runtime     |
+| `--themes=single\|all`         | On `init`: one fixed theme, or all seven at runtime   |
 | `npx entrepta add <comp...>`  | Copies one or more components into the project        |
 | `npx entrepta add`            | Interactive mode, lists components to pick            |
 | `--overwrite`                 | Flag on both commands, allows replacing existing files |
@@ -363,7 +373,7 @@ Vite. Aliases are relative to it, and `add` writes each file under it.
 ### Foundations (CSS, not components)
 
 - `styles/globals.css`, reset, tokens, fonts, type utilities, light mode
-- `styles/themes/*.css`, the 6 presets
+- `styles/themes/*.css`, the 7 presets
 
 ### Primitives (33)
 
@@ -373,14 +383,14 @@ Vite. Aliases are relative to it, and `add` writes each file under it.
 | Badge     | no                              | solid/soft/outline across 6 colors, a dot or an `icon` |
 | Avatar    | no                              | image over server-rendered initials, presence dot, `AvatarGroup` with `+N`, overlapping a fifth so initials stay whole |
 | Input     | no                              | text, search, command (⌘K)               |
-| Card      | no                              | default/featured/terminal/data, sm/md/xl |
+| Card      | no                              | default/featured/data, sm/md/xl, `CardNote` |
 | Dialog    | `@radix-ui/react-dialog`        | base for modals                          |
 | Sheet     | `@radix-ui/react-dialog`        | from the edge, bottom below 640px, `dirty` asks before closing |
 | Popover   | `@radix-ui/react-popover`       | anchored panel on the overlay surface     |
 | Dropdown  | `@radix-ui/react-dropdown-menu` | on the overlay surface, highlighted row in the brand tint |
 | Tooltip   | `@radix-ui/react-tooltip`       | hover info on the overlay surface, a Kbd for shortcuts |
 | Kbd       | no                              | every keyboard hint, chip or plain, brand in a highlighted row |
-| Tabs      | `@radix-ui/react-tabs`          | in place (Tabs) or routes (TabNav), travelling underline, × on the active tab, icons that grow on hover, `variant="window"` is the title bar |
+| Tabs      | `@radix-ui/react-tabs`          | in place (Tabs) or routes (TabNav), travelling underline, icons that grow on hover, an optional `indicator` |
 | Checkbox  | no                              | native checkbox, drawn check, description, indeterminate |
 | Switch    | no                              | native checkbox with `role="switch"`     |
 | Textarea  | no                              | sans prose, mono placeholder, error state |
@@ -396,7 +406,7 @@ Vite. Aliases are relative to it, and `add` writes each file under it.
 | IconTile  | no                              | tinted square in the palette, brand or a status, corner badge; the Toast's tile |
 | Progress  | no                              | bar, steps or ring, fills once on screen with a lit head; `progressbar` with its value in words; a status only through `tone` |
 | Accordion | `@radix-ui/react-accordion`     | heading plus button, `trailing` in the name, `actions` outside it, height in CSS |
-| Stepper   | no                              | ordered list, `aria-current="step"`, state in words, ◆ on the current step; server safe |
+| Stepper   | no                              | ordered list, `aria-current="step"`, an icon or a number in each marker, a check when done, state in words; the vertical one draws its lines too; server safe |
 | ChoiceCard | no                             | cards that are labels of native radios or checkboxes, strong brand border and a drawn check, disabled with a reason |
 | SecretField | no                            | masked read-only secret, reveal toggle, copy through `use-copy` announced politely, expired with an action |
 | SwatchPicker | no                           | native radios over palette keys, each named after the hue it shows in the theme |
@@ -425,47 +435,40 @@ Vite. Aliases are relative to it, and `add` writes each file under it.
 | --------- | ---------- | -------------------------------------------------------- |
 | Chart     | `recharts` | ChartContainer: palette colors by name, tooltip in full values through Amount, legend from three series, View as table, mounts on screen; presets for grid, axes, cursor and projection. Recipes on its docs page |
 
-### Layout (8)
+### Layout (6)
 
 | Component     | Notes                                            |
 | ------------- | ------------------------------------------------ |
-| StatusBar     | bottom bar in the brand color, `fixed` or `static` |
 | TopNav        | top nav with logo, breadcrumb and menu           |
 | ThemeSwitcher | floating preset and dark/light button, uses `use-theme` |
 | ModeToggle    | dark/light only, inline or floating, uses `use-mode` |
-| Sidebar       | 56px rail with Tooltips, or `labeled` with groups, search, footer, `collapsible` and the choice stored; a ◆ travels to the active item, which it keeps in view. The docs sidebar is one |
+| Sidebar       | 56px rail with Tooltips, or `labeled` with groups, search, footer, `collapsible` and the choice stored; an `indicator` (a dot) travels to the active item, which it keeps in view. The docs sidebar is one |
 | MobileNav     | bottom bar, four destinations and More as a grid of IconTiles in a bottom Sheet, safe-area padding |
 | BentoGrid     | 1, 6 and 12 columns, each tile a `@container`, markup order, Reveal entrance |
-| PageOutline   | sticky scrollspy outline from 1100px, `scrollContainer` prop |
 
-### Content (5)
+### Content (2)
 
 | Component | Notes                                                    |
 | --------- | -------------------------------------------------------- |
 | CodeBlock | code with filename header, copy button, visible failure  |
-| Diamond   | the `◆` before a label, `aria-hidden`. No docs page: it comes with what uses it |
-| SectHead  | the `$ command` rule that opens a section                |
-| doc-parts | DocLabel, Section, DisplayH2, Prose, Em, Strong          |
 | ChatThread | messages by role, tool results in a Card, follows the bottom only when you are there, a reply announced once when done |
 
-Card, Dialog, Field, Tabs, PageOutline, Metric, Stepper and the chat thread import Diamond from `content/`. CardLabel, DialogLabel and Field take an `icon` that replaces the ◆ when the label names a kind of thing. The CLI rewrites
-an import between categories (`../content/diamond`) to a sibling (`./diamond`),
+CardLabel, DialogLabel, FieldLabel and Metric draw nothing before their text unless they get an `icon`. Sidebar and MobileNav take an `indicator`: a dot by default, any node, or `null`. Tabs and Stepper take one too, with none by default. The CLI rewrites
+an import between categories (`../content/code-block`) to a sibling (`./code-block`),
 and `registryDeps` makes sure the file is copied. A manifest test checks that
 every such import is covered.
 
-### Feedback (7)
+### Feedback (5)
 
 | Component      | Lib     | Notes                              |
 | -------------- | ------- | ---------------------------------- |
 | Toast          | `sonner`| unstyled sonner, status as an icon tile and a corner glow |
 | Skeleton       | no      | shimmer, respects reduced motion    |
 | CommandPalette | `cmdk`  | ⌘K, rows highlight like a dropdown, Kbd hints |
-| ChromeMessage  | no      | 404 and error screens, `headingLevel` inside a layout, server safe |
-| PageLoading    | no      | CSS only, extra lines only on a long wait |
-| EmptyState     | no      | what is missing and one action; fits in a Card |
+| EmptyState     | no      | what is missing and one action; `size="page"` is a 404 or an error screen, with an `illustration` and a `headingLevel`; server safe |
 | Alert          | no      | stays until dealt with; status in a tile and the glow; server safe |
 
-### Motion (6)
+### Motion (4)
 
 `motion` is a dependency of the items that animate through JS. The
 rest of the system does not need it, and ArrowLink is CSS only.
@@ -475,8 +478,6 @@ rest of the system does not need it, and ArrowLink is CSS only.
 | Reveal        | rise and fade in once on screen, `useReveal` for motion elements |
 | TypeIn        | text assembling piece by piece, full sentence always in the DOM |
 | RollingNumber | odometer digits, `useRollOnHover` spends the entrance delay once |
-| Spotlight     | brand glow trailing the cursor on a spring, moved by transform  |
-| SpotlightCard | a Card with the Spotlight, holds the hook so a server page can use it |
 | ArrowLink     | arrow that travels, brand rule that wipes in, `asChild` for routers |
 
 Rules they follow: `whileInView` with `once`, never `animate`; every one calls
@@ -594,7 +595,7 @@ pnpm dlx file:"$(pwd)/../entrepta/packages/cli" init
   A source test enforces it
 - Routes stay in the user's project. Single-link components take `asChild`,
   lists of links take `linkComponent`, and which item is current is an `active`
-  prop. doc-parts carries no entrance, so it does not pull in `motion`
+  prop
 - One manifest, in the registry. The CLI bundles it, the docs derive from it,
   and the home page's AGENTS.md configurator builds its cheat sheet from it
 - The docs keep a small client-safe index (`lib/component-index.ts`) and the
@@ -656,12 +657,23 @@ pnpm dlx file:"$(pwd)/../entrepta/packages/cli" init
 - The README's component table is generated from the docs index, and a test
   (`apps/docs/lib/readme.test.ts`) fails when a component or the count is
   missing from it
-- Docs pages share their parts: `DocNote` for the `//` aside under a subhead,
+- Docs pages share their parts: `DocNote` for the aside under a subhead,
   `NewComponentsGrid` for a release's new components, next to `DocPageHeader`
   and `DocSubhead`
 - A scroll box that scrolls sideways holds only its own axis
   (`overscroll-x-contain`). `overscroll-contain` on both axes swallowed the
-  wheel over a CodeBlock that had nothing to scroll down, and the page stopped
+  wheel over a CodeBlock that had nothing to scroll down, and the page stopped. ChatThread holds neither axis: a short thread
+  had nothing to scroll and still stopped the page
+  A sideways scroller (ContributionGrid) also sets `overflow-y-hidden`: a classic
+  scrollbar takes height, and the box then scrolled up and down by a few pixels
+- A theme's block for a dark surface in a light page (taylor's) has no rival in
+  the other themes, so `init --themes=all` writes its bare form as
+  `:root:not([data-theme])`. A bare `:root[data-mode="light"] [data-surface="dark"]`
+  for a default of taylor put its white brand into every other theme's code blocks
+- The Sidebar's indicator moves in CSS, so the Sidebar does not need `motion`. A
+  color that needs relative color sits in a variable and is applied under
+  `supports-[color:oklch(from_red_l_c_h)]`: set straight on `color`, a browser
+  without it falls to the inherited color, not to the class's
 - The docs sidebar is the registry's labeled Sidebar with a filter field, not
   a docs-only list. The Sidebar keeps the current item in view on its own, so
   a reload deep in a long list still shows where you are
@@ -677,8 +689,8 @@ pnpm dlx file:"$(pwd)/../entrepta/packages/cli" init
   treats the URL as input: a field id is letters, digits, `-` and `_`, the
   operator must belong to the field's type, the value must be one the field
   takes, and past twenty the rest is dropped
-- The title bar is a variant of the tabs (`variant="window"`), not a component
-  of its own: two tab rows that differ only by window dots were one component
+- The title bar with the window dots is gone. It was a variant of the tabs until
+  4.0, when the editor look left the registry
 - Overlays animate with plain CSS (`motion-fade`, `motion-pop` in
   `globals.css`), not an animation plugin, so a copied component needs nothing
   else. `:root` declares `color-scheme: dark` for native controls and autofill
@@ -768,6 +780,28 @@ pnpm dlx file:"$(pwd)/../entrepta/packages/cli" init
   rises a word at a time and the editor lands last. Only transform and opacity
   move, and reduced motion shows it all at once
 - Docs live at https://entrepta.vercel.app/
+- 4.0 takes the mark out of the defaults. The ◆ is not drawn by a label unless
+  it gets an `icon`; the current item of a nav is an `indicator`, a dot
+  (`NavIndicator` in `lib/nav.tsx`) unless you pass a node; the `//` is gone from
+  FieldError, CardNote and the palette. The `Diamond` component is gone; a project that
+  wants a mark passes its own as an `icon`
+- The editor look left the registry: StatusBar lives in
+  `apps/docs/components/editor/` and SectHead, doc-parts, PageOutline, the Card
+  `terminal` variant and the Tabs `window` variant are gone. `add` names each
+  removed item (`REMOVED` in the CLI) and links the migration guide
+- `lib/format.ts` is `lib/entrepta-format.ts`: the old name collided with files
+  projects already have, and `add amount` overwrote one
+- taylor is the monochrome theme. How much brand light a surface carries is one
+  token, `--finish-glow` (0 to 1), declared once on `:root` and read by
+  `--sheen-tint` and `--shadow-brand`, so a theme or a project sets it in one place
+  instead of overriding the glow in the light block and on a dark surface.
+  Every theme file declares it, or a default of taylor would leak its 0 into the
+  others. The chart palette turns from `--chart-from`, which is the brand unless
+  a theme names one
+- A dashed Card or a flat Dialog is not a registry variant. Every surface keeps
+  the finish; a site that wants other shapes builds them from props
+- The docs site keeps its editor look and tests its editor pieces in jsdom
+  (`apps/docs/test/setup.ts` reuses the registry's setup)
 
 ---
 
@@ -828,13 +862,15 @@ before anything else.
   reason in the diff; `upgrade-insecure-requests` and HSTS stay Vercel only.
 - **Releases publish from CI.** Trusted publishing with provenance, no npm token
   in the repo. Renaming `release.yml` breaks it until npmjs.com is updated.
+  Every action in the workflows is pinned to a commit SHA, with its version in a
+  comment: a moved tag must not run in a job that can mint an npm credential.
 
 ### Everything else
 
 **Reuse before invention.** Read the diff twice for this one. A component that
-hand-rolls a surface, a menu row, a keyboard hint or a `◆` is re-implementing
+hand-rolls a surface, a menu row or a keyboard hint is re-implementing
 something the registry has: the overlay classes in `lib/overlay.ts`, `Kbd`,
-`Diamond`, `Card`. In the docs, a page that hand-rolls a header or a section
+`Card`. In the docs, a page that hand-rolls a header or a section
 rule is re-implementing `DocPageHeader` and `DocSubhead`.
 
 **Standardization.** Reuse asks "does this already exist?". This asks the

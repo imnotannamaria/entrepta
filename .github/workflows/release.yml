@@ -10,37 +10,31 @@ concurrency:
   group: release
   cancel-in-progress: false
 
+# Every action is pinned to a commit, with its version beside it. A tag can be
+# moved, and the publish job can mint an npm credential: it must only run code
+# someone looked at. Raise a pin on purpose, to the commit of a release.
+
 jobs:
-  release:
-    name: Version or publish
+  # Everything that runs project code, dependencies and build tools lives here,
+  # with a read-only token and no way to mint an npm credential. The publish job
+  # below never builds: it takes the finished CLI from this job.
+  verify:
+    name: Typecheck, test and build
     runs-on: ubuntu-latest
     permissions:
-      contents: write
-      pull-requests: write
-      # Lets npm mint a short-lived publish credential for this job. Required
-      # by trusted publishing, which is why there is no NPM_TOKEN here.
-      id-token: write
+      contents: read
     steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
 
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4.3.0
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: 22
           cache: pnpm
-          registry-url: https://registry.npmjs.org
-
-      # npm trusted publishing needs npm >=11.5.1. The npm bundled with a
-      # given Node 22 build lags behind that, so pin it explicitly rather
-      # than gamble on whatever ships with the runner today.
-      - name: Update npm
-        run: npm install -g npm@latest
 
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
 
       - name: Typecheck
         run: pnpm typecheck
@@ -50,6 +44,56 @@ jobs:
 
       - name: Build
         run: pnpm build
+
+      - name: Keep the built CLI for the publish job
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: cli-dist
+          path: packages/cli/dist
+          if-no-files-found: error
+          retention-days: 1
+
+  release:
+    name: Version or publish
+    needs: verify
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      # Lets npm mint a short-lived publish credential for this job. Required
+      # by trusted publishing, which is why there is no NPM_TOKEN here. Only
+      # this job has it, and it runs no build or test code.
+      id-token: write
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          fetch-depth: 0
+
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4.3.0
+
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 22
+          cache: pnpm
+          registry-url: https://registry.npmjs.org
+
+      # npm trusted publishing needs npm >=11.5.1. The npm bundled with a
+      # given Node 22 build lags behind that, so install one that works rather
+      # than whatever is newest today: a publish credential should not meet
+      # code nobody has looked at. Raise this on purpose.
+      - name: Update npm
+        run: npm install -g npm@11.6.0
+
+      # No lifecycle scripts: nothing in the dependency tree runs here. The
+      # packages are packed from the sources and the CLI from the build above.
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile --ignore-scripts
+
+      - name: Get the built CLI
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: cli-dist
+          path: packages/cli/dist
 
       # With changesets pending, this opens or updates the "Version Packages"
       # PR. With none pending, which is what merging that PR looks like, it
@@ -61,7 +105,7 @@ jobs:
       # reliably do npm's OIDC trusted-publishing handshake. See the comment
       # at the top of the script for the pnpm issue this is tracked on.
       - name: Create version PR or publish
-        uses: changesets/action@v1
+        uses: changesets/action@a45c4d594aa4e2c509dc14a9f2b3b67ba3780d0d # v1.9.0
         with:
           version: pnpm changeset:version
           publish: bash scripts/npm-publish-ci.sh

@@ -184,7 +184,7 @@ import { RobotIcon } from "@phosphor-icons/react"
   },
   input: {
     description:
-      "Text field in 3 variants: plain, search (magnifier icon), and command ($ prefix + ⌘K hint). Supports error state and 3 sizes.",
+      "Text field in 3 variants: plain, search (magnifier icon), and command (a ⌘K hint). Supports error state and 3 sizes.",
     usage: `import { Input } from "@/components/entrepta/input"
 
 <Input placeholder="project-name" />
@@ -214,11 +214,10 @@ import { RobotIcon } from "@phosphor-icons/react"
   },
   card: {
     description:
-      "Surface container in 4 variants and 3 sizes. Near black with a border that lights up on hover. The header wraps instead of clipping.",
+      "Surface container in 3 variants and 3 sizes. Near black with a border that lights up on hover. The header wraps instead of clipping.",
     usage: `import {
   Card, CardHeader, CardLabel, CardMeta, CardTitle,
-  CardDescription, CardFooter, CardComment,
-  CardTerminalBar, CardTerminalBody,
+  CardDescription, CardFooter, CardNote,
 } from "@/components/entrepta/card"
 
 <Card>
@@ -232,21 +231,13 @@ import { RobotIcon } from "@phosphor-icons/react"
   <CardDescription>Two years of notes, back in plain text.</CardDescription>
   <CardFooter>
     <span>read →</span>
-    <CardComment>draft</CardComment>
+    <CardNote>draft</CardNote>
   </CardFooter>
-</Card>
-
-<Card variant="terminal">
-  <CardTerminalBar>
-    <CardLabel>install</CardLabel>
-    <CardMeta>v2.0.0</CardMeta>
-  </CardTerminalBar>
-  <CardTerminalBody>$ npx @entrepta/cli@latest init</CardTerminalBody>
 </Card>`,
     props: [
       {
         name: "variant",
-        type: '"default" | "featured" | "terminal" | "data"',
+        type: '"default" | "featured" | "data"',
         default: '"default"',
         description: "Background and border style",
       },
@@ -265,7 +256,7 @@ import { RobotIcon } from "@phosphor-icons/react"
       {
         name: "icon",
         type: "Icon | ReactElement",
-        description: "A Phosphor icon, or an icon element, in place of the ◆ (CardLabel only)",
+        description: "A Phosphor icon, or an icon element, in front of the label (CardLabel only)",
       },
     ],
   },
@@ -302,7 +293,7 @@ import { Button } from "@/components/entrepta/button"
         name: "icon",
         type: "Icon | ReactElement",
         description:
-          "In place of the ◆ (DialogLabel). From a server file, pass an element: icon={<RobotIcon />}",
+          "In front of the label (DialogLabel). From a server file, pass an element: icon={<RobotIcon />}",
       },
       {
         name: "open",
@@ -607,6 +598,13 @@ import { GearIcon, UserIcon } from "@phosphor-icons/react"
         default: "8",
         description: "Gap in px from trigger (TooltipContent)",
       },
+      {
+        name: "surface",
+        type: '"page" | "dark"',
+        default: '"page"',
+        description:
+          "page follows the mode of the page it opens over. dark stays near black in both modes (TooltipContent)",
+      },
     ],
   },
   kbd: {
@@ -631,22 +629,22 @@ import { GearIcon, UserIcon } from "@phosphor-icons/react"
   },
   tabs: {
     description:
-      'Editor file tabs. Tabs switches a panel in place; TabNav is a row of route links. One brand underline travels to the active tab, a Phosphor icon fills when active and grows on hover, and the active tab can show a close button. variant="window" makes either row the editor\'s title bar.',
+      "File tabs. Tabs switches a panel in place; TabNav is a row of route links. One brand underline travels to the active tab, a Phosphor icon fills when active and grows on hover.",
     usage: `import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/entrepta/tabs"
 import { FileTsxIcon, FileMdIcon, BracketsCurlyIcon } from "@phosphor-icons/react"
 
 <Tabs defaultValue="home">
   <TabsList>
-    <TabsTrigger value="home" icon={FileTsxIcon} onClose={() => {}}>home.tsx</TabsTrigger>
-    <TabsTrigger value="about" icon={FileMdIcon} onClose={() => {}}>about.md</TabsTrigger>
-    <TabsTrigger value="stack" icon={BracketsCurlyIcon} onClose={() => {}}>stack.json</TabsTrigger>
+    <TabsTrigger value="home" icon={FileTsxIcon}>home.tsx</TabsTrigger>
+    <TabsTrigger value="about" icon={FileMdIcon}>about.md</TabsTrigger>
+    <TabsTrigger value="stack" icon={BracketsCurlyIcon}>stack.json</TabsTrigger>
   </TabsList>
   <TabsContent value="home" className="p-5">…</TabsContent>
   <TabsContent value="about" className="p-5">…</TabsContent>
   <TabsContent value="stack" className="p-5">…</TabsContent>
 </Tabs>
 
-// Without an icon, the active tab gets a ◆
+// A tab with no icon has nothing in front of its label
 <TabsTrigger value="home">home.tsx</TabsTrigger>
 
 // Tabs that are routes, as the editor's title bar:
@@ -663,6 +661,12 @@ import { TabNav, TabNavLink } from "@/components/entrepta/tabs"
 </TabNav>`,
     props: [
       {
+        name: "indicator",
+        type: "ReactNode",
+        description:
+          "A glyph before the label of the active tab, for tabs with no icon. None by default (Tabs, TabNav)",
+      },
+      {
         name: "defaultValue",
         type: "string",
         description: "Initially active tab (uncontrolled)",
@@ -678,27 +682,14 @@ import { TabNav, TabNavLink } from "@/components/entrepta/tabs"
         description: "Callback when active tab changes",
       },
       {
-        name: "variant",
-        type: '"strip" | "window"',
-        default: '"strip"',
-        description: "window adds the window dots and shows end as meta (TabsList, TabNav)",
-      },
-      {
         name: "end",
         type: "ReactNode",
-        description:
-          "Pinned right, outside the scroller. Meta from 768px in a window (TabsList, TabNav)",
+        description: "Pinned right, outside the scroller, as muted meta (TabsList, TabNav)",
       },
       {
         name: "icon",
         type: "ReactNode | Icon",
-        description:
-          "An element, or a Phosphor icon that fills when active and grows on hover. Defaults to ◆",
-      },
-      {
-        name: "onClose",
-        type: "() => void",
-        description: "Shows a close button on the active tab",
+        description: "An element, or a Phosphor icon that fills when active and grows on hover",
       },
       {
         name: "active",
@@ -711,54 +702,6 @@ import { TabNav, TabNavLink } from "@/components/entrepta/tabs"
         type: "boolean",
         default: "false",
         description: "Renders your router's link (TabNavLink)",
-      },
-    ],
-  },
-  "status-bar": {
-    description:
-      "Bottom bar on the brand color, pinned to the viewport or placed in your layout. Left and right slots for status items. Hidden below 640px.",
-    usage: `import {
-  StatusBar, StatusBarItem, StatusBarSeparator,
-} from "@/components/entrepta/status-bar"
-
-// In root layout:
-<StatusBar
-  left={
-    <>
-      <StatusBarItem icon={<GitBranchIcon />}>main</StatusBarItem>
-      <StatusBarSeparator />
-      <StatusBarItem>0 errors</StatusBarItem>
-    </>
-  }
-  right={
-    <>
-      <StatusBarItem>TypeScript</StatusBarItem>
-      <StatusBarSeparator />
-      <StatusBarItem>UTF-8</StatusBarItem>
-    </>
-  }
-/>`,
-    props: [
-      {
-        name: "position",
-        type: '"fixed" | "static"',
-        default: '"fixed"',
-        description: "Pinned to the viewport, or a row in your own layout",
-      },
-      {
-        name: "left",
-        type: "ReactNode",
-        description: "Content for the left slot",
-      },
-      {
-        name: "right",
-        type: "ReactNode",
-        description: "Content for the right slot",
-      },
-      {
-        name: "icon",
-        type: "ReactNode",
-        description: "Optional icon prefix (StatusBarItem)",
       },
     ],
   },
@@ -1043,7 +986,7 @@ import { Delta } from "@/components/entrepta/delta"
       { name: "comparison", type: "ReactNode", description: "Against what: vs August" },
       { name: "hint", type: "ReactNode", description: "A short note in the muted ink" },
       { name: "trend", type: "ReactNode", description: "A small chart under the value, 40px tall" },
-      { name: "icon", type: "Icon | ReactElement", description: "In place of the ◆" },
+      { name: "icon", type: "Icon | ReactElement", description: "In front of the label" },
       { name: "size", type: '"md" | "lg"', default: '"md"', description: "24px or 40px value" },
       {
         name: "loading",
@@ -1156,19 +1099,29 @@ import { Delta } from "@/components/entrepta/delta"
   },
   stepper: {
     description:
-      "Where someone is in a flow of a few steps: onboarding, a setup, an import. An ordered list; the current step is marked for screen readers and takes the ◆, done steps a check, a step that needs attention a warning, and each step's state is read in words. The line to the next step fills when one is done. Below 640px a horizontal stepper keeps only the current label in view. Server safe.",
+      "Where someone is in a flow of a few steps: onboarding, a setup, an import. An ordered list; each marker shows the step's icon, or its number when it has none. The current step is marked for screen readers and gets the brand ring, done steps a check, a step that needs attention a warning, and each step's state is read in words. The line to the next step fills when one is done. Below 640px a horizontal stepper keeps only the current label in view. Server safe.",
     usage: `import { Stepper } from "@/components/entrepta/stepper"
 
 <Stepper
   steps={[
-    { id: "account", label: "Account" },
-    { id: "bank", label: "Connect a bank", description: "Read only" },
-    { id: "budget", label: "First budget" },
+    { id: "account", label: "Account", icon: <UserIcon /> },
+    { id: "bank", label: "Connect a bank", description: "Read only", icon: <BankIcon /> },
+    { id: "budget", label: "First budget", icon: <WalletIcon /> },
   ]}
   current="bank"
 />`,
     props: [
-      { name: "steps", type: "{ id, label, description? }[]", description: "In order" },
+      {
+        name: "indicator",
+        type: "ReactNode",
+        description: "Inside the current step's marker, in place of its icon or number",
+      },
+      {
+        name: "steps",
+        type: "{ id, label, description?, icon? }[]",
+        description:
+          "In order. icon is a Phosphor icon or an icon element for the marker, until the step is done",
+      },
       { name: "current", type: "string", description: "The id of the step in progress" },
       {
         name: "completed",
@@ -1419,7 +1372,7 @@ const [hidden, setHidden] = useState(false)
   },
   "chat-thread": {
     description:
-      "A conversation, drawn: your messages on the right on the brand tint, replies in full width with a ◆, tool results in a card, a caret while text streams. It follows the bottom only if you are there; scrolled up to read, you stay put and a button offers the latest. Screen readers hear each reply once, when it is done, and never the history. No model and no network: messages in, the thread out.",
+      "A conversation, drawn: your messages on the right on the brand tint, replies in full width, tool results in a card, a caret while text streams. It follows the bottom only if you are there; scrolled up to read, you stay put and a button offers the latest. Screen readers hear each reply once, when it is done, and never the history. No model and no network: messages in, the thread out.",
     usage: `import { ChatThread } from "@/components/entrepta/chat-thread"
 
 <ChatThread
@@ -1434,9 +1387,15 @@ const [hidden, setHidden] = useState(false)
     props: [
       {
         name: "messages",
-        type: "{ id, role, content, name?, time?, status?, error? }[]",
+        type: "{ id, role, content, name?, time?, status?, error?, avatar? }[]",
         description:
           'role is "user", "assistant", "tool" or "system"; status "streaming" or "error"',
+      },
+      {
+        name: "avatars",
+        type: "{ user?, assistant? }",
+        description:
+          "A node drawn before the name of each role, such as an Avatar. A message's own avatar wins",
       },
       { name: "empty", type: "ReactNode", description: "Before the first message" },
       {
@@ -1763,7 +1722,7 @@ const rows = entries.filter((row) => filters.every((f) => matchesFilter(row[f.fi
   },
   "empty-state": {
     description:
-      "A list or a widget with nothing in it. It fits inside a Card, where ChromeMessage takes the whole page. It says what is missing and offers the one thing to do: create or connect when there is nothing yet, clear the filters when a filter found nothing.",
+      'A list or a widget with nothing in it, or with size="page" a whole screen: a 404, an error with a retry, something that was removed. It says what is missing and offers the one thing to do: create or connect when there is nothing yet, clear the filters when a filter found nothing, go home when the page is gone. It has no hooks, so a server file such as not-found.tsx can render it.',
     usage: `import { EmptyState } from "@/components/entrepta/empty-state"
 
 <EmptyState
@@ -1777,7 +1736,19 @@ const rows = entries.filter((row) => filters.every((f) => matchesFilter(row[f.fi
   size="sm"
   title="Nothing for this filter"
   action={<Button variant="ghost" onClick={clear}>clear filters</Button>}
-/>`,
+/>
+
+// a screen of its own, in app/not-found.tsx
+<EmptyState
+  size="page"
+  illustration={<NotFoundArt />}
+  title="Page not found"
+  description="It moved, or it never was."
+  action={<ButtonLink href="/">go home</ButtonLink>}
+/>
+
+// inside a layout that already has an h1
+<EmptyState size="page" headingLevel={2} tone="error" icon={WarningIcon} title="Something broke" />`,
     props: [
       {
         name: "title",
@@ -1795,16 +1766,34 @@ const rows = entries.filter((row) => filters.every((f) => matchesFilter(row[f.fi
         description: "A tile above, and one action below",
       },
       {
+        name: "illustration",
+        type: "ReactNode",
+        description: "A drawing above the title, larger than an icon. It wins over icon",
+      },
+      {
         name: "size",
-        type: '"sm" | "md"',
+        type: '"sm" | "md" | "page"',
         default: '"md"',
-        description: "sm for a widget",
+        description:
+          "sm for a widget. page is a screen of its own: centered in the height it gets, an h1 in a bigger serif title",
+      },
+      {
+        name: "headingLevel",
+        type: "1 | 2 | 3 | 4",
+        description:
+          "Makes the title a heading. A page is an h1 unless you say otherwise; set 2 when the page already has one",
+      },
+      {
+        name: "tone",
+        type: '"neutral" | "error"',
+        default: '"neutral"',
+        description: "error for content that could not load",
       },
     ],
   },
   alert: {
     description:
-      "A notice that stays on the page until it is dealt with: partial data, a connection that needs attention, rows that could not be read. A Toast leaves on its own and a ChromeMessage takes the page. The status is in an icon tile and the corner glow, never a colored edge, and each has its own shape. An error is announced at once; the rest waits its turn.",
+      "A notice that stays on the page until it is dealt with: partial data, a connection that needs attention, rows that could not be read. A Toast leaves on its own and an EmptyState at page size takes the page. The status is in an icon tile and the corner glow, never a colored edge, and each has its own shape. An error is announced at once; the rest waits its turn.",
     usage: `import { Alert } from "@/components/entrepta/alert"
 
 <Alert tone="warning" title="Partial data" action={<ArrowLink href="/sync">sync now</ArrowLink>}>
@@ -1911,7 +1900,7 @@ toast("New update available", {
   },
   "command-palette": {
     description:
-      "⌘K command palette built on cmdk, on the overlay surface. Rows highlight like a dropdown: the brand tint, and the icon and shortcut turn brand. A ◆ on each group, and Kbd chips for esc and the footer hints. Use Command alone for an inline list, or inside CommandDialog. Wire the shortcut with useCommandPalette.",
+      "⌘K command palette built on cmdk, on the overlay surface. Rows highlight like a dropdown: the brand tint, and the icon and shortcut turn brand. Kbd chips for esc and the footer hints. Use Command alone for an inline list, or inside CommandDialog. Wire the shortcut with useCommandPalette.",
     usage: `import {
   Command, CommandDialog, CommandInput,
   CommandList, CommandGroup, CommandItem, CommandEmpty,
@@ -2078,7 +2067,7 @@ export function MyPalette() {
       "A multi-line field for prose. Sans for what you type, mono for the placeholder, and an error state.",
     usage: `import { Textarea } from "@/components/entrepta/textarea"
 
-<Textarea placeholder="// what are you building?" />
+<Textarea placeholder="what are you building?" />
 <Textarea state="error" rows={6} />`,
     props: [
       {
@@ -2092,7 +2081,7 @@ export function MyPalette() {
   },
   field: {
     description:
-      "Label, control, and error or hint in one column. It wires the control for screen readers: id, aria-describedby and aria-invalid.",
+      "Label, control, and error or hint in one column. It wires the control for screen readers: id, aria-describedby and aria-invalid. It does not validate. Check the values with a schema such as zod, put noValidate on the form, and pass the message as error. The star from required is only visual, so the control carries required, or the schema does.",
     usage: `import { Field } from "@/components/entrepta/field"
 import { Input } from "@/components/entrepta/input"
 import { Textarea } from "@/components/entrepta/textarea"
@@ -2103,18 +2092,27 @@ import { Textarea } from "@/components/entrepta/textarea"
 
 <Field id="message" label="message" error={errors.message}>
   <Textarea />
-</Field>`,
+</Field>
+
+// validate with a schema, not the browser
+const schema = z.object({ email: z.string().email("enter a valid email") })
+
+<form noValidate onSubmit={onSubmit}>
+  <Field id="email" label="email" required error={errors.email}>
+    <Input type="email" name="email" required />
+  </Field>
+</form>`,
     props: [
       {
         name: "id",
         type: "string",
         description: "The control's id. Error and hint ids derive from it",
       },
-      { name: "label", type: "ReactNode", description: "Mono label with a ◆" },
+      { name: "label", type: "ReactNode", description: "Mono label" },
       {
         name: "icon",
         type: "Icon | ReactElement",
-        description: "A Phosphor icon, or an icon element, in place of the label's ◆",
+        description: "A Phosphor icon, or an icon element, in front of the label",
       },
       {
         name: "required",
@@ -2323,6 +2321,19 @@ const [price, setPrice] = useState<number | null>(null)
         description: "28 or 36px tall",
       },
       {
+        name: "shape",
+        type: '"default" | "pill"',
+        default: '"default"',
+        description: "pill rounds the track and the indicator all the way",
+      },
+      {
+        name: "truncate",
+        type: "boolean",
+        default: "true",
+        description:
+          "A long label is cut with an ellipsis. Off, every segment grows to the longest word",
+      },
+      {
         name: "aria-label",
         type: "string",
         description: "The group's name. Or aria-labelledby",
@@ -2517,7 +2528,7 @@ const [type, setType] = useUrlFilter("type", TYPES)
   },
   sidebar: {
     description:
-      "The app's main navigation. As a rail it is 56px of icons, each with a Tooltip. Labeled it is 240px, with group titles, a search slot and a footer, and collapsible folds it back to the rail and remembers the choice. The current item sits on a raised row with its icon filled, and a ◆ travels to it. It keeps the current item in view: centered when the page loads, brought in when it changes, scrolling the list and never the page. A labeled sidebar can be text only; the rail shows a letter for an item with no icon. These docs are built on it, search field included. Routing stays yours: pass active and your link component. Below 768px, use MobileNav.",
+      "The app's main navigation. As a rail it is 56px of icons, each with a Tooltip. Labeled it is 240px, with group titles, a search slot and a footer, and collapsible folds it back to the rail and remembers the choice. The current item sits on a raised row with its icon filled, and an indicator, a dot you can swap, travels to it. It keeps the current item in view: centered when the page loads, brought in when it changes, scrolling the list and never the page. A labeled sidebar can be text only; the rail shows a letter for an item with no icon. These docs are built on it, search field included. Routing stays yours: pass active and your link component. Below 768px, use MobileNav.",
     usage: `import { Sidebar } from "@/components/entrepta/sidebar"
 import { ChartBarIcon, HouseLineIcon, KeyIcon } from "@phosphor-icons/react"
 import Link from "next/link"
@@ -2548,6 +2559,12 @@ const GROUPS = [
 // the rail: icons only
 <Sidebar items={ITEMS} active={current} linkComponent={Link} />`,
     props: [
+      {
+        name: "indicator",
+        type: "ReactNode | null",
+        default: "a dot",
+        description: "What travels to the current item, outside its left edge. null hides it",
+      },
       {
         name: "variant",
         type: '"rail" | "labeled"',
@@ -2605,7 +2622,7 @@ const GROUPS = [
   },
   "mobile-nav": {
     description:
-      "The app's navigation below 768px, where a Sidebar does not fit. Up to four destinations sit in reach of the thumb; the rest, and anything else you pass, go in a More sheet from the bottom, as a grid of icon tiles. The current one fills its icon and a ◆ travels along the top edge, to More when the page is inside it. It clears the home indicator on phones that have one. Name each destination in one short word: five share the width of a phone.",
+      "The app's navigation below 768px, where a Sidebar does not fit. Up to four destinations sit in reach of the thumb; the rest, and anything else you pass, go in a More sheet from the bottom, as a grid of icon tiles. The current one fills its icon and an indicator, a dot you can swap, travels along the top edge, to More when the page is inside it. It clears the home indicator on phones that have one. Name each destination in one short word: five share the width of a phone.",
     usage: `import { MobileNav } from "@/components/entrepta/mobile-nav"
 import Link from "next/link"
 
@@ -2620,6 +2637,12 @@ import Link from "next/link"
 // leave room for it at the bottom of the page
 <main className="pb-[calc(56px+env(safe-area-inset-bottom))] md:pb-0">`,
     props: [
+      {
+        name: "indicator",
+        type: "ReactNode | null",
+        default: "a dot",
+        description: "What travels along the top edge to the current item. null hides it",
+      },
       {
         name: "items",
         type: "{ id, label, href, icon }[]",
@@ -2655,14 +2678,14 @@ import Link from "next/link"
     description:
       "A dashboard of tiles on the 12 column grid: one column on a phone, 6 from 640px, 12 from 1024px. Each tile is a size container, so what is inside responds to the tile's width, not the window's. The tiles keep the order of the markup, which is the order they are read in, and enter one after another, the stagger capped.",
     usage: `import { BentoGrid, BentoItem } from "@/components/entrepta/bento-grid"
-import { SpotlightCard } from "@/components/entrepta/spotlight-card"
+import { Card } from "@/components/entrepta/card"
 
 <BentoGrid>
   <BentoItem colSpan={{ sm: 6, lg: 8 }} rowSpan={{ lg: 2 }}>
-    <SpotlightCard>…</SpotlightCard>
+    <Card>…</Card>
   </BentoItem>
   <BentoItem colSpan={{ sm: 3, lg: 4 }}>
-    <SpotlightCard><Metric … /></SpotlightCard>
+    <Card><Metric … /></Card>
   </BentoItem>
 </BentoGrid>`,
     props: [
@@ -2689,158 +2712,6 @@ import { SpotlightCard } from "@/components/entrepta/spotlight-card"
         default: "120px",
         description: "The shortest row",
       },
-    ],
-  },
-  "page-outline": {
-    description:
-      "A sticky outline of the page's sections that follows the scroll. Shown from 1100px up. Works with the window or your own scroll container.",
-    usage: `import { PageOutline } from "@/components/entrepta/page-outline"
-
-<PageOutline
-  file="about.md"
-  items={[
-    { id: "intro", label: "intro", level: 1 },
-    { id: "career", label: "career", level: 2, count: 4 },
-  ]}
-  scrollContainer={() => document.querySelector("main")}
-/>`,
-    props: [
-      {
-        name: "items",
-        type: "{ id, label, level, count? }[]",
-        description: "One per section id on the page",
-      },
-      { name: "file", type: "string", description: "Name in the chip at the top" },
-      { name: "footer", type: "ReactNode", description: "Lines under the list" },
-      {
-        name: "scrollContainer",
-        type: "() => HTMLElement | null",
-        description: "What scrolls, when it is not the window",
-      },
-      {
-        name: "offset",
-        type: "number",
-        default: "24",
-        description: "Space above a heading after a jump",
-      },
-    ],
-  },
-  "sect-head": {
-    description:
-      "The $ command rule that opens a section, over a dashed line with meta on the right. The row wraps and each half stays whole.",
-    usage: `import { SectHead } from "@/components/entrepta/sect-head"
-
-<SectHead id="work" cmd="ls ./work --featured" meta="4 projects" />`,
-    props: [
-      { name: "cmd", type: "string", description: "The command after the $" },
-      { name: "meta", type: "ReactNode", description: "Right side" },
-      { name: "id", type: "string", description: "Put on the heading, for anchors" },
-      { name: "as", type: '"h2" | "h3" | "span"', default: '"h2"', description: "Heading level" },
-    ],
-  },
-  "doc-parts": {
-    description:
-      "The pieces a long-form page is written in: DocLabel, Section, DisplayH2, Prose, Em and Strong. No entrance built in, so they never pull in motion.",
-    usage: `import { DisplayH2, DocLabel, Em, Prose, Section, Strong } from "@/components/entrepta/doc-parts"
-
-<Section id="about" variant="first">
-  <DocLabel>about</DocLabel>
-  <DisplayH2>Engineer, <em>mostly</em>.</DisplayH2>
-  <Prose>
-    I build <Strong>design systems</Strong> and ship them as <Em>copy-paste</Em> code.
-  </Prose>
-</Section>`,
-    props: [
-      {
-        name: "level",
-        type: '"#" | "##"',
-        default: '"#"',
-        description: "Markdown prefix (DocLabel)",
-      },
-      {
-        name: "variant",
-        type: '"default" | "first"',
-        default: '"default"',
-        description: "The first section has no rule above it (Section)",
-      },
-    ],
-  },
-  "chrome-message": {
-    description:
-      "The surface for 404 and error screens: a $ command, an output line, a serif title, a note and an action. No hooks, so a server component can render it.",
-    usage: `import { ChromeMessage } from "@/components/entrepta/chrome-message"
-
-// app/not-found.tsx
-export default function NotFound() {
-  return (
-    <ChromeMessage
-      command="cat ./this-page"
-      output="cat: ./this-page: No such file or directory"
-      title="Page not found."
-      note="it moved, or it never existed"
-      action={<Link href="/">go home</Link>}
-    />
-  )
-}
-
-// app/error.tsx: an error boundary is a client component
-"use client"
-
-export default function Error({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
-  return (
-    <ChromeMessage
-      accent="error"
-      command="npm run page"
-      title="Something broke."
-      note="the error was logged"
-      action={<Button onClick={reset}>try again</Button>}
-    >
-      {error.digest && <p className="font-mono text-mono-sm">digest: {error.digest}</p>}
-    </ChromeMessage>
-  )
-}`,
-    props: [
-      { name: "command", type: "string", description: "The command after the $" },
-      {
-        name: "accent",
-        type: '"brand" | "error"',
-        default: '"brand"',
-        description: "Color of the $",
-      },
-      { name: "output", type: "string", description: "A terminal output line" },
-      { name: "title", type: "ReactNode", description: "The serif heading" },
-      {
-        name: "headingLevel",
-        type: "1 | 2 | 3",
-        default: "1",
-        description:
-          "2 when the page around it already has an h1, such as an error inside a layout",
-      },
-      { name: "note", type: "ReactNode", description: "Mono line under the title" },
-      { name: "action", type: "ReactNode", description: "A way back" },
-    ],
-  },
-  "page-loading": {
-    description:
-      "A loading screen in CSS alone, so it moves before JavaScript runs. The command types itself, and the list of what is loading appears only if the wait passes 2.2s.",
-    usage: `import { PageLoading } from "@/components/entrepta/page-loading"
-
-// app/log/loading.tsx
-export default function Loading() {
-  return (
-    <PageLoading
-      command="ls ./log"
-      crumb="log"
-      label="the log"
-      steps={["reading entries", "reading covers"]}
-    />
-  )
-}`,
-    props: [
-      { name: "command", type: "string", description: "The command the loaded page prints" },
-      { name: "crumb", type: "string", description: "Breadcrumb after ~" },
-      { name: "steps", type: "string[]", description: "Shown only on a long wait" },
-      { name: "label", type: "string", description: "Announced once: Loading {label}" },
     ],
   },
   reveal: {
@@ -2922,49 +2793,6 @@ function Stat() {
         description: "Entrance delay. 0 after interaction",
       },
       { name: "height", type: "number", default: "34", description: "Height of one digit in px" },
-    ],
-  },
-  spotlight: {
-    description:
-      "A brand glow that trails the cursor across a card on a spring. It moves by transform, so it never repaints the card.",
-    usage: `import { Spotlight, useSpotlight } from "@/components/entrepta/spotlight"
-
-function GlowCard() {
-  const { onMouseMove, spotlight } = useSpotlight(560)
-  return (
-    <Card onMouseMove={onMouseMove}>
-      <Spotlight {...spotlight} />
-      …
-    </Card>
-  )
-}`,
-    props: [
-      {
-        name: "useSpotlight(size?)",
-        type: "{ onMouseMove, spotlight }",
-        description: "Size is the glow diameter in px, 560 by default",
-      },
-    ],
-  },
-  "spotlight-card": {
-    description:
-      "A Card with the brand glow trailing the cursor, on a spring. It takes everything a Card takes and holds the hook itself, so a server page can use it as is. Its children keep the Card's layout and gap, over the glow. For tiles that should feel alive: a dashboard's numbers, a call to action.",
-    usage: `import { SpotlightCard } from "@/components/entrepta/spotlight-card"
-
-<SpotlightCard>
-  <Metric label="balance" value={<Amount value={balance} />} />
-</SpotlightCard>
-
-<SpotlightCard variant="featured" size="xl" glow={800}>
-  <CardTitle>Start <em>building.</em></CardTitle>
-</SpotlightCard>`,
-    props: [
-      { name: "glow", type: "number", default: "640", description: "Diameter of the glow in px" },
-      {
-        name: "variant, size",
-        type: "Card's",
-        description: "default, featured, terminal or data; sm, md or xl",
-      },
     ],
   },
   "arrow-link": {

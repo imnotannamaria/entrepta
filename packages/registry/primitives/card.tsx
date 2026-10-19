@@ -1,6 +1,5 @@
 import { type VariantProps, cva } from "class-variance-authority";
 import * as React from "react";
-import { Diamond } from "../content/diamond";
 import { type IconProp, IconSlot } from "../lib/icon";
 import { cn } from "../lib/utils";
 
@@ -25,12 +24,6 @@ const cardVariants = cva(
           "hover:border-[var(--border-brand-strong)] hover:-translate-y-0.5",
           "hover:shadow-[var(--shadow-lift-brand)]",
         ],
-        // Stays dark in both modes. It sets its own text color too: color
-        // inherits as a computed value, so a light page's ink would leak in.
-        terminal: [
-          "sheen bg-[var(--bg-overlay)] border-[var(--border-subtle)] shadow-[var(--shadow-card)]",
-          "text-[var(--fg-primary)] font-mono",
-        ],
         data: [
           // glass: the card color at 80%, blurred, with the corner glow
           "sheen bg-[color-mix(in_srgb,var(--bg-card)_80%,transparent)] border-[var(--border-subtle)] backdrop-blur-sm shadow-[var(--shadow-card)]",
@@ -43,10 +36,6 @@ const cardVariants = cva(
         xl: "rounded-[var(--radius-xl)] pt-14 px-12 pb-12 gap-4 max-sm:pt-8 max-sm:px-5 max-sm:pb-7",
       },
     },
-    compoundVariants: [
-      // the terminal's bar and body carry their own padding
-      { variant: "terminal", className: "p-0 max-sm:p-0 gap-0" },
-    ],
     defaultVariants: {
       variant: "default",
       size: "md",
@@ -61,12 +50,7 @@ export interface CardProps
 /** Clips its content with no ellipsis, so long strings belong in parts that wrap. */
 const Card = React.forwardRef<HTMLDivElement, CardProps>(
   ({ className, variant, size, ...props }, ref) => (
-    <div
-      ref={ref}
-      data-surface={variant === "terminal" ? "dark" : undefined}
-      className={cn(cardVariants({ variant, size }), className)}
-      {...props}
-    />
+    <div ref={ref} className={cn(cardVariants({ variant, size }), className)} {...props} />
   )
 );
 Card.displayName = "Card";
@@ -98,7 +82,7 @@ interface CardLabelProps extends React.HTMLAttributes<HTMLElement> {
   icon?: IconProp;
 }
 
-/** Editor-style label with the ◆ prefix, or an icon. Use inside CardHeader. */
+/** A small mono label, with an icon in front when you pass one. Use inside CardHeader. */
 const CardLabel = React.forwardRef<HTMLElement, CardLabelProps>(
   ({ className, children, as: Tag = "span", icon: LabelIcon, ...props }, ref) => (
     <Tag
@@ -112,9 +96,7 @@ const CardLabel = React.forwardRef<HTMLElement, CardLabelProps>(
     >
       {LabelIcon ? (
         <IconSlot icon={LabelIcon} size={12} className="text-[var(--fg-brand)]" />
-      ) : (
-        <Diamond size={10} />
-      )}
+      ) : null}
       {children}
     </Tag>
   )
@@ -183,48 +165,11 @@ const CardFooter = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDiv
 );
 CardFooter.displayName = "CardFooter";
 
-/** Inline code comment with a dimmed // prefix. Use inside CardFooter. */
-const CardComment = React.forwardRef<HTMLSpanElement, React.HTMLAttributes<HTMLSpanElement>>(
-  ({ className, children, ...props }, ref) => (
-    <span ref={ref} className={cn(className)} {...props}>
-      <span aria-hidden className="opacity-60">
-        {"// "}
-      </span>
-      {children}
-    </span>
-  )
+/** A short note at the end of a card, in the footer's own ink. Use inside CardFooter. */
+const CardNote = React.forwardRef<HTMLSpanElement, React.HTMLAttributes<HTMLSpanElement>>(
+  ({ className, ...props }, ref) => <span ref={ref} className={cn(className)} {...props} />
 );
-CardComment.displayName = "CardComment";
-
-/** Terminal-style header bar with bg + border-bottom. Use as first child of Card variant="terminal". */
-const CardTerminalBar = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
-  ({ className, ...props }, ref) => (
-    <div
-      ref={ref}
-      className={cn(
-        "flex items-center justify-between gap-3 px-4 py-3",
-        // no band of its own, like the CodeBlock bar: the card's glow shows through
-        "border-b border-[var(--border-subtle)]",
-        "font-mono text-mono-sm uppercase tracking-[0.08em] text-[var(--fg-secondary)]",
-        className
-      )}
-      {...props}
-    />
-  )
-);
-CardTerminalBar.displayName = "CardTerminalBar";
-
-/** Body wrapper for Card variant="terminal" (provides inner padding). */
-const CardTerminalBody = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
-  ({ className, ...props }, ref) => (
-    <div
-      ref={ref}
-      className={cn("p-4 font-mono text-mono-md leading-relaxed", className)}
-      {...props}
-    />
-  )
-);
-CardTerminalBody.displayName = "CardTerminalBody";
+CardNote.displayName = "CardNote";
 
 export {
   Card,
@@ -236,8 +181,6 @@ export {
   CardDescription,
   CardContent,
   CardFooter,
-  CardComment,
-  CardTerminalBar,
-  CardTerminalBody,
+  CardNote,
 };
 export type { CardLabelProps };

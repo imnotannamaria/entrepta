@@ -18,6 +18,6 @@ export default async function Image({ params }: { params: Promise<{ slug: string
     eyebrow: `components · ${entry?.section.toLowerCase() ?? ""}`,
     title: entry?.title ?? slug,
     description: description ? `${description}.` : "",
-    command: `$ npx @entrepta/cli@latest add ${slug}`,
+    command: `npx @entrepta/cli@latest add ${slug}`,
   });
 }

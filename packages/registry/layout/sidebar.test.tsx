@@ -26,6 +26,28 @@ describe("Sidebar", () => {
     expect(marks[0]).toHaveAttribute("aria-hidden", "true");
   });
 
+  it("travels a dot by default, takes any node as the indicator, and null hides it", () => {
+    const { container, rerender } = render(<Sidebar items={ITEMS} active="blog" />);
+    expect(container.querySelector("[data-sidebar-mark] [data-nav-indicator]")).not.toBeNull();
+    rerender(<Sidebar items={ITEMS} active="blog" indicator={<b data-mine>◆</b>} />);
+    expect(container.querySelector("[data-sidebar-mark] [data-mine]")).not.toBeNull();
+    expect(container.querySelector("[data-nav-indicator]")).toBeNull();
+    rerender(<Sidebar items={ITEMS} active="blog" indicator={null} />);
+    expect(container.querySelector("[data-sidebar-mark]")).toBeNull();
+  });
+
+  it("keeps the indicator inside the scrolling list, so it moves with the list", () => {
+    const { container } = render(<Sidebar items={ITEMS} active="blog" />);
+    const nav = container.querySelector("nav");
+    expect(nav).toHaveClass("overflow-y-auto", "relative");
+    expect(nav?.querySelector("[data-sidebar-mark]")).not.toBeNull();
+  });
+
+  it("has no indicator when no item is current", () => {
+    const { container } = render(<Sidebar items={ITEMS} />);
+    expect(container.querySelector("[data-sidebar-mark]")).toBeNull();
+  });
+
   it("renders through your router's link component", () => {
     const RouterLink = React.forwardRef<
       HTMLAnchorElement,

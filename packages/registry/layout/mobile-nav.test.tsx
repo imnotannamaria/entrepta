@@ -32,10 +32,20 @@ describe("MobileNav", () => {
     expect(screen.queryByRole("button", { name: "More" })).not.toBeInTheDocument();
   });
 
-  it("marks the current page with one diamond", () => {
+  it("marks the current page with one dot", () => {
     const { container } = render(<MobileNav items={FOUR} active="charts" />);
     expect(screen.getByRole("link", { name: "Reports" })).toHaveAttribute("aria-current", "page");
     expect(container.querySelectorAll("[data-mobile-nav-mark]")).toHaveLength(1);
+    expect(container.querySelector("[data-mobile-nav-mark] [data-nav-indicator]")).not.toBeNull();
+  });
+
+  it("takes any node as the indicator, and null hides it", () => {
+    const { container, rerender } = render(
+      <MobileNav items={FOUR} active="charts" indicator={<b data-mine>◆</b>} />
+    );
+    expect(container.querySelector("[data-mobile-nav-mark] [data-mine]")).not.toBeNull();
+    rerender(<MobileNav items={FOUR} active="charts" indicator={null} />);
+    expect(container.querySelector("[data-mobile-nav-mark]")).toBeNull();
   });
 
   it("puts the fifth destination and on in a More sheet", async () => {

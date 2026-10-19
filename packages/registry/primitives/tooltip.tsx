@@ -17,15 +17,24 @@ TooltipProvider.displayName = "TooltipProvider";
 const Tooltip = TooltipPrimitive.Root;
 const TooltipTrigger = TooltipPrimitive.Trigger;
 
+interface TooltipContentProps
+  extends React.ComponentPropsWithoutRef<typeof TooltipPrimitive.Content> {
+  /**
+   * `page`, the default, follows the mode of the page it opens over, like every
+   * overlay. `dark` stays near black in both modes.
+   */
+  surface?: "dark" | "page";
+}
+
 const TooltipContent = React.forwardRef<
   React.ComponentRef<typeof TooltipPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof TooltipPrimitive.Content>
->(({ className, sideOffset = 8, ...props }, ref) => (
+  TooltipContentProps
+>(({ className, sideOffset = 8, surface = "page", ...props }, ref) => (
   <TooltipPrimitive.Portal>
     <TooltipPrimitive.Content
       ref={ref}
       sideOffset={sideOffset}
-      data-surface="dark"
+      data-surface={surface === "dark" ? "dark" : undefined}
       className={cn(
         OVERLAY_SURFACE,
         "z-50 inline-flex items-center gap-2 whitespace-nowrap",
@@ -44,3 +53,4 @@ const TooltipShortcut = (props: React.HTMLAttributes<HTMLElement>) => <Kbd {...p
 TooltipShortcut.displayName = "TooltipShortcut";
 
 export { Tooltip, TooltipContent, TooltipProvider, TooltipShortcut, TooltipTrigger };
+export type { TooltipContentProps };

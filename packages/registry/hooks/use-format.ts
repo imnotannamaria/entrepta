@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { DEFAULT_LOCALE, DEFAULT_TIME_ZONE, type FormatOptions } from "../lib/format";
+import { DEFAULT_LOCALE, DEFAULT_TIME_ZONE, type FormatOptions } from "../lib/entrepta-format";
 
 interface FormatDefaults {
   locale: string;

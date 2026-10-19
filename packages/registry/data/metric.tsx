@@ -1,6 +1,5 @@
 import { cva } from "class-variance-authority";
 import * as React from "react";
-import { Diamond } from "../content/diamond";
 import { Skeleton } from "../feedback/skeleton";
 import { type IconProp, IconSlot } from "../lib/icon";
 import { cn } from "../lib/utils";
@@ -74,11 +73,7 @@ const Metric = React.forwardRef<HTMLDListElement, MetricProps>(
       {...props}
     >
       <dt className="flex min-w-0 items-center gap-1.5 font-mono text-mono-sm uppercase tracking-[0.08em] text-[var(--fg-secondary)]">
-        {icon ? (
-          <IconSlot icon={icon} size={12} className="text-[var(--fg-brand)]" />
-        ) : (
-          <Diamond size={10} />
-        )}
+        {icon ? <IconSlot icon={icon} size={12} className="text-[var(--fg-brand)]" /> : null}
         <span className="min-w-0 truncate">{label}</span>
       </dt>
       <dd className="m-0 flex min-w-0 flex-col gap-1.5">

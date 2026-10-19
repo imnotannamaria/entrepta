@@ -5,8 +5,8 @@ import { Textarea } from "./textarea";
 
 describe("Textarea", () => {
   it("holds prose in sans, with a mono placeholder", () => {
-    render(<Textarea placeholder="// your message" />);
-    const textarea = screen.getByPlaceholderText("// your message");
+    render(<Textarea placeholder="your message" />);
+    const textarea = screen.getByPlaceholderText("your message");
     expect(textarea).toHaveClass("font-sans", "text-body-md", "placeholder:font-mono");
     expect(textarea).toHaveAttribute("rows", "4");
   });

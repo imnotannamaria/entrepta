@@ -5,7 +5,7 @@ import { motion, useReducedMotion } from "motion/react";
 import * as React from "react";
 import { type IconProp, IconSlot } from "../lib/icon";
 import { EASE_OUT } from "../lib/motion";
-import { NAV_ROW_CURRENT, NAV_ROW_IDLE } from "../lib/nav";
+import { NAV_ROW_CURRENT, NAV_ROW_IDLE, NavIndicator } from "../lib/nav";
 import { cn } from "../lib/utils";
 import { IconTile } from "../primitives/icon-tile";
 import { Sheet, SheetContent, SheetTrigger } from "../primitives/sheet";
@@ -32,6 +32,8 @@ export interface MobileNavProps extends React.HTMLAttributes<HTMLElement> {
   position?: "fixed" | "static";
   /** Your router's link, such as next/link. Defaults to `<a>`. */
   linkComponent?: LinkComponent;
+  /** What travels along the top edge to the current item. A dot by default; `null` hides it. */
+  indicator?: React.ReactNode;
   /** Names the nav landmark. */
   label?: string;
   labels?: { more?: string };
@@ -44,7 +46,7 @@ const IN_BAR = 4;
 /**
  * The app's navigation below 768px, where a Sidebar does not fit: up to four
  * destinations in reach of the thumb, and More for the rest in a bottom
- * Sheet. The current one fills its icon and a ◆ travels along the top edge,
+ * Sheet. The current one fills its icon and an indicator travels along the top edge,
  * away from the icon, since some glyphs are not symmetric. It clears
  * the home indicator on phones that have one. Hide it from `md` up.
  */
@@ -58,6 +60,7 @@ const MobileNav = React.forwardRef<HTMLElement, MobileNavProps>(
       linkComponent: LinkComp = "a",
       label = "Primary",
       labels,
+      indicator,
       container,
       className,
       ...props
@@ -74,18 +77,18 @@ const MobileNav = React.forwardRef<HTMLElement, MobileNavProps>(
     const moreActive = overflow.some((item) => item.id === active);
     const moreLabel = labels?.more ?? "More";
 
-    const mark = (
-      <motion.span
-        layoutId={layoutId}
-        aria-hidden
-        data-mobile-nav-mark
-        transition={reduce ? { duration: 0 } : { duration: 0.32, ease: EASE_OUT }}
-        className="pointer-events-none absolute top-[-0.5px] left-1/2 -translate-1/2 leading-none text-[var(--fg-brand)]"
-        style={{ fontSize: 8 }}
-      >
-        ◆
-      </motion.span>
-    );
+    const mark =
+      indicator === null ? null : (
+        <motion.span
+          layoutId={layoutId}
+          aria-hidden
+          data-mobile-nav-mark
+          transition={reduce ? { duration: 0 } : { duration: 0.32, ease: EASE_OUT }}
+          className="pointer-events-none absolute top-[-0.5px] left-1/2 flex -translate-1/2 leading-none text-[var(--fg-brand)]"
+        >
+          {indicator ?? <NavIndicator />}
+        </motion.span>
+      );
 
     const cell = cn(
       "group focus-ring relative flex h-14 w-full flex-col items-center justify-center gap-1 rounded-[var(--radius-md)]",

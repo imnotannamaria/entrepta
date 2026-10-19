@@ -78,14 +78,6 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         {variant === "search" && (
           <MagnifyingGlassIcon aria-hidden className="shrink-0 text-[var(--fg-muted)]" size={14} />
         )}
-        {variant === "command" && (
-          <span
-            aria-hidden
-            className="shrink-0 font-mono text-[var(--fg-brand)] leading-none select-none"
-          >
-            $
-          </span>
-        )}
         <input
           ref={ref}
           aria-invalid={state === "error" || undefined}

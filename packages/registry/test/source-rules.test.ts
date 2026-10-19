@@ -88,6 +88,20 @@ describe("source rules", () => {
     expect(offenders).toEqual([]);
   });
 
+  // The ◆ and the // are the old brand mark. A component draws neither on its
+  // own. An app passes whatever mark it wants as an icon.
+  it("draws no ◆ and no // glyph by default", () => {
+    const registry = FILES.filter(
+      ({ file }) => file.startsWith("packages/registry/") && !/registry\/manifest\.ts$/.test(file)
+    );
+    const code = (source: string) =>
+      source.replace(/\/\*[\s\S]*?\*\//g, "").replace(/^\s*\/\/.*$/gm, "");
+    const offenders = registry
+      .filter(({ source }) => /◆|["'`]\/\/ /.test(code(source)))
+      .map(({ file }) => file);
+    expect(offenders).toEqual([]);
+  });
+
   // The registry is source people run without reading it.
   it("has no eval, no network calls and no raw HTML beyond the theme scripts", () => {
     const rules: [string, RegExp][] = [

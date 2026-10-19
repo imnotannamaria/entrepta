@@ -3,7 +3,7 @@
    ============================================================ */
 
 /* --fg-on-brand is the ink for text on a --fg-brand fill (a primary button,
-   a solid badge, the status bar). --fg-brand-text is the ink for brand-colored
+   a solid badge, a checked box). --fg-brand-text is the ink for brand-colored
    text on the canvas, a card or the --bg-surface-brand tint. Neither can be
    derived from the brand, so each theme sets both. All of them clear WCAG AA
    in both modes. Measure again after changing any value here. */
@@ -15,6 +15,8 @@
   --fg-brand-text: #f178a0;
   --bg-surface-brand: rgba(232, 90, 138, 0.14);
   --ring: rgba(232, 90, 138, 0.45);
+  --finish-glow: 1;
+  --chart-from: var(--fg-brand);
 }
 
 :root[data-mode="light"] {

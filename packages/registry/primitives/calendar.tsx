@@ -10,7 +10,7 @@ import {
   type DateRange as PickerRange,
 } from "react-day-picker";
 import { useFormat } from "../hooks/use-format";
-import { fromLocalDate, toLocalDate, today as todayIn, weekStart } from "../lib/format";
+import { fromLocalDate, toLocalDate, today as todayIn, weekStart } from "../lib/entrepta-format";
 import { cn } from "../lib/utils";
 
 /** A range of plain dates. `end` is missing while the second day is still to be picked. */

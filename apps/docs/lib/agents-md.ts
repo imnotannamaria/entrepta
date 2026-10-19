@@ -128,7 +128,7 @@ export function buildAgentsMd(options: AgentsOptions): string {
 
   sections.push(`# entrepta in this project
 
-This project uses [entrepta](https://entrepta.vercel.app), a dark-first design system with an editor metaphor: tabs, a command palette, a status bar, shell prompts, serif italic next to mono. Its components are copied into the repo as source, so they are this project's code: read them, and edit them when a change calls for it.
+This project uses [entrepta](https://entrepta.vercel.app), a dark-first design system: near black surfaces, mono for UI, serif italic for titles, and no mark of its own. Its components are copied into the repo as source, so they are this project's code: read them, and edit them when a change calls for it.
 
 Built for ${FRAMEWORK_LABELS[options.framework]} with the ${theme.label} theme.`);
 
@@ -170,7 +170,7 @@ ${bullets([
 
 ${bullets([
   options.themes === "all"
-    ? `All six themes are installed. \`${theme.id}\` is the default; switch with \`data-theme\` on \`<html>\` or the ThemeSwitcher.`
+    ? `All seven themes are installed. \`${theme.id}\` is the default; switch with \`data-theme\` on \`<html>\` or the ThemeSwitcher.`
     : `One theme, \`${theme.id}\`, is installed. Changing it means running \`init\` again.`,
   `Default mode: ${options.mode}. Light mode is \`data-mode="light"\` on \`<html>\`; dark is the absence of it.`,
   "To switch from your own code, wrap the attribute change in `transitionTheme` from the `use-mode` hook. It holds every transition so the page changes at once, not component by component.",
@@ -236,7 +236,7 @@ ${bullets([
 
 ${bullets([
   "Every ink clears WCAG AA on what it sits on, in every theme and mode. Keep each token on the surface it was measured for.",
-  "Glyphs such as ◆, $ and // carry `aria-hidden`.",
+  "Decorative glyphs carry `aria-hidden`.",
   "Links get a brand outline on focus. A bare button with no focus style of its own takes the `.focus-ring` class.",
   'Put `<a href="#main" class="skip-link">skip to content</a>` first in `<body>`.',
   ...(names.includes("field")
@@ -250,7 +250,7 @@ ${bullets([
 
 ${bullets([
   "Money is an integer of minor units (123456 is 1,234.56), shown with Amount and typed with MoneyInput. Never a float.",
-  "A day is a plain `YYYY-MM-DD` string, never a Date. Set the locale, currency and time zone once with `FormatProvider`; `lib/format` has the helpers.",
+  "A day is a plain `YYYY-MM-DD` string, never a Date. Set the locale, currency and time zone once with `FormatProvider`; `lib/entrepta-format` has the helpers.",
   "A change is a Delta: an arrow, a sign and words. No percentage from a base of zero or below; a missing value is a dash with its reason, never a zero.",
   "Series colors are palette keys, `chart-1` to `chart-8`, stored as the key, never a hex. The status colors appear in a chart only for results above and below zero, with a sign.",
   "A data component takes `loading` and draws its skeleton in its final shape. Empty and error are composed where the words are known: EmptyState, Alert, a Badge for stale data. A failed load is never an empty list.",
@@ -283,7 +283,7 @@ ${sheet.join("\n\n")}${also}`);
 ${bullets([
   "Every docs page has a Markdown version at the same URL plus `.md`. Read that instead of the HTML. The component index is https://entrepta.vercel.app/docs/components.md, and each component has its own, such as https://entrepta.vercel.app/docs/components/button.md.",
   "https://entrepta.vercel.app/llms.txt lists every page. https://entrepta.vercel.app/llms-full.txt is all of them in one file.",
-  "Upgrading from 1.x: https://entrepta.vercel.app/docs/migrating-to-v2.md, step by step, with every new component. From 2.x to 3 nothing breaks: https://entrepta.vercel.app/docs/whats-new-in-v3.md.",
+  "Upgrading from 1.x: https://entrepta.vercel.app/docs/migrating-to-v2.md, step by step, with every new component. From 2.x to 3 nothing breaks: https://entrepta.vercel.app/docs/whats-new-in-v3.md. From 3.x to 4: https://entrepta.vercel.app/docs/migrating-to-v4.md, which says how to bring the old look back.",
   "Money, dates, series colors and data states: https://entrepta.vercel.app/docs/foundations/data.md.",
 ])}`);
 

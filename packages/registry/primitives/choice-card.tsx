@@ -1,5 +1,4 @@
 import * as React from "react";
-import { Diamond } from "../content/diamond";
 import type { IconProp } from "../lib/icon";
 import { cn } from "../lib/utils";
 import { cardVariants } from "./card";
@@ -89,7 +88,6 @@ const ChoiceCard = React.forwardRef<HTMLFieldSetElement, ChoiceCardProps>((props
   return (
     <fieldset ref={ref} className={cn("m-0 min-w-0 border-0 p-0", className)} {...rest}>
       <legend className={cn(hideLegend ? "sr-only" : cn(fieldLabelClass, "mb-3 p-0"))}>
-        {hideLegend ? null : <Diamond />}
         {legend}
       </legend>
       <div className={cn("grid grid-cols-1 gap-3", COLUMNS[columns])}>

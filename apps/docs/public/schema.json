@@ -8,11 +8,11 @@
   "properties": {
     "$schema": { "type": "string" },
     "theme": {
-      "description": "The preset init wrote. The default when all six are installed.",
-      "enum": ["entrepta", "blossom", "marmalade", "julia", "ivy", "bosco"]
+      "description": "The preset init wrote. The default when every theme is installed.",
+      "enum": ["entrepta", "blossom", "marmalade", "julia", "ivy", "bosco", "taylor"]
     },
     "themes": {
-      "description": "single writes one fixed theme; all writes the six, switchable with data-theme.",
+      "description": "single writes one fixed theme; all writes every theme, switchable with data-theme.",
       "enum": ["single", "all"]
     },
     "srcDir": {

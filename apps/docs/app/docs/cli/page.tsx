@@ -4,11 +4,11 @@ import { CLI_COMMANDS } from "@/lib/docs-data";
 import { CodeBlock } from "@entrepta/registry/content/code-block";
 import {
   Card,
-  CardComment,
   CardFooter,
   CardHeader,
   CardLabel,
   CardMeta,
+  CardNote,
   CardTitle,
 } from "@entrepta/registry/primitives/card";
 import type { Metadata } from "next";
@@ -105,7 +105,7 @@ npx @entrepta/cli@latest add button`}
                 </div>
               )}
               <CardFooter>
-                <CardComment>copy paste, no install</CardComment>
+                <CardNote>copy paste, no install</CardNote>
               </CardFooter>
             </Card>
           ))}

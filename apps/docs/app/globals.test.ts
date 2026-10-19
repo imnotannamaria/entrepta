@@ -4,7 +4,7 @@ import { describe, expect, it } from "vitest";
 
 /**
  * apps/docs/app/globals.css is a copy of the registry's, plus two things only
- * the docs need: a second @source for the registry files, and the six themes
+ * the docs need: a second @source for the registry files, and the themes
  * at the end, switchable at runtime. Anything else that differs is drift.
  */
 
@@ -32,7 +32,12 @@ describe("docs globals.css", () => {
       for (const [selector, scoped] of [
         [":root {", `:root[data-theme="${id}"] {`],
         [':root[data-mode="light"] {', `:root[data-theme="${id}"][data-mode="light"] {`],
+        [
+          ':root[data-mode="light"] [data-surface="dark"] {',
+          `:root[data-theme="${id}"][data-mode="light"] [data-surface="dark"] {`,
+        ],
       ]) {
+        if (!css.includes(selector)) continue;
         const body = css.slice(css.indexOf(selector), css.indexOf("}", css.indexOf(selector)));
         const docsStart = themes.indexOf(scoped);
         const docsBody = themes.slice(docsStart, themes.indexOf("}", docsStart));

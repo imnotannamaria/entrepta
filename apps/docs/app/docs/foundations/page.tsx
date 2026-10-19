@@ -12,12 +12,12 @@ import { RULES } from "@/lib/rules";
 import { buttonVariants } from "@entrepta/registry/primitives/button-variants";
 import {
   Card,
-  CardComment,
   CardDescription,
   CardFooter,
   CardHeader,
   CardLabel,
   CardMeta,
+  CardNote,
   CardTitle,
 } from "@entrepta/registry/primitives/card";
 import type { Metadata } from "next";
@@ -69,7 +69,7 @@ export default function FoundationsIndex() {
               <CardTitle>{p.title}</CardTitle>
               <CardDescription>{p.summary}</CardDescription>
               <CardFooter>
-                <CardComment>{COUNTS[p.slug]}</CardComment>
+                <CardNote>{COUNTS[p.slug]}</CardNote>
                 <span className="text-[var(--fg-brand)] transition-transform group-hover:translate-x-0.5">
                   →
                 </span>

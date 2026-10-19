@@ -71,7 +71,7 @@ export const FOUNDATION_PAGES = [
     summary:
       "Inks measured in every theme, focus, the skip link, reduced motion, screen reader patterns.",
     description:
-      "Six themes, two modes, and one rule: every ink clears WCAG AA on what it sits on. A test measures it on every change, and this page measures it live.",
+      "Seven themes, two modes, and one rule: every ink clears WCAG AA on what it sits on. A test measures it on every change, and this page measures it live.",
   },
   {
     slug: "rules",
@@ -156,7 +156,6 @@ export const BRAND: Swatch[] = [
   { token: "--border-brand", note: "35% of the brand" },
   { token: "--border-brand-strong", note: "60%, a featured card on hover" },
   { token: "--fg-brand-glow", note: "50%, pulses and glows" },
-  { token: "--bg-spotlight", note: "the cursor glow, stronger in light mode" },
 ];
 
 export const CHART: Swatch[] = [
@@ -325,7 +324,6 @@ export const MOTION_CSS: Swatch[] = [
   { token: ".type-fade", note: "a line that fades up after --type-delay" },
   { token: ".type-caret", note: "a blinking block caret" },
   { token: ".type-late", note: "a line that only shows when a wait runs long" },
-  { token: ".load-dot-1 to 3", note: "an ellipsis" },
   { token: ".skeleton-sweep", note: "one band of light over a grid of skeletons" },
   {
     token: ".motion-fade, .motion-pop, .motion-sheet",
@@ -364,9 +362,9 @@ export const A11Y_SECTIONS: {
   {
     id: "inks",
     title: "Inks",
-    count: "12 combinations",
+    count: "14 combinations",
     inks: true,
-    note: "No single ink reads on all six brands, so each theme sets two: --fg-on-brand for text on a brand fill, and --fg-brand-text for brand-colored text. The contrast test in the registry checks every pair below in all twelve theme and mode combinations. Switch the theme to see the numbers move.",
+    note: "No single ink reads on all seven brands, so each theme sets two: --fg-on-brand for text on a brand fill, and --fg-brand-text for brand-colored text. The contrast test in the registry checks every pair below in all twelve theme and mode combinations. Switch the theme to see the numbers move.",
   },
   {
     id: "focus",
@@ -407,7 +405,7 @@ export const A11Y_SECTIONS: {
     points: [
       {
         lead: "Glyphs are hidden.",
-        text: "◆, $, // and the window dots carry aria-hidden, so a label is read as its words.",
+        text: "Decorative glyphs carry aria-hidden, so a label is read as its words.",
       },
       {
         lead: "Animated text keeps a real copy.",

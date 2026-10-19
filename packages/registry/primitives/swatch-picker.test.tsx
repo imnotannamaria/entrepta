@@ -57,4 +57,32 @@ describe("SwatchPicker", () => {
     const swatch = container.querySelector<HTMLElement>('[data-swatch="ivy"]');
     expect(swatch?.style.getPropertyValue("--swatch")).toBe("#35a365");
   });
+
+  it("gives every swatch an edge, so a near black or near white color shows on any surface", () => {
+    const { container } = render(
+      <SwatchPicker
+        legend="Theme"
+        options={[{ value: "taylor", color: "#09090b", name: "taylor" }]}
+      />
+    );
+    const swatch = container.querySelector<HTMLElement>('[data-swatch="taylor"]');
+    expect(swatch?.className).toContain("shadow-[inset_0_0_0_1px");
+  });
+
+  it("draws the check in the canvas ink, and in the swatch's contrast ink only where relative color works", () => {
+    const { container } = render(
+      <SwatchPicker
+        legend="Theme"
+        value="taylor"
+        onValueChange={() => {}}
+        options={[{ value: "taylor", color: "#09090b", name: "taylor" }]}
+      />
+    );
+    const check = container.querySelector("[data-swatch] svg") as SVGElement;
+    expect(check.getAttribute("class")).toContain("text-[var(--bg-canvas)]");
+    expect(check.getAttribute("class")).toContain(
+      "supports-[color:oklch(from_red_l_c_h)]:text-[var(--check-ink)]"
+    );
+    expect(check.style.color).toBe("");
+  });
 });

@@ -19,6 +19,13 @@ interface SegmentedControlProps
   defaultValue?: string;
   onValueChange?: (value: string) => void;
   size?: "sm" | "md";
+  /** `pill` rounds the track and the indicator all the way. */
+  shape?: "default" | "pill";
+  /**
+   * A label longer than its segment is cut with an ellipsis. Turn it off and
+   * every segment grows to the longest word instead, so the control gets wider.
+   */
+  truncate?: boolean;
   /** The radio group's name. One is generated if left out. */
   name?: string;
   disabled?: boolean;
@@ -27,6 +34,14 @@ interface SegmentedControlProps
 const SIZE = {
   sm: { box: "h-7", segment: "px-2 text-mono-xs", icon: 12 },
   md: { box: "h-9", segment: "px-3 text-mono-sm", icon: 14 },
+} as const;
+
+const SHAPE = {
+  default: {
+    track: "rounded-[var(--radius-md)]",
+    inner: "rounded-[calc(var(--radius-md)-3px)]",
+  },
+  pill: { track: "rounded-full", inner: "rounded-full" },
 } as const;
 
 /**
@@ -43,6 +58,8 @@ const SegmentedControl = React.forwardRef<HTMLDivElement, SegmentedControlProps>
       defaultValue,
       onValueChange,
       size = "md",
+      shape = "default",
+      truncate = true,
       name: nameProp,
       disabled,
       className,
@@ -69,7 +86,8 @@ const SegmentedControl = React.forwardRef<HTMLDivElement, SegmentedControlProps>
         aria-disabled={disabled || undefined}
         className={cn(
           "relative inline-grid grid-flow-col auto-cols-fr items-stretch",
-          "rounded-[var(--radius-md)] border border-[var(--border-subtle)] bg-[var(--bg-field)] p-0.5",
+          "border border-[var(--border-subtle)] bg-[var(--bg-field)] p-0.5",
+          SHAPE[shape].track,
           SIZE[size].box,
           disabled && "pointer-events-none opacity-40",
           className
@@ -89,7 +107,8 @@ const SegmentedControl = React.forwardRef<HTMLDivElement, SegmentedControlProps>
           className={cn(
             "absolute inset-y-0.5 left-0.5 w-[calc((100%-4px)/var(--segments))]",
             "translate-x-[calc(var(--active)*100%)]",
-            "rounded-[calc(var(--radius-md)-3px)] border border-[var(--border-brand)] bg-[var(--bg-surface-brand)]",
+            "border border-[var(--border-brand)] bg-[var(--bg-surface-brand)]",
+            SHAPE[shape].inner,
             "transition-[translate,opacity] duration-[var(--motion-base)] ease-[var(--ease-out)]",
             active === -1 && "opacity-0"
           )}
@@ -98,8 +117,10 @@ const SegmentedControl = React.forwardRef<HTMLDivElement, SegmentedControlProps>
           <label
             key={option.value}
             className={cn(
-              "relative z-[1] flex min-w-0 cursor-pointer select-none items-center justify-center gap-1.5",
-              "rounded-[calc(var(--radius-md)-3px)] font-mono whitespace-nowrap",
+              "relative z-[1] flex cursor-pointer select-none items-center justify-center gap-1.5",
+              "font-mono whitespace-nowrap",
+              truncate && "min-w-0",
+              SHAPE[shape].inner,
               "text-[var(--fg-secondary)] transition-colors duration-[var(--motion-fast)]",
               "hover:text-[var(--fg-primary)] has-[:checked]:text-[var(--fg-primary)]",
               "has-[:focus-visible]:shadow-[0_0_0_2px_var(--fg-brand)]",
@@ -117,7 +138,7 @@ const SegmentedControl = React.forwardRef<HTMLDivElement, SegmentedControlProps>
               className="sr-only"
             />
             {option.icon ? <IconSlot icon={option.icon} size={SIZE[size].icon} /> : null}
-            <span className="truncate">{option.label}</span>
+            <span className={cn(truncate && "truncate")}>{option.label}</span>
           </label>
         ))}
       </div>

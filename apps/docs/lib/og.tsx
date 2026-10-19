@@ -5,7 +5,7 @@ import { ImageResponse } from "next/og";
 
 /**
  * The share image every page gets, 1200 by 630: the logo, an eyebrow, a serif
- * title with an italic brand phrase, a line of text and the status bar. The
+ * title with an italic brand phrase, a line of text and a footer line. The
  * fonts are vendored TTFs (satori reads neither woff2 nor Google's CSS), so the
  * images build with no network.
  */
@@ -21,10 +21,16 @@ const INK = {
   border: "#27272A",
   brand: "#7C6BFF",
   brandText: "#9B8EFF",
-  onBrand: "#09090B",
 };
 
 const FONT_DIR = path.join(process.cwd(), "assets", "fonts");
+const MARK = path.join(process.cwd(), "assets", "brand", "entrepta.png");
+
+/** The mark as a data URL: satori draws an img from one with no network. */
+async function markUrl() {
+  const data = await fs.readFile(MARK);
+  return `data:image/png;base64,${data.toString("base64")}`;
+}
 
 async function fonts() {
   const read = (file: string) => fs.readFile(path.join(FONT_DIR, file));
@@ -49,12 +55,13 @@ export type OgContent = {
   /** The italic, brand-colored part that follows it. */
   emphasis?: string;
   description: string;
-  /** Left of the status bar, such as a command. */
+  /** Left of the footer line, such as the install command. */
   command: string;
 };
 
 export async function ogImage({ eyebrow, title, emphasis, description, command }: OgContent) {
-  const long = title.length + (emphasis?.length ?? 0) > 34;
+  const long = title.length + (emphasis?.length ?? 0) > 26;
+  const mark = await markUrl();
   return new ImageResponse(
     <div
       style={{
@@ -72,37 +79,9 @@ export async function ogImage({ eyebrow, title, emphasis, description, command }
       <div style={{ display: "flex", flexDirection: "column", flex: 1, padding: "64px 72px 0" }}>
         {/* logo */}
         <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-          <div style={{ display: "flex", flexDirection: "column", gap: 6, position: "relative" }}>
-            <div style={{ width: 34, height: 5, borderRadius: 2, background: INK.primary }} />
-            <div
-              style={{
-                width: 22,
-                height: 5,
-                borderRadius: 2,
-                background: INK.primary,
-                opacity: 0.85,
-              }}
-            />
-            <div
-              style={{
-                width: 34,
-                height: 5,
-                borderRadius: 2,
-                background: INK.primary,
-                opacity: 0.55,
-              }}
-            />
-          </div>
-          <div
-            style={{
-              width: 8,
-              height: 8,
-              borderRadius: 999,
-              background: INK.brand,
-              marginLeft: -4,
-            }}
-          />
-          <div style={{ display: "flex", fontFamily: "Newsreader", fontSize: 40, marginLeft: 6 }}>
+          {/* biome-ignore lint/a11y/useAltText: satori renders a picture, not a page */}
+          <img src={mark} width={72} height={72} />
+          <div style={{ display: "flex", fontFamily: "Newsreader", fontSize: 40, marginLeft: 0 }}>
             entrepta<span style={{ color: INK.brand }}>.</span>
           </div>
           <div
@@ -164,7 +143,7 @@ export async function ogImage({ eyebrow, title, emphasis, description, command }
         </div>
       </div>
 
-      {/* status bar */}
+      {/* footer: the command and the address */}
       <div
         style={{
           display: "flex",
@@ -172,10 +151,9 @@ export async function ogImage({ eyebrow, title, emphasis, description, command }
           justifyContent: "space-between",
           height: 56,
           padding: "0 72px",
-          background: INK.brand,
-          color: INK.onBrand,
+          borderTop: `1px solid ${INK.border}`,
+          color: INK.muted,
           fontSize: 20,
-          fontWeight: 500,
         }}
       >
         <span>{command}</span>

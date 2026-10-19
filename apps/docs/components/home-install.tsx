@@ -78,7 +78,7 @@ export function HomeInstall({ steps }: Props) {
             <div className="pl-8 flex items-center gap-2 text-mono-sm">
               <span className="size-1.5 rounded-full bg-[var(--status-success)] inline-block" />
               <span className="text-[var(--status-success-fg)]">ready</span>
-              <span className="text-[var(--fg-muted)]">{"// run npm run dev"}</span>
+              <span className="text-[var(--fg-muted)]">run npm run dev</span>
             </div>
           </div>
         </CodeBlock>
@@ -132,7 +132,6 @@ export function HomeInstall({ steps }: Props) {
                 code={GLOBALS_CSS_SNIPPET}
               />
               <p className="font-mono text-mono-sm text-[var(--fg-muted)] leading-relaxed m-0">
-                <span className="text-[var(--fg-brand)]">{"// "}</span>
                 Copy the full file from{" "}
                 <code className="text-[var(--fg-secondary)]">
                   packages/registry/styles/globals.css
@@ -176,7 +175,6 @@ export function HomeInstall({ steps }: Props) {
                 Copy components individually from the docs.
               </p>
               <p className="font-mono text-mono-sm text-[var(--fg-muted)] leading-relaxed m-0">
-                <span className="text-[var(--fg-brand)]">{"// "}</span>
                 Each component page has a{" "}
                 <strong className="text-[var(--fg-secondary)]">Manual</strong> tab with its own
                 dependency list and copy-pasteable source.

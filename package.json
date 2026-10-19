@@ -31,5 +31,13 @@
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx,json,css}": "biome check --write --no-errors-on-unmatched"
+  },
+  "pnpm": {
+    "overrides": {
+      "postcss@<8.5.23": "^8.5.23",
+      "nanoid@<3.3.18": "^3.3.18",
+      "source-map-js@<1.2.2": "^1.2.2",
+      "sharp@<0.35.5": "^0.35.5"
+    }
   }
 }

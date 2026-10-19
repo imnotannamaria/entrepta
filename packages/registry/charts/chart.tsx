@@ -6,7 +6,7 @@ import { Legend, ResponsiveContainer, Tooltip } from "recharts";
 import { Amount } from "../data/amount";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../data/table";
 import { useFormat } from "../hooks/use-format";
-import { formatMoney, formatNumber } from "../lib/format";
+import { formatMoney, formatNumber } from "../lib/entrepta-format";
 import { OVERLAY_SURFACE } from "../lib/overlay";
 import { type PaletteKey, paletteColor } from "../lib/palette";
 import { cn } from "../lib/utils";

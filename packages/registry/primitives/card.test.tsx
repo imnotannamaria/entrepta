@@ -2,15 +2,13 @@ import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import {
   Card,
-  CardComment,
   CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
   CardLabel,
   CardMeta,
-  CardTerminalBar,
-  CardTerminalBody,
+  CardNote,
   CardTitle,
 } from "./card";
 
@@ -48,24 +46,6 @@ describe("Card", () => {
       "hover:-translate-y-0.5",
       "hover:shadow-[var(--shadow-lift-brand)]"
     );
-  });
-
-  it("terminal stays dark, sets its own ink and drops the padding", () => {
-    const { container } = render(<Card variant="terminal">terminal</Card>);
-    const card = container.firstChild as HTMLElement;
-    expect(card).toHaveAttribute("data-surface", "dark");
-    expect(card).toHaveClass("p-0", "max-sm:p-0", "text-[var(--fg-primary)]");
-    expect(card).not.toHaveClass("p-6");
-  });
-
-  it("terminal drops the padding at every size", () => {
-    const { container } = render(
-      <Card variant="terminal" size="xl">
-        terminal
-      </Card>
-    );
-    expect(container.firstChild).toHaveClass("p-0");
-    expect(container.firstChild).not.toHaveClass("pt-14");
   });
 
   it("uses md by default: 24px padding, 20px below 640px", () => {
@@ -124,10 +104,10 @@ describe("Card sub-components", () => {
     expect(screen.getByText("june 8, 2026 · 3 min")).toHaveClass("whitespace-nowrap");
   });
 
-  it("CardLabel renders a hidden diamond before children", () => {
+  it("CardLabel renders its children and no glyph of its own", () => {
     render(<CardLabel>resend-ecommerce</CardLabel>);
     expect(screen.getByText("resend-ecommerce")).toBeInTheDocument();
-    expect(screen.getByText("◆")).toHaveAttribute("aria-hidden", "true");
+    expect(screen.queryByText("◆")).not.toBeInTheDocument();
   });
 
   it("CardLabel can be a heading without heading styles", () => {
@@ -171,25 +151,10 @@ describe("Card sub-components", () => {
     expect(container.firstChild).toHaveClass("mt-auto", "flex-wrap");
   });
 
-  it("CardComment renders // prefix before children", () => {
-    const { container } = render(<CardComment>shipped 2025-11</CardComment>);
+  it("CardNote is the text alone, with no prefix of its own", () => {
+    const { container } = render(<CardNote>shipped 2025-11</CardNote>);
     expect(screen.getByText("shipped 2025-11")).toBeInTheDocument();
-    const prefix = container.querySelector("[aria-hidden]");
-    expect(prefix?.textContent).toBe("// ");
-    expect(prefix).toHaveClass("opacity-60");
-  });
-
-  it("CardTerminalBar has a bottom border and no band over the card's glow", () => {
-    const { container } = render(<CardTerminalBar>~/project</CardTerminalBar>);
-    expect(screen.getByText("~/project")).toBeInTheDocument();
-    expect(container.firstChild).toHaveClass("border-b");
-    expect((container.firstChild as HTMLElement).className).not.toMatch(/bg-\[/);
-  });
-
-  it("CardTerminalBody applies padding and mono font", () => {
-    const { container } = render(<CardTerminalBody>$ pnpm dev</CardTerminalBody>);
-    expect(screen.getByText("$ pnpm dev")).toBeInTheDocument();
-    expect(container.firstChild).toHaveClass("font-mono");
-    expect(container.firstChild).toHaveClass("p-4");
+    expect(container.textContent).toBe("shipped 2025-11");
+    expect(container.querySelector("[aria-hidden]")).toBeNull();
   });
 });

@@ -1,8 +1,8 @@
 "use client";
 
+import { StatusBar, StatusBarItem, StatusBarSeparator } from "@/components/editor/status-bar";
 import { LINKS } from "@/lib/links";
 import { VERSION_LABEL } from "@/lib/version";
-import { StatusBar, StatusBarItem, StatusBarSeparator } from "@entrepta/registry/layout/status-bar";
 import { usePathname } from "next/navigation";
 
 /**

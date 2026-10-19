@@ -132,10 +132,38 @@ describe("add", () => {
       expect(cva.length).toBe(1);
     });
 
+    it("says a removed item was removed, names the guide, and writes nothing", async () => {
+      await expect(add(["status-bar"], { overwrite: false })).rejects.toThrow("exit:1");
+      expect(log.error).toHaveBeenCalledWith(expect.stringContaining("removed in 4.0.0"));
+      expect(log.error).toHaveBeenCalledWith(expect.stringContaining("/docs/migrating-to-v4"));
+      expect(mockWriteFile).not.toHaveBeenCalled();
+    });
+
+    it("does not install the rest when one name was removed", async () => {
+      await expect(add(["button", "chrome-message"], { overwrite: false })).rejects.toThrow(
+        "exit:1"
+      );
+      expect(mockWriteFile).not.toHaveBeenCalled();
+    });
+
     it("exits with code 1 and lists available components on unknown name", async () => {
       await expect(add(["nonexistent"], { overwrite: false })).rejects.toThrow("exit:1");
       expect(log.error).toHaveBeenCalledWith(expect.stringContaining("nonexistent"));
       expect(mockWriteFile).not.toHaveBeenCalled();
+    });
+
+    it("copies the renamed format file to lib/entrepta-format.ts and leaves lib/format.ts alone", async () => {
+      mockReadFile.mockImplementation(async (p) =>
+        String(p).endsWith("amount.tsx")
+          ? (`import { formatMoney } from "../lib/entrepta-format";\n` as never)
+          : (BUTTON_SOURCE as never)
+      );
+      await add(["amount"], { overwrite: false });
+      const written = mockWriteFile.mock.calls.map(([file]) => String(file));
+      expect(written.some((file) => file.endsWith("lib/entrepta-format.ts"))).toBe(true);
+      expect(written.some((file) => file.endsWith("lib/format.ts"))).toBe(false);
+      const amount = mockWriteFile.mock.calls.find(([file]) => String(file).endsWith("amount.tsx"));
+      expect(String(amount?.[1])).toContain('from "@/lib/entrepta-format"');
     });
 
     it("refuses an alias that climbs out of the project, before asking anything", async () => {
@@ -171,22 +199,22 @@ describe("add", () => {
       expect(hookDest).toContain("hooks/");
     });
 
-    it("copies diamond next to card and points card's import at it", async () => {
+    it("copies skeleton next to metric and points metric's import at it", async () => {
       mockReadFile.mockImplementation(async (p) =>
-        String(p).endsWith("card.tsx")
-          ? (`import { Diamond } from "../content/diamond";\n` as never)
+        String(p).endsWith("metric.tsx")
+          ? (`import { Skeleton } from "../primitives/skeleton";\n` as never)
           : (BUTTON_SOURCE as never)
       );
-      await add(["card"], { overwrite: false });
+      await add(["metric"], { overwrite: false });
       const written = mockWriteFile.mock.calls.map(([p, content]) => [String(p), String(content)]);
       expect(written.map(([p]) => p)).toEqual(
         expect.arrayContaining([
-          expect.stringContaining("components/entrepta/diamond.tsx"),
-          expect.stringContaining("components/entrepta/card.tsx"),
+          expect.stringContaining("components/entrepta/skeleton.tsx"),
+          expect.stringContaining("components/entrepta/metric.tsx"),
         ])
       );
-      const card = written.find(([p]) => p.endsWith("card.tsx"))?.[1];
-      expect(card).toContain('from "./diamond"');
+      const metric = written.find(([p]) => p.endsWith("metric.tsx"))?.[1];
+      expect(metric).toContain('from "./skeleton"');
     });
 
     it("puts lib/motion.ts in the lib alias and points reveal's import at it", async () => {
@@ -336,8 +364,8 @@ describe("rewriteImports", () => {
   });
 
   it("turns an import from another component category into a sibling", () => {
-    expect(rewrite(`import { Diamond } from "../content/diamond";`)).toBe(
-      `import { Diamond } from "./diamond";`
+    expect(rewrite(`import { CodeBlock } from "../content/code-block";`)).toBe(
+      `import { CodeBlock } from "./code-block";`
     );
     expect(rewrite(`import { Card } from '../primitives/card';`)).toBe(
       `import { Card } from "./card";`

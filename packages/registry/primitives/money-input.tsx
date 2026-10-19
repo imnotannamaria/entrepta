@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { useFormat } from "../hooks/use-format";
-import { moneyParts, parseMoney } from "../lib/format";
+import { moneyParts, parseMoney } from "../lib/entrepta-format";
 import { cn } from "../lib/utils";
 import { inputFieldClass, inputWrapperVariants } from "./input";
 

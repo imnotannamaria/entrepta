@@ -56,10 +56,11 @@ describe("Dialog", () => {
     expect(screen.getByText("Dialog title")).toHaveClass("font-serif");
   });
 
-  it("DialogLabel renders the diamond glyph", async () => {
+  it("DialogLabel renders its text and no glyph of its own", async () => {
     render(<TestDialog />);
     await userEvent.click(screen.getByText("Open"));
-    expect(screen.getByText("◆")).toBeInTheDocument();
+    expect(screen.getByText("danger zone")).toBeInTheDocument();
+    expect(screen.queryByText("◆")).not.toBeInTheDocument();
   });
 
   it("closes when the built-in close button is clicked", async () => {

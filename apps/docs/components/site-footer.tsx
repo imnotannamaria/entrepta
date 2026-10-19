@@ -10,7 +10,16 @@ export function SiteFooter() {
         <div className="col-span-2 sm:col-span-1">
           <Logo className="mb-4" />
           <p className="font-sans text-body-md text-[var(--fg-muted)] max-w-xs leading-relaxed">
-            A personal design system, posed as an IDE. Dark-first, built by Anna Maria.
+            The design system you copy and own. Dark-first, built by{" "}
+            <a
+              href={LINKS.author}
+              target="_blank"
+              rel="noreferrer"
+              className="text-[var(--fg-secondary)] underline decoration-[var(--border-strong)] underline-offset-4 transition-colors hover:text-[var(--fg-primary)] hover:decoration-[var(--fg-brand)]"
+            >
+              Anna Maria
+            </a>
+            .
           </p>
         </div>
         <div className="flex flex-col gap-3">
@@ -42,7 +51,7 @@ export function SiteFooter() {
           <ul className="flex flex-col gap-2">
             {[
               { label: "Primitives", href: "/docs/components/button" },
-              { label: "Layout", href: "/docs/components/status-bar" },
+              { label: "Layout", href: "/docs/components/top-nav" },
               { label: "Feedback", href: "/docs/components/toast" },
               { label: "Themes", href: "/docs/themes" },
             ].map((l) => (

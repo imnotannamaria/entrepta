@@ -1,9 +1,19 @@
-export const THEMES = ["entrepta", "blossom", "marmalade", "julia", "ivy", "bosco"] as const;
+export const THEMES = [
+  "entrepta",
+  "blossom",
+  "marmalade",
+  "julia",
+  "ivy",
+  "bosco",
+  "taylor",
+] as const;
 export type Theme = (typeof THEMES)[number];
 export type ThemesMode = "single" | "all";
 
 const DARK = ":root {";
 const LIGHT = ':root[data-mode="light"] {';
+// A theme whose brand cannot be read on a dark surface inside a light page puts it back here.
+const DARK_SURFACE = ':root[data-mode="light"] [data-surface="dark"] {';
 
 /**
  * Rewrites one theme file so its blocks apply under `data-theme="<id>"`.
@@ -16,13 +26,19 @@ export function scopeTheme(css: string, id: Theme, isDefault: boolean): string {
   }
   const dark = `:root[data-theme="${id}"] {`;
   const light = `:root[data-theme="${id}"][data-mode="light"] {`;
+  const darkSurface = `:root[data-theme="${id}"][data-mode="light"] [data-surface="dark"] {`;
+  // The bare light and dark blocks lose to the active theme's own, which are
+  // more specific. No other theme has a dark-surface block to win over this
+  // one, so its bare form must not match a page that names another theme.
+  const bareDarkSurface = ':root:not([data-theme])[data-mode="light"] [data-surface="dark"]';
   return css
     .replace(LIGHT, isDefault ? `:root[data-mode="light"],\n${light}` : light)
+    .replace(DARK_SURFACE, isDefault ? `${bareDarkSurface},\n${darkSurface}` : darkSurface)
     .replace(DARK, isDefault ? `:root,\n${dark}` : dark);
 }
 
 /**
- * All six themes, switchable at runtime through `data-theme` on <html>.
+ * All the themes, switchable at runtime through `data-theme` on <html>.
  *
  * The default theme comes first. Its light block, `:root[data-mode="light"]`,
  * has the same specificity as another theme's dark block,

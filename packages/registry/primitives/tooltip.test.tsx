@@ -27,7 +27,29 @@ function OpenTooltip({ content = "Tooltip text", shortcut = "" }) {
   );
 }
 
+function surfaceOf(surface?: "dark" | "page") {
+  render(
+    <TooltipProvider>
+      <Tooltip defaultOpen>
+        <TooltipTrigger asChild>
+          <button type="button">Trigger</button>
+        </TooltipTrigger>
+        <TooltipContent surface={surface}>Surface text</TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
+  );
+  return document.querySelector("[data-side]");
+}
+
 describe("Tooltip", () => {
+  it("follows the page by default, so it is light on a light page", () => {
+    expect(surfaceOf()).not.toHaveAttribute("data-surface");
+  });
+
+  it('stays near black in both modes with surface="dark"', () => {
+    expect(surfaceOf("dark")).toHaveAttribute("data-surface", "dark");
+  });
+
   it("renders the trigger element", () => {
     render(<OpenTooltip />);
     expect(screen.getByRole("button", { name: "Trigger" })).toBeInTheDocument();

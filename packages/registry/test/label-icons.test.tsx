@@ -1,24 +1,36 @@
 import { render } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
+import { Metric } from "../data/metric";
 import { CardLabel } from "../primitives/card";
 import { Dialog, DialogContent, DialogLabel, DialogTitle } from "../primitives/dialog";
-import { Field } from "../primitives/field";
+import { Field, FieldLabel } from "../primitives/field";
 
 function FakeIcon(props: { className?: string; "aria-hidden"?: boolean }) {
   return <svg data-fake-icon aria-hidden={props["aria-hidden"]} className={props.className} />;
 }
 const icon = FakeIcon as never;
 
-/** A label can trade its ◆ for an icon that names what it labels. Never both. */
+/** A label draws nothing before its text, unless you pass an icon. */
 describe("label icons", () => {
-  it("CardLabel shows the ◆ by default and the icon in its place when given", () => {
+  it("CardLabel draws nothing before its text, and the icon when given", () => {
     const { container, rerender } = render(<CardLabel>layout</CardLabel>);
-    expect(container.textContent).toContain("◆");
+    expect(container.textContent).toBe("layout");
+    expect(container.querySelector("svg, [aria-hidden]")).toBeNull();
     rerender(<CardLabel icon={icon}>layout</CardLabel>);
-    expect(container.textContent).not.toContain("◆");
     const svg = container.querySelector("[data-fake-icon]");
     expect(svg).toHaveAttribute("aria-hidden", "true");
     expect(svg).toHaveClass("text-[var(--fg-brand)]");
+  });
+
+  it("FieldLabel, DialogLabel and Metric draw nothing before their text by default", () => {
+    render(
+      <>
+        <FieldLabel htmlFor="x">email</FieldLabel>
+        <Metric label="spent" value="12" />
+      </>
+    );
+    expect(document.querySelector("label")?.textContent).toBe("email");
+    expect(document.querySelector("dt")?.textContent).toBe("spent");
   });
 
   it("DialogLabel takes an icon", () => {

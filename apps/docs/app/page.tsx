@@ -1,224 +1,55 @@
 import { OpenAgentsButton } from "@/components/agents-configurator";
-import { CommandPaletteTrigger } from "@/components/command-palette-trigger";
-import { CopyInit, HeroStats, HomeShowcase, ThemeRow } from "@/components/home-hero";
-import { HomeInstall } from "@/components/home-install";
+import { HomeCatalog } from "@/components/home-catalog";
+import { CopyInit, HeroStats, ThemeRow } from "@/components/home-hero";
 import { HomeSection, SectionHead, SpecList } from "@/components/home-section";
+import { HomeShowcase } from "@/components/home-showcase";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteNav } from "@/components/site-nav";
-import { SiteStatusBar } from "@/components/site-status-bar";
 import { COMPONENT_INDEX, SECTIONS } from "@/lib/component-index";
 import { USED_BY } from "@/lib/links";
 import { tokenCount } from "@/lib/stats";
 import { THEMES } from "@/lib/theme";
 import { cn } from "@/lib/utils";
-import { NEWS, VERSION } from "@/lib/version";
+import { NEWS } from "@/lib/version";
 import { CodeBlock } from "@entrepta/registry/content/code-block";
-import { Diamond } from "@entrepta/registry/content/diamond";
-import { Amount } from "@entrepta/registry/data/amount";
-import { Reveal } from "@entrepta/registry/motion/reveal";
-import { RollingNumber } from "@entrepta/registry/motion/rolling-number";
-import { SpotlightCard } from "@entrepta/registry/motion/spotlight-card";
 import { Badge } from "@entrepta/registry/primitives/badge";
 import { buttonVariants } from "@entrepta/registry/primitives/button-variants";
 import {
   Card,
-  CardComment,
-  CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
   CardLabel,
   CardMeta,
+  CardNote,
   CardTitle,
 } from "@entrepta/registry/primitives/card";
 import { Kbd } from "@entrepta/registry/primitives/kbd";
-import { Switch } from "@entrepta/registry/primitives/switch";
-import { Tabs, TabsList, TabsTrigger } from "@entrepta/registry/primitives/tabs";
-import type { Icon } from "@phosphor-icons/react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@entrepta/registry/primitives/tabs";
 import {
-  BellSimpleIcon,
-  ChatCircleIcon,
   CheckIcon,
-  CubeIcon,
+  FileCssIcon,
   FileMdIcon,
-  FileTextIcon,
-  LayoutIcon,
+  FileTsxIcon,
   ListBulletsIcon,
-  PaletteIcon,
   RobotIcon,
-  SparkleIcon,
-  TableIcon,
   TerminalWindowIcon,
-  TextboxIcon,
 } from "@phosphor-icons/react/dist/ssr";
 import Link from "next/link";
 import { type CSSProperties, Fragment } from "react";
 
-const PRINCIPLES = [
-  {
-    num: "01",
-    title: "Dark-first, always.",
-    desc: "Both products are born dark. Light mode is optional, never priority. The deep zinc-950 is the canvas, not dashboard gray.",
-    tag: "canvas: #09090B",
-  },
-  {
-    num: "02",
-    title: "Editor as metaphor.",
-    desc: "Tabs, command palette, status bar, file paths, inline comments, shell prompts, monospace metadata. Not decoration. Personality.",
-    tag: "tabs · ⌘K · > · $ · //",
-  },
-  {
-    num: "03",
-    title: "Typography with deliberate contrast.",
-    desc: "Editorial serif for proper nouns. Mono for the rest. Sans only for long prose. The contrast is the signature.",
-    tag: "newsreader · jetbrains mono · inter",
-  },
-  {
-    num: "04",
-    title: "Color with restraint.",
-    desc: "The brand shows up in CTAs, focus and featured cards, with an ink measured for every theme. Cards sit a hair above a darker zinc. The rest is black, white and cold gray.",
-    tag: "--fg-brand · --fg-brand-text · zinc",
-  },
-  {
-    num: "05",
-    title: "High density, clear hierarchy.",
-    desc: "A lot of information without feeling chaotic. Strict 12-col grid, defined cards, small badges and dots create secondary rhythm.",
-    tag: "12 cols · 24 gutters · 1280 max",
-  },
-  {
-    num: "06",
-    title: "Motion with a job.",
-    desc: "Entrances, counters and light that follows the cursor, each one earning its place. Every animation has a reduced-motion path, the JavaScript ones included.",
-    tag: "whileInView · once · reduced motion",
-  },
-];
-
-/** A preview per docs section. Names and counts come from the component index. */
-const SECTION_PREVIEWS: Record<(typeof SECTIONS)[number], React.ReactNode> = {
-  Primitives: (
-    <div className="flex flex-wrap items-center gap-1.5">
-      <Badge variant="solid" color="brand">
-        FEATURED
-      </Badge>
-      <Badge variant="soft" color="success" dot>
-        shipped
-      </Badge>
-      <Badge variant="outline" color="neutral">
-        v{VERSION}
-      </Badge>
-    </div>
-  ),
-  Forms: (
-    <div className="flex flex-col gap-2">
-      <span className="inline-flex items-center gap-1.5 font-mono text-mono-xs uppercase tracking-[0.08em] text-[var(--fg-muted)]">
-        <Diamond /> email <span className="text-[var(--fg-brand)]">*</span>
-      </span>
-      <Switch label="send me a copy" defaultChecked />
-    </div>
-  ),
-  Layout: (
-    <div className="overflow-hidden rounded-[var(--radius-sm)] border border-[var(--border-subtle)]">
-      <Tabs defaultValue="home">
-        <TabsList aria-label="Example files">
-          <TabsTrigger value="home">home.tsx</TabsTrigger>
-          <TabsTrigger value="about">about.md</TabsTrigger>
-          <TabsTrigger value="stack">stack.ts</TabsTrigger>
-        </TabsList>
-      </Tabs>
-    </div>
-  ),
-  Content: (
-    <CodeBlock
-      variant="terminal"
-      language="bash"
-      showCopy={false}
-      size="sm"
-      code="npx @entrepta/cli@latest add code-block"
-    />
-  ),
-  Data: (
-    <ul className="m-0 flex w-full max-w-[220px] list-none flex-col gap-1 p-0 font-mono text-mono-sm">
-      {[
-        ["client invoice", 950000],
-        ["rent", -180000],
-        ["coffee", -1250],
-      ].map(([label, value]) => (
-        <li key={label} className="flex items-center justify-between gap-4">
-          <span className="text-[var(--fg-secondary)]">{label}</span>
-          <Amount value={value as number} currency="USD" tone="auto" />
-        </li>
-      ))}
-    </ul>
-  ),
-  Chat: (
-    <div className="flex w-full max-w-[240px] flex-col gap-2 font-sans text-body-md">
-      <span className="self-end rounded-[var(--radius-lg)] rounded-br-[var(--radius-sm)] bg-[var(--bg-surface-brand)] px-3 py-1.5 text-[var(--fg-primary)]">
-        where did it go?
-      </span>
-      <span className="flex items-baseline gap-1.5 text-[var(--fg-secondary)]">
-        <Diamond size={9} />
-        mostly rent
-        <span aria-hidden className="type-caret ml-0.5" />
-      </span>
-    </div>
-  ),
-  Feedback: (
-    <div className="flex items-start gap-3 rounded-[var(--radius-md)] border border-[var(--border-strong)] bg-[var(--bg-overlay)] p-3 font-mono shadow-[var(--shadow-card-hover)] [background-image:radial-gradient(140%_120%_at_0%_0%,color-mix(in_srgb,var(--status-success)_12%,transparent),transparent_55%)]">
-      <span className="grid size-6 shrink-0 place-items-center rounded-[var(--radius-sm)] bg-[var(--status-success-soft)] text-[var(--status-success-fg)]">
-        <CheckIcon aria-hidden size={13} weight="bold" />
-      </span>
-      <div className="flex flex-col gap-0.5 pt-0.5">
-        <div className="text-mono-md text-[var(--fg-primary)]">Build passed</div>
-        <div className="font-sans text-mono-sm text-[var(--fg-secondary)]">
-          {COMPONENT_INDEX.length} components compiled in 1.4s
-        </div>
-      </div>
-    </div>
-  ),
-  Motion: (
-    <div className="flex items-baseline gap-3 font-mono text-mono-sm text-[var(--fg-muted)]">
-      <RollingNumber
-        value={128}
-        height={40}
-        className="font-serif text-display-md text-[var(--fg-primary)]"
-      />
-      repos shipped
-    </div>
-  ),
-};
-
-/** What each section's card label shows in place of the ◆. */
-const SECTION_ICONS: Record<(typeof SECTIONS)[number], Icon> = {
-  Primitives: CubeIcon,
-  Forms: TextboxIcon,
-  Layout: LayoutIcon,
-  Content: FileTextIcon,
-  Data: TableIcon,
-  Chat: ChatCircleIcon,
-  Feedback: BellSimpleIcon,
-  Motion: SparkleIcon,
-};
-
-const SECTION_FIRST_PAGE = Object.fromEntries(
-  SECTIONS.map((section) => [section, COMPONENT_INDEX.find((c) => c.section === section)?.slug])
-);
-
-const INSTALL_STEPS = [
-  {
-    num: "01",
-    cmd: "npx @entrepta/cli@latest init --theme=entrepta",
-    out: "wrote app/globals.css · created entrepta.json",
-  },
-  {
-    num: "02",
-    cmd: "npx @entrepta/cli@latest add button badge input",
-    out: "3 components copied to components/entrepta/",
-  },
-  {
-    num: "03",
-    cmd: "npm run dev",
-    out: null,
-  },
+/** What a project gets, in the order it matters. */
+const FEATURES = [
+  "Copy-paste source. The components land in your repo, and you edit them.",
+  `${COMPONENT_INDEX.length} components, from buttons to data tables, charts and chat.`,
+  "Dark first, with seven themes. Fixed, or all of them at runtime.",
+  "Every ink measured for WCAG AA, in every theme and both modes, by a test.",
+  "React 19, Tailwind v4 and Radix. No runtime SDK and no telemetry.",
+  "Plain CSS variables for tokens. One file to retheme a whole product.",
+  "Money, dates, filters and tables that handle the hard parts for you.",
+  "A CLI that resolves dependencies and never writes outside your project.",
+  "Markdown for every docs page, an llms.txt and an AGENTS.md for your agent.",
+  "Motion with a job, and a reduced-motion path for every animation.",
 ];
 
 const HERO_STATS = [
@@ -229,10 +60,29 @@ const HERO_STATS = [
   { dt: "AA pairs", dd: String(THEMES.length * 2) },
 ];
 
+const ADD_CODE = `npx @entrepta/cli@latest init --theme=entrepta
+npx @entrepta/cli@latest add button card metric`;
+
+const USE_CODE = `import { Amount } from "@/components/entrepta/amount"
+import { Metric } from "@/components/entrepta/metric"
+
+export default function Page() {
+  return (
+    <Metric
+      label="spent this month"
+      value={<Amount value={218450} currency="USD" />}
+    />
+  )
+}`;
+
+const TOKENS_CODE = `:root {
+  --fg-brand: #7c6bff;     /* your brand */
+  --finish-glow: 1;        /* 0 is flat */
+}`;
+
 /**
  * When each piece of the hero arrives, in seconds from the first paint. The
- * heading goes word by word, the editor lands last, and the counts under it
- * wait for the editor when they are on screen from the start.
+ * heading goes word by word, then the lede, the actions and the code.
  */
 const HERO_AT = {
   news: 0.1,
@@ -240,17 +90,19 @@ const HERO_AT = {
   italic: 0.5,
   lede: 0.85,
   actions: 1,
-  themes: 1.1,
-  editor: 1.2,
-  stats: 1.6,
+  code: 1.15,
 };
+
+const PANEL = "m-0 min-w-0 [grid-area:1/1] data-[state=inactive]:invisible";
 
 const heroDelay = (seconds: number) => ({ "--hero-delay": `${seconds}s` }) as CSSProperties;
 
 /** A line of the heading, a word at a time. The spaces stay text, so it reads as one line. */
 function HeroWords({ text, at }: { text: string; at: number }) {
   return text.split(" ").map((word, i) => (
-    <Fragment key={word}>
+    // the order never changes, and a word can appear twice
+    // biome-ignore lint/suspicious/noArrayIndexKey: see above
+    <Fragment key={i}>
       {i > 0 && " "}
       <span className="hero-in hero-word" style={heroDelay(at + i * 0.08)}>
         {word}
@@ -272,8 +124,8 @@ export default function Home() {
             aria-hidden
             className="pointer-events-none absolute inset-0 [background-image:radial-gradient(var(--border-strong)_1px,transparent_1px)] [background-size:24px_24px] [mask-image:radial-gradient(ellipse_70%_60%_at_50%_0%,#000_30%,transparent_100%)]"
           />
-          <div className="relative mx-auto max-w-[1280px] px-4 pt-16 pb-16 sm:px-12 sm:pt-24">
-            <div className="mx-auto flex max-w-4xl flex-col items-center text-center">
+          <div className="relative mx-auto grid max-w-[1280px] items-center gap-12 px-4 pt-16 pb-16 sm:px-12 sm:pt-24 grid-cols-[minmax(0,1fr)] lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)] lg:gap-16">
+            <div className="flex flex-col items-start">
               <Link
                 href={NEWS.href}
                 style={heroDelay(HERO_AT.news)}
@@ -282,7 +134,7 @@ export default function Home() {
                 <Badge variant="solid" color="brand" size="sm" className="rounded-full">
                   new
                 </Badge>
-                {`${NEWS.label} · ${COMPONENT_INDEX.length} components · ${NEWS.summary}`}
+                {`${NEWS.label} · ${NEWS.summary}`}
                 <span
                   aria-hidden
                   className="text-[var(--fg-brand-text)] transition-transform group-hover:translate-x-0.5"
@@ -291,170 +143,178 @@ export default function Home() {
                 </span>
               </Link>
 
-              <h1 className="m-0 mb-7 font-serif text-display-md font-normal text-[var(--fg-primary)] sm:text-display-lg lg:text-display-xl">
+              <h1 className="m-0 mb-6 font-serif text-display-md font-normal text-[var(--fg-primary)] sm:text-display-lg lg:text-display-md xl:text-display-lg">
                 {/* CSS, not TypeIn: the heading is the first thing on screen, so it rises in
                     before hydration and is there with JavaScript off */}
                 <span className="block">
-                  <HeroWords text="A design system," at={HERO_AT.heading} />
+                  <HeroWords text="The design system" at={HERO_AT.heading} />
                 </span>{" "}
                 <em className="block italic text-[var(--fg-brand)]">
-                  <HeroWords text="posed as an IDE." at={HERO_AT.italic} />
+                  <HeroWords text="you copy and own." at={HERO_AT.italic} />
                 </em>
               </h1>
 
               <p
                 style={heroDelay(HERO_AT.lede)}
-                className="hero-in m-0 mb-10 max-w-2xl text-balance font-sans text-body-lg text-[var(--fg-secondary)] sm:text-heading-md sm:font-normal"
+                className="hero-in m-0 mb-8 max-w-xl text-pretty font-sans text-body-lg text-[var(--fg-secondary)]"
               >
                 <strong className="font-medium text-[var(--fg-primary)]">entrepta</strong> is a
-                dark-first React library you copy into your repo: tabs, a command palette, a status
-                bar, serif italic next to mono. Every ink is measured in six themes.
+                dark-first React library. Near black surfaces, mono for UI, serif italic for titles.
+                One command copies the components into your repo, and every ink is measured in seven
+                themes.
               </p>
 
               <div
                 style={heroDelay(HERO_AT.actions)}
-                className="hero-in mb-10 flex flex-wrap items-center justify-center gap-3"
+                className="hero-in flex flex-wrap items-center gap-3"
               >
                 <Link href="/docs/components" className={buttonVariants({ size: "lg" })}>
                   browse components <span aria-hidden>→</span>
                 </Link>
                 <CopyInit />
-                <CommandPaletteTrigger />
-              </div>
-
-              <div style={heroDelay(HERO_AT.themes)} className="hero-in">
-                <ThemeRow />
               </div>
             </div>
 
             <div
-              style={heroDelay(HERO_AT.editor)}
-              className="hero-in mt-16 [--hero-dur:1.4s] [--hero-rise:48px] sm:mt-20"
+              style={heroDelay(HERO_AT.code)}
+              className="hero-in [--hero-dur:1.2s] [--hero-rise:32px]"
             >
-              <HomeShowcase />
+              <Card className="overflow-hidden p-0 max-sm:p-0 gap-0">
+                <Tabs defaultValue="add">
+                  <TabsList aria-label="How it works">
+                    <TabsTrigger value="add" icon={<TerminalWindowIcon />}>
+                      add
+                    </TabsTrigger>
+                    <TabsTrigger value="use" icon={<FileTsxIcon />}>
+                      use
+                    </TabsTrigger>
+                    <TabsTrigger value="tokens" icon={<FileCssIcon />}>
+                      tokens
+                    </TabsTrigger>
+                  </TabsList>
+                  {/* every panel is rendered in the same cell, so the box takes the tallest one
+                      and switching tabs never changes its height */}
+                  <div className="grid">
+                    <TabsContent value="add" forceMount className={PANEL}>
+                      <CodeBlock
+                        code={ADD_CODE}
+                        language="bash"
+                        filename="terminal"
+                        className="h-full rounded-none border-0"
+                      />
+                    </TabsContent>
+                    <TabsContent value="use" forceMount className={PANEL}>
+                      <CodeBlock
+                        code={USE_CODE}
+                        language="tsx"
+                        filename="app/page.tsx"
+                        className="h-full rounded-none border-0"
+                      />
+                    </TabsContent>
+                    <TabsContent value="tokens" forceMount className={PANEL}>
+                      <CodeBlock
+                        code={TOKENS_CODE}
+                        language="css"
+                        filename="app/globals.css"
+                        className="h-full rounded-none border-0"
+                      />
+                    </TabsContent>
+                  </div>
+                </Tabs>
+              </Card>
+              <p className="mt-4 mb-0 font-mono text-mono-sm text-[var(--fg-muted)]">
+                in use at{" "}
+                {USED_BY.map((u, i) => (
+                  <span key={u.name}>
+                    {i > 0 && " · "}
+                    <a
+                      href={u.href}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-[var(--fg-secondary)] underline-offset-4 hover:text-[var(--fg-primary)] hover:underline"
+                    >
+                      {u.name} ↗
+                    </a>
+                  </span>
+                ))}
+              </p>
             </div>
-
-            <div style={heroDelay(HERO_AT.stats)} className="hero-in mt-6">
-              <HeroStats stats={HERO_STATS} at={HERO_AT.stats} />
-            </div>
-
-            <p
-              style={heroDelay(HERO_AT.stats)}
-              className="hero-in mt-6 text-center font-mono text-mono-sm text-[var(--fg-muted)]"
-            >
-              in use at{" "}
-              {USED_BY.map((u, i) => (
-                <span key={u.name}>
-                  {i > 0 && " · "}
-                  <a
-                    href={u.href}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="text-[var(--fg-secondary)] underline-offset-4 hover:text-[var(--fg-primary)] hover:underline"
-                  >
-                    {u.name} ↗
-                  </a>
-                </span>
-              ))}
-            </p>
           </div>
         </section>
 
-        {/* ── INSTALL ── */}
-        <HomeSection id="install">
+        {/* ── GALLERY ── */}
+        <HomeSection id="gallery" className="border-t-0 pt-4">
           <SectionHead
-            eyebrow="getting started"
+            eyebrow="live"
             title={
               <>
-                <em>Three</em> commands.
+                <em>Real</em> components.
                 <br />
-                <span className="text-[var(--fg-muted)]">You own the code.</span>
+                <span className="text-[var(--fg-muted)]">Not screenshots.</span>
               </>
             }
-            description={
-              <>
-                entrepta ships as CSS tokens and copy-paste components. No runtime SDK and no
-                telemetry in what you copy. Drop it into a Next.js or Vite project and start
-                shipping.
-              </>
-            }
+            description="Every card below is a file you can copy. Pick a theme and they all change."
+            aside={<ThemeRow />}
           />
-
-          <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-6">
-            <HomeInstall steps={INSTALL_STEPS} />
-
-            <Card>
-              <CardHeader>
-                <CardLabel icon={TerminalWindowIcon}>@entrepta/cli</CardLabel>
-                <Badge variant="soft" color="brand">
-                  v{VERSION}
-                </Badge>
-              </CardHeader>
-              <CardContent className="flex flex-col gap-3">
-                {[
-                  { k: "size", v: "~7 kb gzipped" },
-                  { k: "deps", v: "react 19+" },
-                  { k: "ships", v: "css vars · components" },
-                  { k: "license", v: "MIT" },
-                  { k: "themes", v: `${THEMES.length} presets, fixed or at runtime` },
-                ].map((r, i) => (
-                  <div
-                    key={r.k}
-                    className={`flex items-center justify-between font-mono text-mono-sm ${
-                      i > 0 ? "border-t border-[var(--border-subtle)] pt-3" : ""
-                    }`}
-                  >
-                    <span className="text-[var(--fg-muted)]">{r.k}</span>
-                    <span className="text-[var(--fg-secondary)]">{r.v}</span>
-                  </div>
-                ))}
-              </CardContent>
-              <CardFooter>
-                <CardComment>mit · open source</CardComment>
-                <Link
-                  href="/docs"
-                  className="text-[var(--fg-brand-text)] hover:opacity-80 transition-opacity"
-                >
-                  read the docs ↗
-                </Link>
-              </CardFooter>
-            </Card>
+          <HomeShowcase />
+          <div className="mt-6">
+            <HeroStats stats={HERO_STATS} />
           </div>
         </HomeSection>
 
-        {/* ── PRINCIPLES ── */}
-        <HomeSection id="principles">
+        {/* ── FEATURES ── */}
+        <HomeSection id="features">
           <SectionHead
+            eyebrow="what you get"
             title={
               <>
-                <em>Six</em> principles.
-                <br />
-                One product personality.
+                <em>The short</em> list.
               </>
             }
+            description="Each point is in the docs, with the code."
+          />
+          <ul className="m-0 grid list-none grid-cols-1 gap-x-12 gap-y-4 p-0 md:grid-cols-2">
+            {FEATURES.map((text) => (
+              <li
+                key={text}
+                className="flex items-start gap-3 font-sans text-body-lg leading-relaxed text-[var(--fg-secondary)]"
+              >
+                <CheckIcon
+                  aria-hidden
+                  size={16}
+                  weight="bold"
+                  className="mt-1.5 shrink-0 text-[var(--fg-brand)]"
+                />
+                {text}
+              </li>
+            ))}
+          </ul>
+        </HomeSection>
+
+        {/* ── COMPONENTS INDEX ── */}
+        <HomeSection id="inside">
+          <SectionHead
+            eyebrow="the catalog"
+            title={
+              <>
+                <em>What&apos;s</em> inside.
+                <br />
+                <span className="text-[var(--fg-muted)]">
+                  {COMPONENT_INDEX.length} components, {SECTIONS.length} sections.
+                </span>
+              </>
+            }
+            description="Every name below is a page with a live preview, the props and the command to add it."
             aside={
-              <span className="font-mono text-mono-sm uppercase tracking-[0.08em] text-[var(--fg-muted)]">
-                section 1.2 · brief
-              </span>
+              <Link
+                href="/docs/components"
+                className={cn(buttonVariants({ variant: "secondary", size: "sm" }), "shrink-0")}
+              >
+                browse all <span aria-hidden>→</span>
+              </Link>
             }
           />
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {PRINCIPLES.map((p, i) => (
-              <Reveal key={p.num} index={i}>
-                <Card className="h-full">
-                  <CardHeader>
-                    <CardLabel>principle {p.num}</CardLabel>
-                  </CardHeader>
-                  <CardTitle className="text-heading-md">{p.title}</CardTitle>
-                  <CardDescription>{p.desc}</CardDescription>
-                  <CardFooter>
-                    <CardComment>{p.tag}</CardComment>
-                  </CardFooter>
-                </Card>
-              </Reveal>
-            ))}
-          </div>
+          <HomeCatalog />
         </HomeSection>
 
         {/* ── ACCESSIBILITY ── */}
@@ -506,7 +366,7 @@ export default function Home() {
                 },
                 {
                   k: "contrast",
-                  v: "every ink measured against AA in all 12 theme and mode pairs, by a test",
+                  v: "every ink measured against AA in all 14 theme and mode pairs, by a test",
                 },
                 {
                   k: "dark + light",
@@ -573,107 +433,6 @@ export default function Home() {
           </div>
         </HomeSection>
 
-        {/* ── COMPONENTS PREVIEW ── */}
-        <HomeSection>
-          <SectionHead
-            title={
-              <>
-                <em>What's</em> inside.{" "}
-                <span className="text-[var(--fg-muted)]">
-                  {COMPONENT_INDEX.length} components, {SECTIONS.length} sections.
-                </span>
-              </>
-            }
-            aside={
-              <Link
-                href="/docs/components"
-                className={cn(buttonVariants({ variant: "ghost", size: "sm" }), "shrink-0")}
-              >
-                browse all ↗
-              </Link>
-            }
-          />
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {SECTIONS.map((section, i) => {
-              const items = COMPONENT_INDEX.filter((c) => c.section === section);
-              return (
-                <Reveal key={section} index={i}>
-                  {/* the title's link stretches over the card; the preview sits above it, so
-                      its real controls stay usable instead of nesting inside a link */}
-                  <Card className="group relative h-full focus-within:border-[var(--border-strong)]">
-                    <CardHeader>
-                      <CardLabel icon={SECTION_ICONS[section]}>{section.toLowerCase()}</CardLabel>
-                      <CardMeta>{`${items.length} ${items.length === 1 ? "component" : "components"}`}</CardMeta>
-                    </CardHeader>
-                    <CardTitle className="text-heading-md">
-                      <Link
-                        href={`/docs/components/${SECTION_FIRST_PAGE[section]}`}
-                        className="focus-ring rounded-[var(--radius-sm)] after:absolute after:inset-0 after:content-['']"
-                      >
-                        {section}
-                      </Link>
-                    </CardTitle>
-                    <CardDescription>{items.map((c) => c.title).join(", ")}.</CardDescription>
-                    <CardContent className="relative z-10">{SECTION_PREVIEWS[section]}</CardContent>
-                    <CardFooter>
-                      <CardComment>{`${section.toLowerCase()}/`}</CardComment>
-                      <span
-                        aria-hidden
-                        className="text-[var(--fg-brand)] transition-transform group-hover:translate-x-0.5"
-                      >
-                        →
-                      </span>
-                    </CardFooter>
-                  </Card>
-                </Reveal>
-              );
-            })}
-            <Reveal index={SECTIONS.length}>
-              <Card className="group relative h-full focus-within:border-[var(--border-strong)]">
-                <CardHeader>
-                  <CardLabel icon={PaletteIcon}>themes</CardLabel>
-                  <CardMeta>{`${THEMES.length} presets`}</CardMeta>
-                </CardHeader>
-                <CardTitle className="text-heading-md">
-                  <Link
-                    href="/docs/themes"
-                    className="focus-ring rounded-[var(--radius-sm)] after:absolute after:inset-0 after:content-['']"
-                  >
-                    Themes
-                  </Link>
-                </CardTitle>
-                <CardDescription>
-                  One brand per theme, two measured inks each. Fixed, or all six at runtime.
-                </CardDescription>
-                <CardContent>
-                  <div className="flex gap-2">
-                    {THEMES.map((t) => (
-                      <span
-                        key={t.id}
-                        title={t.label}
-                        className="h-6 w-6 rounded-full border border-[var(--border-subtle)]"
-                        style={{ background: t.color }}
-                      >
-                        <span className="sr-only">{t.label}</span>
-                      </span>
-                    ))}
-                  </div>
-                </CardContent>
-                <CardFooter>
-                  <CardComment>--themes=all</CardComment>
-                  <span
-                    aria-hidden
-                    className="text-[var(--fg-brand)] transition-transform group-hover:translate-x-0.5"
-                  >
-                    →
-                  </span>
-                </CardFooter>
-              </Card>
-            </Reveal>
-          </div>
-        </HomeSection>
-
         {/* ── FOR AGENTS ── */}
         <HomeSection id="for-agents">
           <SectionHead
@@ -704,7 +463,7 @@ export default function Home() {
                 live and which token goes where.
               </CardDescription>
               <CardFooter>
-                <CardComment>header · AGENTS.md</CardComment>
+                <CardNote>header · AGENTS.md</CardNote>
                 <OpenAgentsButton className="cursor-pointer text-[var(--fg-brand-text)] hover:underline underline-offset-4">
                   build yours →
                 </OpenAgentsButton>
@@ -721,7 +480,7 @@ export default function Home() {
                 migration guide copies whole.
               </CardDescription>
               <CardFooter>
-                <CardComment>/docs/components/button.md</CardComment>
+                <CardNote>/docs/components/button.md</CardNote>
                 <a
                   href="/docs/components/button.md"
                   target="_blank"
@@ -743,7 +502,7 @@ export default function Home() {
                 one file, ready to paste.
               </CardDescription>
               <CardFooter>
-                <CardComment>/llms-full.txt</CardComment>
+                <CardNote>/llms-full.txt</CardNote>
                 <a
                   href="/llms.txt"
                   target="_blank"
@@ -759,7 +518,7 @@ export default function Home() {
 
         {/* ── CTA STRIP ── */}
         <HomeSection>
-          <SpotlightCard variant="featured" className="p-12 sm:p-16 text-center">
+          <Card variant="featured" className="p-12 sm:p-16 text-center">
             <div className="flex flex-col items-center gap-6">
               <div className="font-mono text-mono-sm uppercase tracking-[0.08em] text-[var(--fg-brand-text)]">
                 · ready to ship
@@ -780,13 +539,11 @@ export default function Home() {
                 </OpenAgentsButton>
               </div>
             </div>
-          </SpotlightCard>
+          </Card>
         </HomeSection>
-
-        <SiteFooter />
       </main>
-
-      <SiteStatusBar />
+      {/* outside main, so it stays the page's contentinfo landmark */}
+      <SiteFooter />
     </>
   );
 }

@@ -125,7 +125,6 @@ export function ComponentInstall({ cliCommand, dependencies, files, utilsSource 
           Update the import paths to match your project setup.
         </p>
         <p className="font-mono text-mono-sm text-[var(--fg-muted)] leading-relaxed m-0">
-          <span className="text-[var(--fg-brand)]">{"// "}</span>
           Snippets import from <code>@/lib/utils</code> for the <code>cn</code> helper. Adjust to
           your alias.
         </p>
@@ -143,7 +142,6 @@ export function ComponentInstall({ cliCommand, dependencies, files, utilsSource 
       <TabsContent value="command" className="pt-5">
         <CodeBlock code={cliCommand} filename="terminal" language="bash" variant="terminal" />
         <p className="mt-3 font-mono text-mono-sm text-[var(--fg-muted)] leading-relaxed">
-          <span className="text-[var(--fg-brand)]">{"// "}</span>
           Resolves dependencies, copies the source, and installs npm packages automatically.
         </p>
       </TabsContent>

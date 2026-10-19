@@ -1,5 +1,5 @@
 <p align="center">
-  <img src=".github/assets/entrepta.png" alt="entrepta: a design system posed as an IDE" width="100%" />
+  <img src=".github/assets/entrepta.png" alt="entrepta: the design system you copy and own" width="100%" />
 </p>
 
 <p align="center">
@@ -11,7 +11,7 @@
 
 <p align="center">
   <a href="https://www.npmjs.com/package/@entrepta/cli"><img src="https://img.shields.io/npm/v/@entrepta/cli?color=7c6bff&label=%40entrepta%2Fcli" alt="npm version" /></a>
-  <img src="https://img.shields.io/badge/WCAG-AA%20in%2012%20themes%20%C3%97%20modes-7c6bff" alt="WCAG AA in 12 theme and mode combinations" />
+  <img src="https://img.shields.io/badge/WCAG-AA%20in%2014%20themes%20%C3%97%20modes-7c6bff" alt="WCAG AA in 14 theme and mode combinations" />
   <img src="https://img.shields.io/badge/license-MIT-7c6bff" alt="MIT license" />
 </p>
 
@@ -28,20 +28,20 @@ npx @entrepta/cli@latest add button card command-palette
 
 ## What you get
 
-70 components across 8 sections, in React 19, Tailwind v4 and CSS variables.
+62 components across 8 sections, in React 19, Tailwind v4 and CSS variables.
 
 | Section    | Components |
 | ---------- | ---------- |
 | Primitives | Button, Badge, Avatar, IconTile, Card, Dialog, Sheet, Popover, Accordion, Dropdown, Tooltip, Kbd, Tabs, Progress, Stepper |
 | Forms      | Input, Textarea, Checkbox, Switch, Field, MoneyInput, Select, Combobox, SegmentedControl, ChoiceCard, SwatchPicker, SecretField, FileDropzone, Calendar, DatePicker, DateNavigator, FilterPill |
-| Layout     | StatusBar, TopNav, ThemeSwitcher, ModeToggle, Sidebar, MobileNav, BentoGrid, PageOutline |
-| Content    | CodeBlock, SectHead, Doc parts |
+| Layout     | TopNav, ThemeSwitcher, ModeToggle, Sidebar, MobileNav, BentoGrid |
+| Content    | CodeBlock, ChatThread |
 | Data       | Amount, Metric, Delta, Sparkline, Chart, BarList, ContributionGrid, Redact, ListRow, Table, DataTable, FilterBuilder |
 | Chat       | PromptInput, ChatThread |
-| Feedback   | Alert, EmptyState, Toast, Skeleton, CommandPalette, ChromeMessage, PageLoading |
-| Motion     | Reveal, TypeIn, RollingNumber, Spotlight, SpotlightCard, ArrowLink |
+| Feedback   | Alert, EmptyState, Toast, Skeleton, CommandPalette |
+| Motion     | Reveal, TypeIn, RollingNumber, ArrowLink |
 
-Six theme presets: `entrepta`, `blossom`, `marmalade`, `julia`, `ivy` and `bosco`. Pick one, or install all six and switch at runtime. Every text color clears WCAG AA in all 12 theme and mode combinations, and a test measures it on every change.
+Seven theme presets: `entrepta`, `blossom`, `marmalade`, `julia`, `ivy`, `bosco` and `taylor`, a flat monochrome one. Pick one, or install all seven and switch at runtime. Every text color clears WCAG AA in all 14 theme and mode combinations, and a test measures it on every change.
 
 New in 3: components for products, from money and dates to tables, filters, charts and chat, with nothing in 2.x broken. [What's new in v3](https://entrepta.vercel.app/docs/whats-new-in-v3) lists them and the one command to update. Upgrading from 1.x? The [migration guide](https://entrepta.vercel.app/docs/migrating-to-v2) lists every change, and copies as one Markdown file for your agent.
 
@@ -60,7 +60,7 @@ entrepta is meant to be installed and used by Claude Code, Cursor or Codex as mu
 ```bash
 npx @entrepta/cli@latest init --theme=ivy
 
-# all six themes, switchable at runtime
+# all seven themes, switchable at runtime
 npx @entrepta/cli@latest init --theme=ivy --themes=all
 
 npx @entrepta/cli@latest add button card field
@@ -101,7 +101,7 @@ export function Launch() {
 ## Principles
 
 1. **Dark-first.** Light mode exists; dark is the default.
-2. **Editor as metaphor.** Tabs, a command palette, a status bar, file paths, comments.
+2. **No mark of its own.** No ◆, no //, no editor frame in the components. Pass them in where you want them.
 3. **Deliberate type contrast.** Serif italic for names, mono for UI, sans for prose.
 4. **Color used sparingly.** The brand only on actions, focus and featured states.
 5. **High density, clear hierarchy.** A 12 column grid, 1280px wide.
@@ -109,7 +109,7 @@ export function Launch() {
 
 ## Built with entrepta
 
-- [annamaria.app](https://annamaria.app), a personal site posed as an IDE, where entrepta started
+- [annamaria.app](https://annamaria.app), a personal site, where entrepta started
 - [wristkit](https://wristkit-web.vercel.app), Apple Health components for Next.js
 
 ## Stack

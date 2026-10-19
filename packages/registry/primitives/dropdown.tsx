@@ -149,13 +149,7 @@ const DropdownMenuLabel = React.forwardRef<
 >(({ className, inset, ...props }, ref) => (
   <DropdownMenuPrimitive.Label
     ref={ref}
-    className={cn(
-      MENU_LABEL,
-      // the ◆ comes in through ::before, so the label needs no extra file
-      "before:text-[var(--fg-brand)] before:content-['◆'] before:[font-size:9px]",
-      inset && "pl-8",
-      className
-    )}
+    className={cn(MENU_LABEL, inset && "pl-8", className)}
     {...props}
   />
 ));

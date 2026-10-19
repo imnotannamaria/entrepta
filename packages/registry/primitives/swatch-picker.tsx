@@ -2,7 +2,6 @@
 
 import { CheckIcon } from "@phosphor-icons/react";
 import * as React from "react";
-import { Diamond } from "../content/diamond";
 import { type PaletteKey, colorHue, hueName, paletteColor } from "../lib/palette";
 import { cn } from "../lib/utils";
 import { fieldLabelClass } from "./field";
@@ -17,6 +16,9 @@ const PALETTE_KEYS = [
   "chart-7",
   "chart-8",
 ] as const satisfies readonly PaletteKey[];
+
+/** White on a dark swatch, black on a light one, read from the swatch's own lightness. */
+const CHECK_INK = "oklch(from var(--swatch) clamp(0, calc((0.62 - l) * 1000), 1) 0 0)";
 
 /** A color of your own, such as a theme's brand, with the id it stands for. */
 export interface SwatchOption {
@@ -88,7 +90,7 @@ function useHueNames(ref: React.RefObject<HTMLElement | null>, keys: readonly Pa
  * A color for something the person owns: a category, an account, a tag. One
  * native radio per color. With palette keys the value is the key ("chart-3")
  * and never a hex, the color follows every theme, and each swatch is named
- * after the hue it shows. With options of your own, such as the six themes,
+ * after the hue it shows. With options of your own, such as the themes,
  * the value is your id. The chosen one carries a check.
  */
 const SwatchPicker = React.forwardRef<HTMLFieldSetElement, SwatchPickerProps>((props, ref) => {
@@ -125,7 +127,6 @@ const SwatchPicker = React.forwardRef<HTMLFieldSetElement, SwatchPickerProps>((p
   return (
     <fieldset ref={ref} className={cn("m-0 min-w-0 border-0 p-0", className)} {...rest}>
       <legend className={cn(hideLegend ? "sr-only" : cn(fieldLabelClass, "mb-3 p-0"))}>
-        {hideLegend ? null : <Diamond />}
         {legend}
       </legend>
       {/* equal columns, as many as fit: rows break evenly, never five and one */}
@@ -155,9 +156,11 @@ const SwatchPicker = React.forwardRef<HTMLFieldSetElement, SwatchPickerProps>((p
                 data-swatch={swatch.value}
                 className={cn(
                   "grid size-8 place-items-center rounded-full bg-[var(--swatch)]",
+                  // an edge that reads on any surface, for a swatch near black or near white
+                  "shadow-[inset_0_0_0_1px_color-mix(in_srgb,var(--fg-primary)_22%,transparent)]",
                   "ring-offset-2 ring-offset-[var(--cutout,var(--bg-canvas))] transition-[box-shadow,scale] duration-[var(--motion-base)] ease-[var(--ease-out)]",
                   "group-hover/swatch:scale-110",
-                  "group-has-[:checked]/swatch:ring-2 group-has-[:checked]/swatch:ring-[var(--swatch)]",
+                  "group-has-[:checked]/swatch:ring-2 group-has-[:checked]/swatch:ring-[color-mix(in_srgb,var(--swatch)_70%,var(--fg-primary))]",
                   "group-has-[:focus-visible]/swatch:ring-2 group-has-[:focus-visible]/swatch:ring-[var(--fg-brand)]"
                 )}
                 style={{ "--swatch": swatch.color } as React.CSSProperties}
@@ -165,7 +168,15 @@ const SwatchPicker = React.forwardRef<HTMLFieldSetElement, SwatchPickerProps>((p
                 <CheckIcon
                   size={14}
                   weight="bold"
-                  className="text-[var(--bg-canvas)] opacity-0 transition-opacity duration-[var(--motion-fast)] group-has-[:checked]/swatch:opacity-100"
+                  // Light on a dark swatch and dark on a light one, so it reads on any color.
+                  // The ink sits in a variable and is used only where relative color works:
+                  // set as `color` directly, a browser without it would drop to the inherited
+                  // color, not to the canvas ink.
+                  style={{ "--check-ink": CHECK_INK } as React.CSSProperties}
+                  className={cn(
+                    "text-[var(--bg-canvas)] supports-[color:oklch(from_red_l_c_h)]:text-[var(--check-ink)]",
+                    "opacity-0 transition-opacity duration-[var(--motion-fast)] group-has-[:checked]/swatch:opacity-100"
+                  )}
                 />
               </span>
               <span className="max-w-full truncate font-mono text-mono-xs text-[var(--fg-muted)] group-has-[:checked]/swatch:text-[var(--fg-primary)]">

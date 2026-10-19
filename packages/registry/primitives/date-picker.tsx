@@ -8,7 +8,7 @@ import {
 } from "@phosphor-icons/react";
 import * as React from "react";
 import { useFormat } from "../hooks/use-format";
-import { formatDate, formatDateRange, formatMonth, today as todayIn } from "../lib/format";
+import { formatDate, formatDateRange, formatMonth, today as todayIn } from "../lib/entrepta-format";
 import { MENU_LABEL, MENU_ROW } from "../lib/overlay";
 import { cn } from "../lib/utils";
 import { Calendar, type DateRange, calendarNavButton } from "./calendar";

@@ -30,13 +30,37 @@ describe("scopeTheme", () => {
     ]);
   });
 
+  it("scopes the dark-surface block of a theme that has one", () => {
+    expect(selectors(scopeTheme(FILES.taylor, "taylor", false))).toEqual([
+      ':root[data-theme="taylor"]',
+      ':root[data-theme="taylor"][data-mode="light"]',
+      ':root[data-theme="taylor"][data-mode="light"] [data-surface="dark"]',
+    ]);
+    expect(selectors(scopeTheme(FILES.taylor, "taylor", true))).toEqual([
+      ':root, :root[data-theme="taylor"]',
+      ':root[data-mode="light"], :root[data-theme="taylor"][data-mode="light"]',
+      ':root:not([data-theme])[data-mode="light"] [data-surface="dark"], :root[data-theme="taylor"][data-mode="light"] [data-surface="dark"]',
+    ]);
+  });
+
+  // No other theme has a dark-surface block, so nothing would outrank a bare one:
+  // with taylor as the default, ivy's code blocks in light mode took taylor's white brand.
+  it("keeps a default's dark-surface block off a page that names another theme", () => {
+    const list = selectors(buildThemesCss(FILES, "taylor"));
+    const surface = list.filter((s) => s.includes('[data-surface="dark"]'));
+    expect(surface).toHaveLength(1);
+    for (const selector of surface[0].split(", ")) {
+      expect(selector).toMatch(/:root(:not\(\[data-theme\]\)|\[data-theme="taylor"\])/);
+    }
+  });
+
   it("refuses a theme file without both blocks", () => {
     expect(() => scopeTheme(":root { --fg-brand: red; }", "ivy", false)).toThrow("ivy");
   });
 });
 
 describe("buildThemesCss", () => {
-  it("writes all six themes, each with a dark and a light block", () => {
+  it("writes every theme, each with a dark and a light block", () => {
     const css = buildThemesCss(FILES, "entrepta");
     for (const t of THEMES) {
       expect(css).toContain(`:root[data-theme="${t}"] {`);
@@ -55,7 +79,17 @@ describe("buildThemesCss", () => {
     expect(
       list.filter((s) => s.startsWith(":root,") || s.startsWith(':root[data-mode="light"],'))
     ).toHaveLength(2);
-    expect(list).toHaveLength(12);
+    // taylor adds a third block for a dark surface in a light page
+    expect(list).toHaveLength(15);
+  });
+
+  // The default's knobs sit on bare :root, so every other theme says its own
+  // or it would inherit the default's (taylor's flat glow, its fixed chart color).
+  it("lets every theme set the knobs, so a default of taylor does not leak", () => {
+    for (const t of THEMES) {
+      expect(FILES[t]).toMatch(/--finish-glow:\s*[\d.]+;/);
+      expect(FILES[t]).toMatch(/--chart-from:/);
+    }
   });
 
   it("keeps every token value from the theme files", () => {

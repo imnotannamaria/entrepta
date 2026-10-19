@@ -112,12 +112,17 @@
   /* focus ring */
   --ring: rgba(124, 107, 255, 0.5); /* overridden by theme */
 
+  /* How much brand light the finish carries: the corner glow of a card and an
+     overlay, and the lift of a hovered card. 1 is the full finish, 0 is flat.
+     Declared once and inherited, so a theme or a project sets it in one place
+     instead of overriding the glow in the light block and on a dark surface. */
+  --finish-glow: 1;
+
   /* brand accents, derived from --fg-brand so they follow every theme */
   --border-brand: color-mix(in srgb, var(--fg-brand) 35%, transparent);
   --border-brand-strong: color-mix(in srgb, var(--fg-brand) 60%, transparent);
-  --shadow-brand: color-mix(in srgb, var(--fg-brand) 20%, transparent);
+  --shadow-brand: color-mix(in srgb, var(--fg-brand) calc(20% * var(--finish-glow)), transparent);
   --fg-brand-glow: color-mix(in srgb, var(--fg-brand) 50%, transparent);
-  --bg-spotlight: color-mix(in srgb, var(--fg-brand) 15%, transparent);
 
   /* shadows. The brand lift signals emphasis; the overlay shadow is depth
      for what covers the page, so it stays black. */
@@ -128,7 +133,7 @@
   /* The toast's finish, for every surface. A brand glow from the top-left
      corner (the .sheen class) and a line of light on the top edge, like glass
      catching it. Near black underneath, never zinc-900 across an area. */
-  --sheen-tint: color-mix(in srgb, var(--fg-brand) 9%, transparent);
+  --sheen-tint: color-mix(in srgb, var(--fg-brand) calc(9% * var(--finish-glow)), transparent);
   --edge-light: inset 0 1px 0 rgba(255, 255, 255, 0.05);
   --shadow-card: var(--edge-light);
   --bg-field: var(--bg-overlay);
@@ -164,17 +169,20 @@
      inside sRGB for every hue of all six brands (the blues and yellows set
      it). A result above or below zero takes the status colors and a sign,
      never this palette. From four series on, add a label or a dash pattern:
-     color alone does not tell them apart. */
+     color alone does not tell them apart.
+     --chart-from is where the turning starts. It is the brand, unless a theme
+     with no hue of its own (taylor) names one. */
+  --chart-from: var(--fg-brand);
   --chart-l: 0.72;
   --chart-c: 0.12;
-  --chart-1: oklch(from var(--fg-brand) var(--chart-l) var(--chart-c) calc(h + 0));
-  --chart-2: oklch(from var(--fg-brand) var(--chart-l) var(--chart-c) calc(h + 45));
-  --chart-3: oklch(from var(--fg-brand) var(--chart-l) var(--chart-c) calc(h + 90));
-  --chart-4: oklch(from var(--fg-brand) var(--chart-l) var(--chart-c) calc(h + 135));
-  --chart-5: oklch(from var(--fg-brand) var(--chart-l) var(--chart-c) calc(h + 180));
-  --chart-6: oklch(from var(--fg-brand) var(--chart-l) var(--chart-c) calc(h + 225));
-  --chart-7: oklch(from var(--fg-brand) var(--chart-l) var(--chart-c) calc(h + 270));
-  --chart-8: oklch(from var(--fg-brand) var(--chart-l) var(--chart-c) calc(h + 315));
+  --chart-1: oklch(from var(--chart-from) var(--chart-l) var(--chart-c) calc(h + 0));
+  --chart-2: oklch(from var(--chart-from) var(--chart-l) var(--chart-c) calc(h + 45));
+  --chart-3: oklch(from var(--chart-from) var(--chart-l) var(--chart-c) calc(h + 90));
+  --chart-4: oklch(from var(--chart-from) var(--chart-l) var(--chart-c) calc(h + 135));
+  --chart-5: oklch(from var(--chart-from) var(--chart-l) var(--chart-c) calc(h + 180));
+  --chart-6: oklch(from var(--chart-from) var(--chart-l) var(--chart-c) calc(h + 225));
+  --chart-7: oklch(from var(--chart-from) var(--chart-l) var(--chart-c) calc(h + 270));
+  --chart-8: oklch(from var(--chart-from) var(--chart-l) var(--chart-c) calc(h + 315));
 
   --chart-grid: color-mix(in srgb, var(--border-subtle) 60%, transparent);
   --chart-axis: var(--fg-muted);
@@ -442,7 +450,7 @@ select:autofill {
 }
 
 /* ============================================================
-   SCROLLBARS, themed to match the IDE chrome
+   SCROLLBARS, thin and in the surface's own grays
    ============================================================ */
 
 @layer base {
@@ -757,34 +765,6 @@ select:autofill {
   }
 }
 
-/* An ellipsis: three dots with the load-dot-1/2/3 delays. */
-@keyframes load-dot {
-  0%,
-  70%,
-  100% {
-    opacity: 0;
-  }
-  35% {
-    opacity: 1;
-  }
-}
-
-.load-dot {
-  animation: load-dot 0.9s ease-in-out infinite backwards;
-}
-
-.load-dot-1 {
-  animation-delay: 0.52s;
-}
-
-.load-dot-2 {
-  animation-delay: 0.64s;
-}
-
-.load-dot-3 {
-  animation-delay: 0.76s;
-}
-
 /* A status dot that breathes, and one that glows in the brand. */
 @keyframes live-pulse {
   0%,
@@ -840,10 +820,8 @@ select:autofill {
   --status-error-fg: #be123c;
   --status-info-fg: #4338ca;
 
-  /* a wash that reads on a dark card vanishes on white, so light mixes more */
-  --bg-spotlight: color-mix(in srgb, var(--fg-brand) 26%, transparent);
   --shadow-card-hover: 0 8px 24px rgba(0, 0, 0, 0.1);
-  --sheen-tint: color-mix(in srgb, var(--fg-brand) 4%, transparent);
+  --sheen-tint: color-mix(in srgb, var(--fg-brand) calc(4% * var(--finish-glow)), transparent);
   --edge-light: inset 0 1px 0 rgba(255, 255, 255, 0.9);
   --shadow-card: var(--edge-light), 0 1px 2px rgba(0, 0, 0, 0.04);
   --shadow-overlay: var(--edge-light), 0 24px 48px rgba(0, 0, 0, 0.12);
@@ -857,8 +835,8 @@ select:autofill {
   color-scheme: light;
 }
 
-/* Scoped "always dark" surface, for terminal cards, code blocks, tooltips
-   and any element that should feel like IDE chrome regardless of page mode.
+/* Scoped "always dark" surface, for a code block and any element that must
+   stay near black whatever the page's mode.
    Apply data-surface="dark" on the element root.
    Every token that differs between modes is redeclared here. A custom
    property resolves on the element that declares it and inherits as a
@@ -882,9 +860,8 @@ select:autofill {
   --bg-hover-strong: rgba(255, 255, 255, 0.08);
   --bg-chrome: rgba(0, 0, 0, 0.3);
 
-  --bg-spotlight: color-mix(in srgb, var(--fg-brand) 15%, transparent);
   --shadow-card-hover: 0 8px 24px rgba(0, 0, 0, 0.3);
-  --sheen-tint: color-mix(in srgb, var(--fg-brand) 9%, transparent);
+  --sheen-tint: color-mix(in srgb, var(--fg-brand) calc(9% * var(--finish-glow)), transparent);
   --edge-light: inset 0 1px 0 rgba(255, 255, 255, 0.05);
   --shadow-card: var(--edge-light);
   --shadow-overlay: var(--edge-light), 0 24px 48px rgba(0, 0, 0, 0.6);
@@ -901,14 +878,14 @@ select:autofill {
      Redeclaring them runs the substitution again in this scope. */
   --chart-l: 0.72;
   --chart-c: 0.12;
-  --chart-1: oklch(from var(--fg-brand) var(--chart-l) var(--chart-c) calc(h + 0));
-  --chart-2: oklch(from var(--fg-brand) var(--chart-l) var(--chart-c) calc(h + 45));
-  --chart-3: oklch(from var(--fg-brand) var(--chart-l) var(--chart-c) calc(h + 90));
-  --chart-4: oklch(from var(--fg-brand) var(--chart-l) var(--chart-c) calc(h + 135));
-  --chart-5: oklch(from var(--fg-brand) var(--chart-l) var(--chart-c) calc(h + 180));
-  --chart-6: oklch(from var(--fg-brand) var(--chart-l) var(--chart-c) calc(h + 225));
-  --chart-7: oklch(from var(--fg-brand) var(--chart-l) var(--chart-c) calc(h + 270));
-  --chart-8: oklch(from var(--fg-brand) var(--chart-l) var(--chart-c) calc(h + 315));
+  --chart-1: oklch(from var(--chart-from) var(--chart-l) var(--chart-c) calc(h + 0));
+  --chart-2: oklch(from var(--chart-from) var(--chart-l) var(--chart-c) calc(h + 45));
+  --chart-3: oklch(from var(--chart-from) var(--chart-l) var(--chart-c) calc(h + 90));
+  --chart-4: oklch(from var(--chart-from) var(--chart-l) var(--chart-c) calc(h + 135));
+  --chart-5: oklch(from var(--chart-from) var(--chart-l) var(--chart-c) calc(h + 180));
+  --chart-6: oklch(from var(--chart-from) var(--chart-l) var(--chart-c) calc(h + 225));
+  --chart-7: oklch(from var(--chart-from) var(--chart-l) var(--chart-c) calc(h + 270));
+  --chart-8: oklch(from var(--chart-from) var(--chart-l) var(--chart-c) calc(h + 315));
   --chart-grid: color-mix(in srgb, var(--border-subtle) 60%, transparent);
   --chart-axis: var(--fg-muted);
   --chart-cursor: var(--bg-surface-brand);
@@ -945,7 +922,7 @@ select:autofill {
    ============================================================ */
 
 /* --fg-on-brand is the ink for text on a --fg-brand fill (a primary button,
-   a solid badge, the status bar). --fg-brand-text is the ink for brand-colored
+   a solid badge, a checked box). --fg-brand-text is the ink for brand-colored
    text on the canvas, a card or the --bg-surface-brand tint. Neither can be
    derived from the brand, so each theme sets both. All of them clear WCAG AA
    in both modes. Measure again after changing any value here. */
@@ -958,6 +935,8 @@ select:autofill {
   --fg-brand-text: #9b8eff;
   --bg-surface-brand: rgba(124, 107, 255, 0.15);
   --ring: rgba(124, 107, 255, 0.5);
+  --finish-glow: 1;
+  --chart-from: var(--fg-brand);
 }
 
 :root[data-mode="light"],
@@ -975,7 +954,7 @@ select:autofill {
    ============================================================ */
 
 /* --fg-on-brand is the ink for text on a --fg-brand fill (a primary button,
-   a solid badge, the status bar). --fg-brand-text is the ink for brand-colored
+   a solid badge, a checked box). --fg-brand-text is the ink for brand-colored
    text on the canvas, a card or the --bg-surface-brand tint. Neither can be
    derived from the brand, so each theme sets both. All of them clear WCAG AA
    in both modes. Measure again after changing any value here. */
@@ -987,6 +966,8 @@ select:autofill {
   --fg-brand-text: #e8787d;
   --bg-surface-brand: rgba(204, 46, 54, 0.14);
   --ring: rgba(204, 46, 54, 0.45);
+  --finish-glow: 1;
+  --chart-from: var(--fg-brand);
 }
 
 :root[data-theme="blossom"][data-mode="light"] {
@@ -1003,7 +984,7 @@ select:autofill {
    ============================================================ */
 
 /* --fg-on-brand is the ink for text on a --fg-brand fill (a primary button,
-   a solid badge, the status bar). --fg-brand-text is the ink for brand-colored
+   a solid badge, a checked box). --fg-brand-text is the ink for brand-colored
    text on the canvas, a card or the --bg-surface-brand tint. Neither can be
    derived from the brand, so each theme sets both. All of them clear WCAG AA
    in both modes. Measure again after changing any value here. */
@@ -1015,6 +996,8 @@ select:autofill {
   --fg-brand-text: #ff9d45;
   --bg-surface-brand: rgba(255, 130, 19, 0.14);
   --ring: rgba(255, 130, 19, 0.45);
+  --finish-glow: 1;
+  --chart-from: var(--fg-brand);
 }
 
 :root[data-theme="marmalade"][data-mode="light"] {
@@ -1031,7 +1014,7 @@ select:autofill {
    ============================================================ */
 
 /* --fg-on-brand is the ink for text on a --fg-brand fill (a primary button,
-   a solid badge, the status bar). --fg-brand-text is the ink for brand-colored
+   a solid badge, a checked box). --fg-brand-text is the ink for brand-colored
    text on the canvas, a card or the --bg-surface-brand tint. Neither can be
    derived from the brand, so each theme sets both. All of them clear WCAG AA
    in both modes. Measure again after changing any value here. */
@@ -1043,6 +1026,8 @@ select:autofill {
   --fg-brand-text: #f178a0;
   --bg-surface-brand: rgba(232, 90, 138, 0.14);
   --ring: rgba(232, 90, 138, 0.45);
+  --finish-glow: 1;
+  --chart-from: var(--fg-brand);
 }
 
 :root[data-theme="julia"][data-mode="light"] {
@@ -1059,7 +1044,7 @@ select:autofill {
    ============================================================ */
 
 /* --fg-on-brand is the ink for text on a --fg-brand fill (a primary button,
-   a solid badge, the status bar). --fg-brand-text is the ink for brand-colored
+   a solid badge, a checked box). --fg-brand-text is the ink for brand-colored
    text on the canvas, a card or the --bg-surface-brand tint. Neither can be
    derived from the brand, so each theme sets both. All of them clear WCAG AA
    in both modes. Measure again after changing any value here. */
@@ -1071,6 +1056,8 @@ select:autofill {
   --fg-brand-text: #4cba7c;
   --bg-surface-brand: rgba(53, 163, 101, 0.14);
   --ring: rgba(53, 163, 101, 0.45);
+  --finish-glow: 1;
+  --chart-from: var(--fg-brand);
 }
 
 :root[data-theme="ivy"][data-mode="light"] {
@@ -1087,7 +1074,7 @@ select:autofill {
    ============================================================ */
 
 /* --fg-on-brand is the ink for text on a --fg-brand fill (a primary button,
-   a solid badge, the status bar). --fg-brand-text is the ink for brand-colored
+   a solid badge, a checked box). --fg-brand-text is the ink for brand-colored
    text on the canvas, a card or the --bg-surface-brand tint. Neither can be
    derived from the brand, so each theme sets both. All of them clear WCAG AA
    in both modes. Measure again after changing any value here. */
@@ -1099,6 +1086,8 @@ select:autofill {
   --fg-brand-text: #6b9bf5;
   --bg-surface-brand: rgba(37, 99, 235, 0.14);
   --ring: rgba(37, 99, 235, 0.45);
+  --finish-glow: 1;
+  --chart-from: var(--fg-brand);
 }
 
 :root[data-theme="bosco"][data-mode="light"] {
@@ -1108,6 +1097,57 @@ select:autofill {
   --fg-brand-text: #1d4ed8;
   --bg-surface-brand: rgba(29, 78, 216, 0.08);
   --ring: rgba(29, 78, 216, 0.4);
+}
+
+/* ============================================================
+   taylor theme, monochrome, flat and customizable
+   ============================================================ */
+
+/* The brand is the page's own ink: white on dark, black on light. There is no
+   hue, so --finish-glow is 0 (a card and an overlay carry no brand light) and
+   --chart-from names the one color the charts start from. These are the
+   knobs to change for a project's own look: set --fg-brand and its inks for a
+   color, --finish-glow between 0 and 1 for the glow, --chart-from for the
+   charts. Measure again after changing any value here.
+
+   Text on a brand fill reads --fg-on-brand, brand-colored text reads
+   --fg-brand-text. In this theme --fg-brand-text is the primary ink, so a
+   state must never be shown by brand color alone: pair it with weight, an
+   underline, a tint or an indicator. */
+
+:root[data-theme="taylor"] {
+  --fg-brand: #fafafa;
+  --fg-brand-hover: #d4d4d8;
+  --fg-on-brand: #09090b;
+  --fg-brand-text: #fafafa;
+  --bg-surface-brand: rgba(250, 250, 250, 0.08);
+  --ring: rgba(250, 250, 250, 0.45);
+  --finish-glow: 0;
+  --chart-from: #3b82f6;
+}
+
+:root[data-theme="taylor"][data-mode="light"] {
+  --fg-brand: #09090b;
+  --fg-brand-hover: #3f3f46;
+  --fg-on-brand: #fafafa;
+  --fg-brand-text: #09090b;
+  --bg-surface-brand: rgba(9, 9, 11, 0.06);
+  --ring: rgba(9, 9, 11, 0.4);
+}
+
+/* A code block stays near black in a light page, and a black brand
+   would vanish on it. The dark values come back inside it. */
+:root[data-theme="taylor"][data-mode="light"] [data-surface="dark"] {
+  --fg-brand: #fafafa;
+  --fg-brand-hover: #d4d4d8;
+  --fg-on-brand: #09090b;
+  --fg-brand-text: #fafafa;
+  --bg-surface-brand: rgba(250, 250, 250, 0.08);
+  --ring: rgba(250, 250, 250, 0.45);
+  --border-brand: color-mix(in srgb, var(--fg-brand) 35%, transparent);
+  --border-brand-strong: color-mix(in srgb, var(--fg-brand) 60%, transparent);
+  --shadow-brand: color-mix(in srgb, var(--fg-brand) calc(20% * var(--finish-glow)), transparent);
+  --fg-brand-glow: color-mix(in srgb, var(--fg-brand) 50%, transparent);
 }
 
 /* ============================================================
