@@ -12,7 +12,7 @@
     "test": "turbo test",
     "changeset": "changeset",
     "changeset:status": "changeset status",
-    "changeset:version": "changeset version",
+    "changeset:version": "changeset version && biome format --write packages/cli/package.json packages/registry/package.json",
     "changeset:publish": "changeset publish",
     "release": "bash scripts/release.sh",
     "prepare": "husky"

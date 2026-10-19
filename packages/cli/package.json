@@ -5,15 +5,7 @@
   "description": "The entrepta CLI. Adds components to your project",
   "license": "MIT",
   "type": "module",
-  "keywords": [
-    "entrepta",
-    "design-system",
-    "components",
-    "cli",
-    "react",
-    "nextjs",
-    "tailwind"
-  ],
+  "keywords": ["entrepta", "design-system", "components", "cli", "react", "nextjs", "tailwind"],
   "homepage": "https://github.com/imnotannamaria/entrepta#readme",
   "repository": {
     "type": "git",
@@ -27,11 +19,7 @@
   "bin": {
     "entrepta": "dist/index.js"
   },
-  "files": [
-    "dist",
-    "README.md",
-    "LICENSE"
-  ],
+  "files": ["dist", "README.md", "LICENSE"],
   "publishConfig": {
     "access": "public"
   },
